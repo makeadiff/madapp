@@ -83,7 +83,7 @@ class Admin extends Controller  {
 	function manageaddcenters()
 	{
 	$data['currentPage'] = 'db';
-	$data['navId'] = '0';
+	$data['navId'] = '1';
 	$this->load->view('admin/includes/header',$data);
 	$this->load->view('admin/includes/superadminNavigation',$data);
 	$this->load->view('admin/addcenter_view');

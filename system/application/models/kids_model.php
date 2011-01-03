@@ -1,0 +1,108 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * CodeIgniter
+ * An open source application development framework for PHP 4.3.2 or newer
+ *
+ * @package		MadApp
+ * @author		Rabeesh
+ * @copyright	Copyright (c) 2008 - 2010, OrisysIndia, LLP.
+ * @license		http://orisysindia.com/licence/brilliant.html
+ * @link		http://orisysindia.com
+ * @since		Version 1.0
+ * @filesource
+ */
+
+class Kids_model extends Model
+{
+	
+    function Kids_model()
+    {
+        parent::Model();
+    }
+    /**
+    * Function to getkids_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [ Array()]
+    **/
+	
+	function getkids_details()
+	{
+		$this->db->select('student.*,center.name as center_name,level.name as lavel_name');
+		$this->db->from('student');
+		$this->db->join('center', 'center.id = student.center_id' ,'join');
+		$this->db->join('level', 'level.id = student.level_id' ,'join');		
+		$result=$this->db->get();
+		return $result;
+		
+	
+	}
+	/**
+    * Function to add_kids
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,]
+    **/
+	function add_kids($data)
+	{
+		$data = array('center_id' 	 => $data['center'],
+			 		  'level_id' => $data['level'],
+					  'name' 	 => $data ['name'],
+					  'birthday' => $data ['date'],
+				   'description' => $data ['description'],
+			 		  );
+		$this->db->insert('student',$data);
+	 	return ($this->db->affected_rows() > 0) ? true: false ;
+	
+	}
+	/**
+    * Function to delete_kids
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
+	function delete_kids($data)
+	{
+		 $id = $data['entry_id'];
+		 $this->db->where('id',$id);
+		 $this->db->delete('student');
+		 return ($this->db->affected_rows() > 0) ? true: false;
+	
+	}
+	/**
+    * Function to get_kids_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [ Array()]
+    **/
+	function get_kids_details($uid)
+	{
+		$this->db->select('*');
+		$this->db->from('student');
+		$this->db->where('id',$uid);
+		$result=$this->db->get();
+		return $result;
+	
+	}
+	/**
+    * Function to update_student
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, ]
+    **/
+	function update_student($data)
+	{
+			$rootId=$data['rootId'];
+			$data = array('center_id' 	 => $data['center'],
+			 		  'level_id' => $data['level'],
+					  'name' 	 => $data ['name'],
+					  'birthday' => $data ['date'],
+				   'description' => $data ['description'],
+			 		  );
+			 $this->db->where('id', $rootId);
+			 $this->db->update('student', $data);
+	 		 return ($this->db->affected_rows() > 0) ? true: false ;
+	
+	}
+	
+}

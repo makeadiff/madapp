@@ -10,6 +10,11 @@
         	<div class="quickLink"> <a href="<?= site_url('admin/manageaddcenters') ?>" class="thickbox " name="" id="example">
              <img src="<?php echo base_url(); ?>images/ico/icoPublish.png" alt="" /> <span>Add Centers</span></a></div>
     	</div>
+        
+        <div id="quick" class="clear" style="margin-top:-15px;">
+        	<div class="quickLink"> <a href="<?= site_url('admin/manageaddkids') ?>" class="thickbox " name="" id="example">
+             <img src="<?php echo base_url(); ?>images/ico/user.png" alt="" /> <span>Add Kids</span></a></div>
+    	</div>
     	</div>
     </div>
 

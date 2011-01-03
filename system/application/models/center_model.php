@@ -143,4 +143,33 @@ class Center_model extends Model
 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
+	/**
+    * Function to center_name
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Array]
+    **/
+	function center_name($center_id)
+	{
+	$this->db->select('name');
+	$this->db->from('center');
+	$this->db->where('id',$center_id);
+	$result=$this->db->get();
+	return $result;
+	
+	}
+	/**
+    * Function to getcenter
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Array]
+    **/
+	function getcenter()
+	{
+	$this->db->select('*');
+	$this->db->from('center');
+	$result=$this->db->get();
+	return $result;
+	
+	}
 }

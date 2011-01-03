@@ -67,6 +67,10 @@ class City extends Controller {
 				));
 		}
 	}
+	function view()
+	{
+	echo "helooooooooooo";
+	}
 
 
 }

@@ -11,7 +11,7 @@ if(!isset($city)) $city = array('name'=>'','president_id'=>'', 'id'=>'');
 <input type="text" name="name" value="<?php echo set_value('name', $city['name']); ?>" /><br />
 
 <label for='president_id'>President</label>
-<?php echo form_dropdown('president_id', $president_ids, $city['president_id']); ?><br />
+<?php echo form_dropdown('president_id', $president_ids, $city['president_id']); ?><br/>
 
 <?php 
 echo form_hidden('id', $city['id']);

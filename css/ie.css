@@ -1,0 +1,39 @@
+@charset "utf-8";
+/* CSS Document */
+
+.content-row-large .radio-button {
+	width:auto;
+	padding:5px;
+	float:left;
+	margin-top:3px;
+	}
+	
+.content-row img {
+	float:left;
+	margin-top:1px;
+	}
+	
+.content-row-large img {
+	float:left;
+	margin-top:1px;
+	}
+	
+	
+#floting-div {
+	top: 210px !important;
+	}
+
+#main-content {
+	padding-bottom:10px;
+	}
+	
+#right-column #enter-scratch .button {
+	margin-top:0;
+	margin:0;
+	padding:0;
+	}
+			
+#main-content #inner #navigation #left-column .radio-button {
+	float:left;
+	margin-top:16px;
+	}

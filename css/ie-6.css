@@ -1,0 +1,36 @@
+#logo {
+	width:950px;
+	margin-bottom:10px;
+	float:left;
+	background-color:#fff;
+	padding-left:20px;
+	-moz-border-radius-bottomright:5px;
+	-webkit-border-bottom-right-radius:5px;
+	-moz-border-radius-bottomleft:5px;
+	-webkit-border-bottom-left-radius:5px;
+	border:1px solid #D6D6D6;
+	}
+
+#right-column {
+	width:600px;
+	float:left;
+	margin-left:5px;
+	margin-top:10px;
+	min-height:300px;
+	}
+	
+#right-column #enter-scratch {
+	width:500px;
+	float:left;
+	margin-top:30px;
+	margin-left:00px;
+	}
+	
+#right-column {
+	width:670px;
+	float:left;
+	margin-left:5px;
+	margin-top:10px;
+	min-height:300px;
+	}
+

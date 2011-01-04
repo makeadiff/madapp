@@ -1,0 +1,28 @@
+/**
+ * Optional rounded corners stylesheet.
+ *
+ * Corners are made rounded using CSS rules
+ * that may not be supported (or partially supported) in certain browsers, such as IE, Opera and Chrome
+ *
+ * Please note, that this stylesheet will not validate in W3C's CSS validator. 
+ *  
+ **/
+
+.button, .quickLink {
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+}
+.sidebox h1, #login h2, #menu ul li a {
+    border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    -khtml-border-radius: 5px 5px 0 0;
+}
+.sidebox, .boxInside {
+    border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    -khtml-border-radius: 0 0 5px 5px;
+}

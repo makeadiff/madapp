@@ -1,0 +1,156 @@
+@charset "utf-8";
+/* CSS Document */
+
+a {outline:none;}
+
+body {
+	margin:0;
+	font-family:Arial, Helvetica, sans-serif;
+	}
+
+#container {
+	width:400px;
+	height:auto;
+	margin-left:auto;
+	margin-right:auto;
+	position:relative;
+	}
+	
+#wraper {
+	width:400px;
+	height:auto;
+	float:left;
+	}
+	
+#logo {
+	width:400px;
+		margin-top:100px;
+	text-align:center;
+	margin-bottom:10px;
+	float:left;
+	}
+	
+#logo a img {
+	border:none;
+	outline:none;
+	height:auto;
+	}
+	
+#login_div {
+	width:400px;
+	float:left;
+	height:auto;
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	}
+	
+#title {
+	width:400px;
+	height:40px;
+	float:left;
+	background:url(../images/bgSidebox.gif) repeat-x;
+	line-height:40px;
+	font-size:14px;
+	font-weight:bold;
+	text-align:center;
+	color:#FFF;
+	border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    -khtml-border-radius: 5px 5px 0 0;
+	text-shadow:0px 0px 3px #000;
+	}
+	
+#content {
+	width:398px;
+	border:1px solid #D6D6D6;
+	float:left;
+	background-color:#f0f0f0;
+	-moz-border-radius-bottomright:5px;
+	-webkit-border-bottom-right-radius:5px;
+	-moz-border-radius-bottomleft:5px;
+	-webkit-border-bottom-left-radius:5px;
+	padding-bottom:20px;
+	padding-top:10px;
+	}
+	
+#error-msg {
+	float:left;
+	width:290px;
+	border:1px solid #FD5559;
+	background-color:#FED3D5;
+	margin-left:43px;
+	margin-top:5px;
+	text-align:center;
+	font-size:12px;
+	padding:10px;
+	}
+
+.content-row {
+	width:398px;
+	float:left;
+	text-align:center;
+	margin-top:15px;
+	}
+
+.content-row .textfield {
+	width:300px;
+	text-align:left;
+	padding:5px;
+	font-size:15px;
+	color:#CCC;
+	border:1px solid #C7C7C7;
+	}
+
+.content-row-upper {
+	width:398px;
+	float:left;
+	text-align:center;
+	margin-top:10px;
+	}
+
+.content-row-upper .textfield {
+	width:300px;
+	text-align:left;
+	padding:5px;
+	font-size:15px;
+	color:#999;
+	border:1px solid #C7C7C7;
+	}
+
+.content-row-button {
+	width:300px;
+	float:left;
+	text-align:center;
+	margin-top:15px;
+	margin-left:45px;
+	}
+.content-row-button .button {
+	text-align:center;
+	padding:5px 10px;
+	background-color:#999;
+	background-image: url(../images/li-main.gif);
+    color: #FFF;
+    border: 1px solid #7c7c7c;
+	cursor:pointer;
+	border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+	float:left;
+	margin-right:10px;
+	}
+.content-row-button span {float:left; min-height:10px; min-width:10px;font-size:11px;line-height:25px;}
+
+.content-row-button span a {
+	float:left;
+	display:block;
+	color:#666;
+	text-decoration:none;
+	}
+
+.content-row-button span a:hover {
+	color:#333;
+	text-decoration:underline;
+	}

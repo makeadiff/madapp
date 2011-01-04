@@ -1,0 +1,56 @@
+/* Layout */
+
+html, body { height: 100%; }
+body {
+    font: normal 77% 'Segoe UI', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #000;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+a:hover { text-decoration: none; }
+img { border: 1px solid #ddd; }
+#wrapper {
+    width: 940px;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -100px;
+    text-align: left;
+}
+#push {
+    height: 100px;
+    clear: both;
+}
+#wrapFooter {
+    width: 940px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#validation{
+ 	width: 800px;
+	height:300px;
+	border:#000000;
+	border:.002em solid;
+
+    
+	
+}
+#question{
+width:800px;
+height:150px;
+border:#000000;
+border-bottom:1px solid;	
+}
+#option{
+width:800px;
+height:120px;
+border:#000000;
+/*border-bottom:1px solid;*/	
+}#check{
+margin-left:200p;
+position:absolute;
+}

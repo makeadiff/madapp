@@ -1,0 +1,70 @@
+/* Reset CSS */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+img, input, select, label {	
+	vertical-align: middle; 
+}
+ol, ul { list-style: none; }
+blockquote, q {	quotes: none; }
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+:focus { outline: 0; }
+ins { text-decoration: none; }
+del { text-decoration: line-through; }
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+legend { display: none; }
+fieldset, img, a img { border: 0; }	
+object{ outline: none; }
+address, caption, cite, code, dfn, em, strong, th, var { 
+	font-style: normal; 
+    font-weight: normal; 
+}
+h1, h2, h3, h4, h5, h6, p, ul, ol, dl, li { 
+	line-height: 1.1em; 
+}
+h1, h2, h3, h4, h5, h6, pre, code { 
+	font-size: 1em; 
+}
+table, thead, tbody, tfoot, tr, th, td, input, select, textarea {	
+	font-size: 1em;	
+    font-family: inherit; 
+}
+.last { border: none !important; }
+.left { text-align: left; }
+.center { text-align: center; }
+.right { text-align: right; }
+.justify { text-align: justify; }
+
+/* Clear fix */
+
+.clear { display: inline-block; }
+.clear:after {
+  display: block;
+  line-height: 0px;
+  height: 0px;
+  clear: both;
+  visibility: hidden;
+  content: "";
+}

@@ -1,0 +1,35 @@
+/* EncoreAdmin - Black skin */
+
+a { color: #333; }
+body.withSubnav { background: #fff url(../images/skin/black/bgTopOpen.gif) repeat-x 0 0; }
+body.withoutSubnav { background: #fff url(../images/skin/black/bgTopClosed.gif) repeat-x 0 0; }
+#top { background: transparent url(../images/skin/black/bgTopLights.jpg) no-repeat 0 0; }
+#title a { color: #fff; }
+#title span { color: #747474; }
+.button.tool {
+    background-image: url(../images/skin/black/btnToolbar.gif);
+    color: #d8e41a;
+    border-color: #000;   
+}
+p#user a { color: #d8e41a; }
+.button.tool:hover { color: #fff; }
+.sidebox h1 {
+    background: #202020 url(../images/skin/black/bgSidebox.gif) repeat-x 0 0;
+    color: #fff; 
+}
+#calendar td.today {
+    background: #444;
+    color: #fff; 
+}
+#calendar td.event { 
+    background: #d8e41a;
+    color: #222; 
+}
+.mainForm legend {
+    color: #333;
+    background: transparent url(../images/skin/black/bgFieldset.gif) repeat-x 0 0;
+}
+#footer { background: #243743 url(../images/skin/black/bgFooter.gif) repeat-x 0 0; margin-top:50px; }
+#footer a { color: #d8e41a; }
+#login h1 span { color: #747474; }
+#login h2 { background: #202020 url(../images/skin/black/bgSidebox.gif) repeat-x 0 0; }

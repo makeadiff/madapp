@@ -4,7 +4,7 @@ class Level extends Controller {
 	
 	function Level() {
 		parent::Controller();
-		$this->message = array('success'=>false, 'error'=>false);
+		$this-> message = array('success'=>false, 'error'=>false);
 	
 		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);

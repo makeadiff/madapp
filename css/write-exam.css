@@ -1,0 +1,427 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+
+a {outline:none;}
+
+body {
+	margin:0;
+	font-family:Arial, Helvetica, sans-serif;
+	overflow:scroll;
+	padding-top:15px;
+	padding-bottom:20px;
+	color:#333;
+	background-color:#f0f0f0;
+	}
+
+#container {
+	width:960px;
+	height:auto;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:2px;
+	position:relative;
+	}
+	
+#wraper {
+	width:960px;
+	height:auto;
+	float:left;
+	}
+	
+#logo {
+	width:938px;
+	margin-bottom:5px;
+	float:left;
+	background-color:#FFF;
+	padding-left:20px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border:1px solid #D6D6D6;
+	}
+	
+#logo a img {
+	border:none;
+	outline:none;
+	height:auto;
+	float:left;
+	margin-bottom:10px;
+	}
+	
+#logo #login-info {
+	width:auto;
+	margin-top:40px;
+	float:right;
+	font-size:12px;
+	font-weight:bold;
+	margin-right:20px;
+	}
+	
+#logo #login-info a {
+	color:#47656f;
+	text-decoration:none;
+	}
+	
+#logo #login-info a:hover {
+	text-decoration:underline;
+	color:#F00;
+	}
+	
+#main-content {
+	width:950px;
+	height:auto;
+	float:left;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	background-color:#FFF;
+	border:1px solid #D6D6D6;
+	margin-bottom:20px;
+	padding-left:08px;
+	}
+
+#main-content #inner {
+	width:922px;
+	float:left;
+	margin:10px;
+	}
+	
+#main-content #inner #header {
+	width:940px;
+	float:left;
+	height:50px;
+	}
+		
+#main-content #inner #header #left-content {
+		width:540px;
+		float:left;
+		height:50px;
+		text-shadow:1px 1px #fff;
+	}
+			
+#main-content #inner #header #left-content span {
+	width:auto;
+	float:left;
+	height:50px;
+	line-height:50px;
+	margin-right:30px;
+	}
+			
+#main-content #inner #header #right-content {
+	width:auto;
+	float:right;
+	height:auto;
+	}
+				
+#main-content #inner #header #right-content #time-show {
+	width:355px;
+	float:right;
+	height:45px;
+	margin-top:5px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	/*text-shadow:1px 1px #666;*/
+	margin-bottom:3px;
+	}
+				
+#main-content #inner #header #right-content #time-show li.left {
+	width:auto;
+	float:left;
+	list-style-type:none;
+	-moz-border-radius-bottomright:5px;
+	-webkit-border-bottom-right-radius:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-top-rightradius:5px;
+	background-color:#000;
+	text-align:center;
+	padding:12px;
+	font-size:13px;
+	font-weight:bold;
+	color:#FFF;
+	}
+				
+#main-content #inner #header #right-content #time-show li.right {
+	width:auto;
+	float:left;
+	list-style-type:none;
+	-moz-border-radius-bottomleft:5px;
+	-webkit-border-bottom-left-radius:5px;
+	-moz-border-radius-topleft:5px;
+	-webkit-border-top-left-radius:5px;
+	background-color:#39F;
+	text-align:center;
+	padding:12px;
+	font-size:13px;
+	font-weight:bold;
+	color:#FFF;
+	}
+
+#main-content #inner #exam-screen {
+	width:900px;
+	float:left;
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	background-color:#FFF;
+	border:1px solid #CCC;
+	padding:10px;
+	}
+
+#main-content #inner #exam-screen #left-col {
+		width:640px;
+		float:left;
+		border-right:#CCC thin solid;
+		padding-left:10px;
+		padding-top:0px;
+	}
+#main-content #inner #exam-screen #left-col .heading{
+		font-size:14px;
+		width:595px;
+		font-weight:bold;
+		height:25px;
+		border-bottom:#CCC thin solid;
+		padding-top:5px;
+	}
+
+#main-content #inner #exam-screen #left-col .strong_qn{
+		font-size:12px;
+		font-weight:bold;
+		margin-top:10px;
+		width:600px;
+	}
+
+#main-content #inner #exam-screen #left-col #qn_scroll {
+	width:630px;
+	float:left;
+	margin-right:0px;
+	height:320px;
+	overflow:scroll;
+	overflow-x:hidden;
+	}
+
+#main-content #inner #exam-screen #left-col #question {
+	width:570px;
+	float:left;
+	font-size:14px;
+	font-weight:normal;
+	padding:10px;
+	padding-left:0px;
+	margin-top:05px;
+	}
+
+
+#main-content #inner #exam-screen #left-col #qn_scroll #answer-options {
+	width:600px;
+	float:left;
+	margin-top:10px;
+	margin-bottom:20px;
+	}
+
+#main-content #inner #exam-screen #left-col #qn_scroll #answer-options span{
+		font-size:12px;
+		font-weight:bold;
+	}	
+
+#main-content #inner #exam-screen #left-col #qn_scroll #answer-options ol {
+	list-style-type:lower-alpha;
+	margin-top:3px;
+}
+#main-content #inner #exam-screen #left-col #qn_scroll #answer-options ol li {
+	width:530px;
+	float:left;
+	font-size:12px;
+	font-weight:bold;
+	margin-top:10px;
+	padding-left:20px;
+	}
+	
+#main-content #inner #exam-screen #right-col {
+	width:240px;
+	float:left;
+	padding-left:9px;
+	}
+	
+#main-content #inner #exam-screen #right-col li {
+	width:auto;
+	float:left;
+	list-style-type:none;
+	margin-right:5px;
+	margin-bottom:5px;
+	}
+	
+#main-content #inner #exam-screen #right-col li a {
+	float:left;
+	display:block;
+	background:url(../images/but.jpg) no-repeat;
+	font-size:10px;
+	color:#333;
+	font-weight:bold;
+	text-decoration:none;
+	height:20px;
+	width:25px;
+	text-align:center;
+	line-height:20px;
+	}
+		
+#main-content #inner #exam-screen #right-col li a:hover, a.selected {
+	background:url(../images/but-hover.jpg) no-repeat;
+	color:#FFF;
+	}
+
+#main-content #inner #navigation {
+	width:920px;
+	float:left;
+	margin:10px;
+	margin-left:0px;
+	margin-right:0;
+	height:50px;
+	}
+
+#main-content #inner #navigation #left-column {
+	width:450px;
+	float:left;
+	height:50px;
+	}
+	
+#main-content #inner #navigation #left-column img {
+	float:left;
+	margin-right:20px;
+	}
+	
+#main-content #inner #navigation #left-column span {
+	float:left;
+	margin-right:30px;
+	line-height:50px;
+	color:#333;
+	font-weight:bold;
+	}
+		
+#main-content #inner #navigation #left-column .radio-button {
+	float:left;
+	margin-top:19px;
+	cursor:pointer;
+	}
+	
+#main-content #inner #navigation #right-column {
+	width:460px;
+	float:right;
+	height:50px;
+	}
+	
+#main-content #inner #navigation #right-column img {
+	float:left;
+	margin-left:25px;
+	}
+		
+#main-content #inner #navigation #right-column a img {
+	border:none;
+	outline:none;
+	}
+
+/******************Marklist******************/
+		
+#main-content #inner #exam-screen #marklist-body {
+	width:500px;
+	float:left;
+	margin-left:209px;
+	margin-top:30px;
+	}
+		
+#main-content #inner #exam-screen #marklist-body .cont-div {
+	width:500px;
+	float:left;
+	margin-bottom:20px;
+	}
+			
+#main-content #inner #exam-screen #marklist-body .cont-div .row {
+	width:500px;
+	float:left;
+	margin-top:10px;
+	padding-bottom:13px;
+	background:url(../images/shadow-long.gif) bottom no-repeat;
+	}
+				
+#main-content #inner #exam-screen #marklist-body .cont-div .row .row-sub1{
+	width:239px;
+	float:left;
+	font-size:14px;
+	font-weight:bold;
+	padding-left:10px;
+	border-right:1px solid #CCC;
+	height:18px;
+	}
+					
+#main-content #inner #exam-screen #marklist-body .cont-div .row .row-sub2{
+	width:240px;
+	float:left;
+	font-size:14px;
+	font-weight:bold;
+	padding-left:10px;
+	height:18px;
+	}
+						
+#main-content #inner #exam-screen #marklist-body .cont-div .row .row-sub3{
+	width:120px;
+	float:left;
+	font-size:14px;
+	font-weight:bold;
+	text-align:center;
+	height:18px;
+	}
+			
+#main-content #inner #exam-screen #marklist-body h4 {
+	width:500px;
+	float:left;
+	margin:0;
+	padding-bottom:10px;
+	padding-top:10px;
+	text-align:center;
+	color:#fff;
+	background:url(../images/h3.gif) no-repeat;
+	}
+
+/******************footer******************/
+
+#footer {
+	width:958px;
+	height:50px;
+	float:left;
+	margin-top:0px;
+	border-top:1px solid #999;
+	line-height:50px;
+	text-align:center;
+	font-size:11px;
+	color:#333;
+	text-shadow:1px 1px #FFF;
+	}
+
+#footer a {
+	color:#666;
+	text-decoration:none;
+	}
+
+#footer a:hover {
+	color:#333;
+	text-decoration:none;
+	}
+	
+#mark-choice-list {
+	width:320px;
+	float:left;
+	}
+
+#mark-choice-list ol{
+	list-style-type:lower-alpha;
+	line-height:50px;
+	padding-left:10px;
+	margin-top:0px;
+	font-weight:bold;
+	font-size:18px;
+	}
+	
+#mark-choice-list ol li{
+	width:60px;
+	float:left;
+	}

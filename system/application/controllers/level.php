@@ -8,6 +8,7 @@ class Level extends Controller {
 	
 		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);
+		$this->load->model('kids_model');
 		$this->load->helper('url');
 	}
 	
@@ -21,7 +22,7 @@ class Level extends Controller {
 		$this->load->view('level/index', array('all_levels'	=> $all_levels,'center_name'=>$center_name->name, 'center_id'=>$center_id));
 	}
 	
-	function create($holder, $center_id = 0) {
+	function create($holder, $center_id = 0) { 
 		if($this->input->post('action') == 'New') {
 			$this->db->insert('Level', 
 				array(
@@ -51,6 +52,7 @@ class Level extends Controller {
 	}
 	
 	function edit($level_id) {
+	
 		if($this->input->post('action') == 'Edit') {
 			$this->db->where('id', $this->input->post('id'))->update('Level', 
 				array(
@@ -58,21 +60,22 @@ class Level extends Controller {
 					'center_id'	=>	$this->input->post('center_id'),
 					'project_id'=>	$this->input->post('project_id'),
 				));
-				
 			$this->message['success'] = 'The Level has been edited successfully';
 			$this->index('center', $this->input->post('center_id'));
-		
+		$this->input->post('center_id');
 		} else {
 			$this->load->helper('misc');
 			$this->load->helper('form');
-			
 			$level = $this->db->where('id',$level_id)->get('Level')->row_array();
+			$c_id=$level['center_id'];
+			$data['kids']=$this->kids_model->get_kids_name($c_id);
+			$kids=$data['kids']->result_array();
 			$center_ids = getById("SELECT id, name FROM Center", $this->model->db);
-			
 			$this->load->view('level/form.php', array(
 				'action' 	=> 'Edit',
 				'center_ids'=> $center_ids,
-				'level'		=> $level
+				'level'		=> $level,
+				'kids'	=>$kids
 				));
 		}
 	}
@@ -88,6 +91,28 @@ class Level extends Controller {
 		$this->db->delete('Level', array('id'=>$level_id));
 		$this->message['success'] = 'The Level has been deleted successfully';
 		$this->index();
+	}
+	/**
+    *
+    * Function to update_student
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function update_student()
+	{
+		$level = $_REQUEST['level'];
+		$agents = $_REQUEST['agents'];
+		$agents = str_replace("on,","",$agents);
+		$agents = substr($agents,0,strlen($agents)-1);
+			$explode_agents_array = explode(",",trim($agents));
+			for($i=0;$i<sizeof($explode_agents_array);$i++)
+			   {
+					$agent_id = $explode_agents_array[$i];				
+					$this->kids_model->kids_level_update($agent_id,$level);
+			   }
+	
 	}
 
 

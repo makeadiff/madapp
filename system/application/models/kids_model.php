@@ -85,6 +85,22 @@ class Kids_model extends Model
 	
 	}
 	/**
+    * Function to get_kids_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [ Array()]
+    **/
+	function get_kids_name($uid)
+	{
+		$this->db->select('id,name');
+		$this->db->from('student');
+		$this->db->where('center_id',$uid);
+		$this->db->where('level_id',0);
+		$result=$this->db->get();
+		return $result;
+	
+	}
+	/**
     * Function to update_student
     * @author:Rabeesh 
     * @param :[$data]
@@ -103,6 +119,18 @@ class Kids_model extends Model
 			 $this->db->update('student', $data);
 	 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
+	}
+	/**
+    * Function to kids_level_update
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, ]
+    **/
+	function kids_level_update($agent_id,$level)
+	{
+		$data = array('level_id' => $level);
+		$this->db->where('id', $agent_id);
+		$this->db->update('student', $data);
 	}
 	
 }

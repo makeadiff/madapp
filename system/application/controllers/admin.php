@@ -305,7 +305,7 @@ class Admin extends Controller  {
 		  {
 		  		$message['msg']   =  "Student added successfully.";
 				$message['successFlag'] = "1";
-				$message['link']  =  "popupaddCneter";
+				$message['link']  =  "popupaddKids";
 				$message['linkText'] = "add new Center";
 				$message['icoFile'] = "ico_addScheme.png";
 			

@@ -93,12 +93,10 @@ class Level extends Controller {
 		$this->index();
 	}
 	/**
-    *
     * Function to update_student
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
 	function update_student()
 	{

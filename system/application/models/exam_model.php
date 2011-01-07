@@ -18,20 +18,31 @@ class Exam_model extends Model
     {
         parent::Model();
     }
-	
+	/**
+    *
+    * Function to insert_exam_name
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function insert_exam_name($name)
 	{
 		$data = array('name' => $name);
 	    $this->db->insert('exam',$data);  
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
+	/**
+    *
+    * Function to insert_subject_name
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function insert_subject_name($choiceText,$exam_id)
 	{
-		//echo "ji=".$choiceText;
 		$choiceText = explode(",",$choiceText);
-			//echo "size=".sizeof($choiceText);	
-			
-			
 		for($i=0;$i<sizeof($choiceText);$i++)
 		   {
 		   		if($choiceText[$i] != 'nil')
@@ -48,6 +59,14 @@ class Exam_model extends Model
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	
 	}
+	/**
+    *
+    * Function to insert_exam_mark
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function insert_exam_mark($choiceText,$exam_id,$agents)
 	{
 		$choiceText = explode(",",$choiceText);
@@ -57,7 +76,6 @@ class Exam_model extends Model
 		for($i=1;$i<sizeof($explode_agent);$i++)
 		{
 			$agent=$explode_agent[$i];
-			//echo "hi=".$agent;
 									for($j=0;$j<sizeof($choiceText);$j++)
 								   	{
 										if($choiceText[$j] != 'nil')
@@ -68,7 +86,6 @@ class Exam_model extends Model
 												$this->db->where('name',$name);
 												$id=$this->db->get();
 												$ids=$id->result_array();
-												//print_r($id->result());
 													foreach($ids as $row)
 													{
 													$id=$row['id'];

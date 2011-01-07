@@ -5,7 +5,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-
 <script>
 function populat_textbox()
 {
@@ -66,9 +65,7 @@ var center = $('#centers').val();
 				 var cText = '';
 				 for(var i=1; i<=sub_no; i++)
 				 {
-				
 				 choiceText[i] = $('#choice-text-'+i).val();
-				 
 				 }
 				 for(var i=1; i<choiceText.length; i++) 
 				 {
@@ -90,11 +87,10 @@ var center = $('#centers').val();
 				
 				
 }
-function suceessfunction()
-{
+	function suceessfunction()
+	{
 		var bool = alert("successfully added")
-}
-//onSubmit="return false;"
+	}
 </script>
 <form id="formEditor" class="mainForm clear"  action="" method="post" style="width:500px;">
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">

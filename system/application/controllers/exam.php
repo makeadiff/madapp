@@ -49,7 +49,7 @@ class Exam extends Controller  {
 
     /**
     *
-    * Function to dashboard
+    * Function to exam_score
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
@@ -67,17 +67,41 @@ class Exam extends Controller  {
 		$this->load->view('admin/includes/footer');
 
     }
+	/**
+    *
+    * Function to ajax_sbjectbox
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function ajax_sbjectbox()
 	{
 		$data['sub_no'] = $_REQUEST['sub_no'];
 		$this->load->view('admin/subjectbox_div',$data);
 	}
+	/**
+    *
+    * Function to get_center
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function get_center()
 	{
 		$data['center']= $this->center_model->getcenter();
 		$this->load->view('admin/getcenter_div',$data);
 	
 	}
+	/**
+    *
+    * Function to get_kidslist
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function get_kidslist()
 	{
 		$c_id = $_REQUEST['center_id'];
@@ -85,6 +109,14 @@ class Exam extends Controller  {
 		$this->load->view('admin/kids_list_div',$data);
 	
 	}
+	/**
+    *
+    * Function to input_exam_mark_details
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function input_exam_mark_details()
 	{
 		$agents = $_REQUEST['agents'];
@@ -94,43 +126,7 @@ class Exam extends Controller  {
 		$exam_id=$this->exam_model->insert_exam_name($name);
 		$choiceText = substr($choice_text,0,strlen($choice_text)-1);
 		$subjects_id=$this->exam_model->insert_subject_name($choiceText,$exam_id);
-		
 		$flag=$this->exam_model->insert_exam_mark($choiceText,$exam_id,$agents);
-		if($flag != 0)
-		{
-			//redirect('exam_score', 'refresh');
-			//$data['currentPage'] = 'db';
-			//$data['navId'] = '3';
-			//$message['message']="Successfully added";
-			//$this->load->view('admin/includes/header',$data);
-			//$this->load->view('admin/includes/superadminNavigation',$data);
-			//$this->load->view('admin/student_exam_score_view',$message);
-			//$this->load->view('admin/includes/footer');
-		
-		}
-		else
-		{
-			$data['currentPage'] = 'db';
-			$data['navId'] = '3';
-			$message['message']="Error occured in this process";
-			$this->load->view('admin/includes/header',$data);
-			$this->load->view('admin/includes/superadminNavigation',$data);
-			$this->load->view('admin/student_exam_score_view',$message);
-			$this->load->view('admin/includes/footer');
-		
-		}
-		
-		
 	}
-	/*function reload_page()
-	{
-			$data['currentPage'] = 'db';
-			$data['navId'] = '3';
-			$message['message']="Successfully added";
-			$this->load->view('admin/includes/header',$data);
-			$this->load->view('admin/includes/superadminNavigation',$data);
-			$this->load->view('admin/student_exam_score_view',$message);
-			$this->load->view('admin/includes/footer');
-		
-	}*/
+	
 }

@@ -132,5 +132,14 @@ class Kids_model extends Model
 		$this->db->where('id', $agent_id);
 		$this->db->update('student', $data);
 	}
+	function getkids_name_incenter($uid)
+	{
+		$this->db->select('id,name');
+		$this->db->from('student');
+		$this->db->where('center_id',$uid);
+		$result=$this->db->get();
+		return $result;
+	
+	}
 	
 }

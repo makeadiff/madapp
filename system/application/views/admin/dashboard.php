@@ -15,6 +15,11 @@
         	<div class="quickLink"> <a href="<?= site_url('admin/manageaddkids') ?>" class="thickbox " name="" id="example">
              <img src="<?php echo base_url(); ?>images/ico/user.png" alt="" /> <span>Add Kids</span></a></div>
     	</div>
+        
+         <div id="quick" class="clear" style="margin-top:-15px;">
+        	<div class="quickLink"> <a href="<?= site_url('exam/exam_score') ?>" class="thickbox " name="" id="example">
+             <img src="<?php echo base_url(); ?>images/ico/exam_icon.jpg" alt="" /> <span>Exams Scores</span></a></div>
+    	</div>
     	</div>
     </div>
 

@@ -34,6 +34,11 @@
     <li> <a href="<?= site_url('admin/manageaddkids') ?>">Add kids</a></li>
     <?php endif; ?>
     
+    <?php if($navId == '3'): ?>
+    <li class="active"><a href="<?= site_url('exam/exam_score') ?>">Exam Scores</a></li>
+    <?php else: ?>
+    <li> <a href="<?= site_url('exam/exam_score') ?>">Exam Scores</a></li>
+    <?php endif; ?>
     
     
     <!-- Navigation Manage Group Check Ends -->

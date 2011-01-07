@@ -28,10 +28,11 @@ class Kids_model extends Model
 	
 	function getkids_details()
 	{
-		$this->db->select('student.*,center.name as center_name,level.name as lavel_name');
-		$this->db->from('student');
-		$this->db->join('center', 'center.id = student.center_id' ,'join');
-		$this->db->join('level', 'level.id = student.level_id' ,'join');		
+		$this->db->select('Student.*,Center.name as center_name,Level.name as lavel_name');
+		$this->db->from('Student');
+		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
+		$this->db->join('StudentLevel', 'StudentLevel.student_id = Student.id' ,'join');
+		$this->db->join('Level', 'Level.id = StudentLevel.level_id' ,'join');
 		$result=$this->db->get();
 		return $result;
 		
@@ -51,7 +52,7 @@ class Kids_model extends Model
 					  'birthday' => $data ['date'],
 				   'description' => $data ['description'],
 			 		  );
-		$this->db->insert('student',$data);
+		$this->db->insert('Student',$data);
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -65,7 +66,7 @@ class Kids_model extends Model
 	{
 		 $id = $data['entry_id'];
 		 $this->db->where('id',$id);
-		 $this->db->delete('student');
+		 $this->db->delete('Student');
 		 return ($this->db->affected_rows() > 0) ? true: false;
 	
 	}
@@ -78,7 +79,7 @@ class Kids_model extends Model
 	function get_kids_details($uid)
 	{
 		$this->db->select('*');
-		$this->db->from('student');
+		$this->db->from('Student');
 		$this->db->where('id',$uid);
 		$result=$this->db->get();
 		return $result;
@@ -93,7 +94,7 @@ class Kids_model extends Model
 	function get_kids_name($uid)
 	{
 		$this->db->select('id,name');
-		$this->db->from('student');
+		$this->db->from('Student');
 		$this->db->where('center_id',$uid);
 		$this->db->where('level_id',0);
 		$result=$this->db->get();
@@ -116,7 +117,7 @@ class Kids_model extends Model
 				   'description' => $data ['description'],
 			 		  );
 			 $this->db->where('id', $rootId);
-			 $this->db->update('student', $data);
+			 $this->db->update('Student', $data);
 	 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -130,12 +131,12 @@ class Kids_model extends Model
 	{
 		$data = array('level_id' => $level);
 		$this->db->where('id', $agent_id);
-		$this->db->update('student', $data);
+		$this->db->update('Student', $data);
 	}
 	function getkids_name_incenter($uid)
 	{
 		$this->db->select('id,name');
-		$this->db->from('student');
+		$this->db->from('Student');
 		$this->db->where('center_id',$uid);
 		$result=$this->db->get();
 		return $result;

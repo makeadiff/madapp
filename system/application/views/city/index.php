@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/header', array('title'=>'Cities')); ?>
+<?php $this->load->view('layout/header', array('title'=>'Cities', 'message'=>$message)); ?>
 <h1>Cities</h1>
 
 <ul>

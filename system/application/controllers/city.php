@@ -12,28 +12,29 @@ class City extends Controller {
 	}
 	
 	function index() {
-		$all_cities = $this->model->db->get('City')->result();
+		$all_cities = $this->model->getCities();
 		
-		$this->load->view('city/index', array('all_cities'	=> $all_cities));
+		$this->load->view('city/index', array('all_cities'	=> $all_cities, 'message'=>$this->message));
 	}
 	
 	function create() {
+		// Make a new city.
 		if($this->input->post('action') == 'New') {
-			$this->db->insert('City', 
-				array(
-					'name'			=>	$this->input->post('name'), 
-					'president_id'	=>	$this->input->post('president_id'),
-					'added_on'		=>	date('Y-m-d H:i:s')
-				));
-
+			$data = array(
+						'name'			=>	$this->input->post('name'), 
+						'president_id'	=>	$this->input->post('president_id'),
+					);
+			$this->model->createCity($data);
 			$this->message['success'] = 'The City has been added';
 			$this->index();
 		
 		} else {
-			$this->load->helper('misc');
+		// Show the form to make a new city.
 			$this->load->helper('form');
+			$this->load->model('User_model','user_model');
 			
-			$president_ids = getById("SELECT id, name FROM User", $this->model->db);
+			$president_ids = $this->user_model->getUsersById();
+			
 			$this->load->view('city/form.php', array(
 				'action' => 'New',
 				'president_ids' => $president_ids
@@ -43,11 +44,11 @@ class City extends Controller {
 	
 	function edit() {
 		if($this->input->post('action') == 'Edit') {
-			$this->db->where('id', $this->input->post('id'))->update('City', 
-				array(
-					'name'			=>	$this->input->post('name'), 
-					'president_id'	=>	$this->input->post('president_id')
-				));
+			$data = array(
+						'name'			=>	$this->input->post('name'), 
+						'president_id'	=>	$this->input->post('president_id'),
+					);
+			$this->model->editCity($data);
 				
 			$this->message['success'] = 'The City has been edited successfully';
 			$this->index();
@@ -56,10 +57,11 @@ class City extends Controller {
 			$this->load->helper('misc');
 			$this->load->helper('form');
 			$city_id = $this->uri->segment(3);
+			$this->load->model('User_model','user_model');
 			
-			$city = $this->db->where('id',$city_id)->get('City')->row_array();
+			$president_ids = $this->user_model->getUsersById();
+			$city = $this->model->getCity($city_id);
 			
-			$president_ids = getById("SELECT id, name FROM User", $this->model->db);
 			$this->load->view('city/form.php', array(
 				'action' 		=> 'Edit',
 				'president_ids' => $president_ids,

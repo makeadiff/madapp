@@ -100,7 +100,7 @@ class Admin extends Controller  {
     **/
 	function getcenterlist()
 	{
-		$page_no = $_REQUEST['pageno'];
+		$page_no = (empty($_REQUEST['pageno'])) ? 1 : $_REQUEST['pageno'];
 		$data['title'] = 'Manage Centers';
 		$linkCount = $this->center_model->getcenter_count();
 		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
@@ -118,10 +118,9 @@ class Admin extends Controller  {
     **/
 	function popupaddCneter()
 	{
-	
-	$data['details']= $this->center_model->getcity();
-	$data['user_name']= $this->center_model->getheadname();
-	$this->load->view('admin/popups/addcenter_popup',$data);
+		$data['details']= $this->center_model->getcity();
+		$data['user_name']= $this->center_model->getheadname();
+		$this->load->view('admin/popups/addcenter_popup',$data);
 	}
 	/**
     *
@@ -133,30 +132,30 @@ class Admin extends Controller  {
     **/
 	function addCenter()
 	{
-	$data['city']=$_REQUEST['city'];
-	$data['user_id']=$_REQUEST['user_id'];
-	$data['center']=$_REQUEST['center'];
-	$returnFlag= $this->center_model->add_center($data);
-	
-	if($returnFlag)
-		  {
-		  		$message['msg']   =  "Center added successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "popupaddCneter";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
+		$data['city']=$_REQUEST['city'];
+		$data['user_id']=$_REQUEST['user_id'];
+		$data['center']=$_REQUEST['center'];
+		$returnFlag= $this->center_model->add_center($data);
+		
+		if($returnFlag)
+			{
+		  	$message['msg']   =  "Center added successfully.";
+			$message['successFlag'] = "1";
+			$message['link']  =  "popupaddCneter";
+			$message['linkText'] = "add new Center";
+			$message['icoFile'] = "ico_addScheme.png";
 			
-				$this->load->view('admin/errorStatus_view',$message);
+			$this->load->view('admin/errorStatus_view',$message);
 		  }
 		else
 		  {
-		  		$message['msg']   =  "no updates performed.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupaddCneter";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
+		  	$message['msg']   =  "no updates performed.";
+			$message['successFlag'] = "0";
+			$message['link']  =  "popupaddCneter";
+			$message['linkText'] = "add new Center";
+			$message['icoFile'] = "ico_addScheme.png";
 			
-				$this->load->view('admin/errorStatus_view',$message);
+			$this->load->view('admin/errorStatus_view',$message);
 		  }
 	
 	
@@ -364,11 +363,12 @@ class Admin extends Controller  {
 	function update_kids()
 	{
 		$data['rootId'] = $_REQUEST['rootId'];
-		$data['center']=$_REQUEST['center'];
-		$data['level']=$_REQUEST['level'];
-		$data['name']=$_REQUEST['name'];
-		$date=$_REQUEST['date-pick'];
-		$newdate=explode("/",$date);
+		$data['center'] = $_REQUEST['center'];
+		$data['level']	= $_REQUEST['level'];
+		$data['name']	= $_REQUEST['name'];
+		
+		$date = $_REQUEST['date-pick'];
+		$newdate = explode("/",$date);
 		$data['date']=$newdate[2]."/".$newdate[1]."/".$newdate[0];
 		$data['description']=$_REQUEST['description'];
 		

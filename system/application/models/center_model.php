@@ -28,10 +28,9 @@ class Center_model extends Model
 	function getcenter_count()
 	{
 			$this->db->select('*');
-			$this->db->from('center');
+			$this->db->from('Center');
 			$count = $this->db->get();	
-			return count($count->result());	
-	
+			return count($count->result());
 	}
     
 	
@@ -44,10 +43,10 @@ class Center_model extends Model
     function getcenter_details()
     {
 	
-		$this->db->select('center.*,city.name as city_name,user.name as user_name');
-		$this->db->from('center');
-		$this->db->join('city', 'city.id = center.city_id' ,'join');
-		$this->db->join('user', 'user.id = center.center_head_id' ,'join');		
+		$this->db->select('Center.*,City.name as city_name,User.name as user_name');
+		$this->db->from('Center');
+		$this->db->join('City', 'City.id = Center.city_id' ,'join');
+		$this->db->join('User', 'User.id = Center.center_head_id' ,'join');		
 		$result=$this->db->get();
 		return $result;	
     }
@@ -60,7 +59,7 @@ class Center_model extends Model
 	function getcity()
 	{
 	$this->db->select('*');
-	$this->db->from('city');
+	$this->db->from('City');
 	$result=$this->db->get();
 	return $result;
 	
@@ -74,7 +73,7 @@ class Center_model extends Model
 	function getheadname()
 	{
 	$this->db->select('*');
-	$this->db->from('user');
+	$this->db->from('User');
 	$result=$this->db->get();
 	return $result;
 	
@@ -87,12 +86,12 @@ class Center_model extends Model
     **/
 	function add_center($data)
 	{
-	$data = array('city_id' => $data['city'] ,
-			 		  'name' => $data['center'] ,
-					  'center_head_id' => $data ['user_id'],
-			 		  );
+	$data = array(	'city_id' => $data['city'] ,
+			 		'name' => $data['center'] ,
+					'center_head_id' => $data ['user_id'],
+			 	);
 						  
-	    $this->db->insert('center',$data);  
+	    $this->db->insert('Center',$data);  
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	
 	}
@@ -105,7 +104,7 @@ class Center_model extends Model
 	function edit_center($uid)
 	{
 	$this->db->select('*');
-	$this->db->from('center');
+	$this->db->from('Center');
 	$this->db->where('id',$uid);
 	$result=$this->db->get();
 	return $result;
@@ -124,7 +123,7 @@ class Center_model extends Model
 					  'center_head_id' => $data ['user_id'],
 			 		  );
 			 $this->db->where('id', $rootId);
-			 $this->db->update('center', $data);
+			 $this->db->update('Center', $data);
 	 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	
@@ -139,7 +138,7 @@ class Center_model extends Model
 	{
 		 $id = $data['entry_id'];
 		 $this->db->where('id',$id);
-		 $this->db->delete('center');
+		 $this->db->delete('Center');
 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -149,13 +148,12 @@ class Center_model extends Model
     * @param :[$data]
     * @return: type: [Array]
     **/
-	function center_name($center_id)
-	{
-	$this->db->select('name');
-	$this->db->from('center');
-	$this->db->where('id',$center_id);
-	$result=$this->db->get();
-	return $result;
+	function center_name($center_id) {
+		$this->db->select('name');
+		$this->db->from('Center');
+		$this->db->where('id',$center_id);
+		$result=$this->db->get();
+		return $result;
 	
 	}
 	/**
@@ -164,12 +162,11 @@ class Center_model extends Model
     * @param :[$data]
     * @return: type: [Array]
     **/
-	function getcenter()
-	{
-	$this->db->select('*');
-	$this->db->from('center');
-	$result=$this->db->get();
-	return $result;
+	function getcenter() {
+		$this->db->select('*');
+		$this->db->from('Center');
+		$result=$this->db->get();
+		return $result;
 	
 	}
 }

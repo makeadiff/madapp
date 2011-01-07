@@ -31,7 +31,7 @@ class Users_model extends Model
       	$username= $data['username'];
         $password = $data['password'];
 		$this->db->select('*');
-		$this->db->from('user');
+		$this->db->from('User');
         $this->db->where('email', $username);
 		$this->db->where('password',$password);
         
@@ -49,6 +49,10 @@ class Users_model extends Model
            {
            return false;
            }
-        }
+    }
 	
+	function getUsersById() {
+		$this->load->helper('misc');
+		return getById("SELECT id, name FROM User", $this->db);
+	}
 }

@@ -4,6 +4,7 @@ class Level_model extends Model {
         // Call the Model constructor
         parent::Model();
     }
+    
 	/**
     * Function to getlevel
     * @author:Rabeesh 

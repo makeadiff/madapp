@@ -14,7 +14,7 @@ class Level_model extends Model {
 	function getlevel()
 	{
 	$this->db->select('*');
-	$this->db->from('level');
+	$this->db->from('Level');
 	$result=$this->db->get();
 	return $result;
 	}

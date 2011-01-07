@@ -47,12 +47,18 @@ class Kids_model extends Model
 	function add_kids($data)
 	{
 		$data = array('center_id' 	 => $data['center'],
-			 		  'level_id' => $data['level'],
 					  'name' 	 => $data ['name'],
 					  'birthday' => $data ['date'],
 				   'description' => $data ['description'],
 			 		  );
 		$this->db->insert('Student',$data);
+		$kid_id = $this->db->insert_id();
+		
+		$this->db->insert('StudentLevel', array(
+				'student_id'	=> $kid_id,
+				'level_id'		=> $data['level'],
+			));
+		
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -67,6 +73,11 @@ class Kids_model extends Model
 		 $id = $data['entry_id'];
 		 $this->db->where('id',$id);
 		 $this->db->delete('Student');
+		 
+		 $this->db->where('student_id',$id);
+		 $this->db->delete('StudentLevel');
+		 
+		 
 		 return ($this->db->affected_rows() > 0) ? true: false;
 	
 	}
@@ -96,7 +107,6 @@ class Kids_model extends Model
 		$this->db->select('id,name');
 		$this->db->from('Student');
 		$this->db->where('center_id',$uid);
-		$this->db->where('level_id',0);
 		$result=$this->db->get();
 		return $result;
 	
@@ -111,13 +121,17 @@ class Kids_model extends Model
 	{
 			$rootId=$data['rootId'];
 			$data = array('center_id' 	 => $data['center'],
-			 		  'level_id' => $data['level'],
 					  'name' 	 => $data ['name'],
 					  'birthday' => $data ['date'],
 				   'description' => $data ['description'],
 			 		  );
 			 $this->db->where('id', $rootId);
 			 $this->db->update('Student', $data);
+			 
+			 
+			 $this->db->where('student_id',$rootId);
+			 $this->db->update('StudentLevel', array('level_id'=>$data['level']));
+			 
 	 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -127,11 +141,10 @@ class Kids_model extends Model
     * @param :[$data]
     * @return: type: [Boolean, ]
     **/
-	function kids_level_update($agent_id,$level)
+	function kids_level_update($student_id,$level)
 	{
-		$data = array('level_id' => $level);
-		$this->db->where('id', $agent_id);
-		$this->db->update('Student', $data);
+		$this->db->where('student_id',$student_id);
+		$this->db->update('StudentLevel', array('level_id'=>$level));
 	}
 	function getkids_name_incenter($uid)
 	{

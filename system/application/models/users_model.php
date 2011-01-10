@@ -53,6 +53,19 @@ class Users_model extends Model
 	
 	function getUsersById() {
 		$this->load->helper('misc');
-		return getById("SELECT id, name FROM User", $this->db);
+		return getById("SELECT id, name FROM User WHERE city_id=1 AND project_id=1 AND user_type='volunteer'", $this->db);
 	}
+	
+	function get_users_in_center($center_id) {
+		return $this->db->where('center_id', $center_id)->where('project_id',1)->where('user_type','volunteer')->get('User')->result();
+	}
+	
+	function set_user_batch_and_level($user_id, $batch_id, $level_id) {
+    	$this->db->insert("UserBatch", array('user_id'=>$user_id, 'batch_id'=>$batch_id, 'level_id'=>$level_id));
+    }
+    
+    function unset_user_batch_and_level($batch_id, $level_id) {
+    	$this->db->delete("UserBatch", array('batch_id'=>$batch_id, 'level_id'=>$level_id));
+    }
+
 }

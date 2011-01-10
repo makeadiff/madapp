@@ -156,6 +156,17 @@ class Center_model extends Model
 		return $result;
 	
 	}
+	
+	function get_center_name($center_id) {
+		$center = $this->db->where('id', $center_id)->get('Center')->row();
+		return $center->name;
+	}
+	
+	function get_all() {
+		return $this->db->where('city_id',1)->get('Center')->result();
+	}
+	
+	
 	/**
     * Function to getcenter
     * @author:Rabeesh 

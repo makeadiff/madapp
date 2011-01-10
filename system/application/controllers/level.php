@@ -16,7 +16,7 @@ class Level extends Controller {
 		if(!is_numeric($center_id)) {
 			show_error("Choose a center." . $center_id);
 		}
-		$all_levels = $this->model->db->where('center_id',$center_id)->get('Level')->result();
+		$all_levels = $this->model->db->where('center_id',$center_id)->where('project_id',1)->get('Level')->result();
 		$center_name = $this->model->db->where('id',$center_id)->get('Center')->row();
 		
 		$this->load->view('level/index', array('all_levels'	=> $all_levels,'center_name'=>$center_name->name, 'center_id'=>$center_id));
@@ -52,7 +52,6 @@ class Level extends Controller {
 	}
 	
 	function edit($level_id) {
-	
 		if($this->input->post('action') == 'Edit') {
 			$this->db->where('id', $this->input->post('id'))->update('Level', 
 				array(
@@ -62,7 +61,6 @@ class Level extends Controller {
 				));
 			$this->message['success'] = 'The Level has been edited successfully';
 			$this->index('center', $this->input->post('center_id'));
-		$this->input->post('center_id');
 		} else {
 			$this->load->helper('misc');
 			$this->load->helper('form');
@@ -92,6 +90,7 @@ class Level extends Controller {
 		$this->message['success'] = 'The Level has been deleted successfully';
 		$this->index();
 	}
+	
 	/**
     * Function to update_student
     * @author : Rabeesh

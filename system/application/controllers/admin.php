@@ -276,7 +276,7 @@ class Admin extends Controller  {
 	function popupaddKids()
 	{
 		$data['center']= $this->center_model->getcenter();
-		$data['level']= $this->level_model->getlevel();
+		$data['level']= $this->level_model->get_all_levels();
 		$this->load->view('admin/popups/addkids_popup',$data);
 	
 	}
@@ -347,7 +347,7 @@ class Admin extends Controller  {
 	{
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
-		$data['level']= $this->level_model->getlevel();
+		$data['level']= $this->level_model->get_all_levels();
 		$data['kids_details']= $this->kids_model->get_kids_details($uid);
 		$this->load->view('admin/popups/kids_edit_view',$data);
 	

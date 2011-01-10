@@ -68,3 +68,11 @@ function getById($query, $db) {
 	
 	return $return;
 }
+
+function idNameFormat($data) {
+		foreach($data as $row) {
+		$return[$row->id] = stripslashes($row->name);
+	}
+	
+	return $return;
+}

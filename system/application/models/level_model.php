@@ -11,12 +11,12 @@ class Level_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
-	function getlevel()
-	{
-	$this->db->select('*');
-	$this->db->from('Level');
-	$result=$this->db->get();
-	return $result;
+	function get_all_levels() {
+		return $this->db->where('project_id', 1)->get('Level')->result();
+	}
+	
+	function get_level($level_id) {
+		return $this->db->where('id', $level_id)->get('Level')->row();
 	}
 	
 }

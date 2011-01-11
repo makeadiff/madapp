@@ -40,7 +40,7 @@ class Common extends Controller
 	function logout()
 	{
 		$this->session->sess_destroy();
-		redirect ('admin/login');
+		redirect ('common/login');
 	}
 	/**
     *
@@ -61,36 +61,24 @@ class Common extends Controller
 		   $Id= $status['id'];
            	if($Id != 0 )
                {
-               		redirect('admin/dashboard');
+               		redirect('dashboard/dashboard_view');
 			   }
                 
 				$error['error']='invalid username or password';
-                $this->load->view('admin/includes/login_header');
-                $this->load->view('admin/login_view',$error);
-                $this->load->view('admin/includes/login_register_footer');
+                $this->load->view('dashboard/includes/login_header');
+                $this->load->view('dashboard/login_view',$error);
+                $this->load->view('dashboard/includes/login_register_footer');
     	 }
      else 
         {
                 $error['error']='';
-                $this->load->view('admin/includes/login_header');
-                $this->load->view('admin/login_view',$error);
-                $this->load->view('admin/includes/login_register_footer');
+                $this->load->view('dashboard/includes/login_header');
+                $this->load->view('dashboard/login_view',$error);
+                $this->load->view('dashboard/includes/login_register_footer');
 
          }
 	  }
    
-	/**
-    * Function to student_logout
-    * @author :Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function student_logout()
-	{
-		$this->session->sess_destroy();
-		$this->load->view('student/includes/login_header');
-        $this->load->view('student/login_view',$error);
-        $this->load->view('student/includes/login_register_footer');
-	}
+	
 
 }

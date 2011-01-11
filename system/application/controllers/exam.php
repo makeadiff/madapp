@@ -12,7 +12,6 @@
  * @since           Version 1.0
  * @filesource
  */
- 
 class Exam extends Controller  {
 
     /**
@@ -22,100 +21,87 @@ class Exam extends Controller  {
     function Exam()
     {
         parent::Controller();
-        
-		
 		$this->load->library('session');
         $this->load->library('user_auth');
 		$this->load->helper('url');
         $this->load->helper('form');
+		$logged_user_id = $this->session->userdata('email');
+		if($logged_user_id == NULL )
+		{
+			redirect('common/login');
+		}
 		$this->load->model('center_model');
 		$this->load->model('kids_model');
 		$this->load->model('exam_model');
     }
 	
     /**
-    *
     * Function to 
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
 
     function index()
     {
         
     }
-
     /**
-    *
     * Function to exam_score
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
     function exam_score()
     {	
-		
 		$data['currentPage'] = 'db';
 		$data['navId'] = '3';
 		$data['message']='';
-		$this->load->view('admin/includes/header',$data);
-		$this->load->view('admin/includes/superadminNavigation',$data);
-		$this->load->view('admin/student_exam_score_view',$data);
-		$this->load->view('admin/includes/footer');
-
+		$this->load->view('dashboard/includes/header',$data);
+		$this->load->view('dashboard/includes/superadminNavigation',$data);
+		$this->load->view('student_exam_score/student_exam_score_view',$data);
+		$this->load->view('dashboard/includes/footer');
     }
 	/**
-    *
     * Function to ajax_sbjectbox
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
 	function ajax_sbjectbox()
 	{
 		$data['sub_no'] = $_REQUEST['sub_no'];
-		$this->load->view('admin/subjectbox_div',$data);
+		$this->load->view('student_exam_score/subjectbox_div',$data);
 	}
 	/**
-    *
     * Function to get_center
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
 	function get_center()
 	{
 		$data['center']= $this->center_model->getcenter();
-		$this->load->view('admin/getcenter_div',$data);
+		$this->load->view('student_exam_score/getcenter_div',$data);
 	
 	}
 	/**
-    *
     * Function to get_kidslist
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
 	function get_kidslist()
 	{
 		$c_id = $_REQUEST['center_id'];
 		$data['kids']=$this->kids_model->getkids_name_incenter($c_id);
-		$this->load->view('admin/kids_list_div',$data);
-	
+		$this->load->view('student_exam_score/kids_list_div',$data);
 	}
 	/**
-    *
     * Function to input_exam_mark_details
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
 	function input_exam_mark_details()
 	{

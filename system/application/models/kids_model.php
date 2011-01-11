@@ -28,14 +28,15 @@ class Kids_model extends Model
 	
 	function getkids_details()
 	{
-		$this->db->select('Student.*,Center.name as center_name,Level.name as lavel_name');
-		$this->db->from('Student');
-		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
-		$this->db->join('StudentLevel', 'StudentLevel.student_id = Student.id' ,'join');
-		$this->db->join('Level', 'Level.id = StudentLevel.level_id' ,'join');
+
+		$this->db->select('student.*,center.name as center_name');
+		$this->db->from('student');
+		$this->db->join('center', 'center.id = student.center_id' ,'join');
 		$result=$this->db->get();
 		return $result;
-		
+	}
+	function kids_count()
+	{
 	
 	}
 	/**
@@ -146,6 +147,12 @@ class Kids_model extends Model
 		$this->db->where('student_id',$student_id);
 		$this->db->update('StudentLevel', array('level_id'=>$level));
 	}
+	/**
+    * Function to getkids_name_incenter
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,Array() ]
+    **/
 	function getkids_name_incenter($uid)
 	{
 		$this->db->select('id,name');

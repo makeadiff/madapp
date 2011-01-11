@@ -324,14 +324,14 @@ p#user a:hover { text-decoration: underline; }
     margin: 03px 0;
 }
 #main {
-    width: 700px;
+    width: 900px;
     float: left;
 }
 #head {
     padding: 0 0 10px 0;
     margin: 0 0 10px 0;
     border-bottom: 1px solid #878787;
-    width: 700px;
+    width: 900px;
 }
 #head h1 {
     float: left;
@@ -462,7 +462,7 @@ form.sideForm, .sideForm fieldset {
 /* Table in main content */
 
 #main table {
-    width: 700px;
+    width: 900px;
     border-bottom: 1px solid #878787;
 }
 #main table a:hover { text-decoration: underline; }

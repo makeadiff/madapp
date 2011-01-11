@@ -15,22 +15,11 @@
 class Project_model extends Model
 {
 	
-    function Project_model()
-    {
+    function Project_model() {
         parent::Model();
     }
-    /**
-    * Function to getkids_details
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [ Array()]
-    **/
-	function getproject()
-	{
-		$this->db->select('*');
-		$this->db->from('project');
-		$result=$this->db->get();
-		return $result;
-	
+    
+	function getproject() {
+		return $this->db->get('Project');
 	}
 }	

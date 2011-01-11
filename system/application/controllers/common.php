@@ -18,8 +18,7 @@ class Common extends Controller
     *  constructor 
     **/
 
-    function Common()
-    {
+    function Common() {
         parent::Controller();
 		$this->load->library('session');
 		$this->load->library('navigation');
@@ -30,55 +29,47 @@ class Common extends Controller
 		
 	
 	/**
-    *
     * Function to logout
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
     *
     **/  
-	function logout()
-	{
+	function logout() {
 		$this->session->sess_destroy();
 		redirect ('common/login');
 	}
+	
+	
 	/**
-    *
     * Function to student_login
     * @author :Rabeesh
     * @param  : []
     * @return : type : []
     *
     **/
-    function login()
-    {	
-     if(Navigation::isPost())
-     		{
-            
-           $username = $_POST['username'];
-           $password = $_POST['password'];
-           $status = $this->user_auth->login($username,$password);
-		   $Id= $status['id'];
-           	if($Id != 0 )
-               {
-               		redirect('dashboard/dashboard_view');
-			   }
-                
-				$error['error']='invalid username or password';
-                $this->load->view('dashboard/includes/login_header');
-                $this->load->view('dashboard/login_view',$error);
-                $this->load->view('dashboard/includes/login_register_footer');
-    	 }
-     else 
-        {
-                $error['error']='';
-                $this->load->view('dashboard/includes/login_header');
-                $this->load->view('dashboard/login_view',$error);
-                $this->load->view('dashboard/includes/login_register_footer');
-
-         }
-	  }
-   
+    function login() {
+		if(Navigation::isPost()) {
+			$username = $_POST['username'];
+			$password = $_POST['password'];
+			print "hi";
+			$status = $this->user_auth->login($username,$password);
+			$Id= $status['id'];
+			if($Id != 0 ) {
+				redirect('dashboard/dashboard_view');
+			}
+			
+			$error['error']='invalid username or password';
+			$this->load->view('dashboard/includes/login_header');
+			$this->load->view('dashboard/login_view',$error);
+			$this->load->view('dashboard/includes/login_register_footer');
+		
+		} else {
+			$error['error']='';
+			$this->load->view('dashboard/includes/login_header');
+			$this->load->view('dashboard/login_view',$error);
+			$this->load->view('dashboard/includes/login_register_footer');
 	
-
+		}
+	}
 }

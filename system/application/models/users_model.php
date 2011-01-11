@@ -252,11 +252,10 @@ class Users_model extends Model
 	function delete_groupby_userid($data)
 	{
 		$id = $data['entry_id'];
-			$this->db->where('id',$id);
-			$this->db->delete('user');
-			
-		$this->db->where('user_id',$id);
-		$this->db->delete('group');
+		$this->db->where('id',$id);
+		$this->db->delete('user');
+			$this->db->where('user_id',$id);
+			$this->db->delete('group');
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}

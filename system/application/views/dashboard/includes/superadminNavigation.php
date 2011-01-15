@@ -35,9 +35,21 @@
     <?php endif; ?>
     
     <?php if($navId == '3'): ?>
-    <li class="active"><a href="<?= site_url('exam/exam_score') ?>">Exam Scores</a></li>
+    <li class="active"><a href="<?= site_url('exam/add_exam') ?>">Add Exam</a></li>
     <?php else: ?>
-    <li> <a href="<?= site_url('exam/exam_score') ?>">Exam Scores</a></li>
+    <li> <a href="<?= site_url('exam/add_exam') ?>">Add Exam</a></li>
+    <?php endif; ?>
+    
+    <?php if($navId == '4'): ?>
+    <li class="active"><a href="<?= site_url('exam/exam_score') ?>">Add Exam Mark</a></li>
+    <?php else: ?>
+    <li> <a href="<?= site_url('exam/exam_score') ?>">Add Exam Mark</a></li>
+    <?php endif; ?>
+        
+     <?php if($navId == '5'): ?>
+    <li class="active"><a href="<?= site_url('permission/manage_permission') ?>">Permission</a></li>
+    <?php else: ?>
+    <li> <a href="<?= site_url('permission/manage_permission') ?>">Permission</a></li>
     <?php endif; ?>
     
     

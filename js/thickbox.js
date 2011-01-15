@@ -45,12 +45,12 @@ function tb_show(caption, url, imageGroup) {//function called when the user clic
 			$("html").css("overflow","hidden");
 			if (document.getElementById("TB_HideSelect") === null) {//iframe to hide select elements in ie6
 				$("body").append("<iframe id='TB_HideSelect'></iframe><div id='TB_overlay'></div><div id='TB_window'></div>");
-				$("#TB_overlay").click(tb_remove);
+				//$("#TB_overlay").click(tb_remove);
 			}
 		}else{//all others
 			if(document.getElementById("TB_overlay") === null){
 				$("body").append("<div id='TB_overlay'></div><div id='TB_window'></div>");
-				$("#TB_overlay").click(tb_remove);
+				//$("#TB_overlay").click(tb_remove);
 			}
 		}
 		

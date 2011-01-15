@@ -17,8 +17,8 @@
     	</div>
         
          <div id="quick" class="clear" style="margin-top:-15px;">
-        	<div class="quickLink"> <a href="<?= site_url('exam/exam_score') ?>" class="thickbox " name="" id="example">
-             <img src="<?php echo base_url(); ?>images/ico/exam_icon.jpg" alt="" /> <span>Exams Scores</span></a></div>
+        	<div class="quickLink"> <a href="<?= site_url('exam/add_exam') ?>" class="thickbox " name="" id="example">
+             <img src="<?php echo base_url(); ?>images/ico/exam_icon.jpg" alt="" /> <span>Add Exams </span></a></div>
     	</div>
         <div id="quick" class="clear" style="margin-top:-15px;">
         	<div class="quickLink"> <a href="<?= site_url('user_group/manageadd_group') ?>" class="thickbox " name="" id="example">
@@ -28,6 +28,18 @@
         	<div class="quickLink"> <a href="<?= site_url('user/manageadd_user') ?>" class="thickbox " name="" id="example">
              <img src="<?php echo base_url(); ?>images/ico/user.jpeg" alt="" /> <span>Add User</span></a></div>
     	</div>
+        
+        <div id="quick" class="clear" style="margin-top:-15px;">
+        	<div class="quickLink"> <a href="<?= site_url('exam/exam_score') ?>" class="thickbox " name="" id="example">
+             <img src="<?php echo base_url(); ?>images/ico/mark.png" alt="" /> <span>Add Exam Mark</span></a></div>
+    	</div>
+        <div id="quick" class="clear" style="margin-top:-15px;">
+        <div class="quickLink"> <a href="<?= site_url('permission/manage_permission') ?>" class="thickbox " name="" id="example">
+             <img src="<?php echo base_url(); ?>images/ico/permission.jpeg" alt="" /> <span>Add Permission</span></a></div>
+    	</div>
+        
+        
+        
     	</div>
     </div>
 

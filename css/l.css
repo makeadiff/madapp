@@ -211,6 +211,7 @@ body.withoutSubnav #top { height: 110px; }
     position: relative;
     clear: both;
     height: 40px;
+	width:900px;
 }
 #menu ul li {
     float: left;

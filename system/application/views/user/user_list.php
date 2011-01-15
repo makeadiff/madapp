@@ -12,7 +12,7 @@
 	
 		
 		$('#example').each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=450&width=700';
+			var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
 	
 			$(this).attr('href', url);
 		});
@@ -91,7 +91,7 @@ foreach($content as $row)
 		});
 		
 		$('#group-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
+			var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
 	
 			$(this).attr('href', url);
 		});
@@ -99,7 +99,6 @@ foreach($content as $row)
 	}
 	); 
 </script>
-
 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><a href="#"><?php echo $row['id']; ?></a></td>
@@ -132,15 +131,6 @@ foreach($content as $row)
 	  endif;
 }    ?>
 
-<!-- Bottom Options Begin -->
-
-<!-- Bottom Options Ends -->
-
 </div>
-
-<!-- Include Sidebar -->
-
-
-<!-- Include Sidebar -->
 
 </div>

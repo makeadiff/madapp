@@ -39,7 +39,7 @@ foreach($group_name as $row)
             
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select Group:</label> 
-            <select id="group" name="group"> 
+            <select id="group" name="group" multiple="multiple"> 
             <option selected="selected" >- choose action -</option> 
 				<?php 
                 $group_details = $group_details->result_array();

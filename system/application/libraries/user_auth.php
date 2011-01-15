@@ -18,7 +18,6 @@ Class User_auth {
  	 function login($username, $password) {
 		$data['username']=$username;
 		$data['password']=$password;
-		print 'there';
 		$status = $this->ci->users_model->login($data);
 			 
 		$this->ci->session->set_userdata('adminid', $status['id']);
@@ -53,7 +52,7 @@ Class User_auth {
     function getUser() {
 		$user_id = $this->logged_in();
 		if($user_id) {
-			return $this->ci->user_auth_model->retrieve_by_pk($user_id);
+		return $this->ci->user_auth_model->retrieve_by_pk($user_id);
 		}
 		return false;
 	}

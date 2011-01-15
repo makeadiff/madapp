@@ -7,7 +7,6 @@
  * @package         MadApp
  * @author          Rabeesh
  * @copyright       Copyright (c) 2008 - 2010, OrisysIndia, LLP.
- * @license         http://orisysindia.com/licence/brilliant.html
  * @link            http://orisysindia.com
  * @since           Version 1.0
  * @filesource

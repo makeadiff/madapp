@@ -7,18 +7,15 @@
  * @package         MadApp
  * @author          Rabeesh
  * @copyright       Copyright (c) 2008 - 2010, OrisysIndia, LLP.
- * @license         http://orisysindia.com/licence/brilliant.html
  * @link            http://orisysindia.com
  * @since           Version 1.0
  * @filesource
  */
- 
-class User_group extends Controller  {
+ class User_group extends Controller  {
 
     /**
     * constructor 
     **/
-
     function User_group()
     {
         parent::Controller();
@@ -30,6 +27,7 @@ class User_group extends Controller  {
 		$this->load->model('center_model');
 		$this->load->model('kids_model');
 		$this->load->model('users_model');
+		$this->load->model('permission_model');
     }
 	 /**
     *
@@ -42,7 +40,7 @@ class User_group extends Controller  {
 	function manageadd_group()
 	{
 	$data['currentPage'] = 'db';
-	$data['navId'] = '';
+	$data['navId'] = '5';
 	$this->load->view('dashboard/includes/header',$data);
 	$this->load->view('dashboard/includes/superadminNavigation',$data);
 	$this->load->view('user_group/add_groupname_view');
@@ -79,7 +77,8 @@ class User_group extends Controller  {
     **/
     function popupaddgroup()
 	{
-		$this->load->view('user_group/popups/add_group');
+		$data['permission']= $this->permission_model->getpermission_details();
+		$this->load->view('user_group/popups/add_group',$data);
 	}
 	/**
     *
@@ -90,29 +89,41 @@ class User_group extends Controller  {
     *
     **/
 	function addgroup_name()
-	{
+	{	
+		$permission = $_REQUEST['permission'];
+		//print_r($permission);
 		$groupname = $_REQUEST['groupname'];
-		$returnFlag= $this->users_model->add_group_name($groupname);
+		//$group_id= $this->users_model->add_group_name($groupname);
+		//$count = count($permission);
+		//echo "count=".$count;
+		
+			
+		$group_id= $this->users_model->add_group_name($groupname);
+		if($group_id)
+		{
+		$returnFlag= $this->users_model->add_group_permission($permission,$group_id);
 		if($returnFlag)
 		  {
 		  		$message['msg']   =  "Group added successfully.";
 				$message['successFlag'] = "1";
 				$message['link']  =  "popupaddgroup";
-				$message['linkText'] = "add new Group";
+				$message['linkText'] = "add new Center";
 				$message['icoFile'] = "ico_addScheme.png";
 			
 				$this->load->view('dashboard/errorStatus_view',$message);
 		  }
 		else
 		  {
-		  		$message['msg']   =  "no Actions performed.";
+		  		$message['msg']   =  "No actions performed.";
 				$message['successFlag'] = "0";
 				$message['link']  =  "popupaddgroup";
-				$message['linkText'] = "add new Group";
+				$message['linkText'] = "add new Center";
 				$message['icoFile'] = "ico_addScheme.png";
 			
 				$this->load->view('dashboard/errorStatus_view',$message);
 		  }
+		}
+		
 	}
 	/**
     *
@@ -126,6 +137,8 @@ class User_group extends Controller  {
 	{
 		$uid = $this->uri->segment(3);
 		$data['details']= $this->users_model->edit_group($uid);
+		$data['permission']= $this->permission_model->getpermission_details();
+		$data['group_permission']= $this->permission_model->getgroup_permission_details($uid);
 		$this->load->view('user_group/popups/group_edit_view',$data);
 	}
 	/**
@@ -138,10 +151,15 @@ class User_group extends Controller  {
     **/
 	function updategroup_name()
 	{
+	
+	
+		
 		$data['rootId'] = $_REQUEST['rootId'];
 		$data['groupname']=$_REQUEST['groupname'];
+		$data['permission'] = $_REQUEST['permission'];
+		$this->users_model->update_group($data);
 		
-		$returnFlag= $this->users_model->update_group($data);
+		$returnFlag=$this->users_model->update_permission($data);
 		
 		if($returnFlag == true) 
 			  {

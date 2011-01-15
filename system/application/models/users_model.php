@@ -2,11 +2,10 @@
 /**
  * CodeIgniter
  * An open source application development framework for PHP 4.3.2 or newer
- *
+ 
  * @package		MadApp
  * @author		Rabeesh
  * @copyright	Copyright (c) 2008 - 2010, OrisysIndia, LLP.
- * @license		http://orisysindia.com/licence/brilliant.html
  * @link		http://orisysindia.com
  * @since		Version 1.0
  * @filesource
@@ -19,10 +18,11 @@ class Users_model extends Model
     {
         parent::Model();
     }
-    
     /**
-    * Function to Login
+    * Function to login
     * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
     **/
 	function login($data) {	
       	$username= $data['username'];
@@ -73,9 +73,29 @@ class Users_model extends Model
     **/
 	function add_group_name($groupname)
 	{
+	
+		
 		$data = array('name'=> $groupname);
 		$this->db->insert('group',$data);
-		return ($this->db->affected_rows() > 0) ? true: false ;
+		return ($this->db->affected_rows() > 0) ? $this->db->insert_id(): false ;
+		
+	}
+	/**
+    * Function to add_group_permission
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,]
+    **/
+	function add_group_permission($permission,$group_id)
+	{
+		$count=sizeof($permission);
+		for($j=0;$j<$count;$j++)
+			{
+				$data = array('group_id'=> $group_id, 'permission_id'=>$permission[$j]);
+				$this->db->set($data);
+				$this->db->insert('grouppermission');
+			}
+		return ($this->db->affected_rows() > 0) ? true : false;
 		
 	}
 	/**
@@ -107,6 +127,29 @@ class Users_model extends Model
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	}
 	/**
+    * Function to update_permission
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,]
+    **/
+	function update_permission($data)
+	{
+			$rootId=$data['rootId'];
+			$group_id=$data['groupname'];
+			$permission=$data['permission'];
+			$this->db->where('group_id',$rootId);
+			$this->db->delete('grouppermission');
+						$count=sizeof($permission);
+						for($j=0;$j<$count;$j++)
+							{
+							$data = array('group_id'=> $rootId, 'permission_id'=>$permission[$j]);
+							$this->db->set($data);
+							$this->db->insert('grouppermission');
+							}
+			return ($this->db->affected_rows() > 0) ? true : false;
+
+	}
+	/**
     * Function to delete_group
     * @author:Rabeesh 
     * @param :[$data]
@@ -117,6 +160,10 @@ class Users_model extends Model
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
 		$this->db->delete('group');
+		
+			$this->db->where('group_id',$id);
+			$this->db->delete('grouppermission');
+			
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}

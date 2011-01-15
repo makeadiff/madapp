@@ -6,12 +6,10 @@
  * @package		MadApp
  * @author		Rabeesh MP
  * @copyright	Copyright (c) 2008 - 2010, OrisysIndia, LLP.
- * @license		http://orisysindia.com/licence/brilliant.html
  * @link		http://orisysindia.com
  * @since		Version 1.0
  * @filesource
  */
-
 class Exam_model extends Model
 {
     function Exam_model()
@@ -106,5 +104,94 @@ class Exam_model extends Model
 		
 		  
 	}
+	/**
+    *
+    * Function to get_exam
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function get_exam()
+	{
+	$this->db->select('*');
+	$this->db->from('exam');
+	$result=$this->db->get();
+	return $result;
 	
+	}
+	/**
+    *
+    * Function to get_subject_names
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function get_subject_names($exam_id)
+	{
+	$this->db->select('*');
+	$this->db->from('exam_subject');
+	$this->db->where('exam_id',$exam_id);
+	$result=$this->db->get();
+	return $result;
+	}
+	/**
+    *
+    * Function to get_mark_details
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function get_mark_details($exam_id,$student_id)
+	{
+		
+		$this->db->select('exam_mark.*,exam_subject.name');
+		$this->db->from('exam_mark');
+		$this->db->join('exam_subject', 'exam_subject.id = exam_mark.subject_id' ,'join');
+		$this->db->where('exam_mark.student_id',$student_id);
+		$this->db->where('exam_mark.exam_id',$exam_id);
+		$result=$this->db->get();
+		return $result;
+	}
+	/**
+    *
+    * Function to get_student_names
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function get_student_names($exam_id)
+	{
+		$this->db->select('student.*,exam_mark.student_id');
+		$this->db->from('exam_mark');
+		$this->db->distinct('exam_mark.student_id');
+		$this->db->join('student', 'student.id = exam_mark.student_id' ,'join');
+		$this->db->where('exam_mark.exam_id',$exam_id);
+		$result=$this->db->get();
+		return $result;
+	}
+	/**
+    *
+    * Function to store_marks
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function store_marks($data)
+	{
+	$student=$data['student'];
+	$mark=$data['marks'];
+				$subject=$data['subject'];
+				$exam_id=$data['exam_id'];
+		 $data = array( 'mark' => $data['marks']);
+		 $this->db->where('student_id',$student);
+		 $this->db->where('subject_id',$subject);
+		 $this->db->where('exam_id',$exam_id);	
+	     $this->db->update('exam_mark',$data);  
+		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
+	}
 }

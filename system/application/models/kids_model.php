@@ -54,10 +54,10 @@ class Kids_model extends Model
 		$this->db->insert('Student',$data);
 		$kid_id = $this->db->insert_id();
 		
-		$this->db->insert('StudentLevel', array(
-				'student_id'	=> $kid_id,
-				'level_id'		=> $data['level'],
-			));
+		//$this->db->insert('StudentLevel', array(
+				//'student_id'	=> $kid_id,
+				//'level_id'		=> $data['level'],
+			//));
 		
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	

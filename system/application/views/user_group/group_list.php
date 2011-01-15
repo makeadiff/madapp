@@ -47,6 +47,7 @@
 <tr>
 	<th class="colCheck1">Id</th>
 	<th class="colName left sortable" style="width:375px; text-align:center">Group Name</th>
+    <th class="colName left sortable" style="width:375px; text-align:center">Permissions</th>
     <th class="colActions"  style="width:225px;">Actions</th>
 </tr>
 </thead>
@@ -95,9 +96,17 @@ foreach($content as $row)
 	); 
 </script>
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><a href="#"><?php echo $i; ?></a></td>
-    <td class="colName left" style="text-align:center"> <a href="#"><?php echo strtolower($row['name']); ?></a></td>
-
+    <td class="colCheck1"><?php echo $i; ?></a></td>
+    <td class="colName left" style="text-align:center"><?php echo strtolower($row['name']); ?></a></td>
+    
+    
+    
+	<td class="colName left" style="text-align:center"><img src="<?php echo base_url(); ?>/images/ico/ico_key.gif" style="border:none;"/> <a href="<?=site_url('user_group/view_permission/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="<strong>Permissions of <?= strtolower($row['name']) ?></strong>"> View Permissions</a></td>
+    
+   
+    
+    
+    
     <td class="colActions right"> 
     <a href="<?= site_url('user_group/popupEdit_group/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit Group : <?= strtolower($row['name']) ?></strong>">Edit</a> 
     <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a>

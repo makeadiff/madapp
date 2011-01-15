@@ -130,10 +130,5 @@ foreach($content as $row)
 
 </div>
 
-<!-- Include Sidebar -->
-
-<?php include_once('sidebar.php'); ?>
-
-<!-- Include Sidebar -->
 
 </div>

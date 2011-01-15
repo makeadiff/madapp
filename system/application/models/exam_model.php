@@ -104,6 +104,10 @@ class Exam_model extends Model
 		
 		  
 	}
+	function exam_count()
+	{
+	}
+	
 	/**
     *
     * Function to get_exam
@@ -114,10 +118,33 @@ class Exam_model extends Model
     **/
 	function get_exam()
 	{
-	$this->db->select('*');
-	$this->db->from('exam');
-	$result=$this->db->get();
-	return $result;
+		$this->db->select('*');
+		$this->db->from('exam');
+		$result=$this->db->get();
+		return $result;
+	
+	}
+	function get_exam_name_by_id($exam_id)
+	{
+		$this->db->select('*');
+		$this->db->from('exam');
+		$this->db->where('id',$exam_id);
+		$result=$this->db->get();
+		return $result;
+	
+	}
+	function get_exam_details($exam_id)
+	{
+		$this->db->select('student.name');
+		$this->db->from('exam_mark');
+		$this->db->distinct('student.name');
+		$this->db->join('student', 'student.id = exam_mark.student_id' ,'join');
+		$this->db->where('exam_mark.exam_id',$exam_id);
+		$result=$this->db->get();
+		//print_r($result->result());
+		return $result;
+	
+	
 	
 	}
 	/**

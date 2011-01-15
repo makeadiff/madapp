@@ -84,20 +84,20 @@ function dataGrabber()
 				 data: "agents="+agents+'&name='+name+'&choice_text='+cText+'&center='+center,
 				 success: function(msg){
 				 $('#right-column').html(msg);
+				 $('#refresh').fadeOut('slow');
 				 }
 				 });
 }
-
-	
 </script>
-
+ <div id="right-column">
+        </div>
+        
+<div id="refresh">
 <!--onclick="return false"-->
 <form name="form" id="formEditor" class="mainForm clear"  onclick="return false"   action="" method="post" style="width:500px;">
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 		
-        <div id="right-column">
-        </div>
-        
+       
             <div class="field clear" style="width:600px;"> 
                         <label for="txtName">Exam Name : </label>
                         <input id="name" name="name"  type="text" /> 
@@ -131,3 +131,4 @@ function dataGrabber()
            
             </fieldset>
             </form>
+            </div>

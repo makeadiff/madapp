@@ -40,7 +40,7 @@
 	function manageadd_group()
 	{
 	$data['currentPage'] = 'db';
-	$data['navId'] = '5';
+	$data['navId'] = '';
 	$this->load->view('dashboard/includes/header',$data);
 	$this->load->view('dashboard/includes/superadminNavigation',$data);
 	$this->load->view('user_group/add_groupname_view');
@@ -91,13 +91,7 @@
 	function addgroup_name()
 	{	
 		$permission = $_REQUEST['permission'];
-		//print_r($permission);
 		$groupname = $_REQUEST['groupname'];
-		//$group_id= $this->users_model->add_group_name($groupname);
-		//$count = count($permission);
-		//echo "count=".$count;
-		
-			
 		$group_id= $this->users_model->add_group_name($groupname);
 		if($group_id)
 		{
@@ -195,6 +189,16 @@
 	{
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->users_model->delete_group($data);
+	
+	}
+	function view_permission()
+	{
+	
+		$uid = $this->uri->segment(3);
+		$data['details']= $this->users_model->edit_group($uid);
+		$data['permission']= $this->permission_model->getpermission_details();
+		$data['group_permission']= $this->permission_model->getgroup_permission_details($uid);
+		$this->load->view('user_group/popups/view_permission',$data);
 	
 	}
 }

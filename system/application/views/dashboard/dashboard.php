@@ -15,9 +15,9 @@
         	<div class="quickLink"> <a href="<?= site_url('kids/manageaddkids') ?>" class="thickbox " name="" id="example">
              <img src="<?php echo base_url(); ?>images/ico/user.png" alt="" /> <span>Add Kids</span></a></div>
     	</div>
-        
-         <div id="quick" class="clear" style="margin-top:-15px;">
-        	<div class="quickLink"> <a href="<?= site_url('exam/add_exam') ?>" class="thickbox " name="" id="example">
+<!--        <?//= site_url('exam/add_exam') ?>
+-->         <div id="quick" class="clear" style="margin-top:-15px;">
+        	<div class="quickLink"> <a href="<?= site_url('exam/manage_exam') ?>" class="thickbox " name="" id="example">
              <img src="<?php echo base_url(); ?>images/ico/exam_icon.jpg" alt="" /> <span>Add Exams </span></a></div>
     	</div>
         <div id="quick" class="clear" style="margin-top:-15px;">
@@ -36,6 +36,10 @@
         <div id="quick" class="clear" style="margin-top:-15px;">
         <div class="quickLink"> <a href="<?= site_url('permission/manage_permission') ?>" class="thickbox " name="" id="example">
              <img src="<?php echo base_url(); ?>images/ico/permission.jpeg" alt="" /> <span>Add Permission</span></a></div>
+    	</div>
+        
+         <div class="quickLink"> <a href="<?= site_url('project/manage_project') ?>" class="thickbox " name="" id="example">
+             <img src="<?php echo base_url(); ?>images/ico/Project-icon.png" alt="" /> <span>Projects</span></a></div>
     	</div>
         
         

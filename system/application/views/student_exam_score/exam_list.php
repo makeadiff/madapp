@@ -12,7 +12,7 @@
 	
 		
 		$('#example').each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
+			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=900';
 	
 			$(this).attr('href', url);
 		});
@@ -32,7 +32,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('kids/popupaddKids')?>" class="thickbox button primary" id="example" name="<strong>Add Kids</strong>">Add  Kids</a>
+<a href="<?= site_url('exam/add_exam')?>" class="thickbox button primary" id="example" name="<strong>Add New Group</strong>">Add New Exam</a>
 </div>
 			<!-- end page actions-->
 
@@ -46,11 +46,10 @@
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
-	<th class="colName left sortable">Name</th>
-    <th class="colStatus sortable">Birth Day</th>
-    <th class="colStatus">City</th>
-<!--    <th class="colStatus">Level</th>
--->   <th class="colActions">Actions</th>
+	<th class="colName left sortable" style="width:375px; text-align:center">Exam Name</th>
+    <th class="colName left sortable" style="width:375px; text-align:center">Details</th>
+    
+    <th class="colActions"  style="width:225px;">Actions</th>
 </tr>
 </thead>
 <tbody>
@@ -97,21 +96,19 @@ foreach($content as $row)
 	}
 	); 
 </script>
-
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><a href="#"><?php echo $i; ?></a></td>
-    <td class="colName left"> <a href="#"><?php echo $row['name']; ?></a></td>
-    <td class="colCount"><a href=""><?php echo $row['birthday']; ?></a></td> 
-     <td class="colStatus" style="text-align:left"><?php echo $row['center_name'];?></td>
-<!--     <td class="colStatus" style="text-align:left"><?php echo $row['lavel_name'];?></td>
--->    <!--<td class="colPosition"></td>-->
+    <td class="colCheck1"><?php echo $i; ?></a></td>
+    <td class="colName left" style="text-align:center"><?php echo strtolower($row['name']); ?></a></td>
+    
+	<td class="colName left" style="text-align:center"> <a href="<?=site_url('exam/view_exam_details/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="<strong>Details of <?= strtolower($row['name']) ?></strong>"> View Details</a></td>
+    
     <td class="colActions right"> 
-    <a href="<?= site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit student : <?= strtolower($row['name']) ?></strong>">Edit</a> 
+    <a href="<?= site_url($row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit Group : <?= strtolower($row['name']) ?></strong>">Edit</a> 
     <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a>
     </td>
 </tr>
 
-<?php  }?>
+<?php }?>
 </tbody>
 </table>
 
@@ -119,16 +116,12 @@ foreach($content as $row)
 { 
 	  if($currentPage != '0'): ?>
        <script>
-      	 get_centerlist('<?php echo $currentPage-1; ?>');
+      	 get_examlist('<?php echo $currentPage-1; ?>');
 	   </script>
 <?php else: 
 	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
 	  endif;
 }    ?>
-
-
-
 </div>
-
 
 </div>

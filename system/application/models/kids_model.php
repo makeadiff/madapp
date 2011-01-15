@@ -24,7 +24,6 @@ class Kids_model extends Model
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	
 	function getkids_details()
 	{
 
@@ -129,8 +128,8 @@ class Kids_model extends Model
 			 $this->db->update('Student', $data);
 			 
 			 
-			 $this->db->where('student_id',$rootId);
-			 $this->db->update('StudentLevel', array('level_id'=>$data['level']));
+			 //$this->db->where('student_id',$rootId);
+			 //$this->db->update('StudentLevel', array('level_id'=>$data['level']));
 			 
 	 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	

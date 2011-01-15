@@ -12,11 +12,9 @@
  * @filesource
  */
 class Exam extends Controller  {
-
     /**
     * constructor 
     **/
-
     function Exam()
     {
         parent::Controller();
@@ -45,6 +43,34 @@ class Exam extends Controller  {
     {
         
     }
+	function manage_exam()
+	{
+		$data['currentPage'] = 'db';
+		$data['navId'] = '3';
+		$this->load->view('dashboard/includes/header',$data);
+		$this->load->view('dashboard/includes/superadminNavigation',$data);
+		$this->load->view('student_exam_score/student_exam_view');
+		$this->load->view('dashboard/includes/footer');
+	}
+	function get_examdetails()
+	{
+		$page_no = $_REQUEST['pageno'];
+		$data['title'] = 'Manage Exam';
+		$linkCount = $this->exam_model->exam_count();
+		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
+		$data['currentPage'] = $page_no;
+		$data['details']= $this->exam_model->get_exam();
+		$this->load->view('student_exam_score/exam_list',$data);
+	
+	}
+	function view_exam_details()
+	{
+		$exam_id = $this->uri->segment(3);
+		$data['exam_name']= $this->exam_model->get_exam_name_by_id($exam_id);
+		$data['contents']= $this->exam_model->get_exam_details($exam_id);
+		$data['sub_name']= $this->exam_model->get_subject_names($exam_id);
+		$this->load->view('student_exam_score/exam_details_view',$data);
+	}
     /**
     * Function to exam_score
     * @author : Rabeesh
@@ -53,12 +79,8 @@ class Exam extends Controller  {
     **/
     function add_exam()
     {	
-		$data['currentPage'] = 'db';
-		$data['navId'] = '3';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
+		
 		$this->load->view('student_exam_score/student_exam');
-		$this->load->view('dashboard/includes/footer');
     }
 	/**
     * Function to ajax_sbjectbox
@@ -106,7 +128,7 @@ class Exam extends Controller  {
 		$agents = $_REQUEST['agents'];
 		$name = $_REQUEST['name'];
 		$choice_text = $_REQUEST['choice_text'];
-		$center = $_REQUEST['center'];
+		//$center = $_REQUEST['center'];
 		$exam_id=$this->exam_model->insert_exam_name($name);
 		$choiceText = substr($choice_text,0,strlen($choice_text)-1);
 		$subjects_id=$this->exam_model->insert_subject_name($choiceText,$exam_id);

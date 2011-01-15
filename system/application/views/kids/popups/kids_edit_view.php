@@ -50,8 +50,6 @@ $description=$row['description'];
             </select>
             </div>
             
-           
-           
             <div class="field clear" style="width:600px;"> 
                         <label for="txtName">Name : </label>
                         <input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 

@@ -12,7 +12,10 @@ class Classes extends Controller {
 		
 		$this->load->library('session');
         $this->load->library('user_auth');
-		$this->user_details = $this->user_auth->getUser();
+        $this->user_details = $this->user_auth->getUser();
+		if(!$this->user_details) {
+			redirect('common/login');
+		}
 		
 		$this->load->helper('url');
 		$this->load->helper('misc');
@@ -20,11 +23,16 @@ class Classes extends Controller {
 	
 	function index() {
 		$all_classes = $this->class_model->get_all($this->user_details->id);
+		$all_levels = array();
 		if($all_classes) {
 			$all_levels[$all_classes[0]->level_id] = $this->level_model->get_level_details($all_classes[0]->level_id);
 		}
 		
 		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model));
+	}
+	
+	function batch_view($batch_id=0) {
+		
 	}
 
 }

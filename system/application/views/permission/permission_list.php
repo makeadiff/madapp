@@ -32,7 +32,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('Permission/popupAddPermission')?>" class="thickbox button primary" id="example" name="<strong>Add Permission</strong>">Add Permission</a>
+<a href="<?= site_url('permission/popupAddPermission')?>" class="thickbox button primary" id="example" name="Add Permission">Add Permission</a>
 </div>
 			<!-- end page actions-->
 

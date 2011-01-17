@@ -158,9 +158,8 @@ class User extends Controller  {
 		$data['user_group']= $this->users_model->getgroup_details();
 		$data['user']= $this->users_model->user_details($uid);
 		$content=$data['user']->result_array();
-		foreach($content as $row)
-		{
-		$uid=$row['group_id'];
+		foreach($content as $row) {
+			$uid=$row['group_id'];
 		}
 		
 		$data['group_name'] = $this->users_model->edit_group($uid);
@@ -174,44 +173,41 @@ class User extends Controller  {
     * @return: type: [Boolean, Array()]
     **/
 	function update_user()
-	{
-	$data['rootId'] = $_REQUEST['rootId'];
-	$data['name'] = $_REQUEST['name'];
-	$data['group'] = $_REQUEST['group'];
-	$data['position'] = $_REQUEST['position'];
-	$data['email'] = $_REQUEST['email'];
-	$data['password'] = $_REQUEST['password'];
-	$data['phone'] = $_REQUEST['phone'];
-	$data['city'] = $_REQUEST['city'];
-	$data['center'] = $_REQUEST['center'];
-	$data['project'] = $_REQUEST['project'];
-	$data['type'] = $_REQUEST['type'];
-	$flag= $this->users_model->updateuser($data);
-	if($flag)
-	{
-	$returnFlag= $this->users_model->updateuser_to_group($data);
-	if($returnFlag) 
-			  {
-					$message['msg']   =  "Profile edited successfully.";
-					$message['successFlag'] = "1";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
-			  }
-			else
-			  {
-					$message['msg']   =  "Profile not edited.";
-					$message['successFlag'] = "0";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
-			 }
+		{
+		$data['rootId'] = $_REQUEST['rootId'];
+		$data['name'] = $_REQUEST['name'];
+		$data['group'] = $_REQUEST['group'];
+		$data['position'] = $_REQUEST['position'];
+		$data['email'] = $_REQUEST['email'];
+		$data['password'] = $_REQUEST['password'];
+		$data['phone'] = $_REQUEST['phone'];
+		$data['city'] = $_REQUEST['city'];
+		$data['center'] = $_REQUEST['center'];
+		$data['project'] = $_REQUEST['project'];
+		$data['type'] = $_REQUEST['type'];
+		$flag= $this->users_model->updateuser($data);
+		if($flag) {
+			$returnFlag= $this->users_model->updateuser_to_group($data);
+			if($returnFlag) {
+				$message['msg']   =  "Profile edited successfully.";
+				$message['successFlag'] = "1";
+				$message['link']  =  "";
+				$message['linkText'] = "";
+				$message['icoFile'] = "ico_addScheme.png";
+	
+				$this->load->view('dashboard/errorStatus_view',$message);		  
+			} else {
+				$message['msg']   =  "Profile not edited.";
+				$message['successFlag'] = "0";
+				$message['link']  =  "";
+				$message['linkText'] = "";
+				$message['icoFile'] = "ico_addScheme.png";
+	
+				$this->load->view('dashboard/errorStatus_view',$message);		  
+			}
+		}
 	}
-	}
+	
 	/**
     * Function to ajax_deleteuser
     * @author:Rabeesh 

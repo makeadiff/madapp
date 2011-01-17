@@ -32,7 +32,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('user/popupAdduser')?>" class="thickbox button primary" id="example" name="<strong>Add User</strong>">Add User</a>
+<a href="<?= site_url('user/popupAdduser')?>" class="thickbox button primary" id="example" name="Add User">Add User</a>
 </div>
 			<!-- end page actions-->
 

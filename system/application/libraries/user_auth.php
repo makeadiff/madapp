@@ -20,9 +20,10 @@ Class User_auth {
 		$data['password']=$password;
 		$status = $this->ci->users_model->login($data);
 			 
-		$this->ci->session->set_userdata('adminid', $status['id']);
+		$this->ci->session->set_userdata('id', $status['id']);
 		$this->ci->session->set_userdata('email', $status['email']);
 		$this->ci->session->set_userdata('name', $status['name']);
+		$this->ci->session->set_userdata('permissions', array());
 		
 		return $status;
 	}
@@ -35,8 +36,8 @@ Class User_auth {
     *
     **/    
 	function logged_in() {
-		if ( $this->ci->session->userdata('adminid') ) {
-			return $this->ci->session->userdata('adminid');
+		if ( $this->ci->session->userdata('id') ) {
+			return $this->ci->session->userdata('id');
 		}
 		return false;
 	}
@@ -63,7 +64,7 @@ Class User_auth {
     *
     **/
 	function logout () {
-		return $this->ci->session->unset_userdata('adminid');
+		return $this->ci->session->unset_userdata('id');
 		$this->ci->session->sess_destroy();
 	}
 }

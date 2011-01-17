@@ -11,12 +11,7 @@
  * @since           Version 1.0
  * @filesource
  */
-class Common extends Controller
-{
-    /**
-    *  constructor 
-    **/
-
+class Common extends Controller {
     function Common() {
         parent::Controller();
 		$this->load->library('session');
@@ -25,27 +20,19 @@ class Common extends Controller
 		$this->load->helper('url');
         $this->load->helper('form');
 	}
-		
 	
 	/**
     * Function to logout
     * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
     **/  
 	function logout() {
 		$this->session->sess_destroy();
 		redirect ('common/login');
 	}
 	
-	
 	/**
-    * Function to student_login
+    * Function to login
     * @author :Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
     **/
     function login() {
 		if(Navigation::isPost()) {

@@ -11,7 +11,7 @@
 		$('#loading').show();
             $.ajax({
             type: "POST",
-            url: "<?= site_url('user/get_userlist')?>",
+            url: "<?php echo site_url('user/get_userlist')?>",
             data: "pageno="+page_no+"&q="+search_query,
             success: function(msg){
             $('#loading').hide();

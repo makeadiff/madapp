@@ -30,7 +30,7 @@ class Permission_model extends Model
 	function getpermission_details()
 	{
 		$this->db->select('*');
-		$this->db->from('permission');
+		$this->db->from('Permission');
 		$result=$this->db->get();
 		return $result;
 	
@@ -44,7 +44,7 @@ class Permission_model extends Model
 	function add_permission($permission)
 	{
 		$data = array('name'=> $permission);
-		$this->db->insert('permission',$data);
+		$this->db->insert('Permission',$data);
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -57,7 +57,7 @@ class Permission_model extends Model
 	function getedit_permission($uid)
 	{
 		$this->db->select('*');
-		$this->db->from('permission');
+		$this->db->from('Permission');
 		$this->db->where('id',$uid);
 		$result=$this->db->get();
 		return $result;
@@ -74,7 +74,7 @@ class Permission_model extends Model
 		$rootId=$data['rootId'];
 		$data = array('name'=> $data['permission']);
 		$this->db->where('id',$rootId);
-		$this->db->update('permission',$data);
+		$this->db->update('Permission',$data);
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -88,7 +88,7 @@ class Permission_model extends Model
 	{
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
-		$this->db->delete('permission');
+		$this->db->delete('Permission');
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -101,7 +101,7 @@ class Permission_model extends Model
 	function getgroup_permission_details($uid)
 	{
 		$this->db->select('permission_id');
-		$this->db->from('grouppermission');
+		$this->db->from('GroupPermission');
 		$this->db->where('group_id',$uid);
 		$result=$this->db->get();
 		return $result;

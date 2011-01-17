@@ -5,25 +5,22 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <?php
-$user_details=$user->result_array();
-foreach($user_details as $row)
-{	
-	$root_id=$row['id'];
-	$name=$row['name'];
-	$title=$row['title'];
-	$email=$row['email'];
-	$phone=$row['phone'];
-	$password=$row['password'];
-	$center_id=$row['center_id'];
-	$city_id=$row['city_id'];
-	$project_id=$row['project_id'];
-	$user_type=$row['user_type'];
+$user_details = $user->result_array();
+foreach($user_details as $row) {	
+	$root_id	= $row['id'];
+	$name		= $row['name'];
+	$title		= $row['title'];
+	$email		= $row['email'];
+	$phone		= $row['phone'];
+	$password	= $row['password'];
+	$center_id	= $row['center_id'];
+	$city_id	= $row['city_id'];
+	$project_id	= $row['project_id'];
+	$user_type	= $row['user_type'];
 }
-?>
-<?php
+
 $group_name=$group_name->result_array();
-foreach($group_name as $row)
-{
+foreach($group_name as $row) {
 	$group_id=$row['id'];
 }
 ?>
@@ -68,7 +65,7 @@ foreach($group_name as $row)
                       
             </div>
             <div class="field clear" style="width:500px;"> 
-                        <label for="txtName">Password : </label>
+                        <label for="txtName">Confirm Password : </label>
                         <input id="cpassword" name="cpassword"  type="password" /> 
                       
             </div>
@@ -85,7 +82,7 @@ foreach($group_name as $row)
 				<?php 
                 $details = $details->result_array();
                 foreach($details as $row) { ?>
-                <?php if($city_id== $row['id'] ){?>
+                <?php if($city_id == $row['id'] ){?>
                 <option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
                 <?php }else { ?>
                 <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>

@@ -34,6 +34,8 @@ class Users_model extends Model
    			$memberCredentials['id'] = $memberR->id;
 			$memberCredentials['email'] = $memberR->email;
 			$memberCredentials['name'] = $memberR->name;
+			
+			
             return $memberCredentials;
         
         } else {
@@ -61,7 +63,7 @@ class Users_model extends Model
 	function getgroup_details()
 	{
 		$this->db->select('*');
-		$this->db->from('group');
+		$this->db->from('Group');
 		$result=$this->db->get();
 		return $result;
 	}
@@ -76,7 +78,7 @@ class Users_model extends Model
 	
 		
 		$data = array('name'=> $groupname);
-		$this->db->insert('group',$data);
+		$this->db->insert('Group',$data);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id(): false ;
 		
 	}
@@ -93,7 +95,7 @@ class Users_model extends Model
 			{
 				$data = array('group_id'=> $group_id, 'permission_id'=>$permission[$j]);
 				$this->db->set($data);
-				$this->db->insert('grouppermission');
+				$this->db->insert('GroupPermission');
 			}
 		return ($this->db->affected_rows() > 0) ? true : false;
 		
@@ -107,7 +109,7 @@ class Users_model extends Model
 	function edit_group($uid)
 	{
 		$this->db->select('*');
-		$this->db->from('group');
+		$this->db->from('Group');
 		$this->db->where('id',$uid);
 		$result=$this->db->get();
 		return $result;
@@ -123,7 +125,7 @@ class Users_model extends Model
 		$rootId=$data['rootId'];
 		$data = array('name' => $data['groupname']);
 		$this->db->where('id', $rootId);
-		$this->db->update('group', $data);
+		$this->db->update('Group', $data);
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	}
 	/**
@@ -138,14 +140,13 @@ class Users_model extends Model
 			$group_id=$data['groupname'];
 			$permission=$data['permission'];
 			$this->db->where('group_id',$rootId);
-			$this->db->delete('grouppermission');
-						$count=sizeof($permission);
-						for($j=0;$j<$count;$j++)
-							{
-							$data = array('group_id'=> $rootId, 'permission_id'=>$permission[$j]);
-							$this->db->set($data);
-							$this->db->insert('grouppermission');
-							}
+			$this->db->delete('GroupPermission');
+			$count=sizeof($permission);
+			for($j=0;$j<$count;$j++) {
+				$data = array('group_id'=> $rootId, 'permission_id'=>$permission[$j]);
+				$this->db->set($data);
+				$this->db->insert('GroupPermission');
+			}
 			return ($this->db->affected_rows() > 0) ? true : false;
 
 	}
@@ -161,8 +162,8 @@ class Users_model extends Model
 		$this->db->where('id',$id);
 		$this->db->delete('group');
 		
-			$this->db->where('group_id',$id);
-			$this->db->delete('grouppermission');
+		$this->db->where('group_id',$id);
+		$this->db->delete('GroupPermission');
 			
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
@@ -176,6 +177,7 @@ class Users_model extends Model
 	function users_count()
 	{
 	}
+	
 	/**
     * Function to getuser_details
     * @author:Rabeesh 
@@ -184,10 +186,10 @@ class Users_model extends Model
     **/
 	function getuser_details()
 	{
-		$this->db->select('user.*,center.name as center_name,city.name as city_name');
-		$this->db->from('user');
-		$this->db->join('center', 'center.id = user.center_id' ,'join');
-		$this->db->join('city', 'city.id = user.city_id' ,'join');
+		$this->db->select('User.*,Center.name as center_name,City.name as city_name');
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		$result=$this->db->get();
 		return $result;
 	}
@@ -206,13 +208,11 @@ class Users_model extends Model
 					'password'=> $data['password'],
 					'center_id'=> $data['center'],
 					'city_id'=> $data['city'],
-					'project_id'=>$data['project'],
+					'project_id' => $data['project'],
 					'user_type' => $data['type']
 					);
-		$this->db->insert('user',$user_array);
+		$this->db->insert('User',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
-	
-	
 	}
 	/**
     * Function to adduser_to_group
@@ -224,7 +224,7 @@ class Users_model extends Model
 	{
 		$user_array=array('user_id'=>$data['insert_id'],
 					'group_id'=> $data['group']);
-		$this->db->insert('usergroup',$user_array);
+		$this->db->insert('UserGroup',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;		
 	}
 	/**
@@ -235,36 +235,36 @@ class Users_model extends Model
     **/
 	function user_details($uid)
 	{
-		$this->db->select('user.*,usergroup.group_id');
-		$this->db->from('user');
-		$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
-		$this->db->where('user.id',$uid);
+		$this->db->select('User.*,UserGroup.group_id');
+		$this->db->from('User');
+		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'left');
+		$this->db->where('User.id',$uid);
 		$result=$this->db->get();
 		return $result;
 	}
+	
 	/**
     * Function to updateuser
     * @author:Rabeesh 
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function updateuser($data)
-	{
-			$rootId=$data['rootId'];
-			$user_array=array('name'=>$data['name'],
-					'title'=> $data['position'],
-					'email' => $data['email'],
-					'phone' => $data['phone'],
-					'password'=> $data['password'],
-					'center_id'=> $data['center'],
-					'city_id'=> $data['city'],
-					'project_id'=>$data['project'],
-					'user_type' => $data['type']
-					);
-					
-			 $this->db->where('id', $rootId);
-			 $this->db->update('user', $user_array);
-	 		 return ($this->db->affected_rows() > 0) ? true: false ;
+	function updateuser($data) {
+		$rootId=$data['rootId'];
+		$user_array=array('name'=>$data['name'],
+				'title'=> $data['position'],
+				'email' => $data['email'],
+				'phone' => $data['phone'],
+				'password'=> $data['password'],
+				'center_id'=> $data['center'],
+				'city_id'=> $data['city'],
+				'project_id'=>$data['project'],
+				'user_type' => $data['type']
+			);
+				
+			$this->db->where('id', $rootId);
+			$this->db->update('User', $user_array);
+			return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
 	/**
@@ -276,10 +276,9 @@ class Users_model extends Model
 	function updateuser_to_group($data)
 	{	
 		$rootId=$data['rootId'];
-		$user_array=array(
-					'group_id'=> $data['group']);
-					 $this->db->where('user_id', $rootId);
-		$this->db->update('usergroup', $user_array);
+		$user_array=array('group_id'=> $data['group']);
+		$this->db->where('user_id', $rootId);
+		$this->db->update('UserGroup', $user_array);
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	}
 	/**
@@ -292,9 +291,9 @@ class Users_model extends Model
 	{
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
-		$this->db->delete('user');
-			$this->db->where('user_id',$id);
-			$this->db->delete('group');
+		$this->db->delete('User');
+		$this->db->where('user_id',$id);
+		$this->db->delete('Group');
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}

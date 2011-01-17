@@ -29,7 +29,7 @@ class Project_model extends Model
 	{
 		$date=date("Y-m-d H:i:s");
 		$data_array=array('name'=>$data['name'],'added_on'=>$date);
-		$this->db->insert('project',$data_array);
+		$this->db->insert('Project',$data_array);
 		return ($this->db->affected_rows() >0)?true: false;
 	}
 	function get_project_byid($uid)
@@ -46,13 +46,13 @@ class Project_model extends Model
 		$date=date("Y-m-d H:i:s");
 		$data_array=array('name'=>$data['name'],'added_on'=>$date);
 		$this->db->where('id',$rootId);
-		$this->db->update('project',$data_array);
+		$this->db->update('Project',$data_array);
 		return ($this->db->affected_rows() >0) ? true: false;
 	}
 	function delete_project($data)
 	{
 		echo 	$entry_id=$data['entry_id'];
 		$this->db->where('id',$entry_id);
-		$this->db->delete('project');
+		$this->db->delete('Project');
 	}
 }	

@@ -69,6 +69,7 @@ class Permission extends controller {
 		$data['details']= $this->permission_model->getpermission_details();
 		$this->load->view('permission/permission_list',$data);
 	}
+	
 	/**
     * Function to popupAddPermission
     * @author : Rabeesh

@@ -20,14 +20,15 @@ class Cron extends Controller  {
 				$day = date('d') + date('w') - intval($batch->day)	// This is how we find the next sunday, monday(whatever is in the $batch->day).
 							+ ($week * 7); // We have to do this for two weeks. So in the first iteration, this will be 0 and in next it will be 7.
 							
-				$time = mktime($hour, $min, $secs, date('m'), $day, date("Y")));
+				$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
 				$date = date("Y-m-d H:i:s", $time);
 				
-				dump($teachers, $date);
+				//dump($teachers, $date);
 				
 				foreach($teachers as $teacher) {
 					// Make sure its not already inserted.
-					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) { 
+					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
+						print "{$teacher->id} - $date<br />";
 						$this->class_model->save_class(array(
 							'batch_id'	=> $batch->id,
 							'level_id'	=> $teacher->level_id,

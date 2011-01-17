@@ -12,7 +12,7 @@ class Batch_model extends Model {
     	return $this->db->where('id', $batch_id)->get("Batch")->row_array();
     }
     
-    function get_teachers_in_batch($batch_id) {
+    function get_batch_teachers($batch_id) {
     	return $this->db->query("SELECT User.id, User.name, UserBatch.level_id FROM User 
     				INNER JOIN UserBatch ON User.id=UserBatch.user_id 
     				WHERE UserBatch.batch_id={$batch_id} AND User.project_id=1")->result();

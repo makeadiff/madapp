@@ -299,6 +299,10 @@ class Users_model extends Model
 	
 	}
 	
+	function get_user($user_id) {
+		return $this->db->where('id', $user_id)->get('User')->row();
+	}
+	
 	function getUsersById() {
 		$this->load->helper('misc');
 		return getById("SELECT id, name FROM User WHERE city_id=1 AND project_id=1 AND user_type='volunteer'", $this->db);

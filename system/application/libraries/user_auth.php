@@ -51,9 +51,7 @@ Class User_auth {
     **/
     function getUser() {
 		$user_id = $this->logged_in();
-		if($user_id) {
-		return $this->ci->user_auth_model->retrieve_by_pk($user_id);
-		}
+		if($user_id) return $this->ci->user_model->get_user($user_id);
 		return false;
 	}
 	

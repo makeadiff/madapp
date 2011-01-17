@@ -12,14 +12,7 @@
  */
 
 class Level_model extends Model {
-    
-	
-	
-	
-	// Call the Model constructor
-	
 	function Level_model() {
-        
         parent::Model();
     }
     
@@ -36,5 +29,11 @@ class Level_model extends Model {
 	function get_level($level_id) {
 		return $this->db->where('id', $level_id)->get('Level')->row();
 	}
+	
+	function get_level_details($level_id) {
+    	return $this->db->query("SELECT Center.name AS center_name, Level.name 
+    		FROM Level INNER JOIN Center ON Center.id=Level.center_id 
+    		WHERE Level.id=$level_id")->row();
+    }
 	
 }

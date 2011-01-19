@@ -34,5 +34,46 @@ class Classes extends Controller {
 	function batch_view($batch_id=0) {
 		
 	}
+	
+	function edit_class($class_id) {
+		$this->load->helper('form');
+	
+		$class_details = $this->class_model->get_class($class_id);
+		$level_details = $this->level_model->get_level($class_details['level_id']);
+		$teachers = idNameFormat($this->user_model->get_users_in_center($level_details->center_id));
+		$substitutes = idNameFormat($this->user_model->get_users_in_city($level_details->center_id));
+		$substitutes[0] = 'No Substitute';
+		
+		$statuses = array(
+			'projected'	=> 'Projected',
+			'confirmed'	=> 'Confirmed', 
+			'attended'	=> 'Attended', 
+			'absent'	=> 'Absent',
+			'cancelled'	=> 'Cancelled',
+		);
+		
+		$this->load->view('classes/form', 
+			array('class_details'=>$class_details, 'teachers'=>$teachers,'substitutes'=>$substitutes,'statuses'=>$statuses, 'message'=>$this->message));
+	}
+	
+	function edit_class_save() {
+		$teacher_ids = $this->input->post('user_id');
+		$user_class_id = $this->input->post('user_class_id');
+		$substitute_ids = $this->input->post('substitute_id');
+		$statuses = $this->input->post('status');
+		
+		$teacher_count = count($user_class_id);
+		// There might be multiple teachers in a class.
+		for($i = 0; $i<$teacher_count; $i++) {
+			$this->class_model->save_class_teachers($user_class_id[$i], array(
+				'user_id'	=>	$teacher_ids[$i],
+				'substitute_id'=>$substitute_ids[$i],
+				'status'	=> $statuses[$i],
+			));
+		}
+		
+		$this->message['success'] = 'Saved the class details';
+		$this->edit_class($this->input->post('class_id'));
+	}
 
 }

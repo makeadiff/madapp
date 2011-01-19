@@ -18,6 +18,7 @@ class Users_model extends Model
     {
         parent::Model();
     }
+    
     /**
     * Function to login
     * @author:Rabeesh 
@@ -311,12 +312,20 @@ class Users_model extends Model
 		return $this->db->where('center_id', $center_id)->where('project_id',1)->where('user_type','volunteer')->get('User')->result();
 	}
 	
+	function get_users_in_city($city_id) {
+		return $this->db->where('city_id', $city_id)->where('project_id',1)->where('user_type','volunteer')->get('User')->result();
+	}
+	
 	function set_user_batch_and_level($user_id, $batch_id, $level_id) {
     	$this->db->insert("UserBatch", array('user_id'=>$user_id, 'batch_id'=>$batch_id, 'level_id'=>$level_id));
     }
     
     function unset_user_batch_and_level($batch_id, $level_id) {
     	$this->db->delete("UserBatch", array('batch_id'=>$batch_id, 'level_id'=>$level_id));
+    }
+    
+    function update_credit($user_id, $credit) {
+    	$this->db->query("UPDATE User SET credit=credit $credit WHERE id=$user_id");
     }
 	
 }

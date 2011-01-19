@@ -48,4 +48,78 @@ class Class_model extends Model {
     		INNER JOIN UserClass on UserClass.class_id=Class.id 
     		WHERE UserClass.user_id=$teacher_id AND Class.class_on='$time'")->result();
     }
+    
+    function get_class($class_id) {
+    	$class_details = $this->db->where('id',$class_id)->get('Class')->row_array();
+    	$class_details['teachers'] = $this->db->where('class_id',$class_id)->get("UserClass")->result_array();
+    	
+    	return $class_details;
+    }
+    
+    function save_class_teachers($user_class_id, $data) {
+    	// When editing the class info, make sure that the credits asigned durring the last edit is removed...
+    	$previous_class_data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
+    	$this->revert_user_class_credit($user_class_id, $previous_class_data);
+    	
+    	
+    	$this->db->update('UserClass', $data, array('id'=>$user_class_id));
+    	$this->calculate_users_class_credit($user_class_id, $data);
+
+    	return $this->db->affected_rows();
+    }
+    
+    /// Calculates the credit that should be given to the user for the given class.
+    /// Argument: $user_class_id - the id of a row in the UserClass table.
+    function calculate_users_class_credit($user_class_id, $data = array()) {
+    	if(!$data) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
+    	$this->load->model('user_model','user_model');
+    	
+    	extract($data);
+    	if($status == 'attended') {
+    		if($substitute_id) {
+    			// A substitute has attended the class. Substitute gets one credit, Original teacher loses one credit.
+    			$this->user_model->update_credit($substitute_id, 1);
+    			$this->user_model->update_credit($user_id, -1);
+    		}
+    	} elseif($status == 'absent') {
+    		if($substitute_id) {
+    			// A substitute was supposed to come - but didn't. Substitute loses two credit, Original teacher loses one credit.
+    			$this->user_model->update_credit($substitute_id, -2);
+    			$this->user_model->update_credit($user_id, -1);
+    		} else {
+    			// Absent without substitute. Teacher loses two credit.
+    			$this->user_model->update_credit($user_id, -2);
+    		}
+    	}
+    }
+    
+    
+    /// When editing the class info, we have to make sure that the credits asigned durring the last edit is removed. Thats what this function is for
+    /// Argument: $user_class_id - the id of a row in the UserClass table.
+    function revert_user_class_credit($user_class_id, $data = array()) {
+    	if(!$data) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
+    	$this->load->model('user_model','user_model');
+    	
+    	extract($data);
+    	
+    	// Note - S = Substitute Teacher, OT= Original Teacher.
+    	if($status == 'attended') {
+    		if($substitute_id) {
+    			// A substitute had attended the class. That would have changed the credits like S = +1, OT = -1. So we make S = -1 and OT = +1 - to make the changed credits 0
+    			$this->user_model->update_credit($substitute_id, -1);
+    			$this->user_model->update_credit($user_id, 1);
+    		}
+    	} elseif($status == 'absent') {
+    		if($substitute_id) {
+    			// A substitute was supposed to come - but didn't. S=-2, OT=-1. So in revert, S=+2,OT=+1
+    			$this->user_model->update_credit($substitute_id, +2);
+    			$this->user_model->update_credit($user_id, +1);
+    		} else {
+    			// Absent without substitute. Teacher lost two credit. So, give them +2.
+    			$this->user_model->update_credit($user_id, +2);
+    		}
+    	}
+    	
+    	
+    }
 }

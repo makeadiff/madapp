@@ -62,6 +62,7 @@ function dataGrabber()
 				{ 
  				agents+=($(selected).val()=="")?$(selected).val():$(selected).val()+",";
 				});
+				alert(agents);
 				//get subject name
 				 var choiceText = [];
 				 var cText = '';

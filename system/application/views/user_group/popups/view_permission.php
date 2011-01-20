@@ -42,18 +42,20 @@ foreach($group_permission as $roll)
                 ?>
                 
             <div class="field clear" style="width:600px;"> 
-          <label for="txtName"><?php echo $row['name']; ?></label>
-           <?php 
+          	<label for="txtName"><?php echo $row['name']; ?></label>
+            <?php 
 		    $a=0;
 		   	for($j=0;$j<count($perm_id);$j++) {
 		  	 if($perm_id[$j]==$row['id'])
 		    { $a=1;} }
 		    ?>
           <?php if($a==1) {?>
-          <img src="<?php echo base_url(); ?>/images/ico/tick-icon.png" style="border:none;"/>
+          <img src="<?php echo base_url(); ?>/images/ico/tick-icon.png" style="border:none; float:left;"/>
            <?php } ?>
-</div></div>
+			</div>
+        
            <?php } ?>
+           </div>
    
    </fieldset>
    </form>		

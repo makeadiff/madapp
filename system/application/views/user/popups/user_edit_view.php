@@ -22,6 +22,8 @@ foreach($user_details as $row) {
 $group_name=$group_name->result_array();
 foreach($group_name as $row) {
 	$group_id=$row['id'];
+	
+	
 }
 ?>
 
@@ -36,8 +38,7 @@ foreach($group_name as $row) {
             
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select Group:</label> 
-            <select id="group" name="group" multiple="multiple"> 
-            <option selected="selected" >- choose action -</option> 
+            <select id="group" name="group[]" style="width:142px; height:50px;" multiple="multiple"> 
 				<?php 
                 $group_details = $group_details->result_array();
                 foreach($group_details as $row){ ?>
@@ -61,7 +62,7 @@ foreach($group_name as $row) {
             </div>
             <div class="field clear" style="width:500px;"> 
                         <label for="txtName">Password : </label>
-                        <input id="password" name="password"  type="password"  /> 
+                        <input id="password" name="password"  type="password" value="<?php echo $password; ?>"  /> 
                       
             </div>
             <div class="field clear" style="width:500px;"> 
@@ -149,7 +150,7 @@ function validate()
               alert("Retype Password.");
               return false;
           }
-       if(document.getElementById("password").value != document.getElementById("repassword").value)
+       if(document.getElementById("password").value != document.getElementById("cpassword").value)
           {
               alert("Password Mismatch.");
               return false;

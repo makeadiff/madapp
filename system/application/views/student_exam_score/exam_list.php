@@ -49,8 +49,8 @@
 	<th class="colName left sortable" style="width:375px; text-align:center">Exam Name</th>
     <th class="colName left sortable" style="width:375px; text-align:center">Details</th>
     
-    <th class="colActions"  style="width:225px;">Actions</th>
-</tr>
+<!--    <th class="colActions"  style="width:225px;">Actions</th>
+--></tr>
 </thead>
 <tbody>
 
@@ -102,10 +102,10 @@ foreach($content as $row)
     
 	<td class="colName left" style="text-align:center"> <a href="<?=site_url('exam/view_exam_details/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="<strong>Details of <?= strtolower($row['name']) ?></strong>"> View Details</a></td>
     
-    <td class="colActions right"> 
-    <a href="<?= site_url($row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit Group : <?= strtolower($row['name']) ?></strong>">Edit</a> 
-    <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a>
-    </td>
+    <!--<td class="colActions right"> 
+    <!--<a href="<?//= //site_url($row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php //echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php //echo $row['id']; ?>" name="<strong>Edit Group : <?//=strtolower($row['name']) ?></strong>">Edit</a> 
+    <a class="actionDelete" href="javascript:deleteEntry('<?php //echo $row['id']; ?>','<?php //echo $currentPage; ?>')">Delete</a>
+    </td>-->
 </tr>
 
 <?php }?>

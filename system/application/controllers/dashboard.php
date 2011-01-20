@@ -17,7 +17,6 @@ class Dashboard extends Controller  {
     /**
     * constructor 
     **/
-
     function Dashboard()
     {
         parent::Controller();

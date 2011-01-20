@@ -44,11 +44,10 @@ foreach($content as $row)
 		$shadeFlag = 0;
   	  }
 ?> 
-    <?php //for($i=1;$i<=$count;$i++) { ?>
     
     <td class="colName left"> <a href="#"> <?php echo $row['mark']; ?>  </a></td>
-    <?php //} ?>
    
 
 
 <?php }?>
+

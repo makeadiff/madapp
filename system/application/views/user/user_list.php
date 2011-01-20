@@ -17,7 +17,6 @@
 			$(this).attr('href', url);
 		});
 		
-	
 	}
 	);  
 	

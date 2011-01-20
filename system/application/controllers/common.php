@@ -11,6 +11,7 @@
  * @since           Version 1.0
  * @filesource
  */
+ 
 class Common extends Controller {
     function Common() {
         parent::Controller();
@@ -20,7 +21,6 @@ class Common extends Controller {
 		$this->load->helper('url');
         $this->load->helper('form');
 	}
-	
 	/**
     * Function to logout
     * @author : Rabeesh

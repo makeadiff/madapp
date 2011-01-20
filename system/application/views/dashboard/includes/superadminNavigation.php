@@ -37,7 +37,7 @@
     <?php if($navId == '3'): ?>
     <li class="active"><a href="<?= site_url('exam/manage_exam') ?>">Add Exam</a></li>
     <?php else: ?>
-    <li> <a href="<?= site_url('exam/add_exam') ?>">Add Exam</a></li>
+    <li> <a href="<?= site_url('exam/manage_exam') ?>">Add Exam</a></li>
     <?php endif; ?>
     
     <?php if($navId == '4'): ?>

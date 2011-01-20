@@ -25,6 +25,7 @@ class Users_model extends Model
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
+	
 	function login($data) {	
       	$username= $data['username'];
         $password = $data['password'];
@@ -194,6 +195,24 @@ class Users_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
+	
+	/**
+    * Function to getuser_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function getuser_details_csv()
+	{
+		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		City.name as city_name');
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$result=$this->db->get();
+		return $result;
+	
+	}
 	/**
     * Function to adduser
     * @author:Rabeesh 
@@ -241,6 +260,7 @@ class Users_model extends Model
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'left');
 		$this->db->where('User.id',$uid);
 		$result=$this->db->get();
+		//print_r($result);
 		return $result;
 	}
 	
@@ -256,7 +276,7 @@ class Users_model extends Model
 				'title'=> $data['position'],
 				'email' => $data['email'],
 				'phone' => $data['phone'],
-				'password'=> $data['password'],
+				//'password'=> $data['password'],
 				'center_id'=> $data['center'],
 				'city_id'=> $data['city'],
 				'project_id'=>$data['project'],
@@ -272,15 +292,21 @@ class Users_model extends Model
     * Function to updateuser_to_group
     * @author:Rabeesh 
     * @param :[$data]
-    * @return: type: [Boolean, Array()]
+    * @return: type: [Boolean]
     **/
 	function updateuser_to_group($data)
 	{	
 		$rootId=$data['rootId'];
-		$user_array=array('group_id'=> $data['group']);
-		$this->db->where('user_id', $rootId);
-		$this->db->update('UserGroup', $user_array);
-	 	return ($this->db->affected_rows() > 0) ? true: false ;
+		$this->db->where('user_id',$rootId);
+		$this->db->delete('usergroup');
+		$group=$data['group'];
+		for($i=0;$i <sizeof($group);$i++)
+		{
+		 	$data['group']=$group[$i];
+			$user_array=array('group_id'=> $data['group'],'user_id'=>$rootId);
+			$this->db->insert('UserGroup', $user_array);
+		}
+		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
 	/**
     * Function to delete_groupby_userid
@@ -328,4 +354,47 @@ class Users_model extends Model
     	$this->db->query("UPDATE User SET credit=credit $credit WHERE id=$user_id");
     }
 	
+	/**
+    * Function to delete_groupby_userid
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function searchuser_details($data)
+	{
+		$city=$data['city'];
+		$group=$data['group'];
+		//$name=$data['name'];
+		$this->db->select('user.*,center.name as center_name,city.name as city_name,usergroup.id 
+		as g_id,usergroup.user_id,usergroup.group_id');
+		$this->db->from('user');
+		$this->db->join('center', 'center.id = user.center_id' ,'join');
+		$this->db->join('city', 'city.id = user.city_id' ,'join');
+		$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
+		$this->db->where('usergroup.group_id',$group);
+		$this->db->where('city.id',$city);
+		//$this->db->or_where('name',$name);
+		$result=$this->db->get();
+		return $result;
+	
+	}
+	function searchuser_details_csv($data)
+	{
+		$city=$data['city'];
+		$group=$data['group'];
+		
+			$this->db->select('user.*,center.name as center_name,city.name as city_name,usergroup.id 
+			as g_id,usergroup.user_id,usergroup.group_id');
+			$this->db->from('user');
+			$this->db->join('center', 'center.id = user.center_id' ,'join');
+			$this->db->join('city', 'city.id = user.city_id' ,'join');
+			$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
+			$this->db->where('usergroup.group_id',$group);
+			$this->db->where('city.id',$city);
+			$result=$this->db->get();
+			return $result;
+		
+	}
+		
+		
 }

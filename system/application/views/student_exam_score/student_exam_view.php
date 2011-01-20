@@ -27,7 +27,7 @@
 		{
 			$.ajax({
 			type : "POST",
-			url  : "<?= site_url('user/ajax_deleteuser') ?>",
+			url  : "<?= site_url('exam/ajax_deleteexam') ?>",
 			data : 'entry_id='+entryId,
 			
 			success : function(data)

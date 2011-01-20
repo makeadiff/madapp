@@ -64,6 +64,7 @@ function divupdation()
     <td><div class="field clear">
             <label for="date" style="margin-left:20px;">Select City</label>
             <select name="city" id="city">
+            <option value="0">Any City</option>
             <?php $city=$city->result_array();
 			foreach($city as $row){ echo "fi=".$row['name'];
 			?>
@@ -78,6 +79,7 @@ function divupdation()
         	<label for="date">Group</label>
             
             <select name="group" id="group" style="width:150px; height:100px;" multiple>
+            <option> </option>
             <?php $group=$group->result_array();
 					foreach($group as $row)
 					{ ?>

@@ -1,4 +1,3 @@
-<!-- superAdmin Navigation Begins -->
 
 <div id="top">
 <div id="title" class="clear"> <a href="<?= site_url('dashboard/dashboard_view') ?>">Madapp</a> <span> | Admin Panel</span></div>
@@ -71,4 +70,3 @@
 
 </div>
 
-<!-- superAdmin Navigation Begins -->

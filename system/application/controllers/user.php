@@ -219,6 +219,12 @@ class User extends Controller  {
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag1= $this->users_model->delete_groupby_userid($data);
 	}
+	/**
+    * Function to view_users
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function view_users()
 	{
 		$data['currentPage'] = 'db';
@@ -244,12 +250,62 @@ class User extends Controller  {
 		
 		}
 	}
+	/**
+    * Function to user_search
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function user_search()
 	{
 		$data['city']=$_REQUEST['city'];
-		//$data['name']=$_REQUEST['name'];
+		$data['name']=$_REQUEST['name'];
 		$group=$_REQUEST['group'];
 		$data['title'] = 'Users view';
+		
+		//search by any city with group only
+		if($data['city'] == 0 && $group !='' && $data['name']=='' )
+		{
+			$agents = substr($group,0,strlen($group)-1);
+			$explode_agent = explode(",",trim($agents));
+			for($i=0;$i<sizeof($explode_agent);$i++)
+			{
+		 		$data['group']=$explode_agent[$i];
+		 		$data['details']= $this->users_model->searchuser_by_anycity($data);
+				$flag=$data['details']->result_array();
+				if($flag )
+				{
+				$this->load->view('user/update_search_view_list',$data);
+				}
+			}
+		}
+		//search by any city with group and name.
+		else if($data['city'] == 0 && $group !='' && $data['name'] !='' )
+		{
+		
+			$agents = substr($group,0,strlen($group)-1);
+			$explode_agent = explode(",",trim($agents));
+			for($i=0;$i<sizeof($explode_agent);$i++)
+			{
+		 		$data['group']=$explode_agent[$i];
+		 		$data['details']= $this->users_model->searchuser_by_anycity_grp_name($data);
+				$flag=$data['details']->result_array();
+				if($flag )
+				{
+				$this->load->view('user/update_search_view_list',$data);
+				}
+			}
+		
+		}
+		//search by city only.
+		else if($data['city'] !='' && $data['name']=='' && $group=='')
+		{
+			$data['details']= $this->users_model->search_by_city($data);
+			$this->load->view('user/update_search_view_list',$data);
+		}
+		//search by city with group and name.
+		else if($data['city'] !='' && $data['name'] !='' && $group !='')
+		{
 		$agents = substr($group,0,strlen($group)-1);
 		$explode_agent = explode(",",trim($agents));
 		for($i=0;$i<sizeof($explode_agent);$i++)
@@ -261,43 +317,111 @@ class User extends Controller  {
 			{
 			$this->load->view('user/update_search_view_list',$data);
 			}
-			else
+			
+		}
+		}
+		//search by city and group.
+		else if($data['city'] !='' && $data['name'] =='' && $group !='')
+		{
+			$agents = substr($group,0,strlen($group)-1);
+		$explode_agent = explode(",",trim($agents));
+		for($i=0;$i<sizeof($explode_agent);$i++)
+		{
+		 	$data['group']=$explode_agent[$i];
+		 	$data['details']= $this->users_model->searchuser_details_by_grp_city($data);
+			$flag=$data['details']->result_array();
+			if($flag )
 			{
-			//$this->load->view('user/error_list');
+			$this->load->view('user/update_search_view_list',$data);
 			}
+			
+		}
+		
+		
+		}
+		//search by city and name.
+		 else if($data['city'] !='' && $data['name'] !='' && $group =='')
+		 {
+			$data['details']= $this->users_model->search_by_city_name($data);
+			$this->load->view('user/update_search_view_list',$data);
+		}
+		else
+		{
+		echo "No result fount";
 		}
 	}
-	
+	/**
+    * Function to csv_export
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function csv_export()
 	{
 	$query= $this->users_model->getuser_details_csv();
 	query_to_csv($query, TRUE, 'user_details.csv');
 	}
+	/**
+    * Function to update_footer
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function update_footer()
 	{
 		$data['city']=$_REQUEST['city'];
-		//$data['name']=$_REQUEST['name'];
+		$data['name']=$_REQUEST['name'];
 		$group=$_REQUEST['group'];
 		$group_sub = substr($group,0,strlen($group)-1);
 		$group_ex= explode(",",trim($group_sub));
 		$data['group'] =implode("-",$group_ex);
 		$this->load->view('user/update_csvbutton_footer',$data);
 	}
+	/**
+    * Function to updated_csv_export
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function updated_csv_export()
 	{
 		$data['city']=$this->uri->segment(3);
-		$group=$this->uri->segment(4);
-		
-		$explode_agent = explode("-",trim($group));
-		for($i=0;$i<sizeof($explode_agent);$i++)
+		$data['group']=$this->uri->segment(4);
+		$data['name']=$this->uri->segment(5);
+		$group=$data['group'];
+		//search by any city with group only
+		if($data['city'] == 0 && $data['group'] !='' && $data['name']=='' )
 		{
-		 	$data['group']=$explode_agent[$i];
-		
-			$query= $this->users_model->searchuser_details_csv($data);
+			$query= $this->users_model->searchuser_by_anycity($data);
 			//print_r($query->result());
+			query_to_csv($query,TRUE,'user_details.csv');
+		}
+		//search by any city with group only
+		else if($data['city'] == 0 && $group !='' && $data['name'] !='' )
+		{
+			$query= $this->users_model->searchuser_by_anycity_grp_name($data);
+			query_to_csv($query,TRUE,'user_details.csv');
+		
+		}
+		//search by city only.
+		else if($data['city'] !='' && $data['name']=='' && $group=='')
+		{
+			$query= $this->users_model->search_by_city($data);
+			query_to_csv($query,TRUE,'user_details.csv');
+		
+		}
+		
+		//search by city with group and name.
+		else if($data['city'] !='' && $data['name'] !='' && $group !='')
+		{
+			$explode_agent = explode("-",trim($group));
+			for($i=0;$i<sizeof($explode_agent);$i++)
+			{
+		 	$data['group']=$explode_agent[$i];
+			//$query= $this->users_model->searchuser_details_csv($data);
+			$query= $this->users_model->searchuser_details($data);
 			$result=$query->result_array();
-			//print_r($result);
-		foreach($result as $row)
+			foreach($result as $row)
 			{
 				$id=$row['id'];
 				$name=$row['name'];
@@ -313,23 +437,49 @@ class User extends Controller  {
 			}
 			//$header_array=array('id','Name','Position Held','Email','Mobile No','Center','City');
 			$array[$i]=$details_array;
-			//print_r($array);
-			//$array_csv=array($header_array,$details_array);
-			//$x=array();
-			//$x=$array_csv;
-			//print_r($array_csv);
-			
+		
+			}
+			array_to_csv($array,'user_details.csv');
 		}
+		//search by city and group.
+		else if($data['city'] !='' && $data['name'] =='' && $group !='')
+		{
+				$explode_agent = explode("-",trim($group));
+				//$j=0;
+			for($i=0;$i<sizeof($explode_agent);$i++)
+			{
+		 	$data['group']=$explode_agent[$i];
+			$query= $this->users_model->searchuser_details_by_grp_city($data);
+			$result=$query->result_array();
+			$j=0;
+			foreach($result as $row)
+			{
+			
+				$id=$row['id'];
+				$name=$row['name'];
+				$title=$row['title'];
+				$email=$row['email'];
+				$phone=$row['phone'];
+				$center_name=$row['center_name'];
+				$city_name=$row['city_name'];
+				$user_type=$row['user_type'];
+				
+				$details_array=array( $id, $name, $title,$email,$phone,$center_name,$city_name,$user_type);
+				$array[$j]=$details_array;
+				$j++;
+			}
+			//$header_array=array('id','Name','Position Held','Email','Mobile No','Center','City');
+			}
+			array_to_csv($array,'user_details.csv');
 		
-		/*print_r($x);
-		$array123 = array(
-	array('Last Name', 'First Name', 'Gender'),
-	array('q', 'w', 'e'),
-	array('r', 'S', 'f'),
-	array('F', 'M', 'e')
-);
-print_r($array123);*/
-		array_to_csv($array,'user_details.csv');
-		
+		}
+		//search by city and name.
+		 else if($data['city'] !='' && $data['name'] !='' && $group =='')
+		 {
+			 $query= $this->users_model->search_by_city_name($data);
+			 query_to_csv($query,TRUE,'user_details.csv');
+		 }
 	}
 }	
+
+

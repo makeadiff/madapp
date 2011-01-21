@@ -26,7 +26,7 @@ class Permission extends controller {
 		$logged_user_id = $this->session->userdata('email');
 		if($logged_user_id == NULL )
 		{
-			redirect('common/login');
+			redirect('auth/login');
 		}
 		$this->load->model('permission_model');
 		//$this->load->model('kids_model');

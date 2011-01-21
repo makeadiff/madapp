@@ -12,7 +12,7 @@
  * @filesource
  */
 class User extends Controller  {
-    /**
+    /*
     * constructor 
     **/
     function User()
@@ -20,13 +20,14 @@ class User extends Controller  {
         parent::Controller();
 		$this->load->library('session');
         $this->load->library('user_auth');
+		$this->load->library('ion_auth');
 		$this->load->helper('url');
         $this->load->helper('form');
 		$this->load->helper('csv');
 		$logged_user_id = $this->session->userdata('email');
 		if($logged_user_id == NULL )
 		{
-			redirect('common/login');
+			redirect('auth/login');
 		}
 		$this->load->model('center_model');
 		$this->load->model('project_model');

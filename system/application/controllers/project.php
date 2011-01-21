@@ -28,7 +28,7 @@ class Project extends Controller  {
 		$logged_user_id = $this->session->userdata('email');
 		if($logged_user_id == NULL )
 		{
-			redirect('common/login');
+			redirect('auth/login');
 		}
 		$this->load->helper('url');
         $this->load->helper('form');

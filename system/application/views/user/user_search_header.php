@@ -1,3 +1,4 @@
+<?php include_once('session_timeout.php'); ?>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script>

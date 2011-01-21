@@ -25,16 +25,16 @@ class Common extends Controller {
     * Function to logout
     * @author : Rabeesh
     **/  
-	function logout() {
+	/*function logout() {
 		$this->session->sess_destroy();
 		redirect ('common/login');
-	}
+	}*/
 	
 	/**
     * Function to login
     * @author :Rabeesh
     **/
-    function login() {
+    /*function login() {
 		if(Navigation::isPost()) {
 			$username = $_POST['username'];
 			$password = $_POST['password'];
@@ -56,5 +56,5 @@ class Common extends Controller {
 			$this->load->view('dashboard/includes/login_register_footer');
 	
 		}
-	}
+	}*/
 }

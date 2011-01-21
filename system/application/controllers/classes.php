@@ -14,7 +14,7 @@ class Classes extends Controller {
         $this->load->library('user_auth');
         $this->user_details = $this->user_auth->getUser();
 		if(!$this->user_details) {
-			redirect('common/login');
+			redirect('auth/login');
 		}
 		
 		$this->load->helper('url');

@@ -32,11 +32,12 @@ class Users_model extends Model
 		
 		$query = $this->db->where('email', $username)->where('password',$password)->get("User");
         if($query->num_rows() > 0) {
-			$memberR = $query->first_row();
-   			$memberCredentials['id'] = $memberR->id;
-			$memberCredentials['email'] = $memberR->email;
-			$memberCredentials['name'] = $memberR->name;
-			
+			$user = $query->first_row();
+   			$memberCredentials['id'] = $user->id;
+			$memberCredentials['email'] = $user->email;
+			$memberCredentials['name'] = $user->name;
+			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
+			$memberCredentials['groups'] = $this->get_user_groups($user->id);
 			
             return $memberCredentials;
         
@@ -77,8 +78,6 @@ class Users_model extends Model
     **/
 	function add_group_name($groupname)
 	{
-	
-		
 		$data = array('name'=> $groupname);
 		$this->db->insert('Group',$data);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id(): false ;
@@ -162,7 +161,7 @@ class Users_model extends Model
 	{
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
-		$this->db->delete('group');
+		$this->db->delete('Group');
 		
 		$this->db->where('group_id',$id);
 		$this->db->delete('GroupPermission');
@@ -297,7 +296,7 @@ class Users_model extends Model
 	{	
 		$rootId=$data['rootId'];
 		$this->db->where('user_id',$rootId);
-		$this->db->delete('usergroup');
+		$this->db->delete('UserGroup');
 		$group=$data['group'];
 		for($i=0;$i <sizeof($group);$i++)
 		{
@@ -364,16 +363,15 @@ class Users_model extends Model
 		$city=$data['city'];
 		$group=$data['group'];
 		$name=$data['name'];
-		//$this->db->select('user.*,center.name as center_name,city.name as city_name,usergroup.id 
-		//as g_id,usergroup.user_id,usergroup.group_id');
-		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		
+		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
-		$this->db->from('user');
-		$this->db->join('center', 'center.id = user.center_id' ,'join');
-		$this->db->join('city', 'city.id = user.city_id' ,'join');
-		$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
-		$this->db->where('usergroup.group_id',$group);
-		$this->db->where('city.id',$city);
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
+		$this->db->where('UserGroup.group_id',$group);
+		$this->db->where('City.id',$city);
 		$this->db->where('user.name',$name);
 		$result=$this->db->get();
 		return $result;
@@ -495,17 +493,46 @@ class Users_model extends Model
 		$city=$data['city'];
 		$group=$data['group'];
 		$name=$data['name'];
-			$this->db->select('user.*,center.name as center_name,city.name as city_name,usergroup.id 
-			as g_id,usergroup.user_id,usergroup.group_id');
-			$this->db->from('user');
-			$this->db->join('center', 'center.id = user.center_id' ,'join');
-			$this->db->join('city', 'city.id = user.city_id' ,'join');
-			$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
-			$this->db->where('usergroup.group_id',$group);
-			$this->db->where('city.id',$city);
-			$result=$this->db->get();
-			return $result;
+		$this->db->select('User.*,Center.name as center_name,City.name as city_name,UserGroup.id 
+		as g_id,UserGroup.user_id,UserGroup.group_id');
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
+		$this->db->where('UserGroup.group_id',$group);
+		$this->db->where('City.id',$city);
+		$result=$this->db->get();
+		return $result;
 		
 	}*/
 	
+	
+	/// Returns all the permissions for the given user as an array.
+	function get_user_permissions($user_id) {
+		$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission 
+			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id 
+			INNER JOIN UserGroup ON GroupPermission.group_id=UserGroup.group_id 
+			WHERE UserGroup.user_id=$user_id")->result();
+		
+		$all_permissions = array();
+		foreach($permissions as $permission) {
+			$all_permissions[] = $permission->name;
+		}
+		
+		return $all_permissions;
+	}
+	
+	/// Returns all the groups for the given user as an associative array with group id as the key.
+	function get_user_groups($user_id) {
+		$groups = $this->db->query("SELECT `Group`.id,`Group`.name FROM `Group`
+			INNER JOIN `UserGroup` ON `Group`.id=`UserGroup`.group_id 
+			WHERE `UserGroup`.user_id=$user_id")->result();
+		
+		$all_groups = array();
+		foreach($groups as $group) {
+			$all_groups[$group->id] = $group->name;
+		}
+		
+		return $all_groups;
+	}
 }

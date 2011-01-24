@@ -25,8 +25,10 @@ class City_model extends Model {
     function getCity($city_id) {
     	return $this->db->where('id',$city_id)->get('City')->row_array();
     }
+    
+    
 	function get_city()
 	{
-	return $this->db->get('city');
+	return $this->db->get('City');
 	}
 }

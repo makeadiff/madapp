@@ -26,7 +26,7 @@ class Center_model extends Model
     **/
 	function getcenter_count()
 	{
-			$this->db->select('*');
+			$this->db->select('*')->where('city_id',1);
 			$this->db->from('Center');
 			$count = $this->db->get();	
 			return count($count->result());

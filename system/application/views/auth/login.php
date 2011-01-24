@@ -1,16 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
+<head>
+<title>madapp Admin Login</title>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/custom.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" /
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
-<!-- Mirrored from miniplaneta.pl/encoreadmin/rc/2/3.html by HTTrack Website Copier/3.x [XR&CO'2010], Sat, 30 Oct 2010 16:18:28 GMT -->
-<head>
-
-<title>madapp Admin Login</title>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
 
 </head>
 <body id="pageLogin">

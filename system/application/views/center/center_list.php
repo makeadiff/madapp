@@ -1,26 +1,18 @@
 <script>
-	
-	tb_init('a.thickbox, input.thickbox');
-	
-	function triggerSearch()
-	{
-		q = $('#searchQuery').val();
-		get_groupList('0',q);
-	}
-	
-	$(document).ready(function(){
-	
-		
-		$('#example').each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-	
-			$(this).attr('href', url);
-		});
-		
-	
-	}
-	);  
-	
+tb_init('a.thickbox, input.thickbox');
+
+function triggerSearch() {
+	q = $('#searchQuery').val();
+	get_groupList('0',q);
+}
+
+$(document).ready(function(){
+	$('#example').each(function(){
+		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
+
+		$(this).attr('href', url);
+	});
+});  
 </script>
 
 <div id="content" class="clear">
@@ -32,7 +24,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('center/popupaddCneter')?>" class="thickbox button primary" id="example" name="<strong>Add New Center</strong>">Add New Center</a>
+<a href="<?= site_url('center/popupaddCneter')?>" class="thickbox button primary" id="example" name="Add New Center">Add New Center</a>
 </div>
 			<!-- end page actions-->
 
@@ -99,16 +91,15 @@ foreach($content as $row)
 	); 
 </script>
 <tr class="<?php echo $shadeClass; ?>" id="group">
-<!--    <td class="colCheck"> <input name="cbSelect[]" type="checkbox" value="<?php echo $row['id']; ?>"/></td>
--->    <td class="colCheck1"><a href="#"><?php echo $i; ?></a></td>
-    <td class="colName left"> <a href="#"><?php echo strtolower($row['name']); ?></a></td>
-    <td class="colCount"><a href=""><?php echo strtolower($row['city_name']); ?></a></td> 
-     <td class="colStatus" style="text-align:left"><?php echo strtolower($row['user_name']);?></td>
-    <!--<td class="colPosition"></td>-->
-    <td class="colActions right"> 
-    <a href="<?= site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a> 
-    <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a>
-    </td>
+<!--    <td class="colCheck"> <input name="cbSelect[]" type="checkbox" value="<?php echo $row['id']; ?>"/></td> -->    
+	<td class="colCheck1"><a href="#"><?php echo $i; ?></a></td>
+	<td class="colName left"> <a href="#"><?php echo $row['name']; ?></a></td>
+	<td class="colCount"><a href=""><?php echo $row['city_name']; ?></a></td> 
+	<td class="colStatus" style="text-align:left"><?php echo $row['user_name'];?></td>
+	<!--<td class="colPosition"></td>-->
+	<td class="colActions right">
+	<a href="<?= site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a> 
+	<a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a></td>
 </tr>
 
 <?php }?>

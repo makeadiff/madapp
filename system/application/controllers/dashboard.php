@@ -21,10 +21,8 @@ class Dashboard extends Controller  {
     {
         parent::Controller();
        
-		
 		$this->load->library('session');
         $this->load->library('user_auth');
-		$this->load->library('ion_auth');
 		$logged_user_id = $this->session->userdata('email');
 		if($logged_user_id == NULL )
 		{

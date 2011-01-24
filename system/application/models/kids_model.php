@@ -27,9 +27,9 @@ class Kids_model extends Model
 	function getkids_details()
 	{
 
-		$this->db->select('student.*,center.name as center_name');
-		$this->db->from('student');
-		$this->db->join('center', 'center.id = student.center_id' ,'join');
+		$this->db->select('Student.*,Center.name as center_name');
+		$this->db->from('Student');
+		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
 		$result=$this->db->get();
 		return $result;
 	}
@@ -54,7 +54,7 @@ class Kids_model extends Model
 		$kid_id = $this->db->insert_id();
 		
 		//$this->db->insert('StudentLevel', array(
-				//'student_id'	=> $kid_id,
+				//'Student_id'	=> $kid_id,
 				//'level_id'		=> $data['level'],
 			//));
 		

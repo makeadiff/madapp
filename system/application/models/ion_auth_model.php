@@ -143,7 +143,7 @@ class Ion_auth_model extends CI_Model
 		$id = $this->session->userdata('user_id');
 	    }
 		$this->db->select('*');
-		$this->db->from('user');
+		$this->db->from('User');
 		$this->db->where('id',$id);
 		$result=$this->db->get();
 		return $result;

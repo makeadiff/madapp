@@ -21,7 +21,10 @@ class Classes extends Controller {
 		$this->load->helper('misc');
 	}
 	
+	/// Shows all the classes the current user is resposible for.
 	function index() {
+		$this->user_auth->check_permission('classes_index');
+		
 		$all_classes = $this->class_model->get_all($this->user_details->id);
 		$all_levels = array();
 		if($all_classes) {

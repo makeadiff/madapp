@@ -160,26 +160,23 @@ class Center extends Controller  {
 		$data['center']=$_REQUEST['center'];
 		$returnFlag= $this->center_model->update_center($data);
 		
-		if($returnFlag == true) 
-			  {
-					$message['msg']   =  "Center edited successfully.";
-					$message['successFlag'] = "1";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
-			  }
-			else
-			  {
-					$message['msg']   =  "Center not edited.";
-					$message['successFlag'] = "0";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
-			 }
+		if($returnFlag == true) {
+			$message['msg']   =  "Center edited successfully.";
+			$message['successFlag'] = "1";
+			$message['link']  =  "";
+			$message['linkText'] = "";
+			$message['icoFile'] = "ico_addScheme.png";
+
+			$this->load->view('dashboard/errorStatus_view',$message);		  
+		} else {
+			$message['msg']   =  "Center not edited.";
+			$message['successFlag'] = "0";
+			$message['link']  =  "";
+			$message['linkText'] = "";
+			$message['icoFile'] = "ico_addScheme.png";
+
+			$this->load->view('dashboard/errorStatus_view',$message);		  
+		}
 	
 	}
 	

@@ -48,9 +48,9 @@
 	<th class="colCheck1">Id</th>
 	<th class="colName left sortable">Name</th>
     <th class="colStatus sortable">Birth Day</th>
-    <th class="colStatus">City</th>
-<!--    <th class="colStatus">Level</th>
--->   <th class="colActions">Actions</th>
+    <th class="colStatus">Center</th>
+<th class="colStatus">Image</th>
+   <th class="colActions">Actions</th>
 </tr>
 </thead>
 <tbody>
@@ -103,8 +103,10 @@ foreach($content as $row)
     <td class="colName left"> <a href="#"><?php echo $row['name']; ?></a></td>
     <td class="colCount"><a href=""><?php echo $row['birthday']; ?></a></td> 
      <td class="colStatus" style="text-align:left"><?php echo $row['center_name'];?></td>
-<!--     <td class="colStatus" style="text-align:left"><?php echo $row['lavel_name'];?></td>
--->    <!--<td class="colPosition"></td>-->
+<td class="colPosition">  
+<img src="<?=base_url().'pictures/'.$row['photo']; ?>" width="50" height="50" /> </td>
+
+
     <td class="colActions right"> 
     <a href="<?= site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit student : <?= strtolower($row['name']) ?></strong>">Edit</a> 
     <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a>
@@ -127,8 +129,8 @@ foreach($content as $row)
 }    ?>
 
 
-
 </div>
 
 
 </div>
+

@@ -23,9 +23,10 @@ class Classes extends Controller {
 	
 	/// Shows all the classes the current user is resposible for.
 	function index() {
+	
 		$this->user_auth->check_permission('classes_index');
-		
 		$all_classes = $this->class_model->get_all($this->user_details->id);
+		
 		$all_levels = array();
 		if($all_classes) {
 			$all_levels[$all_classes[0]->level_id] = $this->level_model->get_level_details($all_classes[0]->level_id);
@@ -34,7 +35,8 @@ class Classes extends Controller {
 		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model));
 	}
 	
-	function batch_view($batch_id=0) {
+	function batch_view($batch_id=0) 
+	{
 		
 	}
 	

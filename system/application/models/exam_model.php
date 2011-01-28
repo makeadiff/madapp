@@ -88,7 +88,7 @@ class Exam_model extends Model
 													{
 													$id=$row['id'];
 													}
-												$choiceList = array('exam_id'  => $exam_id,
+												$choiceList = array('exam_id2'  => $exam_id,
 																		'student_id'=>$agent,
 																			'subject_id'  => $id,
 															 		);

@@ -27,11 +27,12 @@ class Center extends Controller  {
         $this->load->library('user_auth');
 		$this->load->helper('url');
         $this->load->helper('form');
-		$logged_user_id = $this->session->userdata('email');
+		$logged_user_id = $this->session->userdata('id');
 		if($logged_user_id == NULL )
 		{
 			redirect('auth/login');
 		}
+		$this->load->library('validation');
 		$this->load->model('center_model');
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
@@ -98,10 +99,15 @@ class Center extends Controller  {
     **/
 	function addCenter()
 	{
-	$data['city']=$_REQUEST['city'];
-	$data['user_id']=$_REQUEST['user_id'];
-	$data['center']=$_REQUEST['center'];
-	$returnFlag= $this->center_model->add_center($data);
+	
+	
+			$data['city']=$_REQUEST['city'];
+			$data['user_id']=$_REQUEST['user_id'];
+			$data['center']=$_REQUEST['center'];
+			$returnFlag= $this->center_model->add_center($data);
+	
+	
+	
 	
 	if($returnFlag)
 		  {

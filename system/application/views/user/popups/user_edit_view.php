@@ -39,6 +39,7 @@ foreach($group_name as $row) {
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select Group:</label> 
             <select id="group" name="group[]" style="width:142px; height:50px;" multiple="multiple"> 
+            <option value="-1">-Select Group-</option>
 				<?php 
                 $group_details = $group_details->result_array();
                 foreach($group_details as $row){ ?>
@@ -79,7 +80,7 @@ foreach($group_name as $row) {
 			<div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select city:</label> 
             <select id="city" name="city" > 
-            <option selected="selected" >- choose action -</option> 
+            <option selected="selected" value="-1" >- choose action -</option> 
 				<?php 
                 $details = $details->result_array();
                 foreach($details as $row) { ?>
@@ -94,7 +95,7 @@ foreach($group_name as $row) {
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select center:</label> 
             <select id="center" name="center"> 
-            <option selected="selected" >- choose action -</option> 
+            <option selected="selected" value="-1" >- choose action -</option> 
 				<?php 
                 $center = $center->result_array();
                 foreach($center as $row){ ?>
@@ -140,7 +141,25 @@ foreach($group_name as $row) {
 <script language="javascript">
 function validate()
 {
- if(document.getElementById("password").value == '')
+	  if(document.getElementById("name").value == '')
+          {
+              alert("Name Missing.");
+              return false;
+          }
+	  if(document.getElementById("group").value == '-1')
+          {
+              alert("Select Group.");
+              return false;
+          }
+	  if(document.getElementById("email").value == '')
+          {
+              alert("Select Email.");
+              return false;
+          }
+		  
+		  
+
+	   if(document.getElementById("password").value == '')
           {
               alert("Password Missing.");
               return false;
@@ -150,12 +169,23 @@ function validate()
               alert("Retype Password.");
               return false;
           }
-       if(document.getElementById("password").value != document.getElementById("cpassword").value)
+       
+		  
+		  if(document.getElementById("city").value == '-1')
+          {
+              alert("Select City.");
+              return false;
+          }
+		  if(document.getElementById("center").value == '-1')
+          {
+              alert("Select Center.");
+              return false;
+          }
+if(document.getElementById("password").value != document.getElementById("cpassword").value)
           {
               alert("Password Mismatch.");
               return false;
           }
 
-
 }
-</script>
+</script>          

@@ -10,13 +10,13 @@
  * @since		Version 1.0
  * @filesource
  */
-
 class Kids_model extends Model
 {
 	
     function Kids_model()
     {
         parent::Model();
+		
     }
     /**
     * Function to getkids_details
@@ -58,7 +58,7 @@ class Kids_model extends Model
 				//'level_id'		=> $data['level'],
 			//));
 		
-	 	return ($this->db->affected_rows() > 0) ? true: false ;
+	 	return ($this->db->affected_rows() > 0) ? $this->db->insert_id()  : false ;
 	
 	}
 	/**
@@ -160,6 +160,62 @@ class Kids_model extends Model
 		return $result;
 	
 	}
+	
+	function generate_code($length = 10)
+	{
+    
+		$this->load->library('image_lib');
+                if ($length <= 0)
+                {
+                    return false;
+                }
+            
+                $code = "";
+                $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+                srand((double)microtime() * 1000000);
+                for ($i = 0; $i < $length; $i++)
+                {
+                    $code = $code . substr($chars, rand() % strlen($chars), 1);
+                }
+                return $code;
+            
+                }
+ 
+    
+	
+	
+	
+	function process_pic($data)
+    {   
+       $id=$data['id'];
+        //Get File Data Info
+        $uploads = array($this->upload->data());
+        $this->load->library('image_lib');
+        //Move Files To User Folder
+        foreach($uploads as $key[] => $value)
+        {
+            //Gen Random code for new file name
+            $randomcode = $this->generate_code(12);
+            $newimagename = $randomcode.$value['file_ext'];
+			rename($value['full_path'],'pictures/'.$newimagename);
+			$this->load->library('imageResize');
+            $nwidth='100';
+	        $nheight='90';
+			$fileSavePath='C:/xampp/htdocs/maddaplycation/madapp/trunk/pictures/'.$newimagename;
+			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
+			
+			
+			
+            $imagename = $newimagename;
+            $thumbnail = $randomcode.'_tn'.$value['file_ext'];
+            $this->db->set('photo', $imagename);
+            $this->db->set('thumbnail', $thumbnail);
+			$this->db->where('id',$id);
+            $this->db->update('student');
+			return ($this->db->affected_rows() > 0) ? true: false ;
+
+        }
+ 	}       
 	
 	
 }

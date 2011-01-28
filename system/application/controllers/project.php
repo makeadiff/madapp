@@ -25,7 +25,7 @@ class Project extends Controller  {
 		
 		$this->load->library('session');
         $this->load->library('user_auth');
-		$logged_user_id = $this->session->userdata('email');
+		$logged_user_id = $this->session->userdata('id');
 		if($logged_user_id == NULL )
 		{
 			redirect('auth/login');

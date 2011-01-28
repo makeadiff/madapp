@@ -23,7 +23,7 @@ class Permission extends controller {
         $this->load->library('user_auth');
 		$this->load->helper('url');
         $this->load->helper('form');
-		$logged_user_id = $this->session->userdata('email');
+		$logged_user_id = $this->session->userdata('id');
 		if($logged_user_id == NULL )
 		{
 			redirect('auth/login');

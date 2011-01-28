@@ -12,7 +12,6 @@
  * @filesource
  */
  class User_group extends Controller  {
-
     /**
     * constructor 
     **/
@@ -22,7 +21,8 @@
         
 		
 		$this->load->library('session');
-		$logged_user_id = $this->session->userdata('email');
+		$this->load->library('user_auth');
+		$logged_user_id = $this->session->userdata('id');
 		if($logged_user_id == NULL )
 		{
 			redirect('auth/login');
@@ -81,7 +81,8 @@
     *
     **/
     function popupaddgroup()
-	{
+	{	
+		//$this->user_auth->check_permission('user_group_addgroup');
 		$data['permission']= $this->permission_model->getpermission_details();
 		$this->load->view('user_group/popups/add_group',$data);
 	}
@@ -133,7 +134,8 @@
     *
     **/
 	function popupEdit_group()
-	{
+	{	
+		//$this->user_auth->check_permission('user_group_addgroup');
 		$uid = $this->uri->segment(3);
 		$data['details']= $this->users_model->edit_group($uid);
 		$data['permission']= $this->permission_model->getpermission_details();

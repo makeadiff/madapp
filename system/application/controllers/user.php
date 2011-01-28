@@ -20,11 +20,10 @@ class User extends Controller  {
         parent::Controller();
 		$this->load->library('session');
         $this->load->library('user_auth');
-		$this->load->library('ion_auth');
 		$this->load->helper('url');
         $this->load->helper('form');
 		$this->load->helper('csv');
-		$logged_user_id = $this->session->userdata('email');
+		$logged_user_id = $this->session->userdata('id');
 		if($logged_user_id == NULL )
 		{
 			redirect('auth/login');
@@ -87,6 +86,7 @@ class User extends Controller  {
     **/
 	function popupAdduser()
 	{
+		//$this->user_auth->check_permission('user_adduser');
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
 		$data['project']= $this->project_model->getproject();
@@ -152,12 +152,12 @@ class User extends Controller  {
     * @return: type: [Boolean, Array()]
     **/
 	function popupEditusers()
-	{
+	{	
+		//$this->user_auth->check_permission('user_adduser');
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
 		$data['project']= $this->project_model->getproject();
-		//$data['user_group']= $this->users_model->getgroup_details();
 		$data['user']= $this->users_model->user_details($uid);
 		$content=$data['user']->result_array();
 		foreach($content as $row) 
@@ -182,7 +182,6 @@ class User extends Controller  {
 		$data['group'] = $_REQUEST['group'];
 		$data['position'] = $_REQUEST['position'];
 		$data['email'] = $_REQUEST['email'];
-		//$data['password'] = $_REQUEST['password'];
 		$data['phone'] = $_REQUEST['phone'];
 		$data['city'] = $_REQUEST['city'];
 		$data['center'] = $_REQUEST['center'];

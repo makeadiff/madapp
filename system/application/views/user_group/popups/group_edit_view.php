@@ -26,7 +26,7 @@ foreach($group_permission as $roll)
 	}
 ?> 
 
-         <form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/updategroup_name')?>" method="post" style="width:500px;">
+         <form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/updategroup_name')?>" method="post" style="width:500px;" onsubmit="return validate();">
 	<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
     
 		<div id="right-column">
@@ -60,4 +60,14 @@ foreach($group_permission as $roll)
     </div>
     </fieldset>
     </form>		
-   			
+   	<script>
+     function validate()
+     {
+        if(document.getElementById("groupname").value == '')
+          {		
+              alert("Groupname missing.");
+              return false;
+          }
+       
+	}
+		</script>		

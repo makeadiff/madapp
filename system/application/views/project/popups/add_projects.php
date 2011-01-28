@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
 
-<form id="formEditor" class="mainForm clear" action="<?=site_url('project/addproject')?>" method="post" style="width:500px;" >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('project/addproject')?>" method="post" style="width:500px;" onsubmit="return validate();" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
             <div class="field clear" style="width:600px;"> 
@@ -17,3 +17,14 @@
             </div>
             </fieldset>
             </form>
+            
+             <script>
+     function validate()
+     {
+        if(document.getElementById("name").value == '')
+          {		
+              alert("Project Name Missing.");
+              return false;
+          }
+	}
+		</script>

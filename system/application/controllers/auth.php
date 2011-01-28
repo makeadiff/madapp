@@ -86,7 +86,7 @@ class Auth extends Controller {
 			$this->data['password'] = array('name' => 'password',
 				'id' => 'password',
 				'type' => 'password',
-				'value' => $this->form_validation->set_value('password'),
+				//'value' => $this->form_validation->set_value('password'),
 			);
 
 			$this->load->view('auth/login', $this->data);

@@ -10,7 +10,7 @@ if($subject) { ?>
 <div id="content" class="clear" >
 <!-- Main Begins -->
 	<div id="main" class="clear">
-<form id="formEditor" class="mainForm clear" method="post" action="<?=site_url('exam/addMarks')?>"  style="width:500px;" >
+<form id="formEditor" class="mainForm clear" method="post" action="<?=site_url('exam/addMarks')?>"  style="width:500px;"  >
 	<fieldset class="clear" style="margin-top:50px;margin-left:-80px;">
 
 <table cellpadding="0"  cellspacing="0" style="width:auto;" class="clear" id="tableItems">
@@ -93,3 +93,7 @@ foreach($content as $row)
 <?php } else { 
 
 echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no subjects found -</div>";} ?>
+
+
+
+

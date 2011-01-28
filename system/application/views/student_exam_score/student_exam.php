@@ -41,6 +41,7 @@ function get_centers()
 }
 function get_kidslist(center_id)
 {
+	
 	$.ajax({
             type: "POST",
             url: "<?= site_url('exam/get_kidslist')?>",
@@ -50,6 +51,7 @@ function get_kidslist(center_id)
             	$('#kids').html(msg);
             }
             });
+			
 
 }
 function dataGrabber()
@@ -57,6 +59,7 @@ function dataGrabber()
 			var name = $('#name').val();
 			var sub_no = $('#sub_no').val();
 			var center = $('#centers').val();
+			
 			var agents = "";
 			$('#kids :checked').each(function(i, selected)
 				{ 
@@ -64,6 +67,26 @@ function dataGrabber()
 				});
 				alert(agents);
 				//get subject name
+				if(name=='')
+				{
+				alert("name missing");
+				}
+				else if(sub_no=='')
+				{
+				//alert(center);
+				alert("Enter Subject");
+				}
+				else if(center =='-1')
+				{
+				alert("Select Center");
+				}
+				else if(agents =='-1,')
+				{
+				alert("Select agents");
+				}
+				
+				else
+				{
 				 var choiceText = [];
 				 var cText = '';
 				 for(var i=1; i<=sub_no; i++)
@@ -88,6 +111,7 @@ function dataGrabber()
 				 $('#refresh').fadeOut('slow');
 				 }
 				 });
+				 }
 }
 </script>
  <div id="right-column">
@@ -95,7 +119,7 @@ function dataGrabber()
         
 <div id="refresh">
 <!--onclick="return false"-->
-<form name="form" id="formEditor" class="mainForm clear"  onclick="return false"   action="" method="post" style="width:500px;">
+<form name="form" id="formEditor" class="mainForm clear"  onclick="return false"   action="" method="post" style="width:500px;" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 		
        
@@ -114,7 +138,7 @@ function dataGrabber()
             <div class="field clear" id="center" style="width:600px;">
                 <label for="selBulkActions">Select center:</label> 
                 <select id="centers" name="center"> 
-                <option  >- choose action -</option> 
+                <option  value="-1" >- choose action -</option> 
                 </select>
             </div>
             
@@ -122,7 +146,7 @@ function dataGrabber()
          <div class="field clear" style="width:600px; height:100px;">
          <label for="selBulkActions">Kids:</label>
 			<select id="kids" name="kids"  style="width:142px; height:80px;"multiple >
-            <option selected="selected"; >- choose action -</option>  
+            <option selected="selected" value="-1"; >- choose action -</option>  
             </select>
             </div>
             <div class="field clear" style="width:550px;"> 
@@ -133,3 +157,5 @@ function dataGrabber()
             </fieldset>
             </form>
             </div>
+            
+          

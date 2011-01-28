@@ -1,7 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * CodeIgniter
- 
  * An open source application development framework for PHP 4.3.2 or newer
  *
  * @package         MadApp
@@ -22,7 +21,7 @@ class Exam extends Controller  {
         $this->load->library('user_auth');
 		$this->load->helper('url');
         $this->load->helper('form');
-		$logged_user_id = $this->session->userdata('email');
+		$logged_user_id = $this->session->userdata('id');
 		if($logged_user_id == NULL )
 		{
 			redirect('auth/login');
@@ -124,11 +123,11 @@ class Exam extends Controller  {
     * @return : type : []
     **/
 	function input_exam_mark_details()
-	{
+	{	
+		//$this->user_auth->check_permission('exam_addexam_details');
 		$agents = $_REQUEST['agents'];
 		$name = $_REQUEST['name'];
 		$choice_text = $_REQUEST['choice_text'];
-		//$center = $_REQUEST['center'];
 		$exam_id=$this->exam_model->insert_exam_name($name);
 		$choiceText = substr($choice_text,0,strlen($choice_text)-1);
 		$subjects_id=$this->exam_model->insert_subject_name($choiceText,$exam_id);
@@ -201,6 +200,7 @@ class Exam extends Controller  {
     **/
 	function popupAddMark()
 		{
+		//$this->user_auth->check_permission('exam_addmark');
 		$data['exam_details']=$this->exam_model->get_exam();
 		$this->load->view('student_exam_score/popups/popup_getexam',$data);
 		}
@@ -224,7 +224,7 @@ class Exam extends Controller  {
     * @param  : []
     * @return : type : []
     **/
-		function addMarks()
+	function addMarks()
 		{
 		$data['exam_id']=$_REQUEST['exam_id'];
 		$sub_count=$_REQUEST['sub_count'];

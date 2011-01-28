@@ -28,10 +28,11 @@ $birthday =$row['birthday'];
 $birthday =explode("/",$birthday);
 $birthday=$birthday[2]."/".$birthday[1]."/".$birthday[0];
 $description=$row['description'];
+$photo=$row['photo'];
 }
 
 ?>
-<form id="formEditor" class="mainForm clear" action="<?=site_url('kids/update_kids')?>" method="post" style="width:500px;" >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" style="width:500px;" onsubmit="return validate();" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 			<div class="field clear" style="width:600px;">
             <label for="selBulkActions">Select center:</label> 
@@ -62,15 +63,49 @@ $description=$row['description'];
               <p class="error clear"></p>
             </div>
             
+            
+            <div class="field clear" style="width:600px;">
+             <label for="date">Photo</label>
+            <img src="<?=base_url().'pictures/'.$photo; ?>" width="50" style="float:left;" height="50" />
+            </div>
+            <div  class="field clear" style="width:600px;">
+              <label for="date">Change photo</label>
+              <input name="image"  id="image" type="file">
+              <p class="error clear"></p>
+            </div>
             <div class="field clear" style="width:600px;"> 
                         <label for="txtName">Description : </label>
                         <textarea rows="5" cols="40" id="description" name="description"><?php echo $description;  ?></textarea> 
                         <p class="error clear"></p>
            </div>
+           
+            
             
             <div class="field clear" style="width:550px;">
              		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
      				<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
             </div>
+            
+            
             </fieldset>
             </form>
+           <script> 
+            function validate()
+     {
+        if(document.getElementById("center").value == '-1')
+          {		
+              alert("Select a Center.");
+              return false;
+          }
+       if(document.getElementById("name").value == '')
+          {
+              alert("Name missing");
+              return false;
+          }
+       if(document.getElementById("date-pick").value == '')
+          {
+              alert("Date Missing");
+              return false;
+          }
+	}
+		</script>

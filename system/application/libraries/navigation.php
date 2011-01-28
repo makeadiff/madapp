@@ -1,14 +1,12 @@
 <?php
 /**
  * Class for handling navigation
- * @author Sajith
  */
 Class Navigation
 {
         /**
          * Check whether any post or file upload variable
          * @return <type>
-         * @author Sajith
          */
 	function isPost()
 	{
@@ -42,7 +40,6 @@ Class Navigation
 
 	/**
 	* function for displaying not authorized flash
-	* @author Sajith
 	**/
 	private function showFlash($message = FALSE )
 	{

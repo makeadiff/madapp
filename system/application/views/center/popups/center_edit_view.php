@@ -15,12 +15,12 @@ $user_id=$row['center_head_id'];
 }
 
 ?>
-<form id="formEditor" class="mainForm clear" action="<?=site_url('center/update_Center')?>" method="post" style="width:500px;" >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('center/update_Center')?>" method="post" style="width:500px;"  onsubmit="return validate();">
 <fieldset class="clear" style="margin-top:70px;width:500px;margin-left:-30px;">
 			<div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select city:</label> 
             <select id="city" name="city" > 
-            <option selected="selected" >- choose action -</option> 
+            <option selected="selected"  value="-1">- choose action -</option> 
 				<?php 
                 $details = $city->result_array();
                 foreach($details as $row)
@@ -37,7 +37,7 @@ $user_id=$row['center_head_id'];
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select Head:</label> 
             <select id="user_id" name="user_id" > 
-            <option selected="selected" >- choose action -</option> 
+            <option selected="selected" value="-1" >- choose action -</option> 
 				<?php 
                 $user_name = $user_name->result_array();
                 foreach($user_name as $row)
@@ -63,3 +63,23 @@ $user_id=$row['center_head_id'];
             </div>
             </fieldset>
             </form>
+             <script>
+     function validate()
+     {
+        if(document.getElementById("city").value == '-1')
+          {		
+              alert("Select a Center.");
+              return false;
+          }
+       if(document.getElementById("user_id").value == '-1')
+          {
+              alert("Select a Head");
+              return false;
+          }
+       if(document.getElementById("center").value == '')
+          {
+              alert("Center Missing.");
+              return false;
+          }
+	}
+		</script>

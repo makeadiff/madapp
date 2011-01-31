@@ -22,12 +22,12 @@
 	/**
 	 * Site Title, example.com
 	 */
-	$config['site_title']		   = "Example.com";
+	$config['site_title']		   = "maddapp.com";
 	
 	/**
 	 * Admin Email, admin@example.com
 	 */
-	$config['admin_email']		   = "admin@example.com";
+	$config['admin_email']		   = "admin@maddapp.com";
 	
 	/**
 	 * Default group, use name
@@ -122,10 +122,7 @@ $config['email_type'] = 'html';
 	$config['salt_length'] = 10;
 
 	/**
-	 * Should the salt be stored in the database?
-	 * This will change your password encryption algorithm, 
-	 * default password, 'password', changes to 
-	 * fbaa5e216d163a02ae630ab1a43372635dd374c0 with default salt.
+	
 	 **/
 	$config['store_salt'] = false;
 	

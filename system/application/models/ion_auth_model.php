@@ -133,7 +133,6 @@ class Ion_auth_model extends CI_Model
 	 * get_user
 	 *
 	 * @return object
-	 * @author Phil Sturgeon
 	 **/
 	public function get_user($id = false)
 	{
@@ -153,7 +152,6 @@ class Ion_auth_model extends CI_Model
 	 * get_user_by_email
 	 *
 	 * @return object
-	 * @author Ben Edmunds
 	 **/
 	public function get_user_by_email($email)
 	{
@@ -166,7 +164,6 @@ class Ion_auth_model extends CI_Model
 	 * update_last_login
 	 *
 	 * @return bool
-	 * @author Ben Edmunds
 	 **/
 	public function update_last_login($id)
 	{
@@ -187,7 +184,6 @@ class Ion_auth_model extends CI_Model
 	 * set_lang
 	 *
 	 * @return bool
-	 * @author Ben Edmunds
 	 **/
 	public function set_lang($lang = 'en')
 	{
@@ -204,7 +200,6 @@ class Ion_auth_model extends CI_Model
 	 * login_remembed_user
 	 *
 	 * @return bool
-	 * @author Ben Edmunds
 	 **/
 	public function login_remembered_user()
 	{
@@ -260,7 +255,6 @@ class Ion_auth_model extends CI_Model
 	 * remember_user
 	 *
 	 * @return bool
-	 * @author Ben Edmunds
 	 **/
 	private function remember_user($id)
 	{
@@ -290,4 +284,75 @@ class Ion_auth_model extends CI_Model
 	    }
 	    return FALSE;
 	}
+	/**
+    * Function to forgotten_password
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function forgotten_password($email = '')
+	{
+	    if (empty($email))
+	    {
+		return FALSE;
+	    }
+
+	    $key = rand('11111','99999');
+
+	    $this->forgotten_password_code = $key;
+
+	    $this->db->where('email',$email);
+
+	    $this->db->update('user', array('forgotten_password_code' => $key), array('email' => $email));
+
+	    return $this->db->affected_rows() == 1;
+	}
+	/**
+    * Function to get_user_by_identity
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function get_user_by_identity($identity)
+	{
+	    
+		return $this->db->where('email',$identity)->get('user');
+		
+	}
+	/**
+    * Function to forgotten_password_complete
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function forgotten_password_complete($code)
+	{
+	    if (empty($code))
+	    {
+		return FALSE;
+	    }
+
+	    $this->db->where('forgotten_password_code', $code);
+
+	    if ($this->db->count_all_results('user') > 0)
+	    {
+		$password = rand('111111','999999');
+
+		$data = array(
+			    'password'			=> $password ,
+			    'forgotten_password_code'   => '0',
+			    //'active'			=> 1,
+			     );
+
+		$this->db->update('users', $data, array('forgotten_password_code' => $code));
+
+		return $password;
+	    }
+
+	    return FALSE;
+	}
+	
 }

@@ -60,10 +60,9 @@
 </ul>
 </div>
 
-
 <!-- Toolbar Starts -->
 <div id="toolbar" class="clear">
-    <p id="user" style="margin-left: 110px;">Logged in as <a href="#">Admin</a></p>
+    <p id="user" style="margin-left: 110px;">Welcome <a href="#"><?php echo $this->session->userdata('name'); ?></a></p>
         <div id="buttons"><a href="<?= site_url('auth/logout') ?>" class="button tool" style="margin-left: 120px;">Logout</a></div>
 </div>
 <!-- Toolbar Ends -->

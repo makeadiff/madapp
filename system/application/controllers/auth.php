@@ -108,6 +108,58 @@ class Auth extends Controller {
 		//redirect them back to the page they came from
 		redirect('auth/login', 'refresh');
 	}
-
 	
+	/**
+	Function to forgotpassword
+    * @author : rabeesh
+    * @param  : []
+    * @return : type : []
+    **/
+	function forgotpassword()
+	{
+		$this->form_validation->set_rules('email','Email Address', 'required|valid_email');
+		
+		if ($this->form_validation->run() == FALSE)
+		{ 
+			//$email =  $this->input->post('email');
+			$this->data['email'] = array('name' => 'email',
+				'id' => 'email',);
+				$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			$this->load->view('auth/forgotpassword_view', $this->data);
+		}
+		
+		else
+		{
+		//$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+		//$this->load->view('auth/forgotpassword_view', $this->data);
+			$forgotten = $this->user_auth->forgotten_password($this->input->post('email'));
+			if ($forgotten)
+			{ //if there were no errors
+				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				redirect("auth/login", 'refresh'); //we should display a confirmation page here instead of the login page
+			}
+			else
+			{
+				$this->session->set_flashdata('message', $this->user_auth->errors());
+				redirect("auth/forgotpassword", 'refresh');
+			}
+		}
+	}
+	
+	public function reset_password($code)
+	{
+		$reset = $this->user_auth->forgotten_password_complete($code);
+
+		if ($reset)
+		{  //if the reset worked then send them to the login page
+			$this->session->set_flashdata('message', $this->user_auth->messages());
+			redirect("auth/login", 'refresh');
+		}
+		else
+		{ //if the reset didnt work then send them back to the forgot password page
+			$this->session->set_flashdata('message', $this->user_auth->errors());
+			redirect("auth/forgot_password", 'refresh');
+		}
+	}
+
 }

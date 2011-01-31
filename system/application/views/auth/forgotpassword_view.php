@@ -12,44 +12,31 @@
 </head>
 <body id="pageLogin">
 <div class="field" style="color:#CC0000; text-align:center; margin-top:50px;">
-	<?php echo $message;?>
 	</div>
+   
 <div id="login" class="centerbox">
-<h2 align="center">Login</h2>
+ <div style="color:#FF0000; margin-bottom:5px;"><?php echo $message;?></div>
+<h2 align="center">Forgot Password</h2>
 <div class="boxInside">
 
 	
-    <?php echo form_open("auth/login");?>
+    <?php echo form_open("auth/forgotpassword");?>
     <fieldset>
 	<legend>Login</legend>
     
     <div class="field"> 
-      	<label for="email">Email:</label>
-      	<?php  echo form_input($email);?>
+      	<label for="email" >Enter your Email:</label>
+         <?php echo form_input($email);?>
       </div>
-      
-      <div class="field">
-      	<label for="password">Password:</label>
-      	<?php echo form_input($password);?>
-      </div>
-      
-      <div class="field" style="margin-top:10px;">
-	      <label for="remember">Remember Me:</label></div>
-          <div  style=" float:left; margin-left:-50px; margin-top:10px;">
-	      <?php echo form_checkbox('remember', '1', FALSE);?>
-	 </div>
-      
-      <div class="field" style="margin-top:-21px; margin-left:150px;">
-      <?php echo form_submit('submit', 'Login');?>
+      <div class="field" style="margin-top:21px; margin-left:150px;">
+      <?php echo form_submit('submit', 'Submit');?>
 	</div>
-    
-    <div class="field" style="margin-left:5px; margin-top:10px;"><a href="<?php echo site_url('auth/forgotpassword') ?>"> Forgot password ?</a></div>
-    <div class="field" style="margin-left:149px; margin-top:-14px;"><a href="<?php echo site_url('common/register') ?>">New Registration</a></div>
       </fieldset>
     <?php echo form_close();?>
 
 </div>
 
 </body>
+
 
 </html>

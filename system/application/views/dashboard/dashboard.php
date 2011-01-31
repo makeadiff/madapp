@@ -4,7 +4,7 @@
     	<div id="main" class="clear">
     		<div id="head" class="clear" style="border-bottom:none;">
             <div style="font-size:14px;background-color:#FFF89D;height:15px;padding-top:18px;padding-bottom:20px;padding-left:10px;">
-            	welcome<?php echo $this->session->userdata('name'); ?> ,</div>
+            	welcome  <?php echo $this->session->userdata('name'); ?></div>
     	</div>
     		
     	<div id="quick" class="clear" style="margin-top:-15px;">

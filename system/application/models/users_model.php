@@ -482,29 +482,7 @@ class Users_model extends Model
 		return $result;
 	
 	}	
-	/**
-    * Function to searchuser_details_csv
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	/*function searchuser_details_csv($data)
-	{
-		$city=$data['city'];
-		$group=$data['group'];
-		$name=$data['name'];
-		$this->db->select('User.*,Center.name as center_name,City.name as city_name,UserGroup.id 
-		as g_id,UserGroup.user_id,UserGroup.group_id');
-		$this->db->from('User');
-		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
-		$this->db->join('City', 'City.id = User.city_id' ,'join');
-		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
-		$this->db->where('UserGroup.group_id',$group);
-		$this->db->where('City.id',$city);
-		$result=$this->db->get();
-		return $result;
-		
-	}*/
+	
 	
 	
 	/// Returns all the permissions for the given user as an array.
@@ -535,4 +513,54 @@ class Users_model extends Model
 		
 		return $all_groups;
 	}
+	
+	function user_registration($data)
+	{
+		$email = $data['email'];
+        $password  = $data['password'];
+        $this->db->select('email');
+        $this->db->from('user');
+        $this->db->where('email',$email);
+        $result=$this->db->get();
+        if($result->num_rows() == 0) 
+        {
+         		
+                
+                $userdetailsArray = array('name' => $data['firstname'],
+                                          'title' => $data['position'],
+                                          'email' => $data['email'],
+                                          'phone' => $data['mobileno'],
+                                          'password' => $data['password'],
+                                          'city_id'=>$data['city'],
+                                          'center_id'=>$data['center'],
+										  'user_type'=>'applicant',
+                                          );
+                 $this->db->set($userdetailsArray);
+                 $this->db->insert('user');
+				 $user_id=$this->db->insert_id();
+				 
+                       	$this->db->select('User.*,Center.name as center_name,City.name as city_name');
+						$this->db->from('User');
+						$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+						$this->db->join('City', 'City.id = User.city_id' ,'join');
+						$this->db->where('user.id',$user_id);
+						$result=$this->db->get();
+						$user=$result->first_row();
+						$memberCredentials['id'] = $user->id;
+						$memberCredentials['email'] = $user->email;
+						$memberCredentials['name'] = $user->name;
+						$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
+						$memberCredentials['groups'] = $this->get_user_groups($user->id);
+						
+						return $memberCredentials;
+            }
+            else
+            {
+                    return false;
+            }
+    }
+	
+	
+	
+	
 }

@@ -3,6 +3,10 @@ class City_model extends Model {
     function City_model() {
         // Call the Model constructor
         parent::Model();
+        
+        $this->ci = &get_instance();
+		$this->city_id = $this->ci->session->userdata('city_id');
+		$this->project_id = $this->ci->session->userdata('project_id');
     }
     
     function getCities() {

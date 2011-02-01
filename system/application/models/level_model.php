@@ -16,14 +16,8 @@ class Level_model extends Model {
         parent::Model();
     }
     
-	/**
-    * Function to getlevel
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean,]
-    **/
-	function get_all_levels() {
-		return $this->db->where('project_id', 1)->get('Level')->result();
+	function get_all_levels_in_center($center_id) {
+		return $this->db->where('project_id', 1)->where('center_id',$center_id)->get('Level')->result();
 	}
 	
 	function get_level($level_id) {

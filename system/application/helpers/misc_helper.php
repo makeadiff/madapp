@@ -70,9 +70,17 @@ function getById($query, $db) {
 }
 
 function idNameFormat($data) {
-		foreach($data as $row) {
+	$return = array();
+	foreach($data as $row) {
 		$return[$row->id] = stripslashes($row->name);
 	}
+	
+	return $return;
+}
+
+function colFormat($data) {
+	$return = array();
+	foreach($data as $row) $return[] = current($row);
 	
 	return $return;
 }

@@ -21,15 +21,14 @@ class Project extends Controller  {
     function Project()
     {
         parent::Controller();
-        
-		
+       
 		$this->load->library('session');
         $this->load->library('user_auth');
 		$logged_user_id = $this->session->userdata('id');
-		if($logged_user_id == NULL )
-		{
+		if($logged_user_id == NULL ) {
 			redirect('auth/login');
 		}
+		
 		$this->load->helper('url');
         $this->load->helper('form');
 		$this->load->model('project_model');

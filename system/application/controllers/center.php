@@ -21,17 +21,16 @@ class Center extends Controller  {
     function Center()
     {
         parent::Controller();
-        
-		
+
 		$this->load->library('session');
         $this->load->library('user_auth');
 		$this->load->helper('url');
         $this->load->helper('form');
 		$logged_user_id = $this->session->userdata('id');
-		if($logged_user_id == NULL )
-		{
+		if($logged_user_id == NULL ) {
 			redirect('auth/login');
 		}
+		
 		$this->load->library('validation');
 		$this->load->model('center_model');
 		$this->load->model('kids_model');
@@ -97,42 +96,32 @@ class Center extends Controller  {
     * @return : type : []
     *
     **/
-	function addCenter()
-	{
+	function addCenter() {
+		$data['city']=$_REQUEST['city'];
+		$data['user_id']=$_REQUEST['user_id'];
+		$data['center']=$_REQUEST['center'];
+		$returnFlag= $this->center_model->add_center($data);
 	
-	
-			$data['city']=$_REQUEST['city'];
-			$data['user_id']=$_REQUEST['user_id'];
-			$data['center']=$_REQUEST['center'];
-			$returnFlag= $this->center_model->add_center($data);
-	
-	
-	
-	
-	if($returnFlag)
-		  {
-		  		$message['msg']   =  "Center added successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "popupaddCneter";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
-		else
-		  {
-		  		$message['msg']   =  "no updates performed.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupaddCneter";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
-	
-	
+		if($returnFlag) {
+			$message['msg']   =  "Center added successfully. Next step - <a href='".site_url('level/creater/center/'.$returnFlag)."'>Add Levels</a>.";
+			$message['successFlag'] = "1";
+			$message['link']  =  "popupaddCneter";
+			$message['linkText'] = "add new Center";
+			$message['icoFile'] = "ico_addScheme.png";
+		
+			$this->load->view('dashboard/errorStatus_view',$message);
+		} else {
+			$message['msg']   =  "no updates performed.";
+			$message['successFlag'] = "0";
+			$message['link']  =  "popupaddCneter";
+			$message['linkText'] = "add new Center";
+			$message['icoFile'] = "ico_addScheme.png";
+		
+			$this->load->view('dashboard/errorStatus_view',$message);
+		}
 	
 	}
+	
 	/**
     *
     * Function to popupEdit_center

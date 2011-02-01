@@ -5,6 +5,13 @@ class City extends Controller {
 	function City() {
 		parent::Controller();
 		$message = array('success'=>false, 'error'=>false);
+		
+		$this->load->library('session');
+        $this->load->library('user_auth');
+		$logged_user_id = $this->session->userdata('id');
+		if($logged_user_id == NULL ) {
+			redirect('auth/login');
+		}
 	
 		$this->load->scaffolding('City');
 		$this->load->model('City_model','model', TRUE);

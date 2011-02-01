@@ -11,12 +11,13 @@
  * @filesource
  */
 
-class Users_model extends Model
-{
-	
-    function Users_model()
-    {
+class Users_model extends Model {
+
+    function Users_model() {
         parent::Model();
+        $this->ci = &get_instance();
+        $this->city_id = $this->ci->session->userdata('city_id');
+        $this->project_id = $this->ci->session->userdata('project_id');
     }
     
     /**
@@ -36,6 +37,8 @@ class Users_model extends Model
    			$memberCredentials['id'] = $user->id;
 			$memberCredentials['email'] = $user->email;
 			$memberCredentials['name'] = $user->name;
+			$memberCredentials['project_id'] = $user->project_id;
+			$memberCredentials['city_id'] = $user->city_id;
 			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
 			
@@ -333,7 +336,7 @@ class Users_model extends Model
 	}
 	
 	function get_users_in_center($center_id) {
-		return $this->db->where('center_id', $center_id)->where('project_id',1)->where('user_type','volunteer')->get('User')->result();
+		return $this->db->where('center_id', $center_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->get('User')->result();
 	}
 	
 	function get_users_in_city($city_id) {
@@ -483,6 +486,26 @@ class Users_model extends Model
 	
 	}	
 	
+	function search_users($data) {
+		$this->db->from('User');
+		if(!empty($data['project_id'])) $this->db->where('project_id', $data['project_id']);
+		else $this->db->where('project_id', $this->project_id);
+		if(!empty($data['city_id'])) $this->db->where('city_id', $data['city_id']);
+		else $this->db->where('city_id', $this->city_id);
+		
+		if(!empty($data['center_id'])) $this->db->where('center_id', $data['center_id']);
+		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
+		
+		$all_users = $this->db->get()->result();
+		$return = array();
+		foreach($all_users as $user) {
+			// Get the batches for this user. An user can have two batches. That's why I don't do join to get this date.
+			$user->batches = colFormat($this->db->where('user_id',$user->id)->get('UserBatch')->result_array()); // :SLOW:
+			
+			$return[$user->id] = $user;
+		}
+		return $return;
+	}
 	
 	
 	/// Returns all the permissions for the given user as an array.

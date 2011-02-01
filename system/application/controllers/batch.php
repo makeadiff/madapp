@@ -5,11 +5,19 @@ class Batch extends Controller {
 	function Batch() {
 		parent::Controller();
 		$this-> message = array('success'=>false, 'error'=>false);
-	
-		$this->load->scaffolding('Batch');
+		
+		$this->load->library('session');
+        $this->load->library('user_auth');
+		$logged_user_id = $this->session->userdata('id');
+		if($logged_user_id == NULL ) {
+			redirect('auth/login');
+		}
+		
 		$this->load->model('Batch_model','model');
 		$this->load->model('Center_model','center_model');
 		$this->load->model('Users_model','user_model');
+		$this->load->model('Level_model','level_model');
+			
 		$this->load->helper('url');
 		$this->load->helper('misc');
 	}
@@ -25,12 +33,10 @@ class Batch extends Controller {
 			$item_name = $this->center_model->get_center_name($center_id);
 			
 		} elseif($type == 'level') {
-			$this->load->model('Level_model','level_model');
-			
 			$level = $this->level_model->get_level($item_id);
 			$all_batches = $this->model->get_batches_in_level($item_id);
 			
-			if($all_batches) $center_id = $all_batches[0]->id;
+			if($all_batches) $center_id = $all_batches[0]->center_id;
 			else $center_id = $level->center_id;
 			
 			$item_name = $level->name .  ' at ' . $this->center_model->get_center_name($center_id);
@@ -48,20 +54,20 @@ class Batch extends Controller {
 		$batch_name =  $day_list[$batch->day] . ' ' . date('h:i A', strtotime('2000-01-01 ' . $batch->class_time));
 		
 		// Get the rest of the necessary stuff...
-		$levels_in_batch = $this->model->get_levels_in_batch($batch_id);
-		$teachers_in_center = $this->user_model->get_users_in_center($batch->center_id);
+		$levels_in_center = $this->level_model->get_all_levels_in_center($batch->center_id);
+		$all_teachers = $this->user_model->get_users_in_city($this->session->userdata('city_id'));
 		
 		// This array will be used later to decide who belongs to which level.
 		$level_teacher = array();
-		foreach($levels_in_batch as $level) {
-			$teachers_in_level = $teachers_in_batch = $this->model->get_teachers_in_batch_and_level($batch_id, $level->id);
-			foreach($teachers_in_batch as $user) {
+		foreach($levels_in_center as $level) {
+			$teachers_in_level = $this->model->get_teachers_in_batch_and_level($batch_id, $level->id);
+			foreach($teachers_in_level as $user) {
 				$level_teacher[$level->id][$user->id] = true;
 			}
 		}
 		
 		$this->load->view('batch/add_volunteers', array('batch' => $batch,'batch_name'=>$batch_name, 'center_id'=>$batch->center_id, 
-				'levels_in_batch'=>$levels_in_batch,'teachers_in_center'=>$teachers_in_center, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
+				'levels_in_center'=>$levels_in_center,'all_teachers'=>$all_teachers, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
 	}
 	
 	function add_volunteers_action() {

@@ -5,6 +5,13 @@ class Level extends Controller {
 	function Level() {
 		parent::Controller();
 		$this-> message = array('success'=>false, 'error'=>false);
+		
+		$this->load->library('session');
+        $this->load->library('user_auth');
+		$logged_user_id = $this->session->userdata('id');
+		if($logged_user_id == NULL ) {
+			redirect('auth/login');
+		}
 	
 		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);
@@ -12,9 +19,9 @@ class Level extends Controller {
 		$this->load->helper('url');
 	}
 	
-	function index($holder, $center_id = 0) {
-		if(!is_numeric($center_id)) {
-			show_error("Choose a center." . $center_id);
+	function index($holder='', $center_id = 0) {
+		if(!is_numeric($center_id) or !$center_id) {
+			show_error("Choose a center.");
 		}
 		$all_levels = $this->model->db->where('center_id',$center_id)->where('project_id',1)->get('Level')->result();
 		$center_name = $this->model->db->where('id',$center_id)->get('Center')->row();

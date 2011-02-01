@@ -33,6 +33,9 @@ Class User_auth {
 			$this->ci->session->set_userdata('permissions', $status['permissions']);
 			$this->ci->session->set_userdata('groups', $status['groups']);
 			
+			$this->ci->session->set_userdata('city_id', $status['city_id']);
+			$this->ci->session->set_userdata('project_id', $status['project_id']);
+			
 			if($remember_me) {
 				$this->ci->session->set_userdata('password_hash', md5($password, '2o^6uU!'));
 			}

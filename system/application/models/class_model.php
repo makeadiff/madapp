@@ -3,6 +3,10 @@ class Class_model extends Model {
     function Class_model() {
         // Call the Model constructor
         parent::Model();
+        
+        $this->ci = &get_instance();
+		$this->city_id = $this->ci->session->userdata('city_id');
+		$this->project_id = $this->ci->session->userdata('project_id');
     }
     
     function get_all($user_id) {
@@ -34,6 +38,11 @@ class Class_model extends Model {
 	    	));
 	    
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
+    }
+    
+    function get_by_level($level_id) {
+    	$classes = $this->db->query("SELECT Class.*,UserClass.* FROM UserClass INNER JOIN Class ON Class.id=UserClass.class_id WHERE Class.level_id=$level_id ORDER BY class_on")->result();
+    	return $classes;
     }
     
     // Returns the class id.

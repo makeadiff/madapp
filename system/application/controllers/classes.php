@@ -5,10 +5,15 @@ class Classes extends Controller {
 	function Classes() {
 		parent::Controller();
 		$this-> message = array('success'=>false, 'error'=>false);
-	
+		
+		$this->load->model('Users_model','user_model');
 		$this->load->model('Class_model','class_model');
 		$this->load->model('Level_model','level_model');
-		$this->load->model('Users_model','user_model');
+		$this->load->model('Center_model','center_model');
+		$this->load->model('Batch_model','batch_model');
+		
+		$this->load->helper('url');
+		$this->load->helper('misc');
 		
 		$this->load->library('session');
         $this->load->library('user_auth');
@@ -17,13 +22,10 @@ class Classes extends Controller {
 			redirect('auth/login');
 		}
 		
-		$this->load->helper('url');
-		$this->load->helper('misc');
 	}
 	
 	/// Shows all the classes the current user is resposible for.
 	function index() {
-	
 		$this->user_auth->check_permission('classes_index');
 		$all_classes = $this->class_model->get_all($this->user_details->id);
 		
@@ -38,6 +40,47 @@ class Classes extends Controller {
 	function batch_view($batch_id=0) 
 	{
 		
+	}
+	
+	function madsheet() {
+		//$this->user_auth->check_permission('classes_madsheet');
+		
+		$all_centers = $this->center_model->get_all();
+		$all_levels = array();
+		
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
+		
+		$class_days = array();
+		foreach($all_centers as $center) {
+			$batches = $this->batch_model->get_class_days($center->id);
+			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
+			
+			foreach($batches as $batch_id => $batch_name) {
+				$class_days[$center->id]['batchs'][$batch_id]['name'] = $batch_name;
+				
+				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
+				foreach($all_levels[$center->id] as $level) {
+					$class_days[$center->id]['batchs'][$batch_id][$level->id]['users'] = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level->id);
+					
+					
+					$all_classes = $this->class_model->get_by_level($level->id);
+					$days_with_classes = array();
+					foreach($all_classes as $class_date) {
+						$date = date('d M',strtotime($class_date->class_on));
+						if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+					}
+					
+					$class_days[$center->id]['batchs'][$batch_id]['days_with_classes'] = $days_with_classes;
+					
+					$class_days[$center->id]['batchs'][$batch_id]['levels'][$level->id] = $all_classes;
+				}
+				
+			}
+			
+		}
+		
+		//dump($class_days);
+		$this->load->view('classes/madsheet', array('class_days'=>$class_days, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
 	
 	function edit_class($class_id) {

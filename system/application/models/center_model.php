@@ -16,6 +16,10 @@ class Center_model extends Model
     function Center_model()
     {
         parent::Model();
+        
+		$this->ci = &get_instance();
+		$this->city_id = $this->ci->session->userdata('city_id');
+		$this->project_id = $this->ci->session->userdata('project_id');
     }
 	
 	 /**
@@ -162,7 +166,7 @@ class Center_model extends Model
 	}
 	
 	function get_all() {
-		return $this->db->where('city_id',1)->get('Center')->result();
+		return $this->db->where('city_id',$this->city_id)->get('Center')->result();
 	}
 	
 	

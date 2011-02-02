@@ -59,6 +59,7 @@ class Project extends Controller  {
 	}
 	function popupaddproject()
 	{
+		$this->user_auth->check_permission('project_add');
 		$this->load->view('project/popups/add_projects');
 	}
 	function addproject()
@@ -89,6 +90,7 @@ class Project extends Controller  {
 	}
 	function popupEdit_project()
 	{	
+		$this->user_auth->check_permission('project_edit');
 		$uid=$this->uri->segment(3);
 		$data['details']=$this->project_model->get_project_byid($uid);
 		$this->load->view('project/popups/edit_projects',$data);
@@ -120,7 +122,8 @@ class Project extends Controller  {
 	
 	}
 	function ajax_deleteproject()
-	{
+	{	
+		$this->user_auth->check_permission('project_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->project_model->delete_project($data);
 	

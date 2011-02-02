@@ -511,13 +511,14 @@ class Users_model extends Model {
 	/// Returns all the permissions for the given user as an array.
 	function get_user_permissions($user_id) {
 		$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission 
-			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id 
+			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id  
 			INNER JOIN UserGroup ON GroupPermission.group_id=UserGroup.group_id 
 			WHERE UserGroup.user_id=$user_id")->result();
 		
 		$all_permissions = array();
 		foreach($permissions as $permission) {
 			$all_permissions[] = $permission->name;
+			
 		}
 		
 		return $all_permissions;

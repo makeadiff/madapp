@@ -47,12 +47,13 @@ class Center extends Controller  {
     **/
 	function manageaddcenters()
 	{
-	$data['currentPage'] = 'db';
-	$data['navId'] = '1';
-	$this->load->view('dashboard/includes/header',$data);
-	$this->load->view('dashboard/includes/superadminNavigation',$data);
-	$this->load->view('center/addcenter_view');
-	$this->load->view('dashboard/includes/footer');
+		
+		$data['currentPage'] = 'db';
+		$data['navId'] = '1';
+		$this->load->view('dashboard/includes/header',$data);
+		$this->load->view('dashboard/includes/superadminNavigation',$data);
+		$this->load->view('center/addcenter_view');
+		$this->load->view('dashboard/includes/footer');
 	
 	}
 	/**
@@ -83,7 +84,7 @@ class Center extends Controller  {
     **/
 	function popupaddCneter()
 	{
-	
+	$this->user_auth->check_permission('center_add');
 	$data['details']= $this->center_model->getcity();
 	$data['user_name']= $this->center_model->getheadname();
 	$this->load->view('center/popups/addcenter_popup',$data);
@@ -132,6 +133,7 @@ class Center extends Controller  {
     **/
 	function popupEdit_center()
 	{
+		$this->user_auth->check_permission('center_edit');
 		$uid = $this->uri->segment(3);
 		$data['details']= $this->center_model->edit_center($uid);
 		$data['city']=$this->center_model->getcity();
@@ -169,7 +171,6 @@ class Center extends Controller  {
 			$message['link']  =  "";
 			$message['linkText'] = "";
 			$message['icoFile'] = "ico_addScheme.png";
-
 			$this->load->view('dashboard/errorStatus_view',$message);		  
 		}
 	
@@ -186,6 +187,7 @@ class Center extends Controller  {
     **/
 	function ajax_deletecenter()
 	{
+		$this->user_auth->check_permission('center_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->center_model->delete_center($data);
 	}

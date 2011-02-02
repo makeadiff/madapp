@@ -85,11 +85,11 @@ class User extends Controller  {
     **/
 	function popupAdduser()
 	{
-		//$this->user_auth->check_permission('user_adduser');
+		$this->user_auth->check_permission('user_add');
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
 		$data['project']= $this->project_model->getproject();
-		$data['user_group']= $this->users_model->getgroup_details();
+		$data['user_group']= $this->users_model->getgroup_details();	
 		$this->load->view('user/popups/add_user',$data);
 	
 	}
@@ -152,7 +152,7 @@ class User extends Controller  {
     **/
 	function popupEditusers()
 	{	
-		//$this->user_auth->check_permission('user_adduser');
+		$this->user_auth->check_permission('user_edit');
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
@@ -214,7 +214,8 @@ class User extends Controller  {
     * @return: type: [Boolean, Array()]
     **/
 	function ajax_deleteuser()
-	{
+	{	
+		$this->user_auth->check_permission('user_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag1= $this->users_model->delete_groupby_userid($data);
 	}

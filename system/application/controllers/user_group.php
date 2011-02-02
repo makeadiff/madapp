@@ -82,7 +82,7 @@
     **/
     function popupaddgroup()
 	{	
-		//$this->user_auth->check_permission('user_group_addgroup');
+		$this->user_auth->check_permission('user_group_add');
 		$data['permission']= $this->permission_model->getpermission_details();
 		$this->load->view('user_group/popups/add_group',$data);
 	}
@@ -135,7 +135,7 @@
     **/
 	function popupEdit_group()
 	{	
-		//$this->user_auth->check_permission('user_group_addgroup');
+		$this->user_auth->check_permission('user_group_edit');
 		$uid = $this->uri->segment(3);
 		$data['details']= $this->users_model->edit_group($uid);
 		$data['permission']= $this->permission_model->getpermission_details();
@@ -194,6 +194,7 @@
     **/
 	function ajax_deletegroup()
 	{
+		$this->user_auth->check_permission('user_group_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->users_model->delete_group($data);
 	

@@ -98,7 +98,7 @@ class Kids extends Controller  {
     **/
 	function popupaddKids()
 	{	
-		//$this->user_auth->check_permission('kids_addkids');
+		$this->user_auth->check_permission('kids_add');
 		$data['center']= $this->center_model->getcenter();
 		$this->load->view('kids/popups/addkids_popup',$data);
 	
@@ -113,7 +113,7 @@ class Kids extends Controller  {
     **/
 	function popupEdit_kids()
 	{
-		//$this->user_auth->check_permission('kids_editkids');
+		$this->user_auth->check_permission('kids_edit');
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
 		$data['kids_details']= $this->kids_model->get_kids_details($uid);
@@ -279,7 +279,8 @@ class Kids extends Controller  {
     *
     **/
 	function ajax_deleteStudent()
-	{
+	{	
+		$this->user_auth->check_permission('kids_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->kids_model->delete_kids($data);
 	}

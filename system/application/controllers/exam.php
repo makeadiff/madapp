@@ -78,7 +78,7 @@ class Exam extends Controller  {
     **/
     function add_exam()
     {	
-		
+		$this->user_auth->check_permission('exam_details_add');
 		$this->load->view('student_exam_score/student_exam');
     }
 	/**
@@ -124,7 +124,7 @@ class Exam extends Controller  {
     **/
 	function input_exam_mark_details()
 	{	
-		//$this->user_auth->check_permission('exam_addexam_details');
+		//$this->user_auth->check_permission('exam_details_add');
 		$agents = $_REQUEST['agents'];
 		$name = $_REQUEST['name'];
 		$choice_text = $_REQUEST['choice_text'];
@@ -200,7 +200,7 @@ class Exam extends Controller  {
     **/
 	function popupAddMark()
 		{
-		//$this->user_auth->check_permission('exam_addmark');
+		$this->user_auth->check_permission('exam_mark_add');
 		$data['exam_details']=$this->exam_model->get_exam();
 		$this->load->view('student_exam_score/popups/popup_getexam',$data);
 		}

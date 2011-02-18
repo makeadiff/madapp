@@ -1,130 +1,130 @@
-	#sub-chapter-header {
-		width:920px;
-		padding:10px;
-		float:left;
-		margin-bottom:10px;
-		margin-top:10px;
-		background-color:#FDA790;
-		
-	}
-	#sub-chapter-header div {
-		width:auto;
-		margin-left:20px;
-		float:left;
-		margin-right10px;
-	}
-	#sub-chapter-header div label{
-		margin-right:8px;
-		margin-top:2px;
-		font-weight:bold;
-		
-	}
-	#question-ans-div {
-		width:680px;
-		padding:9px;
-		border:1px solid #CCCCCC;
-		
-		float:left;
-	}
-	#question-ans-div #quest-ans {
-		width:660px;
-		background-color:#BBCCDD;
-		padding:10px;
-		float:left;
-	}
-	#question-ans-div #quest-ans #quest-div {
-		width:450px;
-		float:left;
-		padding-right:10px;
-		padding-left:10px;
-		padding-bottom:10px;
-	}
-	#question-ans-div #quest-ans #quest-div img{
-		float:left;
-		clear:both;
-		border:none;
-	}
-	#qn {
-		border:1px;
-		background-color:#F2F2F2;
-		color:#000;
-		padding:3px;
-		font-size:13px;
-		border:#F2F2F2 thin solid;
-	}
-	#qn:focus {
-		border:1;
-		color:#000;
-		background-color:#fff;
-		padding:3px;
-		
-	}
-	#question-ans-div #quest-ans #option-div {
-		width:180px;
-		float:left;
-		padding:10px 0;
-		border:#F2F2F2 solid thin;
-		margin-top:23px;
-		height:134px;
-	}
-	#question-ans-div #quest-ans #status-div {
-		width:180px;
-		float:left;
-		padding:10px 0;
-		border:#F2F2F2 solid thin;
-		margin-top:3px;
-		height:15px;
-		background-color:#66CCFF;
-	}
-	#question-ans-div #quest-ans #option-div div {
-		width:200px;
-		float:left;
-		height:20px;
-		padding-left:5px;
-		padding-right:5px;
-	}
-	#question-ans-div #quest-ans-button-div {
-		width:680px;
-		border-radius:5px;
-		-moz-border-radius:5px;
-		-webkit-border-radius:5px;
-		float:left;
-		margin-top:10px;
-	}
-	#wizard-button-div {
-		background-color:#66CCFF;
-		width:660px;
-		padding:10px;
-		float:left;
-		margin-top:5px;
-	}
-	#prev-button {
-		margin-left:09px;
-	}
-	#next-button {
-		margin-left:290px;
-	}
-	#update-button {
-		margin-left:65px;
-	}
-	#qn_ans_div {
-		float:left;
-		width:100%;
-	}
-	#qn_ans_div_outter {
-		float:left;
-		width:100%;
-		min-height:530px;
-	}
-	#qn_ans_feedback {
-		width:688px;
-		margin-top:-3px;
-	}	
+#sub-chapter-header {
+	width:920px;
+	padding:10px;
+	float:left;
+	margin-bottom:10px;
+	margin-top:10px;
+	background-color:#FDA790;
 	
-	.header_subject_chapter {
-		padding:10px;
-		height:20px;
-		background-color:#FDA790;
-		color:#000;
-		text-transform:capitalize;
-	}
+}
+#sub-chapter-header div {
+	width:auto;
+	margin-left:20px;
+	float:left;
+	margin-right:10px;
+}
+#sub-chapter-header div label{
+	margin-right:8px;
+	margin-top:2px;
+	font-weight:bold;
+	
+}
+#question-ans-div {
+	width:680px;
+	padding:9px;
+	border:1px solid #CCCCCC;
+	
+	float:left;
+}
+#question-ans-div #quest-ans {
+	width:660px;
+	background-color:#BBCCDD;
+	padding:10px;
+	float:left;
+}
+#question-ans-div #quest-ans #quest-div {
+	width:450px;
+	float:left;
+	padding-right:10px;
+	padding-left:10px;
+	padding-bottom:10px;
+}
+#question-ans-div #quest-ans #quest-div img{
+	float:left;
+	clear:both;
+	border:none;
+}
+#qn {
+	border:1px;
+	background-color:#F2F2F2;
+	color:#000;
+	padding:3px;
+	font-size:13px;
+	border:#F2F2F2 thin solid;
+}
+#qn:focus {
+	border:1;
+	color:#000;
+	background-color:#fff;
+	padding:3px;
+	
+}
+#question-ans-div #quest-ans #option-div {
+	width:180px;
+	float:left;
+	padding:10px 0;
+	border:#F2F2F2 solid thin;
+	margin-top:23px;
+	height:134px;
+}
+#question-ans-div #quest-ans #status-div {
+	width:180px;
+	float:left;
+	padding:10px 0;
+	border:#F2F2F2 solid thin;
+	margin-top:3px;
+	height:15px;
+	background-color:#66CCFF;
+}
+#question-ans-div #quest-ans #option-div div {
+	width:200px;
+	float:left;
+	height:20px;
+	padding-left:5px;
+	padding-right:5px;
+}
+#question-ans-div #quest-ans-button-div {
+	width:680px;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	float:left;
+	margin-top:10px;
+}
+#wizard-button-div {
+	background-color:#66CCFF;
+	width:660px;
+	padding:10px;
+	float:left;
+	margin-top:5px;
+}
+#prev-button {
+	margin-left:09px;
+}
+#next-button {
+	margin-left:290px;
+}
+#update-button {
+	margin-left:65px;
+}
+#qn_ans_div {
+	float:left;
+	width:100%;
+}
+#qn_ans_div_outter {
+	float:left;
+	width:100%;
+	min-height:530px;
+}
+#qn_ans_feedback {
+	width:688px;
+	margin-top:-3px;
+}	
+
+.header_subject_chapter {
+	padding:10px;
+	height:20px;
+	background-color:#FDA790;
+	color:#000;
+	text-transform:capitalize;
+}

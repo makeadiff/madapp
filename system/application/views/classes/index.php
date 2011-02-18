@@ -1,8 +1,8 @@
 <?php
-$this->load->view('layout/header', array('title'=>'Your Classes')); ?>
-<h1>Your Classes</h1>
+$this->load->view('layout/header', array('title'=>'Classes')); ?>
+<div id="head" class="clear"><h1>Classes</h1></div>
 
-<table>
+<table id="main">
 <tr><th>Center</th><th>Class</th><th>Time</th><th>Volunteer</th><th>Status</th><th>Action</th></tr>
 <?php foreach($all_classes as $class) {
 	if(empty($all_levels[$class->level_id])) { // This one user might be handling two different classes. Different center, different level, etc.
@@ -16,7 +16,7 @@ $this->load->view('layout/header', array('title'=>'Your Classes')); ?>
 <td><?php echo $level_details->center_name ?></td>
 <td><?php echo $level_details->name ?></td>
 <td><?php echo $class->class_on ?></td>
-<td>You</td>
+<td><?php echo (empty($all_users) ? 'You' : $all_users[$class->user_id]->name) ?></td>
 <td><?php echo ucfirst($class->status) ?></td>
 <td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>">Edit</a></td>
 </tr>

@@ -352,7 +352,12 @@ class Users_model extends Model {
     }
     
     function update_credit($user_id, $credit) {
+    	if($credit == 1) $credit = '+1';
     	$this->db->query("UPDATE User SET credit=credit $credit WHERE id=$user_id");
+    }
+    
+    function get_users_batch($user_id) {
+    	return $this->db->query("SELECT batch_id FROM UserBatch WHERE user_id=$user_id")->row()->batch_id;
     }
 	
 	/**

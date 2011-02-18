@@ -11,9 +11,9 @@ if(!$batch['id']) $batch = array(
 	);
 ?>
 
-<h1><?php echo $action . ' Batch in ' . $center_name ?></h1>
+<div id="head" class="clear"><h1><?php echo $action . ' Batch in ' . $center_name ?></h1></div>
 
-<form action="<?php echo site_url('batch/create_action'); ?>" method="post">
+<form action="<?php echo site_url('batch/create_action'); ?>" class="form-area" method="post">
 <label for="day">Day</label>
 <?php echo form_dropdown('day', $day_list, $batch['day']); ?><br />
 

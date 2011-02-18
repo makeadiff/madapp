@@ -10,8 +10,15 @@ class Class_model extends Model {
     }
     
     function get_all($user_id) {
-    	return $this->db->query("SELECT Class.id AS class_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
-    		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id WHERE Class.project_id=1 AND UserClass.user_id=$user_id")->result();
+    	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
+    		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id 
+    		WHERE Class.project_id={$this->project_id} AND UserClass.user_id=$user_id")->result();
+    }
+    
+    function get_all_by_batch($batch_id) {
+    	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
+    		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id 
+    		WHERE Class.project_id={$this->project_id} AND Class.batch_id=$batch_id")->result();
     }
     
     function save_class($data) {
@@ -41,7 +48,9 @@ class Class_model extends Model {
     }
     
     function get_by_level($level_id) {
-    	$classes = $this->db->query("SELECT Class.*,UserClass.* FROM UserClass INNER JOIN Class ON Class.id=UserClass.class_id WHERE Class.level_id=$level_id ORDER BY class_on")->result();
+    	$classes = $this->db->query("SELECT Class.*,UserClass.user_id,UserClass.substitute_id,UserClass.status 
+    		FROM Class INNER JOIN UserClass ON Class.id=UserClass.class_id 
+    		WHERE Class.level_id=$level_id ORDER BY class_on")->result();
     	return $classes;
     }
     

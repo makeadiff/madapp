@@ -1,17 +1,36 @@
 /* Layout */
-
 html, body { height: 100%; }
 body {
     font: normal 77% 'Segoe UI', 'Trebuchet MS', Arial, Helvetica, sans-serif;
     text-align: center;
     color: #000;
 }
+h1 {
+	margin:0;
+}
 a {
     text-decoration: none;
     color: inherit;
 }
-a:hover { text-decoration: none; }
+a:hover { text-decoration: underline; }
 img { border: 1px solid #ddd; }
+.form-area label {
+	width:100px;
+	display:block;
+	float:left;
+	text-align:right;
+	padding-right:5px;
+}
+.form-area input, .form-area select, .form-area textarea {
+	float:left;
+}
+.form-area p.info {
+	float:left;
+}
+br {
+	clear:both;
+}
+
 #wrapper {
     width: 940px;
     min-height: 100%;
@@ -204,7 +223,7 @@ body.withoutSubnav #top { height: 110px; }
 
 #menu {
     float: left;
-    height: 40px;
+    height: 60px;
     width: 690px;
 }
 #menu ul {
@@ -212,6 +231,9 @@ body.withoutSubnav #top { height: 110px; }
     clear: both;
     height: 40px;
 	width:900px;
+	list-style:none;
+	margin:0;
+	padding:0;
 }
 #menu ul li {
     float: left;
@@ -274,12 +296,9 @@ body.withoutSubnav #top { height: 110px; }
     right: 0;
 }
 p#user {
-    color: #fff;
-    margin-bottom: 10px;
-    text-align: center;
+    text-align: right;
 }
-p#user a:hover { text-decoration: underline; }
-#buttons .button {
+}#buttons .button {
     float: left;
     width: 65px;
     margin-left: 5px;
@@ -326,7 +345,6 @@ p#user a:hover { text-decoration: underline; }
 }
 #main {
     width: 900px;
-    float: left;
 }
 #head {
     padding: 0 0 10px 0;
@@ -462,25 +480,27 @@ form.sideForm, .sideForm fieldset {
 
 /* Table in main content */
 
-#main table {
+#main table, table#main {
     width: 900px;
     border-bottom: 1px solid #878787;
+    border-collapse:collapse;
 }
-#main table a:hover { text-decoration: underline; }
-#main td, tr, th {
+#main td, #main tr, #main th {
     vertical-align: middle;
     height: 30px;
     line-height: 30px;
-    text-align: center;
+    text-align: left;
+	font-size:12px;
 }
-#main td, th { padding: 0 10px; }
+#main td, #main th { padding: 0 10px; }
 #main th {
     border-right: 1px solid #000;
     border-left: 1px solid #575757;
 }
-#main thead tr, thead th {
+#main tr th {
     background: transparent url(../images/bgTable.gif) repeat-x 0 0;
     color: #fff;
+    font-weight:normal;
 }
 #main tr:hover { background-color: #dfdfdf; }
 #main tr.even { background-color: #f5f5f5; }
@@ -920,4 +940,27 @@ padding-left:160px;
 }
 #up{
 	margin-top:10px;
+}
+
+
+.last { border: none !important; }
+.left { text-align: left; }
+.center { text-align: center; }
+.right { text-align: right; }
+.justify { text-align: justify; }
+
+/* Clear fix */
+
+.clear { display: inline-block; }
+.clear:after {
+  display: block;
+  line-height: 0px;
+  height: 0px;
+  clear: both;
+  visibility: hidden;
+  content: "";
+}
+
+#content {
+	clear:both;
 }

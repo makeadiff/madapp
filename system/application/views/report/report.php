@@ -1,6 +1,8 @@
 <?php $this->load->view('layout/header', array('title'=>'Reports')); ?>
 
-<table>
+<div id="head" class="clear"><h1>Reports</h1></div>
+
+<table id="main">
 <tr><?php foreach($fields as $field_name=>$field_title) { ?>
 <th><?php echo $field_title ?></th>
 <?php } ?></tr>

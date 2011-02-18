@@ -4,8 +4,6 @@ a { color: #333; }
 body.withSubnav { background: #fff url(../images/skin/black/bgTopOpen.gif) repeat-x 0 0; }
 body.withoutSubnav { background: #fff url(../images/skin/black/bgTopClosed.gif) repeat-x 0 0; }
 #top { background: transparent url(../images/skin/black/bgTopLights.jpg) no-repeat 0 0; }
-#title a { color: #fff; }
-#title span { color: #747474; }
 .button.tool {
     background-image: url(../images/skin/black/btnToolbar.gif);
     color: #d8e41a;

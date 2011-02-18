@@ -42,7 +42,9 @@ $(document).ready(function(){
 	<th class="colName left sortable">Center Name</th>
     
     <th class="colStatus sortable">City</th>
-    <th class="colStatus">Name of Head</th>
+    <th class="colStatus">View Levels</th>
+    <th class="colStatus">View Batches</th>
+    <th class="colStatus">Center Head</th>
    <th class="colActions">Actions</th>
 </tr>
 </thead>
@@ -92,9 +94,11 @@ foreach($content as $row)
 </script>
 <tr class="<?php echo $shadeClass; ?>" id="group">
 <!--    <td class="colCheck"> <input name="cbSelect[]" type="checkbox" value="<?php echo $row['id']; ?>"/></td> -->    
-	<td class="colCheck1"><a href="#"><?php echo $i; ?></a></td>
-	<td class="colName left"> <a href="#"><?php echo $row['name']; ?></a></td>
-	<td class="colCount"><a href=""><?php echo $row['city_name']; ?></a></td> 
+	<td class="colCheck1"><?php echo $i; ?></td>
+	<td class="colName left"><?php echo $row['name']; ?></td>
+	<td class="colCount"><?php echo $row['city_name']; ?></td> 
+	<td class="colCount"><a href="<?php echo site_url('level/index/center/'.$i) ?>">Levels</a></td>
+	<td class="colCount"><a href="<?php echo site_url('batch/index/center/'.$i) ?>">Batches</a></td>
 	<td class="colStatus" style="text-align:left"><?php echo $row['user_name'];?></td>
 	<!--<td class="colPosition"></td>-->
 	<td class="colActions right">

@@ -2,12 +2,14 @@
 $title = 'Adding Volunteers to '.$batch_name.' Batch';
 $this->load->view('layout/header', array('title'=>$title)); ?>
 
-<h1><?php echo $title ?></h1>
+<div id="head" class="clear"><h1><?php echo $title ?></h1></div>
 
 <form action="<?php echo site_url("batch/add_volunteers_action") ?>" method="post">
 
+<table>
+<tr>
 <?php foreach($levels_in_center as $level) { ?>
-<h3><?php echo $level->name ?></h3>
+<td><h3><?php echo $level->name ?></h3>
 
 <select name="teachers_in_level[<?php echo $level->id ?>][]" multiple="multiple">
 <?php foreach($all_teachers as $user) { ?>
@@ -16,8 +18,9 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 	if(!empty($level_teacher[$level->id][$user->id])) print ' selected="selected"';
 ?>><?php echo $user->name ?></option>
 <?php } ?>
-</select>
+</select></td>
 <?php } ?>
+</tr></table>
 <br />
 
 <?php 

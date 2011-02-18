@@ -37,13 +37,28 @@ class Classes extends Controller {
 		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model));
 	}
 	
-	function batch_view($batch_id=0) 
-	{
+	function batch_view($batch_id=0) {
+		$this->user_auth->check_permission('classes_batch_view');
 		
+		if(!$batch_id) $batch_id = $this->user_model->get_users_batch($this->user_details->id);
+		
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
+		$all_classes = $this->class_model->get_all_by_batch($batch_id);
+		
+		$all_levels = array();
+		$center_id = $this->batch_model->get_batch($batch_id)->center_id;
+		
+		foreach($all_classes as $class_info) {
+			if(isset($all_levels[$class_info->level_id])) continue;
+			
+			$all_levels[$class_info->level_id] = $this->level_model->get_level_details($class_info->level_id);
+		}
+		
+		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model, 'all_users'=>$all_users));
 	}
 	
 	function madsheet() {
-		//$this->user_auth->check_permission('classes_madsheet');
+		$this->user_auth->check_permission('classes_madsheet');
 		
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();
@@ -61,7 +76,6 @@ class Classes extends Controller {
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
 					$class_days[$center->id]['batchs'][$batch_id][$level->id]['users'] = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level->id);
-					
 					
 					$all_classes = $this->class_model->get_by_level($level->id);
 					$days_with_classes = array();
@@ -84,6 +98,8 @@ class Classes extends Controller {
 	}
 	
 	function edit_class($class_id) {
+		$this->user_auth->check_permission('class_edit_class');
+		
 		$this->load->helper('form');
 	
 		$class_details = $this->class_model->get_class($class_id);
@@ -105,6 +121,8 @@ class Classes extends Controller {
 	}
 	
 	function edit_class_save() {
+		$this->user_auth->check_permission('class_edit_class');
+		
 		$teacher_ids = $this->input->post('user_id');
 		$user_class_id = $this->input->post('user_class_id');
 		$substitute_ids = $this->input->post('substitute_id');

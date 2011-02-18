@@ -6,6 +6,7 @@
 	<p id="copyright"><a href="http://madapp.makeadiff.in" target="_blank">http://madapp.makeadiff.in</a></p>
   </div>
 </div>
+</div>
 <!-- Footer Ends -->
 
 </body>

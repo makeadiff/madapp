@@ -1,9 +1,13 @@
 <?php $this->load->view('layout/header', array('title'=>'Cities', 'message'=>$message)); ?>
-<h1>Cities</h1>
 
-<ul>
+<div id="head" class="clear"><h1>Cities</h1></div>
+
+<table id="main" class="data-table">
+<tr><th>Name</th><th colspan="2">Action</th></tr>
 <?php foreach($all_cities as $result) { ?>
-<li><a href="<?php echo base_url() ?>index.php/city/view/<?php echo $result->id ?>"><?php echo $result->name ?></a></li>
+<tr><td><?php echo $result->name ?></td>
+<td><a href="<?php echo site_url('city/edit/'.$result->id); ?>">Edit</a></td>
+</tr>
 <?php } ?>
 </table>
 

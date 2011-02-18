@@ -10,7 +10,7 @@
 $mysql_user = "root";
 $database_host = "localhost";
 $password = "";
-$database = "maxpro";
+$database = "Project_Madapp";
 
 /*
 $mysql_user = "arunrajr_maxpro";

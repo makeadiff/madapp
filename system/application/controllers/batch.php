@@ -23,6 +23,8 @@ class Batch extends Controller {
 	}
 	
 	function index($type='center', $item_id = 0) {
+		$this->user_auth->check_permission('batch_index');
+		
 		if(!is_numeric($item_id) or !$item_id) {
 			show_error("Choose a center/level.");
 		}
@@ -46,6 +48,8 @@ class Batch extends Controller {
 	}
 	
 	function add_volunteers($batch_id) {
+		$this->user_auth->check_permission('batch_add_volunteers');
+		
 		$this->load->helper('form');
 		
 		// Get Batch details.
@@ -71,6 +75,8 @@ class Batch extends Controller {
 	}
 	
 	function add_volunteers_action() {
+		$this->user_auth->check_permission('batch_add_volunteers');
+		
 		$batch_id = $this->input->post('batch_id');
 		$teacher_levels = $this->input->post('teachers_in_level');
 		
@@ -87,6 +93,8 @@ class Batch extends Controller {
 	}
 	
 	function create($holder, $center_id = 0) {
+		$this->user_auth->check_permission('batch_create');
+		
 		if(!is_numeric($center_id)) {
 			show_error("Choose a center." . $center_id);
 		}
@@ -111,6 +119,8 @@ class Batch extends Controller {
 	}
 	
 	function create_action() {
+		$this->user_auth->check_permission('batch_create');
+		
 		$this->model->create(array(
 					'day'		=>	$this->input->post('day'),
 					'class_time'=>	$this->input->post('class_time'),
@@ -124,6 +134,8 @@ class Batch extends Controller {
 	}
 	
 	function edit($batch_id) {
+		$this->user_auth->check_permission('batch_edit');
+		
 		$this->load->helper('misc');
 		$this->load->helper('form');
 		
@@ -142,6 +154,8 @@ class Batch extends Controller {
 	}
 	
 	function edit_action() {
+		$this->user_auth->check_permission('batch_edit');
+		
 		$this->db->where('id', $this->input->post('id'))->update('Batch', 
 				array(
 					'name'		=>	$this->input->post('name'), 
@@ -154,6 +168,8 @@ class Batch extends Controller {
 	}
 	
 	function delete($batch_id) {
+		$this->user_auth->check_permission('batch_delete');
+		
 		$batch = $this->model->get_batch_as_array($batch_id);
 		$this->model->delete($batch_id);
 		

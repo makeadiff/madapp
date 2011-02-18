@@ -11,6 +11,8 @@ Class User_auth {
 		$this->ci->load->model('ion_auth_model');
 		$this->ci->load->library('email');
 		$this->ci->load->library('session');
+		
+		$this->ci->load->helper('cookie');
 	}
 
 	/**
@@ -37,7 +39,8 @@ Class User_auth {
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
 			
 			if($remember_me) {
-				$this->ci->session->set_userdata('password_hash', md5($password, '2o^6uU!'));
+				set_cookie('email', $status['email']);
+				set_cookie('password_hash', md5($password, '2o^6uU!'));
 			}
 		}
 		
@@ -55,10 +58,10 @@ Class User_auth {
 		if ( $this->ci->session->userdata('id') ) {
 			return $this->ci->session->userdata('id');
 		
-		} elseif($this->ci->session->userdata('email') and $this->ci->session->userdata('password_hash')) {
+		} elseif(get_cookie('email') and get_cookie('password_hash')) {
 			//This is a User who have enabled the 'Remember me' Option - so there is a cookie in the users system
-			$email = $this->ci->session->userdata('email');
-			$password_hash = $this->ci->session->userdata('password_hash');
+			$email = get_cookie('email');
+			$password_hash = get_cookie('password_hash');
 			$user_details = $this->ci->users_model->db->query("SELECT id,name FROM User 
 				WHERE email='$email' AND MD5(CONCAT(password,'2o^6uU!'))='$password_hash'")->row();
 			
@@ -90,16 +93,24 @@ Class User_auth {
     **/
 	function logout () {
 		$this->ci->session->sess_destroy();
+		
+		delete_cookie('email');
+		delete_cookie('password_hash');
+		
 		return $this->ci->session->unset_userdata('id');
 	}
 	
 	/// Check to see if the user has permission to do the given activity. Redirect to the no-permissions page if he don't.
 	function check_permission($permission_name) {
-		if(in_array($permission_name, $this->ci->session->userdata('permissions'))) {
-			return true;
-		}
+		if($this->get_permission($permission_name)) return true;
 		
 		redirect('auth/no_permission');
+	}
+	
+	/// Returns true if the current user has permission to do the action specified in the argument
+	function get_permission($permission_name) {
+		return true; // :DEBUG: :TEMP: 
+		return in_array($permission_name, $this->ci->session->userdata('permissions'));
 	}
 	/**
     * Function to register

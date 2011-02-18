@@ -24,10 +24,11 @@ class Exam_model extends Model
     * @return : type : []
     *
     **/
+    
 	function insert_exam_name($name)
 	{
 		$data = array('name' => $name);
-	    $this->db->insert('exam',$data);  
+	    $this->db->insert('Exam',$data);  
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
 	/**
@@ -46,12 +47,10 @@ class Exam_model extends Model
 		   		if($choiceText[$i] != 'nil')
 				  {
 				  		$choiceList = array('exam_id'  => $exam_id,
-                      					   			'name'  => $choiceText[$i],
-                      								                  
-                   					 );
+                      					   	'name'  => $choiceText[$i]);
 				   
 						$this->db->set($choiceList);
-						$this->db->insert('exam_subject');
+						$this->db->insert('Exam_Subject');
 				  }
 		   }
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
@@ -59,7 +58,7 @@ class Exam_model extends Model
 	}
 	/**
     *
-    * Function to insert_exam_mark
+    * Function to insert_Exam_Mark
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
@@ -74,36 +73,29 @@ class Exam_model extends Model
 		for($i=1;$i<sizeof($explode_agent);$i++)
 		{
 			$agent=$explode_agent[$i];
-									for($j=0;$j<sizeof($choiceText);$j++)
-								   	{
-										if($choiceText[$j] != 'nil')
-										  {
-												$name=$choiceText[$j];
-												$this->db->select('id');
-												$this->db->from('exam_subject');
-												$this->db->where('name',$name);
-												$id=$this->db->get();
-												$ids=$id->result_array();
-													foreach($ids as $row)
-													{
-													$id=$row['id'];
-													}
-												$choiceList = array('exam_id2'  => $exam_id,
-																		'student_id'=>$agent,
-																			'subject_id'  => $id,
-															 		);
-												$this->db->set($choiceList);
-												$this->db->insert('exam_mark');
-								 		}
-								 } 
-					
-							   
-		 
+			for($j=0;$j<sizeof($choiceText);$j++) {
+				if($choiceText[$j] != 'nil') {
+					$name=$choiceText[$j];
+					$this->db->select('id');
+					$this->db->from('Exam_Subject');
+					$this->db->where('name',$name);
+					$id=$this->db->get();
+					$ids=$id->result_array();
+					foreach($ids as $row) {
+						$id=$row['id'];
+					}
+					$choiceList = array('exam_id2'  => $exam_id,
+										'student_id'=>$agent,
+										'subject_id'  => $id,
+									);
+					$this->db->set($choiceList);
+					$this->db->insert('Exam_Mark');
+				}
+			}
 		} 
 		return ($this->db->affected_rows() > 0) ? true : false;
-		
-		  
 	}
+	
 	function exam_count()
 	{
 	}
@@ -119,7 +111,7 @@ class Exam_model extends Model
 	function get_exam()
 	{
 		$this->db->select('*');
-		$this->db->from('exam');
+		$this->db->from('Exam');
 		$result=$this->db->get();
 		return $result;
 	
@@ -127,7 +119,7 @@ class Exam_model extends Model
 	function get_exam_name_by_id($exam_id)
 	{
 		$this->db->select('*');
-		$this->db->from('exam');
+		$this->db->from('Exam');
 		$this->db->where('id',$exam_id);
 		$result=$this->db->get();
 		return $result;
@@ -135,18 +127,15 @@ class Exam_model extends Model
 	}
 	function get_exam_details($exam_id)
 	{
-		$this->db->select('student.name');
-		$this->db->from('exam_mark');
-		$this->db->distinct('student.name');
-		$this->db->join('student', 'student.id = exam_mark.student_id' ,'join');
-		$this->db->where('exam_mark.exam_id',$exam_id);
+		$this->db->select('Student.name');
+		$this->db->from('Exam_Mark');
+		$this->db->distinct('Student.name');
+		$this->db->join('Student', 'Student.id = Exam_Mark.Student_id' ,'join');
+		$this->db->where('Exam_Mark.exam_id',$exam_id);
 		$result=$this->db->get();
-		//print_r($result->result());
 		return $result;
-	
-	
-	
 	}
+	
 	/**
     *
     * Function to get_subject_names
@@ -158,7 +147,7 @@ class Exam_model extends Model
 	function get_subject_names($exam_id)
 	{
 	$this->db->select('*');
-	$this->db->from('exam_subject');
+	$this->db->from('Exam_Subject');
 	$this->db->where('exam_id',$exam_id);
 	$result=$this->db->get();
 	return $result;
@@ -174,11 +163,11 @@ class Exam_model extends Model
 	function get_mark_details($exam_id,$student_id)
 	{
 		
-		$this->db->select('exam_mark.*,exam_subject.name');
-		$this->db->from('exam_mark');
-		$this->db->join('exam_subject', 'exam_subject.id = exam_mark.subject_id' ,'join');
-		$this->db->where('exam_mark.student_id',$student_id);
-		$this->db->where('exam_mark.exam_id',$exam_id);
+		$this->db->select('Exam_Mark.*,Exam_Subject.name');
+		$this->db->from('Exam_Mark');
+		$this->db->join('Exam_Subject', 'Exam_Subject.id = Exam_Mark.subject_id' ,'join');
+		$this->db->where('Exam_Mark.student_id',$student_id);
+		$this->db->where('Exam_Mark.exam_id',$exam_id);
 		$result=$this->db->get();
 		return $result;
 	}
@@ -192,11 +181,11 @@ class Exam_model extends Model
     **/
 	function get_student_names($exam_id)
 	{
-		$this->db->select('student.*,exam_mark.student_id');
-		$this->db->from('exam_mark');
-		$this->db->distinct('exam_mark.student_id');
-		$this->db->join('student', 'student.id = exam_mark.student_id' ,'join');
-		$this->db->where('exam_mark.exam_id',$exam_id);
+		$this->db->select('Student.*,Exam_Mark.student_id');
+		$this->db->from('Exam_Mark');
+		$this->db->distinct('Exam_Mark.student_id');
+		$this->db->join('Student', 'student.id = Exam_Mark.student_id' ,'join');
+		$this->db->where('Exam_Mark.exam_id',$exam_id);
 		$result=$this->db->get();
 		return $result;
 	}
@@ -208,17 +197,16 @@ class Exam_model extends Model
     * @return : type : []
     *
     **/
-	function store_marks($data)
-	{
-	$student=$data['student'];
-	$mark=$data['marks'];
-				$subject=$data['subject'];
-				$exam_id=$data['exam_id'];
-		 $data = array( 'mark' => $data['marks']);
-		 $this->db->where('student_id',$student);
-		 $this->db->where('subject_id',$subject);
-		 $this->db->where('exam_id',$exam_id);	
-	     $this->db->update('exam_mark',$data);  
+	function store_marks($data) {
+		$student=$data['student'];
+		$mark=$data['marks'];
+		$subject=$data['subject'];
+		$exam_id=$data['exam_id'];
+		$data = array( 'mark' => $data['marks']);
+		$this->db->where('student_id',$student);
+		$this->db->where('subject_id',$subject);
+		$this->db->where('exam_id',$exam_id);	
+	    $this->db->update('Exam_Mark',$data);  
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
 }

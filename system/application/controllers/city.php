@@ -19,12 +19,16 @@ class City extends Controller {
 	}
 	
 	function index() {
+		$this->user_auth->check_permission('city_index');
+		
 		$all_cities = $this->model->getCities();
 		
 		$this->load->view('city/index', array('all_cities'	=> $all_cities, 'message'=>$this->message));
 	}
 	
 	function create() {
+		$this->user_auth->check_permission('city_create');
+		
 		// Make a new city.
 		if($this->input->post('action') == 'New') {
 			$data = array(
@@ -38,7 +42,7 @@ class City extends Controller {
 		} else {
 		// Show the form to make a new city.
 			$this->load->helper('form');
-			$this->load->model('User_model','user_model');
+			$this->load->model('Users_model','user_model');
 			
 			$president_ids = $this->user_model->getUsersById();
 			
@@ -50,6 +54,8 @@ class City extends Controller {
 	}
 	
 	function edit() {
+		$this->user_auth->check_permission('city_edit');
+		
 		if($this->input->post('action') == 'Edit') {
 			$data = array(
 						'name'			=>	$this->input->post('name'), 
@@ -64,7 +70,7 @@ class City extends Controller {
 			$this->load->helper('misc');
 			$this->load->helper('form');
 			$city_id = $this->uri->segment(3);
-			$this->load->model('User_model','user_model');
+			$this->load->model('Users_model','user_model');
 			
 			$president_ids = $this->user_model->getUsersById();
 			$city = $this->model->getCity($city_id);

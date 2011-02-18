@@ -4,40 +4,39 @@
 <link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/thickbox.css">
 
 <script>
-
-	function get_kidslist(page_no,search_query)
-	{
-		
-		$('#loading').show();
-            $.ajax({
-            type: "POST",
-            url: "<?= site_url('kids/getkidslist')?>",
-            data: "pageno="+page_no+"&q="+search_query,
-            success: function(msg){
-            $('#loading').hide();
-            $('#updateDiv').html(msg);
-            }
-            });
-	}
+function get_kidslist(page_no,search_query)
+{
 	
-	function deleteEntry(entryId,page_no)
-	{
-		var bool = confirm("confirm delete!")
-		if(bool)
-		{
-			$.ajax({
-			type : "POST",
-			url  : "<?= site_url('kids/ajax_deleteStudent') ?>",
-			data : 'entry_id='+entryId,
-			
-			success : function(data)
-			{		
-			 	get_kidslist(page_no);
-			}
-			
-			});
+	$('#loading').show();
+		$.ajax({
+		type: "POST",
+		url: "<?php echo site_url('kids/getkidslist'); ?>",
+		data: "pageno="+page_no+"&q="+search_query,
+		success: function(msg) {
+			$('#loading').hide();
+			$('#updateDiv').html(msg);
 		}
-	}	
+		});
+}
+
+function deleteEntry(entryId,page_no)
+{
+	var bool = confirm("Are you sure you want to delete this?")
+	if(bool)
+	{
+		$.ajax({
+		type : "POST",
+		url  : "<?= site_url('kids/ajax_deleteStudent') ?>",
+		data : 'entry_id='+entryId,
+		
+		success : function(data)
+		{		
+			get_kidslist(page_no);
+		}
+		
+		});
+	}
+}	
 	
 	
 </script>

@@ -1,0 +1,30 @@
+.class-projected,.class-confirmed,.class-absent,.class-attended,.class-cancelled {
+	text-align:center;
+	font-weight:bold;
+}
+.madsheet {
+	border-collapse:collapse;
+}
+.madsheet td, .madsheet th {
+	border: 1px solid #000;
+}
+
+.madsheet .odd td {
+	border-top:2px solid #777;
+}
+
+.class-projected {
+	background-color:#fff;
+}
+.class-confirmed {
+	background-color:#c6e0ff;
+}
+.class-absent {
+	background-color:#ff6f71;
+}
+.class-attended {
+	background-color:#b7ffaa;
+}
+.class-cancelled {
+	background-color:#000;
+}

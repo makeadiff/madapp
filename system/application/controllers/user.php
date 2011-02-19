@@ -89,9 +89,9 @@ class User extends Controller  {
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
 		$data['project']= $this->project_model->getproject();
-		$data['user_group']= $this->users_model->getgroup_details();	
-		$this->load->view('user/popups/add_user',$data);
-	
+		$data['user_group']= $this->users_model->getgroup_details();
+		
+		$this->load->view('user/popups/add_user',$data);	
 	}
 	/**
     * Function to adduser
@@ -101,48 +101,48 @@ class User extends Controller  {
     **/
 	function adduser()
 	{
-	$data['name'] = $_REQUEST['name'];
-	$data['group'] = $_REQUEST['group'];
-	$data['position'] = $_REQUEST['position'];
-	$data['email'] = $_REQUEST['email'];
-	$data['password'] = $_REQUEST['password'];
-	$data['phone'] = $_REQUEST['phone'];
-	$data['city'] = $_REQUEST['city'];
-	$data['center'] = $_REQUEST['center'];
-	$data['project'] = $_REQUEST['project'];
-	$data['type'] = $_REQUEST['type'];
-	$data['insert_id']= $this->users_model->adduser($data);
-	if($data['insert_id'])
-	{
-	$returnFlag= $this->users_model->adduser_to_group($data);
-	if($returnFlag)
-		  {
-		  		$message['msg']   =  "User Added successfully.";
+		$data['name'] = $_REQUEST['name'];
+		$data['group'] = $_REQUEST['group'];
+		$data['position'] = $_REQUEST['position'];
+		$data['email'] = $_REQUEST['email'];
+		$data['password'] = $_REQUEST['password'];
+		$data['phone'] = $_REQUEST['phone'];
+		$data['city'] = $_REQUEST['city'];
+		$data['center'] = $_REQUEST['center'];
+		$data['project'] = $_REQUEST['project'];
+		$data['type'] = $_REQUEST['type'];
+		$data['insert_id']= $this->users_model->adduser($data);
+		if($data['insert_id'])
+		{
+			$returnFlag= $this->users_model->adduser_to_group($data);
+			if($returnFlag)
+			{
+				$message['msg']   =  "User Added successfully.";
 				$message['successFlag'] = "1";
 				$message['link']  =  "popupAdduser";
 				$message['linkText'] = "add new Center";
 				$message['icoFile'] = "ico_addScheme.png";
 				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
-		else
-		  {
-		  		$message['msg']   =  "No Action performed.";
+			}
+			else
+			{
+				$message['msg']   =  "No Action performed.";
 				$message['successFlag'] = "0";
 				$message['link']  =  "popupAdduser";
 				$message['linkText'] = "add new Center";
 				$message['icoFile'] = "ico_addScheme.png";
 				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
-	}
-	else	
-	{
-		   	    $message['msg']   =  "No Group created.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupAdduser";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);
-	}
+			}
+		}
+		else	
+		{
+			$message['msg']   =  "No Group created.";
+			$message['successFlag'] = "0";
+			$message['link']  =  "popupAdduser";
+			$message['linkText'] = "add new Center";
+			$message['icoFile'] = "ico_addScheme.png";
+			$this->load->view('dashboard/errorStatus_view',$message);
+		}
 	}
 	/**
     * Function to popupEditusers
@@ -306,36 +306,36 @@ class User extends Controller  {
 		//search by city with group and name.
 		else if($data['city'] !='' && $data['name'] !='' && $group !='')
 		{
-		$agents = substr($group,0,strlen($group)-1);
-		$explode_agent = explode(",",trim($agents));
-		for($i=0;$i<sizeof($explode_agent);$i++)
-		{
-		 	$data['group']=$explode_agent[$i];
-		 	$data['details']= $this->users_model->searchuser_details($data);
-			$flag=$data['details']->result_array();
-			if($flag )
+			$agents = substr($group,0,strlen($group)-1);
+			$explode_agent = explode(",",trim($agents));
+			for($i=0;$i<sizeof($explode_agent);$i++)
 			{
-			$this->load->view('user/update_search_view_list',$data);
+				$data['group']=$explode_agent[$i];
+				$data['details']= $this->users_model->searchuser_details($data);
+				$flag=$data['details']->result_array();
+				if($flag )
+				{
+				$this->load->view('user/update_search_view_list',$data);
+				}
+				
 			}
-			
-		}
 		}
 		//search by city and group.
 		else if($data['city'] !='' && $data['name'] =='' && $group !='')
 		{
 			$agents = substr($group,0,strlen($group)-1);
-		$explode_agent = explode(",",trim($agents));
-		for($i=0;$i<sizeof($explode_agent);$i++)
-		{
-		 	$data['group']=$explode_agent[$i];
-		 	$data['details']= $this->users_model->searchuser_details_by_grp_city($data);
-			$flag=$data['details']->result_array();
-			if($flag )
+			$explode_agent = explode(",",trim($agents));
+			for($i=0;$i<sizeof($explode_agent);$i++)
 			{
-			$this->load->view('user/update_search_view_list',$data);
+				$data['group']=$explode_agent[$i];
+				$data['details']= $this->users_model->searchuser_details_by_grp_city($data);
+				$flag=$data['details']->result_array();
+				if($flag )
+				{
+				$this->load->view('user/update_search_view_list',$data);
+				}
+				
 			}
-			
-		}
 		
 		
 		}
@@ -350,6 +350,8 @@ class User extends Controller  {
 		echo "No result fount";
 		}
 	}
+	
+	
 	/**
     * Function to csv_export
     * @author:Rabeesh 

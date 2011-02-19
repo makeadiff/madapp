@@ -206,7 +206,7 @@ class Users_model extends Model {
     **/
 	function getuser_details_csv()
 	{
-		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
@@ -380,7 +380,7 @@ class Users_model extends Model {
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
 		$this->db->where('UserGroup.group_id',$group);
 		$this->db->where('City.id',$city);
-		$this->db->where('user.name',$name);
+		$this->db->where('User.name',$name);
 		$result=$this->db->get();
 		return $result;
 	
@@ -389,16 +389,16 @@ class Users_model extends Model {
 	{
 		$city=$data['city'];
 		$group=$data['group'];
-		//$this->db->select('user.*,center.name as center_name,city.name as city_name,usergroup.id 
-		//as g_id,usergroup.user_id,usergroup.group_id');
-		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		//$this->db->select('user.*,Center.name as center_name,City.name as city_name,UserGroup.id 
+		//as g_id,UserGroup.user_id,UserGroup.group_id');
+		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
-		$this->db->from('user');
-		$this->db->join('center', 'center.id = user.center_id' ,'join');
-		$this->db->join('city', 'city.id = user.city_id' ,'join');
-		$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
-		$this->db->where('usergroup.group_id',$group);
-		$this->db->where('city.id',$city);
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
+		$this->db->where('UserGroup.group_id',$group);
+		$this->db->where('City.id',$city);
 		$result=$this->db->get();
 		return $result;
 	
@@ -412,13 +412,13 @@ class Users_model extends Model {
 	function search_by_city($data)
 	{
 		$city=$data['city'];
-		//$this->db->select('user.*,center.name as center_name,city.name as city_name');
-		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		//$this->db->select('User.*,Center.name as center_name,City.name as city_name');
+		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('user');
-		$this->db->join('center', 'center.id = user.center_id' ,'join');
-		$this->db->join('city', 'city.id = user.city_id' ,'join');
-		$this->db->where('city.id',$city);
+		$this->db->join('center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('city', 'City.id = User.city_id' ,'join');
+		$this->db->where('City.id',$city);
 		$result=$this->db->get();
 		return $result;
 	
@@ -433,13 +433,13 @@ class Users_model extends Model {
 	{
 	
 		$group=$data['group'];
-		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
-		$this->db->from('user');
-		$this->db->join('center', 'center.id = user.center_id' ,'join');
-		$this->db->join('city', 'city.id = user.city_id' ,'join');
-		$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
-		$this->db->where('usergroup.group_id',$group);
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
+		$this->db->where('UserGroup.group_id',$group);
 		$result=$this->db->get();
 		return $result;
 	
@@ -454,16 +454,16 @@ class Users_model extends Model {
 	{
 		$group=$data['group'];
 		$name=$data['name'];
-		//$this->db->select('user.*,center.name as center_name,city.name as city_name,usergroup.id 
-		//as g_id,usergroup.user_id,usergroup.group_id');
-		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		//$this->db->select('User.*,Center.name as center_name,City.name as city_name,UserGroup.id 
+		//as g_id,UserGroup.user_id,UserGroup.group_id');
+		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
-		$this->db->from('user');
-		$this->db->join('center', 'center.id = user.center_id' ,'join');
-		$this->db->join('city', 'city.id = user.city_id' ,'join');
-		$this->db->join('usergroup', 'usergroup.user_id = user.id' ,'join');
-		$this->db->where('usergroup.group_id',$group);
-		$this->db->where('user.name',$name);
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
+		$this->db->where('UserGroup.group_id',$group);
+		$this->db->where('User.name',$name);
 		$result=$this->db->get();
 		return $result;
 	
@@ -478,14 +478,14 @@ class Users_model extends Model {
 	{
 		$city=$data['city'];
 		$name=$data['name'];
-		//$this->db->select('user.*,center.name as center_name,city.name as city_name');
-		$this->db->select('User.id,user.name,user.email,user.phone,user.title,user.user_type,Center.name as center_name,
+		//$this->db->select('User.*,Center.name as center_name,City.name as city_name');
+		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
-		$this->db->from('user');
-		$this->db->join('center', 'center.id = user.center_id' ,'join');
-		$this->db->join('city', 'city.id = user.city_id' ,'join');
-		$this->db->where('city.id',$city);
-		$this->db->where('user.name',$name);
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->where('City.id',$city);
+		$this->db->where('User.name',$name);
 		$result=$this->db->get();
 		return $result;
 	
@@ -504,7 +504,7 @@ class Users_model extends Model {
 		$all_users = $this->db->get()->result();
 		$return = array();
 		foreach($all_users as $user) {
-			// Get the batches for this user. An user can have two batches. That's why I don't do join to get this date.
+			// Get the batches for this User. An user can have two batches. That's why I don't do join to get this date.
 			$user->batches = colFormat($this->db->where('user_id',$user->id)->get('UserBatch')->result_array()); // :SLOW:
 			
 			$return[$user->id] = $user;
@@ -572,7 +572,7 @@ class Users_model extends Model {
 						$this->db->from('User');
 						$this->db->join('Center', 'Center.id = User.center_id' ,'join');
 						$this->db->join('City', 'City.id = User.city_id' ,'join');
-						$this->db->where('user.id',$user_id);
+						$this->db->where('User.id',$user_id);
 						$result=$this->db->get();
 						$user=$result->first_row();
 						$memberCredentials['id'] = $user->id;

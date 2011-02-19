@@ -1,25 +1,17 @@
-<script>
-	
-	tb_init('a.thickbox, input.thickbox');
-	
-	function triggerSearch()
-	{
-		q = $('#searchQuery').val();
-		get_groupList('0',q);
-	}
-	
-	$(document).ready(function(){
-	
-		
-		$('#example').each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
-	
-			$(this).attr('href', url);
-		});
-		
-	}
-	);  
-	
+<script type="text/javascript">
+tb_init('a.thickbox, input.thickbox');
+
+function triggerSearch() {
+	q = $('#searchQuery').val();
+	get_groupList('0',q);
+}
+
+$(document).ready(function(){
+	$('#example').each(function(){
+		var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
+		$(this).attr('href', url);
+	});
+});
 </script>
 
 <div id="content" class="clear">

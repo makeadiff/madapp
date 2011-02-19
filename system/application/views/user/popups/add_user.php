@@ -17,7 +17,7 @@
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select Group:</label> 
             <select id="group" name="group"> 
-            <option selected="selected" value="-1" >- choose action -</option> 
+            <option selected="selected" value="-1" >- Choose -</option> 
 				<?php 
                 $user_group = $user_group->result_array();
                 foreach($user_group as $row)
@@ -28,23 +28,23 @@
             </select>
             </div>
             <div class="field clear" style="width:500px;"> 
-                        <label for="txtName">Position : </label>
+                        <label for="position">Position : </label>
                         <input id="position" name="position"  type="text" /> 
                       
             </div>
 			
             <div class="field clear" style="width:500px;"> 
-                        <label for="txtName">Email : </label>
+                        <label for="email">Email : </label>
                         <input id="email" name="email"  type="text" /> 
                       
             </div>
             <div class="field clear" style="width:500px;"> 
-                        <label for="txtName">Password : </label>
+                        <label for="password">Password : </label>
                         <input id="password" name="password"  type="password" /> 
                       
             </div>
             <div class="field clear" style="width:500px;"> 
-                        <label for="txtName">Password : </label>
+                        <label for="cpassword">Confirm Password : </label>
                         <input id="cpassword" name="cpassword"  type="password" /> 
                       
             </div>
@@ -57,7 +57,7 @@
 			<div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select city:</label> 
             <select id="city" name="city" > 
-            <option selected="selected" value="-1" >- choose action -</option> 
+            <option selected="selected" value="-1" >- Choose -</option> 
 				<?php 
                 $details = $details->result_array();
                 foreach($details as $row)
@@ -71,7 +71,7 @@
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select center:</label> 
             <select id="center" name="center"> 
-            <option selected="selected" value="-1" >- choose action -</option> 
+            <option selected="selected" value="-1" >- Choose -</option> 
 				<?php 
                 $center = $center->result_array();
                 foreach($center as $row)
@@ -86,7 +86,7 @@
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select project:</label> 
             <select id="project" name="project"> 
-            <option selected="selected" >- choose action -</option> 
+            <option selected="selected" >- Choose -</option> 
 				<?php 
                 $project = $project->result_array();
                 foreach($project as $row)
@@ -98,9 +98,14 @@
             </div>
            
              <div class="field clear" style="width:500px;"> 
-                        <label for="txtName">User Type : </label>
-                        <input id="type" name="type"  type="text" /> 
-                      
+                        <label for="type">User Type : </label>
+                        <select name="type">
+                        	<option value="applicant">Applicant</option>
+                        	<option value="volunteer">Volunteer</option>
+                        	<option value="well_wisher">Well Wisher</option>
+                        	<option value="alumni">Alumni</option>
+                        	<option value="other">Other</option>
+                        </select>
             </div>
             
             <div class="field clear" style="width:550px;"> 
@@ -117,14 +122,9 @@ function validate()
               alert("Name Missing.");
               return false;
           }
-	  if(document.getElementById("group").value == '-1')
-          {
-              alert("Select Group.");
-              return false;
-          }
 	  if(document.getElementById("email").value == '')
           {
-              alert("Select Email.");
+              alert("Enter Email.");
               return false;
           }
 		  
@@ -137,7 +137,7 @@ function validate()
           }
        if(document.getElementById("cpassword").value == '')
           {
-              alert("Retype Password.");
+              alert("Confirm your Password.");
               return false;
           }
        
@@ -147,12 +147,7 @@ function validate()
               alert("Select City.");
               return false;
           }
-		  if(document.getElementById("center").value == '-1')
-          {
-              alert("Select Center.");
-              return false;
-          }
-if(document.getElementById("password").value != document.getElementById("cpassword").value)
+		 if(document.getElementById("password").value != document.getElementById("cpassword").value)
           {
               alert("Password Mismatch.");
               return false;

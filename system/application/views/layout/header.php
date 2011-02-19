@@ -19,11 +19,6 @@
 <li<?php if($this->uri->segment(1) == 'classes' and ($this->uri->segment(2) == 'index' or !$this->uri->segment(2))) { ?> class="active"<?php } ?>><a href="<?php echo site_url('classes/') ?>">Your Classes</a></li>
 <li<?php if($this->uri->segment(2) == 'madsheet') { ?> class="active"<?php } ?>><a href="<?php echo site_url('classes/madsheet') ?>">MAD Sheet</a></li>
 
-<!--
-<li<?php if($this->uri->segment(1) == 'center') { ?> class="active"<?php } ?>><a href="<?php echo site_url('center/manageaddcenters') ?>">Add Centers</a></li>
-<li<?php if($this->uri->segment(1) == 'kids') { ?> class="active"<?php } ?>><a href="<?php echo site_url('kids/manageaddkids') ?>">Add kids</a></li>
-<li<?php if($this->uri->segment(1) == 'exam') { ?> class="active"<?php } ?>><a href="<?php echo site_url('exam/exam_score') ?>">Exam Scores</a></li>
--->
 </ul>
 </div>
 
@@ -34,7 +29,7 @@
 </div>
 
 <div id="content">
-<?php if(isset($message)) { ?>
-<div id="error-message" <?php echo ($message['error']) ? '':'style="display:none;"';?>><?php echo $message['error'] ?></div>
-<div id="success-message" <?php echo ($message['success']) ? '':'style="display:none;"';?>><?php echo $message['success'] ?></div>
+<?php if(!empty($message)) { ?>
+<div id="error-message" <?php echo (empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
+<div id="success-message" <?php echo (empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
 <?php } ?>

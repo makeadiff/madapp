@@ -332,7 +332,7 @@ class Users_model extends Model {
 	
 	function getUsersById() {
 		$this->load->helper('misc');
-		return getById("SELECT id, name FROM User WHERE city_id=1 AND project_id=1 AND user_type='volunteer'", $this->db);
+		return getById("SELECT id, name FROM User WHERE city_id={$this->city_id} AND project_id={$this->project_id} AND user_type='volunteer'", $this->db);
 	}
 	
 	function get_users_in_center($center_id) {

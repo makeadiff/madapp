@@ -42,9 +42,11 @@ class City extends Controller {
 		} else {
 		// Show the form to make a new city.
 			$this->load->helper('form');
+			$this->load->helper('misc');
 			$this->load->model('Users_model','user_model');
 			
-			$president_ids = $this->user_model->getUsersById();
+			$president_ids = idNameFormat($this->user_model->get_users_in_city(0));
+			$president_ids['0'] = 'None';
 			
 			$this->load->view('city/form.php', array(
 				'action' => 'New',

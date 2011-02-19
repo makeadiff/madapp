@@ -142,11 +142,6 @@ function validate()
           }
        
 		  
-		  if(document.getElementById("city").value == '-1')
-          {
-              alert("Select City.");
-              return false;
-          }
 		 if(document.getElementById("password").value != document.getElementById("cpassword").value)
           {
               alert("Password Mismatch.");

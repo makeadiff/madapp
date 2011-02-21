@@ -1,9 +1,12 @@
 <?php $this->load->view('layout/header', array('title'=>'Cities', 'message'=>$message)); ?>
 
 <div id="head" class="clear"><h1>Cities</h1>
+
+<?php if($this->user_auth->get_permission('city_create')) { ?>
 <div id="actions"> 
 <a href="<?= site_url('city/create')?>" class="thickbox button primary" id="example" name="Add City">Add City</a>
 </div>
+<?php } ?>
 </div>
 
 <table id="main" class="data-table">

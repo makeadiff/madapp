@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
 tb_init('a.thickbox, input.thickbox');
 
 function triggerSearch() {
@@ -8,6 +8,18 @@ function triggerSearch() {
 
 $(document).ready(function(){
 	$('#example').each(function(){
+		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
+
+		$(this).attr('href', url);
+	});
+	
+	$('.groupmanage').each(function(){
+		var url = $(this).attr('href') + '?TB_iframe=true&height=430&width=850';
+
+		$(this).attr('href', url);
+	});
+	
+	$('.group').each(function(){
 		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
 
 		$(this).attr('href', url);
@@ -22,11 +34,11 @@ $(document).ready(function(){
     	<div id="head" class="clear">
         	<h1><?php echo $title; ?></h1>
 
-            <!-- start page actions-->
+            <?php if($this->user_auth->get_permission('center_add')) { ?>
         	<div id="actions"> 
-<a href="<?= site_url('center/popupaddCneter')?>" class="thickbox button primary" id="example" name="Add New Center">Add New Center</a>
-</div>
-			<!-- end page actions-->
+			<a href="<?php echo site_url('center/popupaddCneter')?>" class="thickbox button primary" id="example" name="Add New Center">Add New Center</a>
+			</div>
+			<?php } ?>
 
 	    </div>
 
@@ -58,51 +70,28 @@ $shadeClass = '';
 $statusIco = '';
 $statusText = '';
 $content = $details->result_array();
-$i=0;
-foreach($content as $row)
-{	$i++;
+foreach($content as $row) {
 	$norecord_flag = 0;
 
-	if($shadeFlag == 0)
-	  {
+	if($shadeFlag == 0) {
   		$shadeClass = 'even';
 		$shadeFlag = 1;
-  	  }
-	else if($shadeFlag == 1)
-	  {
+  	} else {
   		$shadeClass = 'odd';		
 		$shadeFlag = 0;
-  	  }
+  	}
 ?> 
-<script>
-	$(document).ready(function(){
-		
-		$('#groupmanage-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=430&width=850';
-	
-			$(this).attr('href', url);
-		});
-		
-		$('#group-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-	
-			$(this).attr('href', url);
-		});
-	
-	}
-	); 
-</script>
 <tr class="<?php echo $shadeClass; ?>" id="group">
 <!--    <td class="colCheck"> <input name="cbSelect[]" type="checkbox" value="<?php echo $row['id']; ?>"/></td> -->    
-	<td class="colCheck1"><?php echo $i; ?></td>
+	<td class="colCheck1"><?php echo $row['id']; ?></td>
 	<td class="colName left"><?php echo $row['name']; ?></td>
 	<td class="colCount"><?php echo $row['city_name']; ?></td> 
-	<td class="colCount"><a href="<?php echo site_url('level/index/center/'.$i) ?>">Levels</a></td>
-	<td class="colCount"><a href="<?php echo site_url('batch/index/center/'.$i) ?>">Batches</a></td>
+	<td class="colCount"><a href="<?php echo site_url('level/index/center/'.$row['id']) ?>">Levels</a></td>
+	<td class="colCount"><a href="<?php echo site_url('batch/index/center/'.$row['id']) ?>">Batches</a></td>
 	<td class="colStatus" style="text-align:left"><?php echo $row['user_name'];?></td>
 	<!--<td class="colPosition"></td>-->
 	<td class="colActions right">
-	<a href="<?= site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a> 
+	<a href="<?php echo site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" class="group" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a> 
 	<a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a></td>
 </tr>
 

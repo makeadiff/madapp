@@ -78,9 +78,10 @@ function divupdation() {
             <select name="city" id="city">
             <option value="0">Any City</option>
             <?php $city=$city->result_array();
-			foreach($city as $row) {
-			?>
-            <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+			foreach($city as $row) { ?>
+            <option value="<?php echo $row['id']; ?>" <?php 
+            	if(!empty($selected_city) and $selected_city==$row['id']) echo 'selected="selected"';
+            ?>><?php echo $row['name']; ?></option>
             <?php } ?>
             </select>
             <p class="error clear"></p> 
@@ -91,10 +92,9 @@ function divupdation() {
         	<label for="date">Group </label>
             
             <select name="group" id="group" style="width:150px; height:100px;" multiple>
-            <option> </option>
-            <?php $group=$group->result_array();
-					foreach($group as $row)
-					{ ?>
+            <?php
+            $group = $group->result_array();
+			foreach($group as $row) { ?>
             <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
             <?php } ?>
             </select>

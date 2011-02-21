@@ -19,10 +19,10 @@ jQuery(document).ready(function () {
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('kids/addkids')?>" method="post" enctype="multipart/form-data" style="width:500px;" onsubmit="return validate();" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 <div class="field clear" style="width:600px;">
-<label for="selBulkActions">Select center:</label> 
+<label for="selBulkActions">Select Center</label> 
 <select id="center" name="center" > 
-<option selected="selected" value="-1" >- choose action -</option> 
-	<?php 
+<option selected="selected" value="-1" >- Choose -</option> 
+	<?php
 	$center = $center->result_array();
 	foreach($center as $row) {
 	?>
@@ -34,26 +34,26 @@ jQuery(document).ready(function () {
 
 
 <div class="field clear" style="width:600px;"> 
-	<label for="txtName">Name : </label>
+	<label for="txtName">Name</label>
 	<input id="name" name="name"  type="text" /> 
 			
 </div>
 
 <div  class="field clear" style="width:600px;">
-	<label for="date">Dob</label>
+	<label for="date">Date of Birth</label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text">
 	<p class="error clear"></p>
 </div>
 
 <div  class="field clear" style="width:600px;">
-	<label for="date">Upload photo</label>
+	<label for="date">Upload Photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
 </div>
 
 
 <div class="field clear" style="width:600px;"> 
-	<label for="txtName">Description : </label>
+	<label for="txtName">Description</label>
 	<textarea rows="5" cols="40" id="description" name="description"></textarea> 
 	<p class="error clear"></p>
 </div>
@@ -73,17 +73,12 @@ function validate()
 {
 if(document.getElementById("center").value == '-1')
 	{		
-		alert("Select a Center.");
+		alert("Select a Center");
 		return false;
 	}
 if(document.getElementById("name").value == '')
 	{
 		alert("Name missing");
-		return false;
-	}
-if(document.getElementById("date-pick").value == '')
-	{
-		alert("Date Missing");
 		return false;
 	}
 }

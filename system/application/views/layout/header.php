@@ -24,7 +24,10 @@
 
 <div id="toolbar" class="clear">
 <div id="buttons"><a href="<?php echo site_url('auth/logout') ?>" class="button tool" style="margin-left: 120px;">Logout</a></div>
-<p id="user"><a href="#"><?php echo $this->session->userdata('name'); ?></a> (<?php echo implode(',', $this->session->userdata('groups')) ?>)</p>
+<p id="user"><a href="#"><?php echo $this->session->userdata('name'); ?></a><?php
+	$groups = $this->session->userdata('groups');
+	if($groups) print ' (' . implode(',', $groups) . ')';
+?></p>
 </div>
 </div>
 

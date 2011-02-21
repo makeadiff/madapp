@@ -188,13 +188,18 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function getuser_details()
+	function getuser_details($where=array())
 	{
 		$this->db->select('User.*,Center.name as center_name,City.name as city_name');
 		$this->db->from('User');
-		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		if($where) {
+			if($where['city_id']) $this->db->where('User.city_id', $where['city_id']);
+		}
+		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
-		$result=$this->db->get();
+		$this->db->where('User.project_id',$this->project_id);
+		$result = $this->db->get();
+		
 		return $result;
 	}
 	
@@ -211,6 +216,7 @@ class Users_model extends Model {
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		return $result;
 	
@@ -261,6 +267,7 @@ class Users_model extends Model {
 		$this->db->from('User');
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'left');
 		$this->db->where('User.id',$uid);
+		$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		//print_r($result);
 		return $result;
@@ -381,6 +388,7 @@ class Users_model extends Model {
 		$this->db->where('UserGroup.group_id',$group);
 		$this->db->where('City.id',$city);
 		$this->db->where('User.name',$name);
+		$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		return $result;
 	
@@ -389,16 +397,16 @@ class Users_model extends Model {
 	{
 		$city=$data['city'];
 		$group=$data['group'];
-		//$this->db->select('user.*,Center.name as center_name,City.name as city_name,UserGroup.id 
-		//as g_id,UserGroup.user_id,UserGroup.group_id');
+		
 		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
-		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
 		$this->db->where('UserGroup.group_id',$group);
 		$this->db->where('City.id',$city);
+		$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		return $result;
 	
@@ -415,10 +423,11 @@ class Users_model extends Model {
 		//$this->db->select('User.*,Center.name as center_name,City.name as city_name');
 		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
-		$this->db->from('user');
-		$this->db->join('center', 'Center.id = User.center_id' ,'join');
-		$this->db->join('city', 'City.id = User.city_id' ,'join');
+		$this->db->from('User');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'left');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		$this->db->where('City.id',$city);
+		$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		return $result;
 	
@@ -434,12 +443,13 @@ class Users_model extends Model {
 	
 		$group=$data['group'];
 		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
-		City.name as city_name');
+			City.name as city_name');
 		$this->db->from('User');
-		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
 		$this->db->where('UserGroup.group_id',$group);
+		$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		return $result;
 	
@@ -464,6 +474,7 @@ class Users_model extends Model {
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'join');
 		$this->db->where('UserGroup.group_id',$group);
 		$this->db->where('User.name',$name);
+		$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		return $result;
 	

@@ -54,19 +54,26 @@
                       
             </div>
             
+            <?php 
+			$this_city_id = $this->session->userdata('city_id');
+			if($this->user_auth->get_permission('change_city')) { ?>
 			<div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select city:</label> 
             <select id="city" name="city" > 
             <option selected="selected" value="-1" >- Choose -</option> 
 				<?php 
                 $details = $details->result_array();
-                foreach($details as $row)
-                {
+                foreach($details as $row) {
                 ?>
-                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
+                <option value="<?php echo $row['id']; ?>" <?php
+                	if($row['id'] == $this_city_id) echo 'selected';
+                ?>><?php echo $row['name']; ?></option> 
                 <?php } ?>
             </select>
             </div>
+            <?php } else { ?>
+    		<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
+    		<?php } ?>
             
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select center:</label> 
@@ -82,21 +89,26 @@
             </select>
             </div>
             
-            
+            <?php 
+			$this_project_id = $this->session->userdata('project_id');
+			if($this->user_auth->get_permission('change_city')) { ?>
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select project:</label> 
             <select id="project" name="project"> 
             <option selected="selected" >- Choose -</option> 
 				<?php 
                 $project = $project->result_array();
-                foreach($project as $row)
-                {
-                ?>
-                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
+                foreach($project as $row) { ?>
+                <option value="<?php echo $row['id']; ?>" <?php
+                	if($row['id'] == $this_project_id) echo 'selected';
+                ?>><?php echo $row['name']; ?></option> 
                 <?php } ?>
             </select>
             </div>
-           
+            <?php } else { ?>
+    		<input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
+    		<?php } ?>
+    		
              <div class="field clear" style="width:500px;"> 
                         <label for="type">User Type : </label>
                         <select name="type">

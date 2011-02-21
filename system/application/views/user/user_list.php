@@ -17,19 +17,16 @@ $(document).ready(function(){
 <div id="content" class="clear">
 
 <!-- Main Begins -->
-	<div id="main" class="clear">
-   	  <div id="head" class="clear">
-        	<h1><?php echo $title; ?></h1>
+<div id="main" class="clear">
+<div id="head" class="clear">
+<h1><?php echo $title; ?></h1>
 
-            <!-- start page actions-->
-        	<div id="actions"> 
+<!-- start page actions-->
+<div id="actions"> 
 <a href="<?= site_url('user/popupAdduser')?>" class="thickbox button primary" id="example" name="Add User">Add User</a>
 </div>
-			<!-- end page actions-->
-
-      </div>
-
-		
+<!-- end page actions-->
+</div>
 
 <table cellpadding="0"  cellspacing="0" class="clear" id="tableItems">
 <thead>

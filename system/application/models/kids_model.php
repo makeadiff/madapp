@@ -10,46 +10,47 @@
  * @since		Version 1.0
  * @filesource
  */
-class Kids_model extends Model
-{
-	
-    function Kids_model()
-    {
+class Kids_model extends Model {
+    function Kids_model() {
         parent::Model();
-		
+        
+		$this->ci = &get_instance();
+		$this->city_id = $this->ci->session->userdata('city_id');
+		$this->project_id = $this->ci->session->userdata('project_id');
     }
+    
     /**
     * Function to getkids_details
     * @author:Rabeesh 
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	function getkids_details()
-	{
-
+	function getkids_details() {
 		$this->db->select('Student.*,Center.name as center_name');
+		$this->db->where('city_id',$this->city_id);
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
 		$result=$this->db->get();
 		return $result;
 	}
+	
 	function kids_count()
 	{
 	
 	}
+	
 	/**
     * Function to add_kids
     * @author:Rabeesh 
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
-	function add_kids($data)
-	{
+	function add_kids($data) {
 		$data = array('center_id' 	 => $data['center'],
 					  'name' 	 => $data ['name'],
 					  'birthday' => $data ['date'],
-				   'description' => $data ['description'],
-			 		  );
+				  	 'description' => $data ['description'],
+			   );
 		$this->db->insert('Student',$data);
 		$kid_id = $this->db->insert_id();
 		
@@ -59,16 +60,15 @@ class Kids_model extends Model
 			//));
 		
 	 	return ($this->db->affected_rows() > 0) ? $this->db->insert_id()  : false ;
-	
 	}
+	
 	/**
     * Function to delete_kids
     * @author:Rabeesh 
     * @param :[$data]
     * @return: type: [Boolean]
     **/
-	function delete_kids($data)
-	{
+	function delete_kids($data) {
 		 $id = $data['entry_id'];
 		 $this->db->where('id',$id);
 		 $this->db->delete('Student');

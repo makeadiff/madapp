@@ -9,7 +9,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 <table>
 <tr>
 <?php foreach($levels_in_center as $level) { ?>
-<td><h3><?php echo $level->name ?></h3>
+<td width="200"><h3><?php echo $level->name ?></h3>
 
 <select name="teachers_in_level[<?php echo $level->id ?>][]" multiple="multiple">
 <?php foreach($all_teachers as $user) { ?>
@@ -27,6 +27,8 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 echo form_hidden('batch_id', $batch->id);
 echo '<label for="action">&nbsp;</label>';echo form_submit('action', "Save");
 ?>
-</form>
+</form><br />
+
+<a href="<?php echo site_url('batch/index/center/'.$center_id) ?>">See All Batches</a>
 
 <?php $this->load->view('layout/footer'); ?>

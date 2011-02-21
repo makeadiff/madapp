@@ -175,28 +175,27 @@ class Kids extends Controller  {
 		
 		
 		if($returnFlag == true || $flag== true) 
-			  {
-					$message['msg']   =  "Student updated successfully.";
-					$message['successFlag'] = "1";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
-			  }
-			else
-			  {
-					$message['msg']   =  "Center not edited.";
-					$message['successFlag'] = "0";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
-			 }
-	
-	
+			{
+			$message['msg']   =  "Student updated successfully.";
+			$message['successFlag'] = "1";
+			$message['link']  =  "";
+			$message['linkText'] = "";
+			$message['icoFile'] = "ico_addScheme.png";
+
+			$this->load->view('dashboard/errorStatus_view',$message);		  
+			}
+		else
+			{
+			$message['msg']   =  "Center not edited.";
+			$message['successFlag'] = "0";
+			$message['link']  =  "";
+			$message['linkText'] = "";
+			$message['icoFile'] = "ico_addScheme.png";
+
+			$this->load->view('dashboard/errorStatus_view',$message);		  
+			}
 	}
+	
 	/**
     *
     * Function to addkids
@@ -209,9 +208,13 @@ class Kids extends Controller  {
 	{
 	$data['center']=$_REQUEST['center'];
 	$data['name']=$_REQUEST['name'];
-	$date=$_REQUEST['date-pick'];
-	$newdate=explode("/",$date);
-	$data['date']=$newdate[2]."/".$newdate[1]."/".$newdate[0];
+	
+	$data['date'] = '';
+	if(!empty($_REQUEST['date-pick'])) {
+		$date = $_REQUEST['date-pick'];
+		$newdate=explode("/",$date);
+		$data['date'] = $newdate[2]."/".$newdate[1]."/".$newdate[0];
+	}
 	$data['description']=$_REQUEST['description'];
 	
 	$returnFlag= $this->kids_model->add_kids($data);
@@ -243,29 +246,23 @@ class Kids extends Controller  {
         
         }
 	
-	
-	
-	
-	if($returnFlag)
-		  {
-		  		$message['msg']   =  "Student added successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "popupaddKids";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
-		else
-		  {
-		  		$message['msg']   =  "no updates performed.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupaddCneter";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
+		if($returnFlag) {
+			$message['msg']   =  "Student added successfully.";
+			$message['successFlag'] = "1";
+			$message['link']  =  "popupaddKids";
+			$message['linkText'] = "Add New Student";
+			$message['icoFile'] = "ico_addScheme.png";
+		
+			$this->load->view('dashboard/errorStatus_view',$message);
+		} else {
+			$message['msg']   =  "no updates performed.";
+			$message['successFlag'] = "0";
+			$message['link']  =  "popupaddKids";
+			$message['linkText'] = "Add New Student";
+			$message['icoFile'] = "ico_addScheme.png";
+		
+			$this->load->view('dashboard/errorStatus_view',$message);
+		}
 	}
 	
 	

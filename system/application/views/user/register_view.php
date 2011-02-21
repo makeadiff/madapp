@@ -9,7 +9,6 @@
 </head>
 <body>
 <script type="text/javascript">
-
 function getcenter_Name(center)
 	{
 	 		xmlHttp=GetXmlHttpObject();
@@ -57,13 +56,11 @@ function returnOnValues()
         <form method="post" action="<?=site_url('common/register')?>"  name="regform" id="regForm" onsubmit="return validate();" >
             <div class="content-row-large">
                    <span>Name:</span>
-                   <input type="text" class="textfield" id="firstname" name="firstname" value="<?php if(isset($this->validation->firstname)){ echo $this->validation->
-				   firstname; } ?>" />										
+                   <input type="text" class="textfield" id="firstname" name="firstname" value="<?php if(isset($this->validation->firstname)){ echo $this->validation->firstname; } ?>" />
                    <?php if(!empty($this->validation->firstname_error)) { ?>
                    <img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
                    <?php } ?>
             </div>
-            
 
             <div class="content-row-large"><span>Email:</span>
                 <input type="text" class="textfield" id="email" name="email" value="<?php if(!empty($this->validation->email)){ echo $this->validation->email; } ?>" />
@@ -71,37 +68,21 @@ function returnOnValues()
                   <img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
                   <?php } ?>
             </div>
-               
 
-            <div class="content-row-large"><span>Password:</span>
-                  	<input type="password" class="textfield" id="password" name="password" />
-            </div>
-
-            <div class="content-row-large"><span>Retype Password:</span>
-                  	<input type="password" class="textfield" id="repassword" name="repassword" />
-                  	<?php if(!empty($this->validation->repassword_error)) { ?>
-                  	<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-                  	<?php } ?>
-            </div>
-
-            <div class="content-row-large"><span>Mobile No :</span>
-                  	<input type="text" class="textfield" id="mobileno" name="mobileno" value="<?php if(isset($this->validation->mobileno)){ echo $this->validation->
-				  	mobileno; } ?>" />
+            <div class="content-row-large"><span>Mobile No:</span>
+                  	<input type="text" class="textfield" id="mobileno" name="mobileno" value="<?php if(isset($this->validation->mobileno)){ echo $this->validation->mobileno; } ?>" />
                   	<?php if(!empty($this->validation->mobileno_error)) { ?>
                   	<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
                   	<?php } ?>
             </div>
-          
 				 
-            <div class="content-row-large">
-                  	<span>City:</span>
+            <div class="content-row-large"><span>City:</span>
                     <select class="dropdown" id="city" name="city" onchange="javascript:getcenter_Name(this.value);">
                     <option value="-1">- Select -</option>
-                    <?php $details=$details->result_array(); ?>
-                    <?php foreach($details as $row)
-		  					{
-			  				$cityName=$row['name'];
-							$city_id=$row['id'];
+                    <?php $details = $details->result_array(); ?>
+                    <?php foreach($details as $row) {
+						$cityName=$row['name'];
+						$city_id=$row['id'];
 					?>
                     <option value="<?php echo $city_id; ?> "><?php echo $cityName; ?></option>
                   	<?php } ?>  
@@ -112,24 +93,9 @@ function returnOnValues()
                 	<?php } ?>
             </div>
             
-             <div class="content-row-large" id="center">
-             <span>Center:</span>
-                <select class="dropdown" id="center" name="center">
-				<option value="-1">- Select -</option>
-                </select>
-                <?php if(isset($center) && $center == '1') { ?>
-<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" style="margin-left: -15px;" />
-<?php } ?>
-            </div>
-            
-            <div class="content-row-large">
-                   <span>Position:</span>
-                   <input type="text" class="textfield" id="position" name="position" value="<?php if(isset($this->validation->position)){ echo $this->validation->
-				   position; } ?>" />
-                   <?php if(!empty($this->validation->position_error)) { ?>
-                   <img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-                   <?php } ?>                   
-            </div>
+            <input type="hidden" name="password" value="defaultpass" />
+            <input type="hidden" name="center" value="0" />
+            <input type="hidden" name="position" value="" />
             
             <div class="content-row-reg" style="margin-top: 30px;">
 				  <input name="button" type="submit" class="reg-button" id="button" value="Register" />

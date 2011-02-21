@@ -6,22 +6,20 @@ function bulk_action(level) {
 		{ 
 		agents+=($(selected).val()=="")?$(selected).val():$(selected).val()+",";
 		});
-			$.ajax({
-				type : "POST", 
-				url  : "<?php echo site_url('level/update_student') ?>",
-				data : 'agents='+agents+'&level='+level,
-				success : function(data) 
-				{
-					
-				}
-			});
-	
+	$.ajax({
+		type : "POST", 
+		url  : "<?php echo site_url('level/update_student') ?>",
+		data : 'agents='+agents+'&level='+level,
+		success : function(data) 
+		{
 			
-	}
+		}
+	});
+}
 </script>
 
 <?php 
-$this->load->view('layout/header', array('title' => $action . ' Level'));
+$this->load->view('layout/header', array('title' => $action . ' Level in ' . $center_name));
 
 if(!isset($level)) $level = array(
 	'id'		=> 0,
@@ -30,27 +28,23 @@ if(!isset($level)) $level = array(
 	);
 ?>
 
-<h1><?php echo $action . ' Level' ?></h1>
+<h1><?php echo $action . ' Level in ' . $center_name ?></h1>
 
 <form action="" method="post" class="form-area">
 <label for='name'>Level Name</label>
 <input type="text" id="level" name="name" value="<?php echo set_value('name', $level['name']); ?>" /><br />
 
-<label for='center_id'>Center</label>
-<?php echo form_dropdown('center_id', $center_ids, $level['center_id']);  ?><br />
-
 <label for="selBulkActions">Kids:</label>
-<select id="student" name="student" multiple  > 
-<option selected="selected" >- choose action -</option> 
-	<?php 
-	foreach($kids as $row)
-	{
-	?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
-	<?php } ?>
-</select>
+<select id="students" name="students[]" multiple>
+<?php foreach($level['kids'] as $row) { ?>
+<option value="<?php echo $row->id; ?>" <?php 
+	if(in_array($row->id, $level['selected_students'])) echo 'selected'; 
+?>><?php echo $row->name; ?></option> 
+<?php } ?>
+</select><br />
 
 <?php
+echo form_hidden('center_id', $center_id);
 echo form_hidden('project_id', 1);
 echo form_hidden('id', $level['id']);
 $js = 'id="student" onclick="bulk_action('.$level['id'].');"';

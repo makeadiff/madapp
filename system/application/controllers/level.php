@@ -16,6 +16,7 @@ class Level extends Controller {
 		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);
 		$this->load->model('kids_model');
+		$this->load->model('center_model', 'center_model');
 		$this->load->helper('url');
 	}
 	
@@ -31,13 +32,13 @@ class Level extends Controller {
 	
 	function create($holder, $center_id = 0) { 
 		if($this->input->post('action') == 'New') {
-			$this->db->insert('Level', 
-				array(
+			$this->model->create(array(
 					'name'		=>	$this->input->post('name'),
 					'center_id'	=>	$this->input->post('center_id'),
 					'project_id'=>	$this->input->post('project_id'),
+					'students'	=>	$this->input->post('students')
 				));
-
+				
 			$this->message['success'] = 'The Level has been added';
 			$this->index('center', $this->input->post('center_id'));
 		
@@ -45,14 +46,19 @@ class Level extends Controller {
 			$this->load->helper('misc');
 			$this->load->helper('form');
 			
-			$center_ids = getById("SELECT id, name FROM Center", $this->model->db);
+			$center_name = $this->center_model->get_center_name($center_id);
+			$kids = $this->kids_model->get_kids_name($center_id);
+			
 			$this->load->view('level/form.php', array(
 				'action' => 'New',
-				'center_ids' => $center_ids,
+				'center_id' => $center_id,
+				'center_name'=>$center_name,
 				'level'	=> array(
 					'id'		=> 0,
-					'name'		=>	'Level ',
+					'name'		=> 'Level ',
 					'center_id'	=> $center_id,
+					'kids'		=> $kids->result(),
+					'selected_students'=> array()
 					)
 				));
 		}
@@ -60,27 +66,33 @@ class Level extends Controller {
 	
 	function edit($level_id) {
 		if($this->input->post('action') == 'Edit') {
-			$this->db->where('id', $this->input->post('id'))->update('Level', 
-				array(
-					'name'		=>	$this->input->post('name'), 
-					'center_id'	=>	$this->input->post('center_id'),
-					'project_id'=>	$this->input->post('project_id'),
-				));
+			$this->model->edit($level_id, array(
+				'name'		=>	$this->input->post('name'),
+				'center_id'	=>	$this->input->post('center_id'),
+				'project_id'=>	$this->input->post('project_id'),
+				'students'	=>	$this->input->post('students')
+			));
+
 			$this->message['success'] = 'The Level has been edited successfully';
 			$this->index('center', $this->input->post('center_id'));
 		} else {
+		
 			$this->load->helper('misc');
 			$this->load->helper('form');
+			
 			$level = $this->db->where('id',$level_id)->get('Level')->row_array();
-			$c_id=$level['center_id'];
-			$data['kids']=$this->kids_model->get_kids_name($c_id);
-			$kids=$data['kids']->result_array();
-			$center_ids = getById("SELECT id, name FROM Center", $this->model->db);
+			$center_id = $level['center_id'];
+			$center_name = $this->center_model->get_center_name($center_id);
+			$kids = $this->kids_model->get_kids_name($center_id);
+			$level['kids'] = $kids->result();
+			
+			$level['selected_students'] = $this->model->get_kids_in_level($level_id);
+
 			$this->load->view('level/form.php', array(
 				'action' 	=> 'Edit',
-				'center_ids'=> $center_ids,
+				'center_id'	=> $center_id,
+				'center_name'=> $center_name,
 				'level'		=> $level,
-				'kids'	=>$kids
 				));
 		}
 	}

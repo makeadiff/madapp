@@ -30,8 +30,7 @@ class Center_model extends Model
     **/
 	function getcenter_count()
 	{
-			$this->db->select('*')->where('city_id',1);
-			$this->db->from('Center');
+			$this->db->select('*')->where('Center.city_id',$this->city_id)->from('Center');
 			$count = $this->db->get();	
 			return count($count->result());
 	}
@@ -48,9 +47,11 @@ class Center_model extends Model
 	
 		$this->db->select('Center.*,City.name as city_name,User.name as user_name');
 		$this->db->from('Center');
+		$this->db->where('Center.city_id',$this->city_id);
 		$this->db->join('City', 'City.id = Center.city_id' ,'join');
-		$this->db->join('User', 'User.id = Center.center_head_id' ,'join');		
-		$result=$this->db->get();
+		$this->db->join('User', 'Center.center_head_id = User.id' ,'left');
+		
+		$result = $this->db->get();
 		return $result;	
     }
 	 /**
@@ -73,12 +74,11 @@ class Center_model extends Model
     * @param :[$data]
     * @return: type: [Array()]
     **/
-	function getheadname()
-	{
-	$this->db->select('*');
-	$this->db->from('User');
-	$result=$this->db->get();
-	return $result;
+	function getheadname() {
+		$this->db->select('*')->where('city_id', $this->city_id)->where('project_id',$this->project_id)->where('center_id',0);
+		$this->db->from('User');
+		$result=$this->db->get();
+		return $result;
 	
 	}
 	 /**
@@ -179,6 +179,7 @@ class Center_model extends Model
 	function getcenter() {
 		$this->db->select('*');
 		$this->db->from('Center');
+		$this->db->where('city_id', $this->city_id);
 		$result=$this->db->get();
 		return $result;
 	

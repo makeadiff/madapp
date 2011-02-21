@@ -72,6 +72,7 @@ class Center extends Controller  {
 		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
 		$data['currentPage'] = $page_no;
 		$data['details']= $this->center_model->getcenter_details($page_no);
+		
 		$this->load->view('center/center_list',$data);
 	}
 	/**
@@ -84,10 +85,10 @@ class Center extends Controller  {
     **/
 	function popupaddCneter()
 	{
-	$this->user_auth->check_permission('center_add');
-	$data['details']= $this->center_model->getcity();
-	$data['user_name']= $this->center_model->getheadname();
-	$this->load->view('center/popups/addcenter_popup',$data);
+		$this->user_auth->check_permission('center_add');
+		$data['details']= $this->center_model->getcity();
+		$data['user_name']= $this->center_model->getheadname();
+		$this->load->view('center/popups/addcenter_popup',$data);
 	}
 	/**
     *
@@ -107,15 +108,15 @@ class Center extends Controller  {
 			$message['msg']   =  "Center added successfully. Next step - <a href='".site_url('level/creater/center/'.$returnFlag)."'>Add Levels</a>.";
 			$message['successFlag'] = "1";
 			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "add new Center";
+			$message['linkText'] = "Add New Center";
 			$message['icoFile'] = "ico_addScheme.png";
 		
 			$this->load->view('dashboard/errorStatus_view',$message);
 		} else {
-			$message['msg']   =  "no updates performed.";
+			$message['msg']   =  "No updates performed.";
 			$message['successFlag'] = "0";
 			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "add new Center";
+			$message['linkText'] = "Add new Center";
 			$message['icoFile'] = "ico_addScheme.png";
 		
 			$this->load->view('dashboard/errorStatus_view',$message);

@@ -3,7 +3,7 @@
 <script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/thickbox.css">
 
-<script>
+<script type="text/javascript">
 function get_kidslist(page_no,search_query)
 {
 	
@@ -48,7 +48,7 @@ function deleteEntry(entryId,page_no)
 </div>
 <div id="updateDiv" >
     
-<script>
+<script type="text/javascript">
     get_kidslist('0','');
 </script>
 

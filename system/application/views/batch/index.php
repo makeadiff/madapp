@@ -12,7 +12,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 
 
 <table class="data-table" id="main">
-<tr><th>Batch Time</th><th colspan="2">Volunteers</th><th colspan="2">Action</th></tr>
+<tr><th>Batch Time</th><th>Volunteers</th><th colspan="2">Action</th></tr>
 <?php 
 $day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 $row_class = 'odd';
@@ -23,7 +23,6 @@ foreach($all_batches as $batch) {
 <tr class="<?php echo $row_class ?>">
 <td><?php echo $batch_name ?></td>
 
-<td><a href="<?php echo site_url('user/index/batch/'.$batch->id) ?>">Show Volunteers</a></td>
 <td><a href="<?php echo site_url('batch/add_volunteers/'.$batch->id) ?>">Add Volunteers to this Batch</a></td>
 
 <td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="edit">Edit</a></td>

@@ -120,7 +120,7 @@ class User extends Controller  {
 				$message['msg']   =  "User Added successfully.";
 				$message['successFlag'] = "1";
 				$message['link']  =  "popupAdduser";
-				$message['linkText'] = "add new Center";
+				$message['linkText'] = "Add New User";
 				$message['icoFile'] = "ico_addScheme.png";
 				$this->load->view('dashboard/errorStatus_view',$message);
 			}
@@ -129,7 +129,7 @@ class User extends Controller  {
 				$message['msg']   =  "No Action performed.";
 				$message['successFlag'] = "0";
 				$message['link']  =  "popupAdduser";
-				$message['linkText'] = "add new Center";
+				$message['linkText'] = "Add New User";
 				$message['icoFile'] = "ico_addScheme.png";
 				$this->load->view('dashboard/errorStatus_view',$message);
 			}
@@ -139,7 +139,7 @@ class User extends Controller  {
 			$message['msg']   =  "No Group created.";
 			$message['successFlag'] = "0";
 			$message['link']  =  "popupAdduser";
-			$message['linkText'] = "add new Center";
+			$message['linkText'] = "Add New User";
 			$message['icoFile'] = "ico_addScheme.png";
 			$this->load->view('dashboard/errorStatus_view',$message);
 		}
@@ -232,19 +232,19 @@ class User extends Controller  {
 		$data['title'] = 'Users view';
 		$this->load->view('dashboard/includes/header',$data);
 		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$data['city']= $this->city_model->get_city();
-		$data['group']= $this->users_model->getgroup_details();
+		
+		$data['city'] = $this->city_model->get_city();
+		$data['selected_city'] = $this->session->userdata('city_id');
+		$data['group'] = $this->users_model->getgroup_details();
 		$this->load->view('user/user_search_header',$data);
-		$data['details']= $this->users_model->getuser_details();
+		
+		$data['details'] = $this->users_model->getuser_details(array('city_id' => $data['selected_city']));
 		$result=$data['details']->result_array();
-		if($result)
-		{
+		if($result) {
 			$this->load->view('user/users_search_view_div',$data);
 			$this->load->view('user/user_search_footer',$data);
 			$this->load->view('dashboard/includes/footer');
-		}
-		else
-		{
+		} else {
 			$this->load->view('user/error_list');
 			$this->load->view('dashboard/includes/footer');
 		
@@ -260,8 +260,8 @@ class User extends Controller  {
 	{
 		$data['city']=$_REQUEST['city'];
 		$data['name']=$_REQUEST['name'];
-		$group=$_REQUEST['group'];
-		$data['title'] = 'Users view';
+		$group = $_REQUEST['group'];
+		$data['title'] = 'Users View';
 		
 		//search by any city with group only
 		if($data['city'] == 0 && $group !='' && $data['name']=='' )

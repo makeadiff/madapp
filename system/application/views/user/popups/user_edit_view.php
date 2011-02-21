@@ -31,9 +31,8 @@ foreach($group_name as $row) {
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
 		<div class="field clear" style="width:500px;"> 
-                        <label for="txtName">Name : </label>
-                        <input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
-                      
+			<label for="txtName">Name : </label>
+			<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
             </div>
             
             <div class="field clear" style="width:500px;">
@@ -77,9 +76,12 @@ foreach($group_name as $row) {
                       
             </div>
             
+            <?php 
+			$this_city_id = $this->session->userdata('city_id');
+			if($this->user_auth->get_permission('change_city')) { ?>
 			<div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select city:</label> 
-            <select id="city" name="city" > 
+            <select id="city" name="city" >
             <option selected="selected" value="-1" >- choose action -</option> 
 				<?php 
                 $details = $details->result_array();
@@ -91,6 +93,9 @@ foreach($group_name as $row) {
                 <?php }} ?>
             </select>
             </div>
+            <?php } else { ?>
+    			<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
+    		<?php } ?>
             
             <div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select center:</label> 

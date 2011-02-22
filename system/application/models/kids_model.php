@@ -27,7 +27,7 @@ class Kids_model extends Model {
     **/
 	function getkids_details() {
 		$this->db->select('Student.*,Center.name as center_name');
-		$this->db->where('city_id',$this->city_id);
+		//$this->db->where('city_id',$this->city_id);
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
 		$result=$this->db->get();

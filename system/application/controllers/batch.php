@@ -74,7 +74,7 @@ class Batch extends Controller {
 				'levels_in_center'=>$levels_in_center,'all_teachers'=>$all_teachers, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
 	}
 	
-	function add_volunteers_action() {
+function add_volunteers_action() {
 		$this->user_auth->check_permission('batch_add_volunteers');
 		
 		$batch_id = $this->input->post('batch_id');
@@ -92,7 +92,7 @@ class Batch extends Controller {
 		$this->add_volunteers($batch_id);
 	}
 	
-	function create($holder, $center_id = 0) {
+function create($holder, $center_id = 0) {
 		$this->user_auth->check_permission('batch_create');
 		
 		if(!is_numeric($center_id)) {
@@ -172,7 +172,6 @@ class Batch extends Controller {
 		
 		$batch = $this->model->get_batch_as_array($batch_id);
 		$this->model->delete($batch_id);
-		
 		$this->message['success'] = 'The Batch has been deleted successfully';
 		$this->index('center',$batch['center_id']);
 	}

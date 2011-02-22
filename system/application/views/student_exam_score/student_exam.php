@@ -65,7 +65,7 @@ function dataGrabber()
 				{ 
  				agents+=($(selected).val()=="")?$(selected).val():$(selected).val()+",";
 				});
-				alert(agents);
+				//alert(agents);
 				//get subject name
 				if(name=='')
 				{

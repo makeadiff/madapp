@@ -98,7 +98,7 @@ class Kids extends Controller  {
     **/
 	function popupaddKids()
 	{	
-		$this->user_auth->check_permission('kids_add');
+		//$this->user_auth->check_permission('kids_add');
 		$data['center']= $this->center_model->getcenter();
 		$this->load->view('kids/popups/addkids_popup',$data);
 	

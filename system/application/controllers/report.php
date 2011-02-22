@@ -22,7 +22,6 @@ class Report extends Controller {
 	
 	function users_with_low_credits() {
 		$report_data = $this->report_model->get_users_with_low_credits();
-		
 		$this->show_report($report_data, array('name'=>'Name', 'credit'=>'Credits'), 'Users With Low Credits(0 or less)');
 	}
 	

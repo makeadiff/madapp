@@ -4,19 +4,19 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
 
 <?php 
-$subject = $subject->result_array();
-if($subject) { ?>
+$details = $details->result_array();
+if($details) { ?>
 
-<div id="content" class="clear" >
+<div id="content" class="clear">
 <!-- Main Begins -->
-	<div id="main" class="clear">
+	<div id="main" class="clear" >
 <form id="formEditor" class="mainForm clear" method="post" action="<?=site_url('exam/addMarks')?>"  style="width:500px;"  >
 	<fieldset class="clear" style="margin-top:50px;margin-left:-80px;">
 
 <table cellpadding="0"  cellspacing="0" style="width:auto;" class="clear" id="tableItems">
 <thead>
 <tr id="generated_rows">
-	<th  class="colCheck1">Id</th>
+	<th  class="colCheck1">Si No</th>
 	<th  class="colName left sortable">Name</th>
 	<?php 
 	$i=0;
@@ -69,8 +69,8 @@ foreach($content as $row)
     <?php $j=0; ?>
     <?php for($i=1;$i<count($subject)+1;$i++) { $j++; ?>
     <td class="colCheck1">
-    <?php // echo $l.'mark'.$j; ?>
-    <input type="text" name="<?=$l?>mark<?=$j?>" style="width:50px; margin-bottom:5px;" id="mark"></td>
+    <?php //echo $l.'mark'.$j; ?>
+    <input type="text" name="<?=$l?>mark<?=$j?>" style="width:150px; margin-bottom:5px;" id="mark"></td>
     <?php }  ?>
 </tr>
 <?php }?>
@@ -92,7 +92,7 @@ foreach($content as $row)
 </form>
 <?php } else { 
 
-echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no subjects found -</div>";} ?>
+echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no subjects and students found -</div>";} ?>
 
 
 

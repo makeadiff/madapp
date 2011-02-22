@@ -85,6 +85,7 @@ class Center extends Controller  {
     **/
 	function popupaddCneter()
 	{
+
 		$this->user_auth->check_permission('center_add');
 		$data['details']= $this->center_model->getcity();
 		$data['user_name']= $this->center_model->getheadname();

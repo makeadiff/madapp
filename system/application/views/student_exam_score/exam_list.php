@@ -32,7 +32,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('exam/add_exam')?>" class="thickbox button primary" id="example" name="<strong>Add New Group</strong>">Add New Exam</a>
+<a href="<?= site_url('exam/add_exam')?>" class="thickbox button primary" id="example" name="<strong>Add New Exam</strong>">Add New Exam</a>
 </div>
 			<!-- end page actions-->
 

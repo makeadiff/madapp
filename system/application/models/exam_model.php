@@ -70,11 +70,11 @@ class Exam_model extends Model
 		$agents = str_replace("on,","",$agents);
 		$agents = substr($agents,0,strlen($agents)-1);
 		$explode_agent = explode(",",trim($agents));
-		for($i=1;$i<sizeof($explode_agent);$i++)
+		for($i=0;$i<sizeof($explode_agent);$i++)
 		{
 			$agent=$explode_agent[$i];
 			for($j=0;$j<sizeof($choiceText);$j++) {
-				if($choiceText[$j] != 'nil') {
+				if($choiceText[$j] != 'nil') { 
 					$name=$choiceText[$j];
 					$this->db->select('id');
 					$this->db->from('Exam_Subject');
@@ -84,7 +84,7 @@ class Exam_model extends Model
 					foreach($ids as $row) {
 						$id=$row['id'];
 					}
-					$choiceList = array('exam_id2'  => $exam_id,
+					$choiceList = array('exam_id'  => $exam_id,
 										'student_id'=>$agent,
 										'subject_id'  => $id,
 									);

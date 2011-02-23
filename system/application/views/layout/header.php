@@ -6,7 +6,10 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
-<link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/thickbox.css">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/thickbox.css" />
+<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
+<script type="text/javascript" src="<?php echo base_url()?>js/application.js"></script>
 </head>
 
 <body>

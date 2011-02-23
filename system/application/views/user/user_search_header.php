@@ -1,7 +1,3 @@
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/thickbox.css" />
-
 <script type="text/javascript">
 tb_init('a.thickbox, input.thickbox');
 
@@ -11,7 +7,7 @@ function triggerSearch() {
 }
 
 $(document).ready(function(){
-	$('.thickbox').each(function(){
+	$('.popup').each(function(){
 		var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
 		$(this).attr('href', url);
 	});
@@ -84,7 +80,7 @@ function divupdation() {
     	<div id="head" class="clear"><h1><?php echo $title; ?></h1>
     	
     <div id="actions"> 
-	<a href="<?= site_url('user/popupAdduser')?>" class="thickbox button primary" id="example" name="Add User">Add User</a>
+	<a href="<?= site_url('user/popupAdduser')?>" class="thickbox button primary popup" id="example" name="Add User">Add User</a>
 	</div>
 	</div>
 

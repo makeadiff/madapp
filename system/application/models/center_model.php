@@ -75,8 +75,8 @@ class Center_model extends Model
     * @return: type: [Array()]
     **/
 	function getheadname() {
-		$this->db->select('*')->where('city_id', $this->city_id)->where('project_id',$this->project_id)->where('center_id',0);
-		$result=$this->db->get();
+		$this->db->select('*')->where('city_id', $this->city_id)->where('project_id',$this->project_id);
+		$result=$this->db->get('User');
 		return $result;
 	
 	}

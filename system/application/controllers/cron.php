@@ -20,8 +20,12 @@ class Cron extends Controller  {
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
 				
-				$day = date('d') + date('w') - intval($batch->day)	// This is how we find the next sunday, monday(whatever is in the $batch->day).
-							+ ($week * 7); // We have to do this for two weeks. So in the first iteration, this will be 0 and in next it will be 7.
+				// This is how we find the next sunday, monday(whatever is in the $batch->day).
+				$date_interval = intval($batch->day) - date('w');
+				if($date_interval <= 0) $date_interval += 7;
+				$day = date('d') + $date_interval;
+				
+				$day = $day + ($week * 7); // We have to do this for two weeks. So in the first iteration, this will be 0 and in next it will be 7.
 							
 				$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
 				$date = date("Y-m-d H:i:s", $time);
@@ -31,15 +35,15 @@ class Cron extends Controller  {
 				foreach($teachers as $teacher) {
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
-						print "{$teacher->id} - $date<br />";
-// 						$this->class_model->save_class(array(
-// 							'batch_id'	=> $batch->id,
-// 							'level_id'	=> $teacher->level_id,
-// 							'teacher_id'=> $teacher->id,
-// 							'substitute_id'=>0,
-// 							'class_on'	=> $date,
-// 							'status'	=> 'projected'
-// 						));
+						if($debug) print "{$teacher->id} - $date<br />";
+						$this->class_model->save_class(array(
+							'batch_id'	=> $batch->id,
+							'level_id'	=> $teacher->level_id,
+							'teacher_id'=> $teacher->id,
+							'substitute_id'=>0,
+							'class_on'	=> $date,
+							'status'	=> 'projected'
+						));
 					}
 				}
 				

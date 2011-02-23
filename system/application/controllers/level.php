@@ -105,8 +105,8 @@ class Level extends Controller {
 		}
 		$level_center = $this->db->select('center_id')->where('id', $level_id)->get('Level')->row();
 		
-// 		$this->db->delete('Level', array('id'=>$level_id));
-// 		$this->db->delete('StudentLevel', array('level_id'=>$level_id));
+ 		$this->db->delete('Level', array('id'=>$level_id));
+ 		$this->db->delete('StudentLevel', array('level_id'=>$level_id));
 		$this->message['success'] = 'The Level has been deleted successfully';
 		$this->index('center', $level_center->center_id);
 	}

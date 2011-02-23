@@ -99,15 +99,16 @@ class Level extends Controller {
 	
 	function delete($level_id) {
 		//Make sure the level don't have any batches under it.
-		$batches = $this->db->where('level_id', $level_id)->get('Batch')->result();
+		$batches = $this->db->where('level_id', $level_id)->get('UserBatch')->result();
 		if($batches) {
 			show_error("This level has batches under it. You can only delete levels that have no batches");
 		}
-		// Check for kids in this batch too? Not sure.
-				
-		$this->db->delete('Level', array('id'=>$level_id));
+		$level_center = $this->db->select('center_id')->where('id', $level_id)->get('Level')->row();
+		
+// 		$this->db->delete('Level', array('id'=>$level_id));
+// 		$this->db->delete('StudentLevel', array('level_id'=>$level_id));
 		$this->message['success'] = 'The Level has been deleted successfully';
-		$this->index();
+		$this->index('center', $level_center->center_id);
 	}
 	
 	/**

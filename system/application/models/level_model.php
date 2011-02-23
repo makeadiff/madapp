@@ -50,11 +50,13 @@ class Level_model extends Model {
 		$level_id = $this->db->insert_id();
 		$this->db->delete("StudentLevel", array('level_id'=>$level_id));
 		$selected_students = $data['students'];
-		foreach($selected_students as $student_id) {
-			$this->db->insert("StudentLevel", array(
-				'level_id'	=> $level_id,
-				'student_id'=> $student_id
-			));
+		if($selected_students) {
+			foreach($selected_students as $student_id) {
+				$this->db->insert("StudentLevel", array(
+					'level_id'	=> $level_id,
+					'student_id'=> $student_id
+				));
+			}
 		}
     }
     

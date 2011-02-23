@@ -72,7 +72,7 @@ class Project extends Controller  {
 		  		$message['msg']   =  "project added successfully.";
 				$message['successFlag'] = "1";
 				$message['link']  =  "popupaddproject";
-				$message['linkText'] = "add new Project";
+				$message['linkText'] = "Add new Project";
 				$message['icoFile'] = "ico_addScheme.png";
 			
 				$this->load->view('dashboard/errorStatus_view',$message);
@@ -82,7 +82,7 @@ class Project extends Controller  {
 		  		$message['msg']   =  "No Operations  performed.";
 				$message['successFlag'] = "0";
 				$message['link']  =  "popupaddproject";
-				$message['linkText'] = "add new Project";
+				$message['linkText'] = "Add new Project";
 				$message['icoFile'] = "ico_addScheme.png";
 			
 				$this->load->view('dashboard/errorStatus_view',$message);

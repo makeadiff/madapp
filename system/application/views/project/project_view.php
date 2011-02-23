@@ -22,7 +22,7 @@
 	
 	function deleteEntry(entryId,page_no)
 	{
-		var bool = confirm("confirm delete!")
+		var bool = confirm("Are you sure you wish to delete this Project?")
 		if(bool)
 		{
 			$.ajax({
@@ -47,6 +47,7 @@
     <img src="<?php echo base_url()?>images/ico/loading.gif" height="25" width="25" style="border: none;margin-left: 300px;" /> loading...
 </div>
 </div>
+
 <div id="updateDiv" >
     
 <script>

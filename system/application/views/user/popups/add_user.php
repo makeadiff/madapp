@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-
 <form id="formEditor" class="mainForm clear" action="<?=site_url('user/adduser')?>" method="post" onsubmit="return validate();" style="width:500px;" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 

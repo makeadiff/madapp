@@ -11,11 +11,28 @@ function triggerSearch() {
 }
 
 $(document).ready(function(){
-	$('#example').each(function(){
+	$('.thickbox').each(function(){
 		var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
 		$(this).attr('href', url);
 	});
 });  
+
+function deleteEntry(entryId,page_no)
+{
+	var bool = confirm("Are you sure you want to delete this?")
+	if(bool)
+	{
+		$.ajax({
+		type : "POST",
+		url  : "<?php echo site_url("user/ajax_deleteuser") ?>",
+		data : 'entry_id='+entryId,
+		success : function(data) {
+			update_userlist();
+		}
+		
+		});
+	}
+}	
 
 function update_userlist()
 {
@@ -28,7 +45,7 @@ function update_userlist()
 
 	$.ajax({
 		type: "POST",
-		url: "<?= site_url('user/user_search')?>",
+		url: "<?php echo site_url('user/user_search')?>",
 		data: "city="+city+"&group="+agents+"&name="+name,
 		success: function(msg){
 			//$('#loading').hide();
@@ -125,6 +142,7 @@ function divupdation() {
     <th class="colPosition">City</th>
     <th class="colPosition">Center</th>
     <th class="colPosition">User Type</th>
+    <th class="colPosition">Actions</th>
 </tr>
 </thead>
 <tbody id="search">

@@ -75,9 +75,7 @@ class Center_model extends Model
     * @return: type: [Array()]
     **/
 	function getheadname() {
-		//$this->db->select('*')->where('city_id', $this->city_id)->where('project_id',$this->project_id)->where('center_id',0);
-		$this->db->select('*');
-		$this->db->from('User');
+		$this->db->select('*')->where('city_id', $this->city_id)->where('project_id',$this->project_id)->where('center_id',0);
 		$result=$this->db->get();
 		return $result;
 	
@@ -119,20 +117,18 @@ class Center_model extends Model
     * @param :[$data]
     * @return: type: [Boolean]
     **/
-	function update_center($data)
-	{
-			$rootId=$data['rootId'];
-			$data = array('city_id' => $data['city'] ,
-			 		  'name' => $data['center'] ,
-					  'center_head_id' => $data ['user_id'],
-			 		  );
-			 $this->db->where('id', $rootId);
-			 $this->db->update('Center', $data);
-	 		 return ($this->db->affected_rows() > 0) ? true: false ;
-	
-	
+	function update_center($data) {
+		$rootId=$data['rootId'];
+		$data = array('city_id' => $data['city'] ,
+				'name' => $data['center'] ,
+				'center_head_id' => $data ['user_id'],
+				);
+		$this->db->where('id', $rootId);
+		$this->db->update('Center', $data);
+		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
-	 /**
+	
+	/**
     * Function to delete_center
     * @author:Rabeesh 
     * @param :[$data]
@@ -180,9 +176,8 @@ class Center_model extends Model
 	function getcenter() {
 		$this->db->select('*');
 		$this->db->from('Center');
-		//$this->db->where('city_id', $this->city_id);
+		$this->db->where('city_id', $this->city_id);
 		$result=$this->db->get();
 		return $result;
-	
 	}
 }

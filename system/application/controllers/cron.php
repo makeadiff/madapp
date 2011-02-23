@@ -11,6 +11,9 @@ class Cron extends Controller  {
 		$this->load->model('Class_model','class_model', TRUE);
 		$all_batches = $this->batch_model->get_all_batches();
 		
+		$debug = true;
+		if($debug) $this->load->helper('misc_helper');
+		
 		// Wee have to add all the classes for the next two weeks.
 		for($week = 0; $week < 2; $week++) {
 			foreach($all_batches as $batch) {
@@ -23,22 +26,24 @@ class Cron extends Controller  {
 				$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
 				$date = date("Y-m-d H:i:s", $time);
 				
-				//dump($teachers, $date);
+				if($debug) dump($teachers, $date, $batch);
 				
 				foreach($teachers as $teacher) {
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
 						print "{$teacher->id} - $date<br />";
-						$this->class_model->save_class(array(
-							'batch_id'	=> $batch->id,
-							'level_id'	=> $teacher->level_id,
-							'teacher_id'=> $teacher->id,
-							'substitute_id'=>0,
-							'class_on'	=> $date,
-							'status'	=> 'projected'
-						));
+// 						$this->class_model->save_class(array(
+// 							'batch_id'	=> $batch->id,
+// 							'level_id'	=> $teacher->level_id,
+// 							'teacher_id'=> $teacher->id,
+// 							'substitute_id'=>0,
+// 							'class_on'	=> $date,
+// 							'status'	=> 'projected'
+// 						));
 					}
 				}
+				
+				if($debug) print "++++++++++++++++++++++++++++++++++++++++++++++<br />";
 			}
 		}
 	}

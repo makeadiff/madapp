@@ -178,7 +178,10 @@ class User extends Controller  {
 		{
 		$data['rootId'] = $_REQUEST['rootId'];
 		$data['name'] = $_REQUEST['name'];
-		$data['group'] = $_REQUEST['group'];
+		
+		$data['group'] = array();
+		if(!empty($_REQUEST['group'])) $data['group'] = $_REQUEST['group'];
+		
 		$data['position'] = $_REQUEST['position'];
 		$data['email'] = $_REQUEST['email'];
 		$data['phone'] = $_REQUEST['phone'];

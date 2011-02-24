@@ -85,11 +85,13 @@ class User extends Controller  {
     **/
 	function popupAdduser()
 	{
-		$this->user_auth->check_permission('user_add');
+		//$this->user_auth->check_permission('user_add');
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
 		$data['project']= $this->project_model->getproject();
 		$data['user_group']= $this->users_model->getgroup_details();
+		//$this->load->view('user/popups/user_edit_view',$data);
+		//$this->load->view('user/popups/user_edit_view',$data);	
 		
 		$this->load->view('user/popups/add_user',$data);
 	}
@@ -152,7 +154,7 @@ class User extends Controller  {
     **/
 	function popupEditusers()
 	{	
-		$this->user_auth->check_permission('user_edit');
+		//$this->user_auth->check_permission('user_edit');
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
@@ -181,9 +183,20 @@ class User extends Controller  {
 		
 		$data['group'] = array();
 		if(!empty($_REQUEST['group'])) $data['group'] = $_REQUEST['group'];
-		
-		$data['position'] = $_REQUEST['position'];
 		$data['email'] = $_REQUEST['email'];
+		$data['position'] = $_REQUEST['position'];
+		$password=$_REQUEST['password'];
+		if($password=='')
+		{
+			$password=$this->users_model->get_password($data);
+			$password=$password->password;
+			$data['password']=$password;
+		}
+		else{
+		$data['password']=$password;
+		}
+		
+		
 		$data['phone'] = $_REQUEST['phone'];
 		$data['city'] = $_REQUEST['city'];
 		$data['center'] = $_REQUEST['center'];
@@ -241,7 +254,8 @@ class User extends Controller  {
 		$data['group'] = $this->users_model->getgroup_details();
 		$this->load->view('user/user_search_header',$data);
 		
-		$data['details'] = $this->users_model->getuser_details(array('city_id' => $data['selected_city']));
+		//$data['details'] = $this->users_model->getuser_details(array('city_id' => $data['selected_city']));
+		$data['details'] = $this->users_model->getuser_details();
 		$result=$data['details']->result_array();
 		if($result) {
 			$this->load->view('user/users_search_view_div',$data);

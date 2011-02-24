@@ -197,7 +197,7 @@ class Users_model extends Model {
 		}
 		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
-		$this->db->where('User.project_id',$this->project_id);
+		//$this->db->where('User.project_id',$this->project_id);
 		$result = $this->db->get();
 		
 		return $result;
@@ -288,7 +288,8 @@ class Users_model extends Model {
 				'center_id'=> $data['center'],
 				'city_id'=> $data['city'],
 				'project_id'=>$data['project'],
-				'user_type' => $data['type']
+				'user_type' => $data['type'],
+				'password' => $data['password']
 			);
 				
 			$this->db->where('id', $rootId);
@@ -599,8 +600,16 @@ class Users_model extends Model {
                     return false;
             }
     }
-	
-	
-	
+	/**
+    * Function to get password
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function get_password($data)
+	{
+	$email=$data['email'];
+	return $this->db->where('email', $email)->get("user")->row();
+	}
 	
 }

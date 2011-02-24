@@ -12,7 +12,7 @@ foreach($user_details as $row) {
 	$title		= $row['title'];
 	$email		= $row['email'];
 	$phone		= $row['phone'];
-	$password	= $row['password'];
+	//$password	= $row['password'];
 	$center_id	= $row['center_id'];
 	$city_id	= $row['city_id'];
 	$project_id	= $row['project_id'];
@@ -26,7 +26,13 @@ foreach($group_name as $row) {
 	
 }
 ?>
+<script type="text/javascript">
+function get_center_Name(city_id)
+{
+alert(city_id);
 
+}
+</script>
 <form id="formEditor" class="mainForm clear" action="<?=site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
@@ -59,7 +65,7 @@ foreach($group_name as $row) {
             </div>
             <div class="field clear" style="width:500px;"> 
 				<label for="txtName">Password : </label>
-				<input id="password" name="password"  type="password" value="<?php echo $password; ?>"  /> 
+				<input id="password" name="password"  type="password"   /> 
                       
             </div>
             <div class="field clear" style="width:500px;"> 
@@ -76,7 +82,7 @@ foreach($group_name as $row) {
 			if($this->user_auth->get_permission('change_city')) { ?>
 			<div class="field clear" style="width:500px;">
             <label for="selBulkActions">Select city:</label> 
-            <select id="city" name="city" >
+            <select id="city" name="city"  onchange="javascript:get_center_Name(this.value);">
             <option selected="selected" value="-1" >- choose action -</option> 
 				<?php 
                 $details = $details->result_array();
@@ -155,7 +161,12 @@ function validate()
               alert("Select Email.");
               return false;
           }
-		  		  
+		
+		if(document.getElementById("password").value != document.getElementById("cpassword").value)
+          {
+              alert("Password Missmatch.");
+              return false;
+          }
 	if(document.getElementById("city").value == '-1')
           {
               alert("Select City.");

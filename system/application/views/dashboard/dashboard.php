@@ -7,11 +7,11 @@
 	
 <div id="quick" class="clear" style="margin-top:-15px;">
 	<div class="quickLink"> <a href="<?= site_url('city/') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/Project-icon.png" alt="" /> <span>City</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/city.jpeg" alt="" /> <span>City</span></a></div>
 	<div class="quickLink"> <a href="<?= site_url('project/manage_project') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/Project-icon.png" alt="" /> <span>Projects</span></a></div>
 	<div class="quickLink"> <a href="<?= site_url('center/manageaddcenters') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/icoPublish.png" alt="" /> <span>Centers</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/center_right.png" alt="" /> <span>Centers</span></a></div>
 	
 	<br />
 	
@@ -20,11 +20,11 @@
 	<div class="quickLink"> <a href="<?= site_url('level/') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/Project-icon.png" alt="" /> <span>Levels</span></a></div>-->
 	<div class="quickLink"> <a href="<?= site_url('classes/') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/icoPublish.png" alt="" /> <span>Classes</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/class.png" alt="" /> <span>Classes</span></a></div>
 	<div class="quickLink"> <a href="<?= site_url('report/') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/icoPublish.png" alt="" /> <span>Report</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Report</span></a></div>
 	<div class="quickLink"> <a href="<?= site_url('classes/madsheet') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/icoPublish.png" alt="" /> <span>MADSheet</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/stock_new-spreadsheet.png" alt="" /> <span>MADSheet</span></a></div>
 	
 	<br />
 

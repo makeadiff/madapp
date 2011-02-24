@@ -131,7 +131,7 @@ class Kids_model extends Model {
 			 //$this->db->where('student_id',$rootId);
 			 //$this->db->update('StudentLevel', array('level_id'=>$data['level']));
 			 
-	 		 return ($this->db->affected_rows() > 0) ? true: false ;
+	 		 return ($this->db->affected_rows() > 0) ? 1: 0 ;
 	
 	}
 	/**
@@ -160,7 +160,12 @@ class Kids_model extends Model {
 		return $result;
 	
 	}
-	
+	/**
+    * Function to generate_code
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,Array() ]
+    **/
 	function generate_code($length = 10)
 	{
     
@@ -180,10 +185,12 @@ class Kids_model extends Model {
                 return $code;
             
                 }
- 
-    
-	
-	
+	/**
+    * Function to process_pic
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,Array() ]
+    **/
 	
 	function process_pic($data)
     {   
@@ -201,7 +208,8 @@ class Kids_model extends Model {
 			$this->load->library('imageResize');
             $nwidth='100';
 	        $nheight='90';
-			$fileSavePath='C:/xampp/htdocs/maddaplycation/madapp/trunk/pictures/'.$newimagename;
+			//$fileSavePath=base_url().'pictures/'.$newimagename;
+			$fileSavePath='E:/projects/maddaplycation/madapp/trunk/pictures/'.$newimagename;
 			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
 			
 			

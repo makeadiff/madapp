@@ -29,5 +29,6 @@ $norecord_flag = 0;
     <td class="colPosition"><?php echo $row['city_name'];  ?></td>
     <td class="colPosition"><?php echo $row['center_name'];  ?></td>
     <td class="colPosition"><?php echo $row['user_type'];  ?></td>
+    <td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'pictures/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
 </tr>
 <?php  } ?> 

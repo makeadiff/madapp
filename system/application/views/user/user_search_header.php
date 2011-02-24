@@ -138,6 +138,7 @@ function divupdation() {
     <th class="colPosition">City</th>
     <th class="colPosition">Center</th>
     <th class="colPosition">User Type</th>
+    <th class="colPosition">Photo</th>
     <th class="colPosition">Actions</th>
 </tr>
 </thead>

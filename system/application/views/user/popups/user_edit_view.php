@@ -12,11 +12,11 @@ foreach($user_details as $row) {
 	$title		= $row['title'];
 	$email		= $row['email'];
 	$phone		= $row['phone'];
-	//$password	= $row['password'];
 	$center_id	= $row['center_id'];
 	$city_id	= $row['city_id'];
 	$project_id	= $row['project_id'];
 	$user_type	= $row['user_type'];
+	$photo=$row['photo'];
 }
 
 $group_name=$group_name->result_array();
@@ -33,7 +33,7 @@ alert(city_id);
 
 }
 </script>
-<form id="formEditor" class="mainForm clear" action="<?=site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
 		<div class="field clear" style="width:500px;"> 
@@ -129,6 +129,19 @@ alert(city_id);
                 <?php } }?>
             </select>
             </div>
+           
+           <div class="field clear" style="width:600px; margin-left:100px;">
+	<label for="date">Photo</label>
+<img src="<?php echo base_url().'pictures/'.$photo; ?>" width="100" style="float:left;" height="100" />
+</div>
+ <div  class="field clear" style="width:600px; margin-left:100px;">
+	<label for="date">Change photo</label>
+	<input name="image"  id="image" type="file">
+	<p class="error clear"></p>
+</div>          
+           
+           
+           
            
            <div class="field clear" style="width:500px;"> 
 				<label for="type">User Type : </label>

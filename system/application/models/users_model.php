@@ -243,6 +243,65 @@ class Users_model extends Model {
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
 	/**
+    * Function to process_pic
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,Array() ]
+    **/
+	function process_pic($data)
+    {   
+      	$id=$data['id'];
+        //Get File Data Info
+        $uploads = array($this->upload->data());
+        $this->load->library('image_lib');
+        //Move Files To User Folder
+        foreach($uploads as $key[] => $value)
+        {
+            //Gen Random code for new file name
+            $randomcode = $this->generate_code(12);
+            $newimagename = $randomcode.$value['file_ext'];
+			rename($value['full_path'],'pictures/'.$newimagename);
+			$this->load->library('imageResize');
+            $nwidth='100';
+	        $nheight='90';
+			$fileSavePath='E:/projects/maddaplycation/madapp/trunk/pictures/'.$newimagename;
+			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
+            $imagename = $newimagename;
+            $thumbnail = $randomcode.'_tn'.$value['file_ext'];
+            $this->db->set('photo', $imagename);
+            //$this->db->set('thumbnail', $thumbnail);
+			$this->db->where('id',$id);
+            $this->db->update('user');
+			return ($this->db->affected_rows() > 0) ? true: false ;
+
+        }
+ 	}       
+	/**
+    * Function to generate_code
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,Array() ]
+    **/
+	function generate_code($length = 10)
+	{
+		$this->load->library('image_lib');
+                if ($length <= 0)
+                {
+                    return false;
+                }
+                $code = "";
+                $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+                srand((double)microtime() * 1000000);
+                for ($i = 0; $i < $length; $i++)
+                {
+                    $code = $code . substr($chars, rand() % strlen($chars), 1);
+                }
+                return $code;
+            
+                }
+ 
+	
+	/**
     * Function to adduser_to_group
     * @author:Rabeesh 
     * @param :[$data]
@@ -250,7 +309,7 @@ class Users_model extends Model {
     **/
 	function adduser_to_group($data)
 	{
-		$user_array=array('user_id'=>$data['insert_id'],
+		$user_array=array('user_id'=>$data['id'],
 					'group_id'=> $data['group']);
 		$this->db->insert('UserGroup',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;		
@@ -267,7 +326,7 @@ class Users_model extends Model {
 		$this->db->from('User');
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'left');
 		$this->db->where('User.id',$uid);
-		$this->db->where('User.project_id',$this->project_id);
+		//$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		//print_r($result);
 		return $result;
@@ -380,7 +439,7 @@ class Users_model extends Model {
 		$group=$data['group'];
 		$name=$data['name'];
 		
-		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,user.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
@@ -399,7 +458,7 @@ class Users_model extends Model {
 		$city=$data['city'];
 		$group=$data['group'];
 		
-		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,user.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
@@ -422,7 +481,7 @@ class Users_model extends Model {
 	{
 		$city=$data['city'];
 		//$this->db->select('User.*,Center.name as center_name,City.name as city_name');
-		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,user.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'left');
@@ -443,7 +502,7 @@ class Users_model extends Model {
 	{
 	
 		$group=$data['group'];
-		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.email,user.photo,User.phone,User.title,User.user_type,Center.name as center_name,
 			City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
@@ -467,7 +526,7 @@ class Users_model extends Model {
 		$name=$data['name'];
 		//$this->db->select('User.*,Center.name as center_name,City.name as city_name,UserGroup.id 
 		//as g_id,UserGroup.user_id,UserGroup.group_id');
-		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.email,User.phone,user.photo,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
@@ -491,7 +550,7 @@ class Users_model extends Model {
 		$city=$data['city'];
 		$name=$data['name'];
 		//$this->db->select('User.*,Center.name as center_name,City.name as city_name');
-		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,user.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');

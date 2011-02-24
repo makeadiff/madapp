@@ -31,6 +31,7 @@ class User extends Controller  {
 		$this->load->model('project_model');
 		$this->load->model('users_model');
 		$this->load->model('city_model');
+		$this->load->library('upload');
     }
 	
     /**
@@ -113,8 +114,28 @@ class User extends Controller  {
 		$data['center'] = $_REQUEST['center'];
 		$data['project'] = $_REQUEST['project'];
 		$data['type'] = $_REQUEST['type'];
-		$data['insert_id']= $this->users_model->adduser($data);
-		if($data['insert_id'])
+		$data['id']= $this->users_model->adduser($data);
+		
+		$config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size']    = '1000'; //2 meg
+		foreach($_FILES as $key => $value)
+        {
+            if( ! empty($key['name']))
+            {
+                $this->upload->initialize($config);
+        
+                if ( ! $this->upload->do_upload($key))
+                {
+                    $errors[] = $this->upload->display_errors();
+                }    
+                else
+                {
+                    $flag=$this->users_model->process_pic($data);
+                }
+             }
+        }
+		if($data['id'] !='')
 		{
 			$returnFlag= $this->users_model->adduser_to_group($data);
 			if($returnFlag)
@@ -161,6 +182,7 @@ class User extends Controller  {
 		$data['project']= $this->project_model->getproject();
 		$data['user']= $this->users_model->user_details($uid);
 		$content=$data['user']->result_array();
+		//print_r($content);
 		foreach($content as $row) 
 		{
 			$uid=$row['group_id'];
@@ -204,6 +226,27 @@ class User extends Controller  {
 		$data['type'] = $_REQUEST['type'];
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
+		$data['id']=$data['rootId'];
+		$config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size']    = '1000'; //2 meg
+		foreach($_FILES as $key => $value)
+        {
+            if( ! empty($key['name']))
+            {
+                $this->upload->initialize($config);
+                if ( ! $this->upload->do_upload($key))
+                {
+                    $errors[] = $this->upload->display_errors();
+                }    
+                else
+                {
+                    $flag1=$this->users_model->process_pic($data);
+                }
+             }
+        }
+		
+		
 		if($flag || $returnFlag ) 
 		{
 				$message['msg']   =  "Profile edited successfully.";

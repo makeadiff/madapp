@@ -130,6 +130,7 @@ class Kids extends Controller  {
     **/
 	function update_kids()
 	{
+		$flag='';
 		$data['rootId'] = $_REQUEST['rootId'];
 		$id=$data['rootId'];
 		$data['id']=$id;
@@ -137,52 +138,45 @@ class Kids extends Controller  {
 		$data['name']=$_REQUEST['name'];
 		$date=$_REQUEST['date-pick'];
 		$newdate=explode("/",$date);
-		$data['date']=$newdate[2]."/".$newdate[1]."/".$newdate[0];
+		$data['date']=$newdate[2]."-".$newdate[0]."-".$newdate[1];
 		$data['description']=$_REQUEST['description'];
-		
-		
 		$returnFlag= $this->kids_model->update_student($data);
 		
 		$config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
-		
-	
-	
 		foreach($_FILES as $key => $value)
         {
             if( ! empty($key['name']))
             {
                 $this->upload->initialize($config);
-        
                 if ( ! $this->upload->do_upload($key))
                 {
                     $errors[] = $this->upload->display_errors();
-                    
                 }    
                 else
                 {
                     $flag=$this->kids_model->process_pic($data);
-
                 }
              }
-        
         }
-		
-		
-		
-		
-		
-		
-		if($returnFlag == true || $flag== true) 
+		if($returnFlag != '') 
 			{
 			$message['msg']   =  "Student updated successfully.";
 			$message['successFlag'] = "1";
 			$message['link']  =  "";
 			$message['linkText'] = "";
 			$message['icoFile'] = "ico_addScheme.png";
-
 			$this->load->view('dashboard/errorStatus_view',$message);		  
+			}
+		elseif($flag!= '')
+		{
+		$message['msg']   =  "Student updated successfully.";
+			$message['successFlag'] = "1";
+			$message['link']  =  "";
+			$message['linkText'] = "";
+			$message['icoFile'] = "ico_addScheme.png";
+			$this->load->view('dashboard/errorStatus_view',$message);
 			}
 		else
 			{
@@ -191,7 +185,6 @@ class Kids extends Controller  {
 			$message['link']  =  "";
 			$message['linkText'] = "";
 			$message['icoFile'] = "ico_addScheme.png";
-
 			$this->load->view('dashboard/errorStatus_view',$message);		  
 			}
 	}
@@ -213,7 +206,7 @@ class Kids extends Controller  {
 	if(!empty($_REQUEST['date-pick'])) {
 		$date = $_REQUEST['date-pick'];
 		$newdate=explode("/",$date);
-		$data['date'] = $newdate[2]."/".$newdate[1]."/".$newdate[0];
+		$data['date'] = $newdate[2]."/".$newdate[0]."/".$newdate[1];
 	}
 	$data['description']=$_REQUEST['description'];
 	

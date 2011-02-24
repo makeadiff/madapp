@@ -22,8 +22,8 @@ foreach($kids_details as $row) {
 	$name=$row['name'];
 	$center_id=$row['center_id'];
 	$birthday =$row['birthday'];
-	//$birthday =explode("/",$birthday);
-	//$birthday=$birthday[2]."/".$birthday[1]."/".$birthday[0];
+	$birthday =explode("-",$birthday);
+	$birthday=$birthday[2]."/".$birthday[1]."/".$birthday[0];
 	$description=$row['description'];
 	$photo=$row['photo'];
 }

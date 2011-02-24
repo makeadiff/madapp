@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
 
-<form id="formEditor" class="mainForm clear" action="<?=site_url('user/adduser')?>" method="post" onsubmit="return validate();" style="width:500px;" >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" style="width:500px;" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
 <div class="field clear" style="width:500px;"> 
@@ -116,6 +116,14 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<option value="other">Other</option>
 </select>
 </div>
+
+<div  class="field clear" style="width:600px; margin-left:100px;">
+	<label for="date">Upload Photo</label>
+	<input name="image"  id="image" type="file">
+	<p class="error clear"></p>
+</div>
+
+
 
 <div class="field clear" style="width:550px;"> 
 		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />

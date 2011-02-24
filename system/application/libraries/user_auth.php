@@ -39,8 +39,8 @@ Class User_auth {
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
 			
 			if($remember_me) {
-				set_cookie('email', $status['email']);
-				set_cookie('password_hash', md5($password, '2o^6uU!'));
+				setcookie('email', $status['email'], -1, '/');
+				setcookie('password_hash', md5($password . '2o^6uU!'), -1, '/');
 			}
 		}
 		

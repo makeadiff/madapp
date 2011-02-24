@@ -91,7 +91,7 @@ class User extends Controller  {
 		$data['project']= $this->project_model->getproject();
 		$data['user_group']= $this->users_model->getgroup_details();
 		
-		$this->load->view('user/popups/add_user',$data);	
+		$this->load->view('user/popups/add_user',$data);
 	}
 	/**
     * Function to adduser

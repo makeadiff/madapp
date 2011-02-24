@@ -113,7 +113,7 @@ class Kids extends Controller  {
     **/
 	function popupEdit_kids()
 	{
-		$this->user_auth->check_permission('kids_edit');
+		//$this->user_auth->check_permission('kids_edit');
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
 		$data['kids_details']= $this->kids_model->get_kids_details($uid);

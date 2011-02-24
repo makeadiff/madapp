@@ -36,7 +36,11 @@
 </div>
 
 <div id="content">
-<?php if(!empty($message)) { ?>
-<div id="error-message" <?php echo (empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
-<div id="success-message" <?php echo (empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
+
+<?php
+$message['success'] = $this->session->flashdata('success');
+$message['error'] = $this->session->flashdata('error');
+if(!empty($message['success']) or !empty($message['error'])) { ?>
+<div id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
+<div id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
 <?php } ?>

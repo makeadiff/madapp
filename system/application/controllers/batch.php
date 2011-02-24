@@ -156,15 +156,16 @@ function create($holder, $center_id = 0) {
 	function edit_action() {
 		$this->user_auth->check_permission('batch_edit');
 		
-		$this->db->where('id', $this->input->post('id'))->update('Batch', 
-				array(
-					'name'		=>	$this->input->post('name'), 
-					'center_id'	=>	$this->input->post('center_id'),
-					'project_id'=>	$this->input->post('project_id'),
-				));
-		$this->message['success'] = 'The Batch has been edited successfully';
-		$this->index('center', $this->input->post('center_id'));
-		$this->input->post('center_id');
+		$this->model->edit($this->input->post('id'),  array(
+				'day'		=>	$this->input->post('day'),
+				'class_time'=>	$this->input->post('class_time'),
+				'batch_head_id' =>	$this->input->post('batch_head_id'),
+				'center_id'	=>	$this->input->post('center_id'),
+				'project_id'=>	$this->input->post('project_id'),
+			));
+
+		$this->session->set_flashdata('success', 'The Batch has been edited successfully');
+		redirect('batch/index/center/'.$this->input->post('center_id'));
 	}
 	
 	function delete($batch_id) {

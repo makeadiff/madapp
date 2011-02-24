@@ -97,6 +97,59 @@ class Classes extends Controller {
 		$this->load->view('classes/madsheet', array('class_days'=>$class_days, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
 	
+	
+	function madsheet_class_mode() {
+		$this->user_auth->check_permission('classes_madsheet');
+		
+		$all_centers = $this->center_model->get_all();
+		$all_levels = array();
+		
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
+		
+		$data = array();
+		foreach($all_centers as $center) {
+			$data[$center->id] = array(
+				'center_id'	=> $center->id,
+				'center_name'=>$center->name,
+			);
+			$batches = $this->batch_model->get_class_days($center->id);
+			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
+			print $center->name . '<br />';
+			
+			$data[$center->id]['batches'] = array();
+			foreach($batches as $batch_id => $batch_name) {
+				$data[$center->id]['batches'][$batch_id] = array();
+				print $batch_name . "<br />";
+				
+				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
+				foreach($all_levels[$center->id] as $level) {
+					print $level->name . "<br />";
+					
+					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
+					$days_with_classes = array();
+					foreach($all_classes as $class_date) {
+						$date = date('d M',strtotime($class_date->class_on));
+						if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+					}
+					
+					$data[$center->id]['batches'][$batch_id]['levels'][$level->id] = $all_classes;
+				}
+				
+				$data[$center->id]['batches'][$batch_id]['days'] = $days_with_classes;
+			}
+			
+		}
+		
+		dump($data);
+		
+		//dump($class_days);
+		//$this->load->view('classes/madsheet', array('class_days'=>$class_days, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
+	}
+	
+	
+	
+	
+	
 	function edit_class($class_id) {
 		$this->user_auth->check_permission('class_edit_class');
 		

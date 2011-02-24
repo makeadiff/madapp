@@ -34,7 +34,7 @@ foreach($kids_details as $row) {
 <div class="field clear" style="width:600px;">
 <label for="selBulkActions">Select Center</label> 
 <select id="center" name="center" > 
-<option selected="selected" >- choose action -</option> 
+<option selected="selected" >- Choose -</option> 
 	<?php 
 	$center = $center->result_array();
 	foreach($center as $row)

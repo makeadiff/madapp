@@ -60,6 +60,10 @@ class Batch_model extends Model {
     	$this->db->insert("Batch", $data);
     }
     
+    function edit($batch_id, $data) {
+		$this->db->where('id', $batch_id)->update('Batch',$data);
+    }
+    
     function delete($batch_id) {
     	$this->db->delete('Batch', array('id'=>$batch_id));
     	$this->db->delete('UserBatch', array('batch_id'=>$batch_id));

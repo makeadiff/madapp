@@ -184,7 +184,7 @@ class Exam_model extends Model
 		$this->db->select('Student.*,Exam_Mark.student_id');
 		$this->db->from('Exam_Mark');
 		$this->db->distinct('Exam_Mark.student_id');
-		$this->db->join('Student', 'student.id = Exam_Mark.student_id' ,'join');
+		$this->db->join('Student', 'Student.id = Exam_Mark.student_id' ,'join');
 		$this->db->where('Exam_Mark.exam_id',$exam_id);
 		$result=$this->db->get();
 		return $result;

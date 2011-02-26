@@ -44,6 +44,8 @@ class Exam extends Controller  {
     }
 	function manage_exam()
 	{
+		$this->user_auth->check_permission('exam_index');
+		
 		$data['currentPage'] = 'db';
 		$data['navId'] = '3';
 		$this->load->view('dashboard/includes/header',$data);
@@ -64,6 +66,8 @@ class Exam extends Controller  {
 	}
 	function view_exam_details()
 	{
+		$this->user_auth->check_permission('exam_view');
+		
 		$exam_id = $this->uri->segment(3);
 		$data['exam_name']= $this->exam_model->get_exam_name_by_id($exam_id);
 		$data['contents']= $this->exam_model->get_exam_details($exam_id);
@@ -78,7 +82,8 @@ class Exam extends Controller  {
     **/
     function add_exam()
     {	
-		//$this->user_auth->check_permission('exam_details_add');
+		$this->user_auth->check_permission('exam_add');
+		
 		$this->load->view('student_exam_score/student_exam');
     }
 	/**
@@ -124,7 +129,8 @@ class Exam extends Controller  {
     **/
 	function input_exam_mark_details()
 	{	
-		//$this->user_auth->check_permission('exam_details_add');
+		$this->user_auth->check_permission('exam_details_add');
+		
 		$agents = $_REQUEST['agents'];
 		$name = $_REQUEST['name'];
 		$choice_text = $_REQUEST['choice_text'];
@@ -149,6 +155,7 @@ class Exam extends Controller  {
     **/
 	function exam_score()
 	{
+		$this->user_auth->check_permission('exam_marks_index');
 		$data['currentPage'] = 'db';
 		$data['navId'] = '4';
 		$this->load->view('dashboard/includes/header',$data);
@@ -200,7 +207,8 @@ class Exam extends Controller  {
     **/
 	function popupAddMark()
 		{
-		//$this->user_auth->check_permission('exam_mark_add');
+		$this->user_auth->check_permission('exam_mark_add');
+		
 		$data['exam_details']=$this->exam_model->get_exam();
 		$this->load->view('student_exam_score/popups/popup_getexam',$data);
 		}
@@ -226,6 +234,8 @@ class Exam extends Controller  {
     **/
 	function addMarks()
 		{
+		$this->user_auth->check_permission('exam_mark_add');
+		
 		$data['exam_id']=$_REQUEST['exam_id'];
 		$sub_count=$_REQUEST['sub_count'];
 		$stnt_count=$_REQUEST['stnt_count'];

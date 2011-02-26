@@ -53,6 +53,7 @@ class User extends Controller  {
     **/
 	function manageadd_user()
 	{
+		$this->user_auth->check_permission('user_index');
 		$data['currentPage'] = 'db';
 		$data['navId'] = '';
 		$this->load->view('dashboard/includes/header',$data);
@@ -86,7 +87,7 @@ class User extends Controller  {
     **/
 	function popupAdduser()
 	{
-		//$this->user_auth->check_permission('user_add');
+		$this->user_auth->check_permission('user_add');
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
 		$data['project']= $this->project_model->getproject();
@@ -104,6 +105,7 @@ class User extends Controller  {
     **/
 	function adduser()
 	{
+		$this->user_auth->check_permission('user_add');
 		$data['name'] = $_REQUEST['name'];
 		$data['group'] = $_REQUEST['group'];
 		$data['position'] = $_REQUEST['position'];
@@ -175,7 +177,7 @@ class User extends Controller  {
     **/
 	function popupEditusers()
 	{	
-		//$this->user_auth->check_permission('user_edit');
+		$this->user_auth->check_permission('user_edit');
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
 		$data['details']= $this->center_model->getcity();
@@ -200,6 +202,7 @@ class User extends Controller  {
     **/
 	function update_user()
 		{
+		$this->user_auth->check_permission('user_edit');
 		$data['rootId'] = $_REQUEST['rootId'];
 		$data['name'] = $_REQUEST['name'];
 		
@@ -286,6 +289,7 @@ class User extends Controller  {
     **/
 	function view_users()
 	{
+		$this->user_auth->check_permission('user_index');
 		$data['currentPage'] = 'db';
 		$data['navId'] = '';
 		$data['title'] = 'Users view';
@@ -318,6 +322,7 @@ class User extends Controller  {
     **/
 	function user_search()
 	{
+		$this->user_auth->check_permission('user_index');
 		$data['city']=$_REQUEST['city'];
 		$data['name']=$_REQUEST['name'];
 		$group = $_REQUEST['group'];
@@ -420,8 +425,9 @@ class User extends Controller  {
     **/
 	function csv_export()
 	{
-	$query= $this->users_model->getuser_details_csv();
-	query_to_csv($query, TRUE, 'user_details.csv');
+		$this->user_auth->check_permission('user_export');
+		$query= $this->users_model->getuser_details_csv();
+		query_to_csv($query, TRUE, 'user_details.csv');
 	}
 	/**
     * Function to update_footer
@@ -439,6 +445,7 @@ class User extends Controller  {
 		$data['group'] =implode("-",$group_ex);
 		$this->load->view('user/update_csvbutton_footer',$data);
 	}
+	
 	/**
     * Function to updated_csv_export
     * @author:Rabeesh 
@@ -447,6 +454,7 @@ class User extends Controller  {
     **/
 	function updated_csv_export()
 	{
+		$this->user_auth->check_permission('user_export');
 		$data['city']=$this->uri->segment(3);
 		$data['group']=$this->uri->segment(4);
 		$data['name']=$this->uri->segment(5);

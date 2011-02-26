@@ -17,10 +17,12 @@ class Report extends Controller {
 	}
 	
 	function index() {
+		$this->user_auth->check_permission('report_index');
 		$this->load->view('report/index');
 	}
 	
 	function users_with_low_credits() {
+		$this->user_auth->check_permission('report_view');
 		$report_data = $this->report_model->get_users_with_low_credits();
 		$this->show_report($report_data, array('name'=>'Name', 'credit'=>'Credits'), 'Users With Low Credits(0 or less)');
 	}
@@ -31,8 +33,8 @@ class Report extends Controller {
 			'Users Who Were Absent Without a Substitute');
 	}
 	
-	
 	function show_report($data, $fields, $title) {
+		$this->user_auth->check_permission('report_view');
 		$this->load->view('report/report', array('data'=>$data, 'fields'=>$fields, 'title'=>$title));
 	}
 

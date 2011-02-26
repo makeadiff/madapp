@@ -47,6 +47,7 @@ class Center extends Controller  {
     **/
 	function manageaddcenters()
 	{
+		$this->user_auth->check_permission('center_index');
 		
 		$data['currentPage'] = 'db';
 		$data['navId'] = '1';
@@ -66,6 +67,7 @@ class Center extends Controller  {
     **/
 	function getcenterlist()
 	{
+	
 		$page_no = $_REQUEST['pageno'];
 		$data['title'] = 'Manage Centers';
 		$linkCount = $this->center_model->getcenter_count();
@@ -85,7 +87,6 @@ class Center extends Controller  {
     **/
 	function popupaddCneter()
 	{
-
 		$this->user_auth->check_permission('center_add');
 		$data['details']= $this->center_model->getcity();
 		$data['user_name']= $this->center_model->getheadname();
@@ -100,6 +101,7 @@ class Center extends Controller  {
     *
     **/
 	function addCenter() {
+		$this->user_auth->check_permission('center_add');
 		$data['city']=$_REQUEST['city'];
 		$data['user_id']=$_REQUEST['user_id'];
 		$data['center']=$_REQUEST['center'];
@@ -153,6 +155,7 @@ class Center extends Controller  {
     **/
 	function update_Center()
 	{
+		$this->user_auth->check_permission('center_edit');
 		$data['rootId'] = $_REQUEST['rootId'];
 		$data['city']=$_REQUEST['city'];
 		$data['user_id']=$_REQUEST['user_id'];

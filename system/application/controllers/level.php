@@ -21,6 +21,8 @@ class Level extends Controller {
 	}
 	
 	function index($holder='', $center_id = 0) {
+		$this->user_auth->check_permission('level_index');
+		
 		if(!is_numeric($center_id) or !$center_id) {
 			show_error("Choose a center.");
 		}
@@ -31,6 +33,8 @@ class Level extends Controller {
 	}
 	
 	function create($holder, $center_id = 0) { 
+		$this->user_auth->check_permission('level_create');
+		
 		if($this->input->post('action') == 'New') {
 			$this->model->create(array(
 					'name'		=>	$this->input->post('name'),
@@ -65,6 +69,8 @@ class Level extends Controller {
 	}
 	
 	function edit($level_id) {
+		$this->user_auth->check_permission('level_edit');
+		
 		if($this->input->post('action') == 'Edit') {
 			$this->model->edit($level_id, array(
 				'name'		=>	$this->input->post('name'),
@@ -98,6 +104,8 @@ class Level extends Controller {
 	}
 	
 	function delete($level_id) {
+		$this->user_auth->check_permission('level_delete');
+		
 		//Make sure the level don't have any batches under it.
 		$batches = $this->db->where('level_id', $level_id)->get('UserBatch')->result();
 		if($batches) {

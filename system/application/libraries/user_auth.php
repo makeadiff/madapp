@@ -39,8 +39,8 @@ Class User_auth {
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
 			
 			if($remember_me) {
-				setcookie('email', $status['email'], -1, '/');
-				setcookie('password_hash', md5($password . '2o^6uU!'), -1, '/');
+				setcookie('email', $status['email'], time() + 3600 * 24 * 30, '/'); // Expires in a month.
+				setcookie('password_hash', md5($password . '2o^6uU!'), time() + 3600 * 24 * 30, '/');
 			}
 		}
 		
@@ -55,6 +55,7 @@ Class User_auth {
     *
     **/    
 	function logged_in() {
+// 		print get_cookie('email');exit;
 		if ( $this->ci->session->userdata('id') ) {
 			return $this->ci->session->userdata('id');
 		

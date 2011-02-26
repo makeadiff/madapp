@@ -29,8 +29,6 @@ class Permission extends controller {
 			redirect('auth/login');
 		}
 		$this->load->model('permission_model');
-		//$this->load->model('kids_model');
-		//$this->load->model('exam_model');
 
 	}
     function index()
@@ -45,6 +43,8 @@ class Permission extends controller {
     **/
 	function manage_permission()
 	{
+		$this->user_auth->check_permission('permission_index');
+		
 		$data['currentPage'] = 'db';
 		$data['navId'] = '5';
 		$this->load->view('dashboard/includes/header',$data);
@@ -78,6 +78,7 @@ class Permission extends controller {
     **/
 	function popupAddPermission()
 	{
+		$this->user_auth->check_permission('permission_add');
 		$this->load->view('permission/popups/addpermission');
 	
 	}
@@ -89,6 +90,7 @@ class Permission extends controller {
     **/
 	function addpermission()
 	{
+		$this->user_auth->check_permission('permission_add');
 		$permission = $_REQUEST['permission'];
 		$returnFlag= $this->permission_model->add_permission($permission);
 		if($returnFlag)
@@ -121,6 +123,7 @@ class Permission extends controller {
     **/
 	function popupEdit_permission()
 	{
+		$this->user_auth->check_permission('permission_edit');
 		$uid=$this->uri->segment(3);
 		$data['content']= $this->permission_model->getedit_permission($uid);
 		$this->load->view('permission/popups/edit_permission',$data);
@@ -133,6 +136,7 @@ class Permission extends controller {
     **/
 	function edit_permission()
 	{
+		$this->user_auth->check_permission('permission_edit');
 		$data['permission'] = $_REQUEST['permission'];
 		$data['rootId'] = $_REQUEST['rootId'];
 		$returnFlag= $this->permission_model->update_permission($data);
@@ -166,6 +170,7 @@ class Permission extends controller {
     **/
 	function ajax_deletepermission()
 	{
+		$this->user_auth->check_permission('permission_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$returnFlag= $this->permission_model->delete_permission($data);
 	}

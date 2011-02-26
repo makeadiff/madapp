@@ -61,6 +61,8 @@ class Kids extends Controller  {
     **/
 	function manageaddkids()
 	{
+		$this->user_auth->check_permission('kids_index');
+	
 		$data['currentPage'] = 'db';
 		$data['navId'] = '2';
 		$this->load->view('dashboard/includes/header',$data);
@@ -98,7 +100,8 @@ class Kids extends Controller  {
     **/
 	function popupaddKids()
 	{	
-		//$this->user_auth->check_permission('kids_add');
+		$this->user_auth->check_permission('kids_add');
+		
 		$data['center']= $this->center_model->getcenter();
 		$this->load->view('kids/popups/addkids_popup',$data);
 	
@@ -113,7 +116,8 @@ class Kids extends Controller  {
     **/
 	function popupEdit_kids()
 	{
-		//$this->user_auth->check_permission('kids_edit');
+		$this->user_auth->check_permission('kids_edit');
+		
 		$uid = $this->uri->segment(3);
 		$data['center']= $this->center_model->getcenter();
 		$data['kids_details']= $this->kids_model->get_kids_details($uid);
@@ -130,6 +134,8 @@ class Kids extends Controller  {
     **/
 	function update_kids()
 	{
+		$this->user_auth->check_permission('kids_edit');
+		
 		$flag='';
 		$data['rootId'] = $_REQUEST['rootId'];
 		$id=$data['rootId'];
@@ -199,28 +205,26 @@ class Kids extends Controller  {
     **/
 	function addkids()
 	{
-	$data['center']=$_REQUEST['center'];
-	$data['name']=$_REQUEST['name'];
-	
-	$data['date'] = '';
-	if(!empty($_REQUEST['date-pick'])) {
-		$date = $_REQUEST['date-pick'];
-		$newdate=explode("/",$date);
-		$data['date'] = $newdate[2]."/".$newdate[0]."/".$newdate[1];
-	}
-	$data['description']=$_REQUEST['description'];
-	
-	$returnFlag= $this->kids_model->add_kids($data);
-	$data['id']=$returnFlag;
-	
+		$this->user_auth->check_permission('kids_add');
+		$data['center']=$_REQUEST['center'];
+		$data['name']=$_REQUEST['name'];
+		
+		$data['date'] = '';
+		if(!empty($_REQUEST['date-pick'])) {
+			$date = $_REQUEST['date-pick'];
+			$newdate=explode("/",$date);
+			$data['date'] = $newdate[2]."/".$newdate[0]."/".$newdate[1];
+		}
+		$data['description']=$_REQUEST['description'];
+		
+		$returnFlag= $this->kids_model->add_kids($data);
+		$data['id']=$returnFlag;
+		
 		$config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
 		
-	
-	
-		foreach($_FILES as $key => $value)
-        {
+		foreach($_FILES as $key => $value) {
             if( ! empty($key['name']))
             {
                 $this->upload->initialize($config);
@@ -271,6 +275,7 @@ class Kids extends Controller  {
 	function ajax_deleteStudent()
 	{	
 		$this->user_auth->check_permission('kids_delete');
+		
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->kids_model->delete_kids($data);
 	}

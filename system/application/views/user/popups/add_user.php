@@ -13,7 +13,7 @@
 
 <div class="field clear" style="width:500px;">
 <label for="selBulkActions">Select Group:</label> 
-<select id="group" name="group"> 
+<select id="group" name="group" multiple="multiple"> 
 <option selected="selected" value="-1" >- Choose -</option> 
 	<?php 
 	$user_group = $user_group->result_array();
@@ -110,7 +110,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <label for="type">User Type : </label>
 <select name="type">
 	<option value="applicant">Applicant</option>
-	<option value="volunteer">Volunteer</option>
+	<option value="volunteer" selected="selected">Volunteer</option>
 	<option value="well_wisher">Well Wisher</option>
 	<option value="alumni">Alumni</option>
 	<option value="other">Other</option>

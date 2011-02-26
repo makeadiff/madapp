@@ -44,12 +44,13 @@
     **/
 	function manageadd_group()
 	{
-	$data['currentPage'] = 'db';
-	$data['navId'] = '';
-	$this->load->view('dashboard/includes/header',$data);
-	$this->load->view('dashboard/includes/superadminNavigation',$data);
-	$this->load->view('user_group/add_groupname_view');
-	$this->load->view('dashboard/includes/footer');
+		$this->user_auth->check_permission('user_group_index');
+		$data['currentPage'] = 'db';
+		$data['navId'] = '';
+		$this->load->view('dashboard/includes/header',$data);
+		$this->load->view('dashboard/includes/superadminNavigation',$data);
+		$this->load->view('user_group/add_groupname_view');
+		$this->load->view('dashboard/includes/footer');
 	
 	}
 	 /**
@@ -96,6 +97,7 @@
     **/
 	function addgroup_name()
 	{	
+		$this->user_auth->check_permission('user_group_add');
 		$permission = $_REQUEST['permission'];
 		$groupname = $_REQUEST['groupname'];
 		$group_id= $this->users_model->add_group_name($groupname);
@@ -134,7 +136,7 @@
     *
     **/
 	function popupEdit_group()
-	{	
+	{		
 		$this->user_auth->check_permission('user_group_edit');
 		$uid = $this->uri->segment(3);
 		$data['details']= $this->users_model->edit_group($uid);
@@ -152,7 +154,7 @@
     **/
 	function updategroup_name()
 	{
-	
+		$this->user_auth->check_permission('user_group_edit');
 	
 		
 		$data['rootId'] = $_REQUEST['rootId'];
@@ -201,7 +203,7 @@
 	}
 	function view_permission()
 	{
-	
+		$this->user_auth->check_permission('user_group_view');
 		$uid = $this->uri->segment(3);
 		$data['details']= $this->users_model->edit_group($uid);
 		$data['permission']= $this->permission_model->getpermission_details();

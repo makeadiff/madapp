@@ -5,7 +5,8 @@
 
 <?php 
 $details = $details->result_array();
-if($details) { ?>
+if($details) { 
+?>
 
 <div id="content" class="clear">
 <!-- Main Begins -->
@@ -20,12 +21,15 @@ if($details) { ?>
 	<th  class="colName left sortable">Name</th>
 	<?php 
 	$i=0;
-    $sub_count=count($subject);
+    
+	$subject=$subject->result_array();
+	$sub_count=count($subject);
     foreach($subject as $row)
 	{
 	$exam_id=$row['exam_id'];
    	$i++;
     ?>
+    
     <input type="hidden" value="<?php echo $row['id']; ?> " id="sub_id" name="sub_name<?=$i?>">
 	<td width="59" class="colCheck12"><?php echo $row['name']; ?></td>
     <?php }?>   
@@ -40,11 +44,12 @@ $shadeClass = '';
 $statusIco = '';
 $statusText = '';
 
-$content = $details->result_array();
-$id_count=count($content);
+//$content = $details->result_array();
+//print_r($content);
+$id_count=count($details);
 $k=0;
 $l=0;
-foreach($content as $row)
+foreach($details as $row)
 {
 	$l++;
 	$k++;

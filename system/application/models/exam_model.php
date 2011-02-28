@@ -150,6 +150,7 @@ class Exam_model extends Model
 	$this->db->from('Exam_Subject');
 	$this->db->where('exam_id',$exam_id);
 	$result=$this->db->get();
+	//print_r($result->result());
 	return $result;
 	}
 	/**
@@ -187,6 +188,7 @@ class Exam_model extends Model
 		$this->db->join('Student', 'Student.id = Exam_Mark.student_id' ,'join');
 		$this->db->where('Exam_Mark.exam_id',$exam_id);
 		$result=$this->db->get();
+		//print_r($result->result());
 		return $result;
 	}
 	/**

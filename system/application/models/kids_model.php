@@ -219,7 +219,7 @@ class Kids_model extends Model {
             $this->db->set('photo', $imagename);
             $this->db->set('thumbnail', $thumbnail);
 			$this->db->where('id',$id);
-            $this->db->update('student');
+            $this->db->update('Student');
 			return ($this->db->affected_rows() > 0) ? true: false ;
 
         }

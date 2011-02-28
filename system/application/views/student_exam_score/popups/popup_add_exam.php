@@ -1,7 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
+<?php $this->load->view('layout/css'); ?>
 
 <?php 
 $details = $details->result_array();
@@ -17,21 +14,20 @@ if($details) {
 <table cellpadding="0"  cellspacing="0" style="width:auto;" class="clear" id="tableItems">
 <thead>
 <tr id="generated_rows">
-	<th  class="colCheck1">Si No</th>
+	<th  class="colCheck1">#</th>
 	<th  class="colName left sortable">Name</th>
 	<?php 
 	$i=0;
     
 	$subject=$subject->result_array();
 	$sub_count=count($subject);
-    foreach($subject as $row)
-	{
-	$exam_id=$row['exam_id'];
-   	$i++;
+    foreach($subject as $row) {
+		$exam_id=$row['exam_id'];
+   		$i++;
     ?>
     
     <input type="hidden" value="<?php echo $row['id']; ?> " id="sub_id" name="sub_name<?=$i?>">
-	<td width="59" class="colCheck12"><?php echo $row['name']; ?></td>
+	<th width="59" class="colCheck12"><?php echo $row['name']; ?></th>
     <?php }?>   
 </tr>
 </thead>

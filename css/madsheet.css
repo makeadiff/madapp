@@ -28,3 +28,24 @@
 .class-cancelled {
 	background-color:#000;
 }
+.teacher {
+	margin:0;
+	padding:0;
+	border-collapse:collapse;
+	width:100%;
+}
+.teacher td {
+	border:0 !important;
+}
+.class-info {
+	display:none;
+	position:absolute;
+	background-color:#ccc;
+	border:1px solid #666;
+	text-align:left;
+	font-size:14px;
+	font-weight:normal;
+}
+.class-info ul {
+	list-style:none;
+}

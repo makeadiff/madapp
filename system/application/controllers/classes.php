@@ -57,7 +57,7 @@ class Classes extends Controller {
 		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model, 'all_users'=>$all_users));
 	}
 	
-	function madsheet() {
+	function madsheet_class_mode() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
 		$all_centers = $this->center_model->get_all();
@@ -98,13 +98,13 @@ class Classes extends Controller {
 	}
 	
 	
-	function madsheet_class_mode() {
+	function madsheet() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();
 		
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
+		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer')));
 		
 		$data = array();
 		foreach($all_centers as $center) {
@@ -114,36 +114,59 @@ class Classes extends Controller {
 			);
 			$batches = $this->batch_model->get_class_days($center->id);
 			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
-			print $center->name . '<br />';
 			
 			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {
-				$data[$center->id]['batches'][$batch_id] = array();
-				print $batch_name . "<br />";
+				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
-					print $level->name . "<br />";
-					
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 					$days_with_classes = array();
-					foreach($all_classes as $class_date) {
-						$date = date('d M',strtotime($class_date->class_on));
+					
+					$last_class_id = 0;
+					$total_classes = count($all_classes); // Don't put this inside the for condition - as we'll unset stuff in between.
+					for($i=0; $i<$total_classes; $i++) {
+						$class = $all_classes[$i];
+						
+						// To get all the dates the classes happened on. We need this to make the header.
+						$date = date('d M',strtotime($class->class_on));
 						if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+						
+						// Just one person took the class.
+						$all_classes[$i]->teachers = array(array(
+							'user_id'		=> $class->user_id,
+							'substitute_id'	=> $class->substitute_id,
+							'status'		=> $class->status,
+						));
+						
+						// If multiple guys took a class, get that class together.
+						if($last_class_id == $class->id) {
+							// ... add one more entry to the list.
+							$all_classes[$i-1]->teachers[] = array(
+								'user_id'		=> $class->user_id,
+								'substitute_id'	=> $class->substitute_id,
+								'status'		=> $class->status,
+							);
+							
+							unset($all_classes[$i]);
+						}
+						
+						$last_class_id = $class->id;
 					}
+					$all_classes = array_values($all_classes);
 					
 					$data[$center->id]['batches'][$batch_id]['levels'][$level->id] = $all_classes;
 				}
 				
-				$data[$center->id]['batches'][$batch_id]['days'] = $days_with_classes;
+				$data[$center->id]['batches'][$batch_id]['days_with_classes'] = $days_with_classes;
+				$days_with_classes = array();
 			}
 			
 		}
 		
-		dump($data);
-		
-		//dump($class_days);
-		//$this->load->view('classes/madsheet', array('class_days'=>$class_days, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
+		//dump($data);
+		$this->load->view('classes/madsheet_class_mode', array('data'=>$data, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
 	
 	

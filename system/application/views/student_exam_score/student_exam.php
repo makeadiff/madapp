@@ -1,10 +1,6 @@
-<?php include_once('session_timeout.php'); ?>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
+<?php 
+$this->load->view('layout/css');
+?>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script>
 function populat_textbox()
@@ -145,8 +141,8 @@ function dataGrabber()
             
          <div class="field clear" style="width:600px; height:100px;">
          <label for="selBulkActions">Kids:</label>
-			<select id="kids" name="kids"  style="width:142px; height:80px;"multiple >
-            <option selected="selected" value="-1"; >- choose action -</option>  
+			<select id="kids" name="kids"  style="width:142px; height:80px;" multiple >
+            <option selected="selected" value="-1">- choose action -</option>  
             </select>
             </div>
             <div class="field clear" style="width:550px;"> 

@@ -22,7 +22,7 @@ foreach($content as $row) {
     <td class="colCount"><?php echo $row['email']; ?></td> 
     <td class="colStatus" style="text-align:left"><?php echo $row['phone'];  ?></td>
     <td class="colPosition" style="text-align:left"><?php echo $row['title'];  ?></td>
-    <td class="colPosition"><?php echo $row['city_name'];  ?></td>
+    <td class="colPosition" style="text-align:left"><?php echo $row['credit'];  ?></td>
     <td class="colPosition"><?php echo $row['center_name'];  ?></td>
     <td class="colPosition"><?php echo ucfirst($row['user_type']);  ?></td>
     <td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'pictures/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>

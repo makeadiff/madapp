@@ -189,7 +189,7 @@ class Exam extends Controller  {
 		$this->load->view('student_exam_score/exam_score_header',$data);
 		$data['details']=$this->exam_model->get_student_names($exam_id);
 		$student_id=$data['details']->result_array();
-			foreach($student_id as $row)
+		foreach($student_id as $row)
 			{
 			$student_id=$row['student_id'];
 			$data['id']=$student_id;

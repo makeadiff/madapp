@@ -55,7 +55,6 @@ Class User_auth {
     *
     **/    
 	function logged_in() {
-// 		print get_cookie('email');exit;
 		if ( $this->ci->session->userdata('id') ) {
 			return $this->ci->session->userdata('id');
 		
@@ -63,10 +62,13 @@ Class User_auth {
 			//This is a User who have enabled the 'Remember me' Option - so there is a cookie in the users system
 			$email = get_cookie('email');
 			$password_hash = get_cookie('password_hash');
-			$user_details = $this->ci->users_model->db->query("SELECT id,name FROM User 
+			$user_details = $this->ci->users_model->db->query("SELECT email,password FROM User 
 				WHERE email='$email' AND MD5(CONCAT(password,'2o^6uU!'))='$password_hash'")->row();
 			
-			if($row) return $row->id;
+			if($user_details) {
+				$status = $this->login($user_details->email, $user_details->password);
+				return $status->id;
+			}
 		}
 		return false;
 	}

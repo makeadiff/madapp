@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 <!-- start page actions-->
 <div id="actions"> 
-<a href="<?= site_url('user/popupAdduser')?>" class="thickbox button primary" id="example" name="Add User">Add User</a>
+<a href="<?php echo site_url('user/popupAdduser')?>" class="thickbox button primary" id="example" name="Add User">Add User</a>
 </div>
 <!-- end page actions-->
 </div>
@@ -99,7 +99,7 @@ foreach($content as $row)
     <td class="colPosition"><?php echo $row['user_type'];  ?></td>
     
     <td class="colActions right"> 
-    <a href="<?= site_url('user/popupEditusers/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit User : <?= strtolower($row['name']) ?></strong>"></a> 
+    <a href="<?php echo site_url('user/popupEditusers/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit User : <?= strtolower($row['name']) ?></strong>"></a> 
     <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>');"></a>
     </td>
 </tr>

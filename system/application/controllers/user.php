@@ -301,8 +301,7 @@ class User extends Controller  {
 		$data['group'] = $this->users_model->getgroup_details();
 		$this->load->view('user/user_search_header',$data);
 		
-		//$data['details'] = $this->users_model->getuser_details(array('city_id' => $data['selected_city']));
-		$data['details'] = $this->users_model->getuser_details();
+		$data['details'] = $this->users_model->getuser_details(array('city_id' => $data['selected_city']));
 		$result=$data['details']->result_array();
 		if($result) {
 			$this->load->view('user/users_search_view_div',$data);

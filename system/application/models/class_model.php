@@ -55,7 +55,9 @@ class Class_model extends Model {
     
     /// Get just the class information for the current level/batch
     function get_classes_by_level_and_batch($level_id, $batch_id) {
-    	$classes = $this->db->query("SELECT * FROM Class WHERE level_id=$level_id AND batch_id=$batch_id ORDER BY class_on")->result();
+    	$classes = $this->db->query("SELECT Class.*,UserClass.user_id,UserClass.substitute_id,UserClass.status 
+    		FROM Class INNER JOIN UserClass ON Class.id=UserClass.class_id 
+    		WHERE Class.level_id=$level_id AND Class.batch_id=$batch_id ORDER BY Class.class_on")->result();
     	return $classes;
     }
     

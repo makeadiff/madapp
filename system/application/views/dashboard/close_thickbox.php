@@ -1,9 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/custom.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
+<?php $this->load->view('layout/css'); ?>
 
 <style>
 	a:hover { text-decoration:underline; }
@@ -16,5 +11,5 @@
 <div id="msgConfirm" class="message" style="margin-left:1px; text-align:center;" align="left"><?php echo $msg; ?></div>
 
 <div align="center" style="margin-top:100px;">
-<div style="width:280px;float:left;margin-left:450px;" align="left"><img src="<?php echo base_url()?>images/ico/ico_closeThickbox.png" style="border:none;"> <a href="javascript:parent.tb_remove(); parent.location.reload(1);">close thickbox</a></div>
+<div style="width:280px;float:left;margin-left:450px;" align="left"><img src="<?php echo base_url()?>images/ico/ico_closeThickbox.png" style="border:none;"> <a href="javascript:parent.tb_remove(); parent.location.reload(1);">Close This Box</a></div>
 </div>

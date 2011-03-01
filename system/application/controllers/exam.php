@@ -83,7 +83,8 @@ class Exam extends Controller  {
     {	
 		$this->user_auth->check_permission('exam_add');
 		
-		$this->load->view('student_exam_score/student_exam');
+		$data['centers']= $this->center_model->get_all();
+		$this->load->view('student_exam_score/student_exam', $data);
     }
 	/**
     * Function to ajax_sbjectbox

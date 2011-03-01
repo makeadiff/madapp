@@ -82,6 +82,23 @@ class Class_model extends Model {
     		WHERE UserClass.user_id=$teacher_id AND Class.class_on='$time'")->result();
     }
     
+    /// The the absent/present status of the kids of any perticular class.
+    function get_attendence($class_id) {
+    	return $this->db->where('class_id', $class_id)->get('StudentClass')->result();
+    }
+    
+    function save_attendence($class_id, $all_students, $attendence) {
+    	$this->db->where('class_id', $class_id)->delete("StudentClass");
+    	
+    	foreach($all_students as $student_id=>$name) {
+    		$present = !(empty($attendence[$student_id])) ? '1' : '0';
+	    	$this->db->insert("StudentClass", array(
+	    		'class_id'	=> $class_id, 
+	    		'student_id'=> $student_id, 
+	    		'present'	=> $present));
+	    }
+    }
+    
     function get_class($class_id) {
     	$class_details = $this->db->where('id',$class_id)->get('Class')->row_array();
     	$class_details['teachers'] = $this->db->where('class_id',$class_id)->get("UserClass")->result_array();

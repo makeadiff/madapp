@@ -27,11 +27,10 @@ class Kids_model extends Model {
     **/
 	function getkids_details($user_id) {
 		$this->db->select('Student.*,Center.name as center_name');
-		//$this->db->where('city_id',$this->city_id);
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
-		$this->db->join('user', 'user.center_id = Student.center_id' ,'join');
-		$this->db->where('user.id',$user_id);
+		$this->db->join('User', 'User.center_id = Student.center_id' ,'join');
+		$this->db->where('User.id',$user_id);
 		$result=$this->db->get();
 		return $result;
 	}
@@ -48,10 +47,10 @@ class Kids_model extends Model {
     * @return: type: [Boolean,]
     **/
 	function add_kids($data) {
-		$data = array('center_id' 	 => $data['center'],
-					  'name' 	 => $data ['name'],
-					  'birthday' => $data ['date'],
-				  	 'description' => $data ['description'],
+		$data = array('center_id' 	=> $data['center'],
+					  'name' 	 	=> $data ['name'],
+					  'birthday'	=> $data ['date'],
+				  	 'description'	=> $data ['description'],
 			   );
 		$this->db->insert('Student',$data);
 		$kid_id = $this->db->insert_id();
@@ -78,9 +77,7 @@ class Kids_model extends Model {
 		 $this->db->where('student_id',$id);
 		 $this->db->delete('StudentLevel');
 		 
-		 
 		 return ($this->db->affected_rows() > 0) ? true: false;
-	
 	}
 	/**
     * Function to get_kids_details
@@ -118,23 +115,17 @@ class Kids_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, ]
     **/
-	function update_student($data)
-	{
-			$rootId=$data['rootId'];
-			$data = array('center_id' 	 => $data['center'],
-					  'name' 	 => $data ['name'],
-					  'birthday' => $data ['date'],
-				   'description' => $data ['description'],
-			 		  );
-			 $this->db->where('id', $rootId);
-			 $this->db->update('Student', $data);
-			 
-			 
-			 //$this->db->where('student_id',$rootId);
-			 //$this->db->update('StudentLevel', array('level_id'=>$data['level']));
-			 
-	 		 return ($this->db->affected_rows() > 0) ? 1: 0 ;
-	
+	function update_student($data) {
+		$rootId=$data['rootId'];
+		$data = array(	'center_id'	=> $data['center'],
+						'name'		=> $data ['name'],
+						'birthday'	=> $data ['date'],
+						'description'=> $data ['description'],
+					);
+		$this->db->where('id', $rootId);
+		$this->db->update('Student', $data);
+		
+		return ($this->db->affected_rows() > 0) ? 1: 0 ;
 	}
 	/**
     * Function to kids_level_update
@@ -168,25 +159,21 @@ class Kids_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean,Array() ]
     **/
-	function generate_code($length = 10)
-	{
-    
+	function generate_code($length = 10) {
 		$this->load->library('image_lib');
-                if ($length <= 0)
-                {
-                    return false;
-                }
-            
-                $code = "";
-                $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-                srand((double)microtime() * 1000000);
-                for ($i = 0; $i < $length; $i++)
-                {
-                    $code = $code . substr($chars, rand() % strlen($chars), 1);
-                }
-                return $code;
-            
-                }
+		if ($length <= 0) {
+			return false;
+		}
+	
+		$code = "";
+		$chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+		srand((double)microtime() * 1000000);
+		for ($i = 0; $i < $length; $i++) {
+			$code = $code . substr($chars, rand() % strlen($chars), 1);
+		}
+		return $code;
+
+	}
 	/**
     * Function to process_pic
     * @author:Rabeesh 
@@ -210,11 +197,8 @@ class Kids_model extends Model {
 			$this->load->library('imageResize');
             $nwidth='100';
 	        $nheight='90';
-			//$fileSavePath=base_url().'pictures/'.$newimagename;
-			$fileSavePath='E:/projects/maddaplycation/madapp/trunk/pictures/'.$newimagename;
+			$fileSavePath=base_url().'pictures/'.$newimagename;
 			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
-			
-			
 			
             $imagename = $newimagename;
             $thumbnail = $randomcode.'_tn'.$value['file_ext'];
@@ -229,7 +213,7 @@ class Kids_model extends Model {
 	function get_kidsby_center($center_id)
 	{
 		$this->db->select('*');
-		$this->db->from('student');
+		$this->db->from('Student');
 		$this->db->where('center_id',$center_id);
 		return $this->db->get();
 	

@@ -79,11 +79,11 @@ foreach($details as $row)
 </table>
 
 <div class="field clear"> 
-		<input type="hidden" value="<?php echo $sub_count; ?>" id="sub_count" name="sub_count">
-        <input type="hidden" value="<?php echo $id_count; ?>" id="stnt_count" name="stnt_count">
-                <input type="hidden" value="<?php echo $exam_id; ?>" id="exam_id" name="exam_id">
+<input type="hidden" value="<?php echo $sub_count; ?>" id="sub_count" name="sub_count">
+<input type="hidden" value="<?php echo $id_count; ?>" id="stnt_count" name="stnt_count">
+<input type="hidden" value="<?php echo $exam_id; ?>" id="exam_id" name="exam_id">
 
-     	<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
 </div>
 
 </div>

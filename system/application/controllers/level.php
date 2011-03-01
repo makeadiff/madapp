@@ -92,7 +92,7 @@ class Level extends Controller {
 			$kids = $this->kids_model->get_kids_name($center_id);
 			$level['kids'] = $kids->result();
 			
-			$level['selected_students'] = $this->model->get_kids_in_level($level_id);
+			$level['selected_students'] = array_keys($this->model->get_kids_in_level($level_id));
 
 			$this->load->view('level/form.php', array(
 				'action' 	=> 'Edit',

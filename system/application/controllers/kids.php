@@ -193,7 +193,7 @@ class Kids extends Controller  {
 			}
 		elseif($flag!= '')
 		{
-		$message['msg']   =  "Student updated successfully.";
+			$message['msg']   =  "Student updated successfully.";
 			$message['successFlag'] = "1";
 			$message['link']  =  "";
 			$message['linkText'] = "";

@@ -1,8 +1,5 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
+<?php $this->load->view('layout/css'); ?>
+
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>

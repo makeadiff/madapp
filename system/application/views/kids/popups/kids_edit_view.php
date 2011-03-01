@@ -1,8 +1,5 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
+<?php $this->load->view('layout/css'); ?>
+
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
@@ -21,15 +18,15 @@ foreach($kids_details as $row) {
 	$root_id=$row['id'];
 	$name=$row['name'];
 	$center_id=$row['center_id'];
-	$birthday =$row['birthday'];
-	$birthday =explode("-",$birthday);
-	$birthday=$birthday[2]."/".$birthday[1]."/".$birthday[0];
+	$birthday = $row['birthday'];
+	$birthday = explode("-",$birthday);
+	$birthday = $birthday[2]."/".$birthday[1]."/".$birthday[0];
 	$description=$row['description'];
-	$photo=$row['photo'];
+	$photo = $row['photo'];
 }
 
 ?>
-<form id="formEditor" class="mainForm clear" action="<?=site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" style="width:500px;" onsubmit="return validate();" >
+<form id="formEditor" class="mainForm clear" action="<?php echo site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" style="width:500px;" onsubmit="return validate();" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 <div class="field clear" style="width:600px;">
 <label for="selBulkActions">Select Center</label> 
@@ -49,8 +46,8 @@ foreach($kids_details as $row) {
 </div>
 
 <div class="field clear" style="width:600px;"> 
-			<label for="txtName">Name</label>
-			<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
+	<label for="txtName">Name</label>
+	<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
 			
 </div>
 
@@ -63,7 +60,7 @@ foreach($kids_details as $row) {
 
 <div class="field clear" style="width:600px;">
 	<label for="date">Photo</label>
-<img src="<?php echo base_url().'pictures/'.$photo; ?>" width="50" style="float:left;" height="50" />
+	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="50" style="float:left;" height="50" /><?php } ?>
 </div>
 <div  class="field clear" style="width:600px;">
 	<label for="date">Change photo</label>
@@ -71,16 +68,16 @@ foreach($kids_details as $row) {
 	<p class="error clear"></p>
 </div>
 <div class="field clear" style="width:600px;"> 
-			<label for="txtName">Description</label>
-			<textarea rows="5" cols="40" id="description" name="description"><?php echo $description;  ?></textarea> 
-			<p class="error clear"></p>
+	<label for="txtName">Description</label>
+	<textarea rows="5" cols="40" id="description" name="description"><?php echo $description;  ?></textarea> 
+	<p class="error clear"></p>
 </div>
 
 
 
 <div class="field clear" style="width:550px;">
-		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+	<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
+	<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
 </div>
 
 

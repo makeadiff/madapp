@@ -57,7 +57,32 @@ class Classes extends Controller {
 		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model, 'all_users'=>$all_users));
 	}
 	
-	function madsheet_class_mode() {
+	function mark_attendence($class_id) {
+		$this->load->helper('form');
+		
+		$class_info = $this->class_model->get_class($class_id);
+		$level_id = $class_info['level_id'];
+		
+		$students = $this->level_model->get_kids_in_level($level_id);
+		$attendence = $this->class_model->get_attendence($class_id);
+				
+		$this->load->view('classes/attendence', array('students'=>$students, 'attendence'=>$attendence, 'class_info'=>$class_info));
+	}
+	
+	function mark_attendence_save() {
+		$attendence = $this->input->post('attendence');
+		$class_id = $this->input->post('class_id');
+		$class_info = $this->class_model->get_class($class_id);
+		$level_id = $class_info['level_id'];
+		
+		$students = $this->level_model->get_kids_in_level($level_id);
+		$this->class_model->save_attendence($class_id, $students, $attendence);
+		
+		$this->session->set_flashdata('success', 'Saved the attendence for this class');
+		redirect('classes/mark_attendence/'.$class_id);
+	}
+	
+	function madsheet_old_mode() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
 		$all_centers = $this->center_model->get_all();

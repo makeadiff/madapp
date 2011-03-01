@@ -48,10 +48,9 @@ class Exam extends Controller  {
 		
 		$data['currentPage'] = 'db';
 		$data['navId'] = '3';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
+		$this->load->view('layout/header',$data);
 		$this->load->view('student_exam_score/student_exam_view');
-		$this->load->view('dashboard/includes/footer');
+		$this->load->view('layout/footer');
 	}
 	function get_examdetails()
 	{

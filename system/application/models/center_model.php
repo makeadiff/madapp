@@ -176,7 +176,7 @@ class Center_model extends Model
 	function getcenter() {
 		$this->db->select('*');
 		$this->db->from('Center');
-		//$this->db->where('city_id', $this->city_id);
+		$this->db->where('city_id', $this->city_id);
 		$result=$this->db->get();
 		return $result;
 	}

@@ -8,7 +8,7 @@ function populat_textbox()
 var sub_no = $('#sub_no').val();
  			if(isNaN(sub_no))
 			 {
-              alert("This Is not a number");
+              alert("This is not a number");
 			  document.getElementById('sub_no').focus(); 
               return false;
 			  }
@@ -63,22 +63,20 @@ function dataGrabber()
 				});
 				//alert(agents);
 				//get subject name
-				if(name=='')
-				{
-				alert("name missing");
+				if(name=='') {
+					alert("Name missing");
 				}
 				else if(sub_no=='')
 				{
-				//alert(center);
-				alert("Enter Subject");
+					alert("Enter Subject");
 				}
 				else if(center =='-1')
 				{
-				alert("Select Center");
+					alert("Select Center");
 				}
 				else if(agents =='-1,')
 				{
-				alert("Select agents");
+					alert("Select agents");
 				}
 				
 				else
@@ -125,7 +123,7 @@ function dataGrabber()
                       
             </div>
             <div class="field clear" style="width:600px;"> 
-                        <label for="txtName">No of Subject : </label>
+                        <label for="txtName">Number of Subjects : </label>
                         <input id="sub_no" name="sub_no"  type="text" onkeyup="javascript:populat_textbox();" /> 
                  </div>     
              <div class="field clear" id="subject" style="width:600px;"> 
@@ -146,8 +144,7 @@ function dataGrabber()
             </select>
             </div>
             <div class="field clear" style="width:550px;"> 
-     		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" 
-            onclick="javascript:return dataGrabber();"/>
+     		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" onclick="javascript:return dataGrabber();"/>
             </div>
            
             </fieldset>

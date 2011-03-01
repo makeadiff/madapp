@@ -86,9 +86,25 @@ class Kids extends Controller  {
 		$linkCount = $this->kids_model->kids_count();
 		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
 		$data['currentPage'] = $page_no;
-		$data['details']= $this->kids_model->getkids_details();
+		$user_id=$this->session->userdata('id');
+		$data['details']= $this->kids_model->getkids_details($user_id);
+		
+		$data['center_list']=$this->center_model->get_all();
+		//print_r($data['center_list']);
 		$this->load->view('kids/kids_list',$data);
 	
+	}
+	
+	function get_kids_details()
+	{
+		$center_id=$_REQUEST['center_id'];
+		$page_no = $_REQUEST['page_no'];
+		$linkCount = $this->kids_model->kids_count();
+		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
+		$data['currentPage'] = $page_no;
+		$data['kids_details']=$this->kids_model->get_kidsby_center($center_id);
+		$data['center_name']=$this->center_model->center_name($center_id);
+		$this->load->view('kids/kids_update_list',$data);
 	}
 	/**
     *

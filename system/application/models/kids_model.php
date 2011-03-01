@@ -25,11 +25,13 @@ class Kids_model extends Model {
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	function getkids_details() {
+	function getkids_details($user_id) {
 		$this->db->select('Student.*,Center.name as center_name');
 		//$this->db->where('city_id',$this->city_id);
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
+		$this->db->join('user', 'user.center_id = Student.center_id' ,'join');
+		$this->db->where('user.id',$user_id);
 		$result=$this->db->get();
 		return $result;
 	}
@@ -224,6 +226,14 @@ class Kids_model extends Model {
 
         }
  	}       
+	function get_kidsby_center($center_id)
+	{
+		$this->db->select('*');
+		$this->db->from('student');
+		$this->db->where('center_id',$center_id);
+		return $this->db->get();
+	
+	}
 	
 	
 }

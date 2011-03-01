@@ -549,6 +549,90 @@ class User extends Controller  {
 			 query_to_csv($query,TRUE,'user_details.csv');
 		 }
 	}
+	
+	function edit_profile()
+	{	
+		$data['msg']='';
+		//$this->user_auth->check_permission('user_edit');
+		$uid = $this->session->userdata('id');
+		$data['center']= $this->center_model->getcenter();
+		$data['details']= $this->center_model->getcity();
+		$data['project']= $this->project_model->getproject();
+		$data['user']= $this->users_model->user_details($uid);
+		$content=$data['user']->result_array();
+		//print_r($content);
+		foreach($content as $row) 
+		{
+			$uid=$row['group_id'];
+		}
+		
+		$data['group_name'] = $this->users_model->edit_group($uid);
+		$data['group_details'] = $this->users_model->getgroup_details();
+		$this->load->view('layout/header');
+		$this->load->view('user/edit_profile_view',$data);
+	
+	}
+	function update_profile()
+	{
+		$data['rootId'] = $this->session->userdata('id');
+		$data['name'] = $_REQUEST['name'];
+		
+		$data['group'] = array();
+		if(!empty($_REQUEST['group'])) $data['group'] = $_REQUEST['group'];
+		$data['email'] = $_REQUEST['email'];
+		$data['position'] = $_REQUEST['position'];
+		$password=$_REQUEST['password'];
+		if($password=='')
+		{
+			$password=$this->users_model->get_password($data);
+			$password=$password->password;
+			$data['password']=$password;
+		}
+		else{
+		$data['password']=$password;
+		}
+		
+		
+		$data['phone'] = $_REQUEST['phone'];
+		$data['city'] = $_REQUEST['city'];
+		$data['center'] = $_REQUEST['center'];
+		$data['project'] = $_REQUEST['project'];
+		$data['type'] = $_REQUEST['type'];
+		$flag= $this->users_model->updateuser($data);
+		$returnFlag= $this->users_model->updateuser_to_group($data);
+		$data['id']=$data['rootId'];
+		$config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size']    = '1000'; //2 meg
+		foreach($_FILES as $key => $value)
+        {
+            if( ! empty($key['name']))
+            {
+                $this->upload->initialize($config);
+                if ( ! $this->upload->do_upload($key))
+                {
+                    $errors[] = $this->upload->display_errors();
+                }    
+                else
+                {
+                    $flag1=$this->users_model->process_pic($data);
+                }
+             }
+        }
+		
+		
+		if($flag || $returnFlag ) 
+		{
+				$message['msg']   =  "Profile edited successfully.";
+				$this->load->view('layout/header');
+				$this->load->view('user/popups/profile_successview',$message);		  
+			} else {
+				$message['msg']   =  "Profile not edited.";
+				$this->load->view('layout/header');
+				$this->load->view('user/popups/profile_failview',$message);		  
+		}
+	}
+	
 }	
 
 

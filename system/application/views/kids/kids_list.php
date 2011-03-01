@@ -1,3 +1,4 @@
+ 
 <script>
 tb_init('a.thickbox, input.thickbox');
 
@@ -5,6 +6,19 @@ function triggerSearch() {
 	q = $('#searchQuery').val();
 	get_groupList('0',q);
 }
+
+function get_kids_Name(center_id,pageno){
+//alert(center_id);
+	$.ajax({
+		type: "POST",
+		url: "<?= site_url('kids/get_kids_details') ?>",
+		data: "center_id="+center_id+"&page_no="+pageno,
+		success: function(msg){
+			$('#kids_list').html(msg);
+		}
+		});
+}
+
 
 $(document).ready(function(){
 	$('#example').each(function(){
@@ -31,8 +45,20 @@ $(document).ready(function(){
 <div id="content" class="clear">
 
 <!-- Main Begins -->
-<div id="main" class="clear">
+<div id="main" class="clear"> 
+
+<select name="center" id="center" onchange="javascript:get_kids_Name(this.value,0);" >
+            
+
+              <option value="">-Select center-</option>
+              <?php foreach($center_list as $row){ ?>
+              <option value="<?php echo $row->id; ?>"><?php echo $row->name; ?> </option>
+              <?php } ?>
+              </select>
+
+
 	<div id="head" class="clear">
+   
 		<h1><?php echo $title; ?></h1>
 
 		<div id="actions">
@@ -41,7 +67,7 @@ $(document).ready(function(){
 		<?php } ?>
 		</div>
 	</div>
-
+<div id="kids_list">
 <table id="tableItems" class="clear" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
@@ -94,7 +120,7 @@ foreach($content as $row)
 <?php  }?>
 </tbody>
 </table>
-
+</div>
 <?php if($norecord_flag == 1) 
 { 
 	  if($currentPage != '0') { ?>

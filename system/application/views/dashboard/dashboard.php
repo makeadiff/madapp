@@ -1,3 +1,4 @@
+<link href="<?php echo base_url(); ?>css/dashboard.css" type="text/css" rel="stylesheet" />
 <div id="content" class="clear">
 <div id="main" class="clear">
 	<div id="head" class="clear" style="border-bottom:none;">

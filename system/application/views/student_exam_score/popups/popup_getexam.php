@@ -1,3 +1,4 @@
+<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script>
 function mark_view_div(exam_id)

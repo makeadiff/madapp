@@ -1,0 +1,66 @@
+.formulnew {
+width:100%;
+}
+
+.formulnew ul {
+list-style-type:none;
+width:100%;
+margin:0;
+padding:0;
+}
+
+.formulnew li {
+width:100%;
+clear:both;
+margin:0;
+padding:0;
+}
+
+.formulnew .label1 {
+float:left;
+width:200px;
+}
+
+.formulnew .validator1 {
+padding-left:200px;
+}
+
+.formulnew .label2 {
+float:left;
+width:145px;
+}
+
+.formulnew .validator2 {
+padding-left:145px;
+}
+
+.formulnew .validator3 {
+padding-left:100px;
+}
+
+.required_star {
+padding-left:3px;
+font-weight:700;
+color:Red;
+font-size:10px;
+}
+
+.formulnew .label_display2 {
+float:left;
+width:150px;
+}
+
+.formulnew .data1,.formulnew .data2,.formulnew .data3 {
+float:left;
+margin-bottom:3px;
+}
+
+.formulnew .label3,.formulnew .label_display1 {
+float:left;
+width:100px;
+}
+
+.formulnew .data_display1,.formulnew .data_display2 {
+float:left;
+margin-bottom:10px;
+}

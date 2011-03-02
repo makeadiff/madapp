@@ -47,6 +47,10 @@ class Class_model extends Model {
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
     }
     
+    function save_class_lesson($class_id, $lesson_id) {
+    	$this->db->where('id', $class_id)->update('Class',array('lesson_id'=>$lesson_id));
+    }
+    
     /// Get just the class information for the current level
     function get_classes_by_level($level_id) {
     	$classes = $this->db->query("SELECT * FROM Class WHERE level_id=$level_id ORDER BY class_on")->result();
@@ -84,7 +88,14 @@ class Class_model extends Model {
     
     /// The the absent/present status of the kids of any perticular class.
     function get_attendence($class_id) {
-    	return $this->db->where('class_id', $class_id)->get('StudentClass')->result();
+    	$result = $this->db->where('class_id', $class_id)->get('StudentClass')->result();
+    	
+    	$attendence = array();
+    	foreach($result as $class) {
+    		$attendence[$class->student_id] = $class->present;
+    	}
+    	
+    	return $attendence;
     }
     
     function save_attendence($class_id, $all_students, $attendence) {
@@ -169,7 +180,5 @@ class Class_model extends Model {
     			$this->user_model->update_credit($user_id, +2);
     		}
     	}
-    	
-    	
     }
 }

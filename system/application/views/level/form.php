@@ -43,6 +43,9 @@ if(!isset($level)) $level = array(
 <?php } ?>
 </select><br />
 
+<label for="book_id">Book</label>
+<?php echo form_dropdown('book_id', $all_books, $level['book_id']); ?><br />
+
 <?php
 echo form_hidden('center_id', $center_id);
 echo form_hidden('project_id', 1);

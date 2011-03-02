@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/css'); ?>
+<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />

@@ -1,0 +1,66 @@
+.cust_button_01 {
+background-image:url(../../images/madapp/save_btn.gif);
+background-repeat:no-repeat;
+border:0 none;
+color:#666;
+cursor:pointer;
+font-family:Verdana;
+font-size:11px;
+font-weight:900;
+height:22px;
+line-height:22px;
+width:63px;
+padding:0 0 3px;
+}
+
+.cust_button_02 {
+background-image:url(../../images/madapp/cust_button_02.gif);
+background-repeat:no-repeat;
+border:0 none;
+color:#666;
+cursor:pointer;
+float:right;
+font-family:Verdana;
+font-size:11px;
+font-weight:900;
+height:22px;
+width:136px;
+margin:0;
+padding:0 0 2px;
+}
+
+.cust_drop_field_01 {
+height:22px;
+color:#000;
+font-family:Verdana,Arial,Helvetica,sans-serif;
+font-size:11px;
+border:#c3c3c3 solid 1px;
+font-weight:100;
+width:182px;
+margin:0;
+padding:0;
+}
+
+.custlink_01 {
+color:#666;
+text-decoration:underline;
+font-weight:400;
+}
+
+.custlink_01:hover {
+color:#666;
+text-decoration:none;
+font-weight:400;
+}
+
+.ListViewHighlight1_Normal {
+background-color:#f0f0f0;
+}
+
+.ListViewHighlight1_Hover {
+background-color:#bad965;
+}
+
+.ListViewHighlight1_Selected {
+background-color:#63b8f2;
+}

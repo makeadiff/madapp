@@ -1,11 +1,6 @@
 <script type="text/javascript">
 tb_init('a.thickbox, input.thickbox');
 
-function triggerSearch() {
-	q = $('#searchQuery').val();
-	get_groupList('0',q);
-}
-
 $(document).ready(function(){
 	$('#example').each(function(){
 		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
@@ -30,21 +25,17 @@ $(document).ready(function(){
 <div id="content" class="clear">
 
 <!-- Main Begins -->
-	<div id="main" class="clear">
-    	<div id="head" class="clear">
-        	<h1><?php echo $title; ?></h1>
+<div id="main" class="clear">
+<div id="head" class="clear">
+	<h1><?php echo $title; ?></h1>
 
-            <?php if($this->user_auth->get_permission('center_add')) { ?>
-        	<div id="actions"> 
-			<a href="<?php echo site_url('center/popupaddCneter')?>" class="thickbox button primary" id="example" name="Add New Center">Add New Center</a>
-			</div>
-			<?php } ?>
+	<?php if($this->user_auth->get_permission('center_add')) { ?>
+	<div id="actions"> 
+	<a href="<?php echo site_url('center/popupaddCneter')?>" class="thickbox button primary" id="example" name="Add New Center">Add New Center</a>
+	</div>
+	<?php } ?>
 
-	    </div>
-
-		<div id="topOptions" class="clear">
-
-		</div>
+</div>
 
 <table id="tableItems" class="clear" cellpadding="0" cellspacing="0">
 <thead>
@@ -91,8 +82,8 @@ foreach($content as $row) {
 	<td class="colStatus" style="text-align:left"><?php echo $row['user_name'];?></td>
 	<!--<td class="colPosition"></td>-->
 	<td class="colActions right">
-	<a href="<?php echo site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" class="group" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a> 
-	<a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a></td>
+	<?php if($this->user_auth->get_permission('center_edit')) { ?><a href="<?php echo site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" class="group" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a><?php } ?>
+	<?php if($this->user_auth->get_permission('center_delete')) { ?><a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a></td><?php } ?>
 </tr>
 
 <?php }?>
@@ -109,10 +100,5 @@ foreach($content as $row) {
 	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
 	  endif;
 }    ?>
-
-
-
 </div>
-
-
 </div>

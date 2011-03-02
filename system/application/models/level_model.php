@@ -14,10 +14,14 @@
 class Level_model extends Model {
 	function Level_model() {
         parent::Model();
+        
+        $this->ci = &get_instance();
+		$this->city_id = $this->ci->session->userdata('city_id');
+		$this->project_id = $this->ci->session->userdata('project_id');
     }
     
 	function get_all_levels_in_center($center_id) {
-		return $this->db->where('project_id', 1)->where('center_id',$center_id)->get('Level')->result();
+		return $this->db->where('project_id', $this->project_id)->where('center_id',$center_id)->get('Level')->result();
 	}
 	
 	function get_level($level_id) {
@@ -46,6 +50,7 @@ class Level_model extends Model {
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
 				'project_id'=>	$data['project_id'],
+				'book_id'	=>	$data['book_id'],
 			));
 			
 		$level_id = $this->db->insert_id();
@@ -67,6 +72,7 @@ class Level_model extends Model {
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
 				'project_id'=>	$data['project_id'],
+				'book_id'	=>	$data['book_id'],
 			));
 			
 		$this->db->delete("StudentLevel", array('level_id'=>$level_id));

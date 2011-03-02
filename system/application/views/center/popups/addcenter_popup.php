@@ -1,8 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
+<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 
 <form id="formEditor" class="mainForm clear" action="<?=site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >

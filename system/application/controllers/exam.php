@@ -218,15 +218,14 @@ class Exam extends Controller  {
     * @param  : []
     * @return : type : []
     **/
-	function getexam_subjects_name()
-		{
-		
-		 $exam_id = $_REQUEST['exam_id'];
+	function getexam_subjects_name() {
+		$exam_id = $_REQUEST['exam_id'];
 		$data['subject']=$this->exam_model->get_subject_names($exam_id);
 		$data['details']=$this->exam_model->get_student_names($exam_id);
 		$this->load->view('student_exam_score/popups/popup_add_exam',$data);
-		}
-		/**
+	}
+	
+	/**
     * Function to addMarks
     * @author : Rabeesh
     * @param  : []
@@ -239,22 +238,27 @@ class Exam extends Controller  {
 		$data['exam_id']=$_REQUEST['exam_id'];
 		$sub_count=$_REQUEST['sub_count'];
 		$stnt_count=$_REQUEST['stnt_count'];
-			for($i=1;$i<=$stnt_count;$i++)
+		for($i=1;$i<=$stnt_count;$i++)
+		{
+			$data['student']=$_REQUEST['stnt_name'.$i];
+			for($j=1;$j<=$sub_count;$j++)
 			{
-				$data['student']=$_REQUEST['stnt_name'.$i];
-				for($j=1;$j<=$sub_count;$j++)
-				{
 				$data['subject']=$_REQUEST['sub_name'.$j];
 				$data['marks']=$_REQUEST[$i.'mark'.$j];
 				$returnFlag=$this->exam_model->store_marks($data);
-				}
 			}
-		  		$message['msg']   =  "Mark Added succeessfully";
-				$message['successFlag'] = "0";
-				$message['link']  =  "addMarks";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/close_thickbox',$message);
+		}
+		$message['msg']   =  "Mark Added succeessfully";
+		$message['successFlag'] = "0";
+		$message['link']  =  "addMarks";
+		$message['linkText'] = "add new Center";
+		$message['icoFile'] = "ico_addScheme.png";
+		$this->load->view('dashboard/close_thickbox',$message);
 		 
 		}
+		
+	function delete_exam($exam_id) {
+		$this->user_auth->check_permission('exam_delete');
+		$this->exam_model->delete($exam_id);
+	}
 }

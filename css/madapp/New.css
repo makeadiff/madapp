@@ -1,0 +1,21 @@
+#main-content {
+	background-color:#fff;
+	color:#000;
+	min-height:500px;
+}
+
+#nav_container li {
+	padding:7px 10px 0 10px;
+	border-right: 1px solid #000;
+}
+#nav_container li a {
+	color:#fff !important;
+	font-size:14px;
+}
+
+#nav_container li:hover, #nav_container li.active {
+	background-color:#13586c;
+}
+#nav_container a:hover {
+	text-decoration:none !important;
+}

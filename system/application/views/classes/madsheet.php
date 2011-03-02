@@ -1,4 +1,7 @@
-<?php $this->load->view('layout/header', array('title'=>'MAD Sheet')); ?>
+<?php $this->load->view('layout/header', array('title'=>'MAD Sheet'));
+
+// See the madsheet_class_mode.php - that's the one in active use
+?>
 <h1>MAD Sheet</h1>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/madsheet.css">
 

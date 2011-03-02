@@ -22,17 +22,20 @@
 	
 	function deleteEntry(entryId,page_no)
 	{
-		var bool = confirm("confirm delete!")
+		var bool = confirm("Are you sure you want to delete this?")
 		if(bool)
 		{
 			$.ajax({
 			type : "POST",
 			url  : "<?= site_url('center/ajax_deletecenter') ?>",
 			data : 'entry_id='+entryId,
-			
-			success : function(data)
-			{		
+			success : function(data) {		
 			 	get_centerlist(page_no);
+			},
+			error: function(data) {
+				var error = data.responseText.match(/<p>(.+?)<\/p>/);
+				if(error) error = " - Error: " + error[1];
+				alert("Couldn't delete center" + error);
 			}
 			
 			});

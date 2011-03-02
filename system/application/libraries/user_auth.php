@@ -23,7 +23,7 @@ Class User_auth {
     * @return : type : [Array()]
     *
     **/
- 	 function login($username, $password, $remember_me) {
+ 	 function login($username, $password, $remember_me=false) {
 		$data['username']=$username;
 		$data['password']=$password;
 		$status = $this->ci->users_model->login($data);

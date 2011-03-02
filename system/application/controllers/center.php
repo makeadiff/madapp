@@ -193,7 +193,15 @@ class Center extends Controller  {
 	function ajax_deletecenter()
 	{
 		$this->user_auth->check_permission('center_delete');
-		$data['entry_id'] = $_REQUEST['entry_id'];
-		$flag= $this->center_model->delete_center($data);
+		$center_id = $data['entry_id'] = $_REQUEST['entry_id'];
+		
+		if($this->level_model->get_all_levels_in_center($center_id)) {
+			show_error("This Center has levels under it. Please delete those first.");
+		}
+		if($this->kids_model->get_kidsby_center($center_id)->result()) {
+			show_error("This Center has Kids under it. Please delete them first.");
+		}
+		
+		$this->center_model->delete_center($data);
 	}
 }

@@ -172,6 +172,7 @@ class Exam_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
+	
 	/**
     *
     * Function to get_student_names
@@ -191,6 +192,7 @@ class Exam_model extends Model
 		//print_r($result->result());
 		return $result;
 	}
+	
 	/**
     *
     * Function to store_marks
@@ -210,5 +212,11 @@ class Exam_model extends Model
 		$this->db->where('exam_id',$exam_id);	
 	    $this->db->update('Exam_Mark',$data);  
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
+	}
+	
+	function exam_delete($exam_id) {
+		$this->db->where->('exam_id', $exam_id)->delete("Exam_Mark");
+		$this->db->where->('exam_id', $exam_id)->delete("Exam_Subject");
+		$this->db->where->('id', $exam_id)->delete("Exam");
 	}
 }

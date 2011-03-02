@@ -140,18 +140,18 @@ class Users_model extends Model {
     **/
 	function update_permission($data)
 	{
-			$rootId=$data['rootId'];
-			$group_id=$data['groupname'];
-			$permission=$data['permission'];
-			$this->db->where('group_id',$rootId);
-			$this->db->delete('GroupPermission');
-			$count=sizeof($permission);
-			for($j=0;$j<$count;$j++) {
-				$data = array('group_id'=> $rootId, 'permission_id'=>$permission[$j]);
-				$this->db->set($data);
-				$this->db->insert('GroupPermission');
-			}
-			return ($this->db->affected_rows() > 0) ? true : false;
+		$rootId=$data['rootId'];
+		$group_id=$data['groupname'];
+		$permission=$data['permission'];
+		$this->db->where('group_id',$rootId);
+		$this->db->delete('GroupPermission');
+		$count=sizeof($permission);
+		for($j=0;$j<$count;$j++) {
+			$data = array('group_id'=> $rootId, 'permission_id'=>$permission[$j]);
+			$this->db->set($data);
+			$this->db->insert('GroupPermission');
+		}
+		return ($this->db->affected_rows() > 0) ? true : false;
 
 	}
 	/**
@@ -422,6 +422,7 @@ class Users_model extends Model {
     
     function update_credit($user_id, $credit) {
     	if($credit == 1) $credit = '+1';
+    	if($credit == 2) $credit = '+2';
     	$this->db->query("UPDATE User SET credit=credit $credit WHERE id=$user_id");
     }
     

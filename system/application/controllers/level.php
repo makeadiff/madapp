@@ -16,6 +16,7 @@ class Level extends Controller {
 		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);
 		$this->load->model('kids_model');
+		$this->load->model('book_lesson_model');
 		$this->load->model('center_model', 'center_model');
 		$this->load->helper('url');
 	}
@@ -40,6 +41,7 @@ class Level extends Controller {
 					'name'		=>	$this->input->post('name'),
 					'center_id'	=>	$this->input->post('center_id'),
 					'project_id'=>	$this->input->post('project_id'),
+					'book_id'	=>	$this->input->post('book_id'),
 					'students'	=>	$this->input->post('students')
 				));
 				
@@ -76,11 +78,12 @@ class Level extends Controller {
 				'name'		=>	$this->input->post('name'),
 				'center_id'	=>	$this->input->post('center_id'),
 				'project_id'=>	$this->input->post('project_id'),
+				'book_id'	=>	$this->input->post('book_id'),
 				'students'	=>	$this->input->post('students')
 			));
 
-			$this->message['success'] = 'The Level has been edited successfully';
-			$this->index('center', $this->input->post('center_id'));
+			$this->session->set_flashdata('success', 'The Level has been edited successfully');
+			redirect('level/index/center/' . $this->input->post('center_id'));
 		} else {
 		
 			$this->load->helper('misc');
@@ -93,12 +96,15 @@ class Level extends Controller {
 			$level['kids'] = $kids->result();
 			
 			$level['selected_students'] = array_keys($this->model->get_kids_in_level($level_id));
+			
+			$all_books = idNameFormat($this->book_lesson_model->get_all_books());
 
 			$this->load->view('level/form.php', array(
 				'action' 	=> 'Edit',
 				'center_id'	=> $center_id,
 				'center_name'=> $center_name,
 				'level'		=> $level,
+				'all_books'	=> $all_books 
 				));
 		}
 	}

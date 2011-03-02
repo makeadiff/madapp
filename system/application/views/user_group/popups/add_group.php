@@ -1,8 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
+<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 
 <form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/addgroup_name')?>" method="post" onsubmit="return validate();" style="width:500px;">
 	<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">

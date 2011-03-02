@@ -1,0 +1,38 @@
+.compose_list_field_ch{
+	font-family:"Verdana";
+	font-size:11px;
+	color:#464646;
+	text-decoration:underline;
+	width:-100px;
+	height:19px;
+	padding:2px 0px 0px 0px;
+	margin:0px 0px 0px 5px;
+	border:#85817c solid 1px;
+}
+.compose_top_portion1{
+	width:960px;
+	/*height:99px;*/
+}
+.inbox_table_cnt1{
+	padding:0px 0px 0px 5px;
+	width:800px;
+}
+.topic_container_bunch{
+	padding:13px 10px 0px 10px;
+	margin:0px 0px 0px 0px;
+	background-color:#F0F0F0;
+}
+#center_listingCh{
+	margin:0px;
+	padding:0px 0 0 0;
+}
+#center_listingCh ul{
+	margin:0px;
+	padding:0px;
+}
+#center_listingCh li{
+	float:left;
+	width:130px;
+	margin:10px 19px 0 10px;
+	padding:0px;
+}

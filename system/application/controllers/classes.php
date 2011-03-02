@@ -11,6 +11,7 @@ class Classes extends Controller {
 		$this->load->model('Level_model','level_model');
 		$this->load->model('Center_model','center_model');
 		$this->load->model('Batch_model','batch_model');
+		$this->load->model('Book_Lesson_model','book_lesson_model');
 		
 		$this->load->helper('url');
 		$this->load->helper('misc');
@@ -130,6 +131,7 @@ class Classes extends Controller {
 		$all_levels = array();
 		
 		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer')));
+		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
 		
 		$data = array();
 		foreach($all_centers as $center) {
@@ -190,13 +192,10 @@ class Classes extends Controller {
 			
 		}
 		
-		//dump($data);
-		$this->load->view('classes/madsheet_class_mode', array('data'=>$data, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
+		$this->load->view('classes/madsheet_class_mode', array(
+			'data'=>$data, 'all_lessons'=>$all_lessons,
+			'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
-	
-	
-	
-	
 	
 	function edit_class($class_id) {
 		$this->user_auth->check_permission('class_edit_class');
@@ -208,6 +207,7 @@ class Classes extends Controller {
 		$teachers = idNameFormat($this->user_model->get_users_in_center($level_details->center_id));
 		$substitutes = idNameFormat($this->user_model->get_users_in_city($level_details->center_id));
 		$substitutes[0] = 'No Substitute';
+		$all_lessons = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_details->book_id));
 		
 		$statuses = array(
 			'projected'	=> 'Projected',
@@ -218,7 +218,9 @@ class Classes extends Controller {
 		);
 		
 		$this->load->view('classes/form', 
-			array('class_details'=>$class_details, 'teachers'=>$teachers,'substitutes'=>$substitutes,'statuses'=>$statuses, 'message'=>$this->message));
+			array('class_details'=>$class_details, 'teachers'=>$teachers,'substitutes'=>$substitutes,
+			'statuses'=>$statuses, 'message'=>$this->message,
+			'all_lessons'=>$all_lessons));
 	}
 	
 	function edit_class_save() {
@@ -238,9 +240,10 @@ class Classes extends Controller {
 				'status'	=> $statuses[$i],
 			));
 		}
+		$this->class_model->save_class_lesson($this->input->post('class_id'), $this->input->post('lesson_id'));
 		
-		$this->message['success'] = 'Saved the class details';
-		$this->edit_class($this->input->post('class_id'));
+		$this->session->set_flashdata('success', 'Saved the class details');
+		redirect('classes/edit_class/'.$this->input->post('class_id'));
 	}
 
 }

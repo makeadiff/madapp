@@ -6,7 +6,7 @@
 
 <?php foreach($students as $student_id => $student_name) { ?>
 <input type="checkbox" name="attendence[<?php echo $student_id ?>]" id="attendence-<?php echo $student_id ?>" value="1" <?php 
-	if(!empty($attendence[$student_id])) print "checked='checked'"; // :TODO:
+	if(!empty($attendence[$student_id])) print "checked='checked'";
 ?>/> 
 <label for="attendence-<?php echo $student_id; ?>"> &nbsp; <?php echo $student_name; ?></label><br />
 <?php } ?>

@@ -112,7 +112,6 @@ Class User_auth {
 	
 	/// Returns true if the current user has permission to do the action specified in the argument
 	function get_permission($permission_name) {
-		return true; // :DEBUG: :TEMP: 
 		return in_array($permission_name, $this->ci->session->userdata('permissions'));
 	}
 	/**

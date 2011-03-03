@@ -597,7 +597,6 @@ class Users_model extends Model {
 		$all_permissions = array();
 		foreach($permissions as $permission) {
 			$all_permissions[] = $permission->name;
-			
 		}
 		
 		return $all_permissions;

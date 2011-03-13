@@ -215,8 +215,8 @@ class Exam_model extends Model
 	}
 	
 	function exam_delete($exam_id) {
-		$this->db->where->('exam_id', $exam_id)->delete("Exam_Mark");
-		$this->db->where->('exam_id', $exam_id)->delete("Exam_Subject");
-		$this->db->where->('id', $exam_id)->delete("Exam");
+		$this->db->where('exam_id', $exam_id)->delete("Exam_Mark");
+		$this->db->where('exam_id', $exam_id)->delete("Exam_Subject");
+		$this->db->where('id', $exam_id)->delete("Exam");
 	}
 }

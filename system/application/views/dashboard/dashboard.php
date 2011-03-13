@@ -59,7 +59,7 @@
 		
 	<br />
 	
-	<?php if($this->user_auth->get_permission('users_index')) { ?>
+	<?php if($this->user_auth->get_permission('user_index')) { ?>
 	<div class="quickLink"> <a href="<?= site_url('user/view_users') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/user_groups.jpeg" alt="" /> <span>View Users</span></a></div>
 	<?php } ?>

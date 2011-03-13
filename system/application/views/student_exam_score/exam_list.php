@@ -98,14 +98,8 @@ foreach($content as $row)
 </script>
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></a></td>
-    <td class="colName left" style="text-align:center"><?php echo strtolower($row['name']); ?></a></td>
-    
-	<td class="colName left" style="text-align:center"> <a href="<?=site_url('exam/view_exam_details/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="<strong>Details of <?= strtolower($row['name']) ?></strong>"> View Details</a></td>
-    
-    <!--<td class="colActions right"> 
-    <!--<a href="<?//= //site_url($row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php //echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php //echo $row['id']; ?>" name="<strong>Edit Group : <?//=strtolower($row['name']) ?></strong>">Edit</a> 
-    <a class="actionDelete" href="javascript:deleteEntry('<?php //echo $row['id']; ?>','<?php //echo $currentPage; ?>')">Delete</a>
-    </td>-->
+    <td class="colName left" style="text-align:center"><?php echo $row['name']; ?></a></td>
+	<td class="colName left" style="text-align:center"> <a href="<?php echo site_url('exam/view_exam_details/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="<strong>Details of <?= strtolower($row['name']) ?></strong>"> View Details</a></td>
 </tr>
 
 <?php }?>

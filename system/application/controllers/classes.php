@@ -59,6 +59,7 @@ class Classes extends Controller {
 	}
 	
 	function mark_attendence($class_id) {
+		$this->user_auth->check_permission('classes_mark_attendence');
 		$this->load->helper('form');
 		
 		$class_info = $this->class_model->get_class($class_id);
@@ -71,6 +72,8 @@ class Classes extends Controller {
 	}
 	
 	function mark_attendence_save() {
+		$this->user_auth->check_permission('classes_mark_attendence');
+		
 		$attendence = $this->input->post('attendence');
 		$class_id = $this->input->post('class_id');
 		$class_info = $this->class_model->get_class($class_id);

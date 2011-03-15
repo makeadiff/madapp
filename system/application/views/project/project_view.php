@@ -11,7 +11,7 @@ function get_projectlist(page_no,search_query)
 		$('#loading').hide();
 		$('#updateDiv').html(msg);
 		}
-		});
+	});
 }
 
 function deleteEntry(entryId,page_no)

@@ -135,7 +135,7 @@ function divupdation() {
     <th class="colStatus sortable">Email</th>
     <th class="colStatus">Phone</th>
     <th class="colPosition">Position</th>
-    <th class="colPosition">Cerdits</th>
+    <th class="colPosition">Credits</th>
     <th class="colPosition">Center</th>
     <th class="colPosition">User Type</th>
     <th class="colPosition">Photo</th>

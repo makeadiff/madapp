@@ -213,7 +213,7 @@ class Users_model extends Model {
     **/
 	function getuser_details_csv()
 	{
-		$this->db->select('User.id,User.name,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
@@ -266,7 +266,7 @@ class Users_model extends Model {
 			$this->load->library('imageResize');
             $nwidth='100';
 	        $nheight='90';
-			$fileSavePath='E:/projects/maddaplycation/madapp/trunk/pictures/'.$newimagename;
+			$fileSavePath='./pictures/'.$newimagename;
 			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
             $imagename = $newimagename;
             $thumbnail = $randomcode.'_tn'.$value['file_ext'];
@@ -442,7 +442,7 @@ class Users_model extends Model {
 		$group=$data['group'];
 		$name=$data['name'];
 		
-		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
@@ -461,7 +461,7 @@ class Users_model extends Model {
 		$city=$data['city'];
 		$group=$data['group'];
 		
-		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
@@ -484,7 +484,7 @@ class Users_model extends Model {
 	{
 		$city=$data['city'];
 		//$this->db->select('User.*,Center.name as center_name,City.name as city_name');
-		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.photo,User.email,User.credit,User.phone,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'left');
@@ -505,7 +505,7 @@ class Users_model extends Model {
 	{
 	
 		$group=$data['group'];
-		$this->db->select('User.id,User.name,User.email,User.photo,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.email,User.photo,User.credit,User.phone,User.title,User.user_type,Center.name as center_name,
 			City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
@@ -529,7 +529,7 @@ class Users_model extends Model {
 		$name=$data['name'];
 		//$this->db->select('User.*,Center.name as center_name,City.name as city_name,UserGroup.id 
 		//as g_id,UserGroup.user_id,UserGroup.group_id');
-		$this->db->select('User.id,User.name,User.email,User.phone,User.photo,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.email,User.phone,User.credit,User.photo,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
@@ -553,7 +553,7 @@ class Users_model extends Model {
 		$city=$data['city'];
 		$name=$data['name'];
 		//$this->db->select('User.*,Center.name as center_name,City.name as city_name');
-		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.title,User.user_type,Center.name as center_name,
+		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name,
 		City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');

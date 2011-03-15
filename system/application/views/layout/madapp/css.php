@@ -7,3 +7,4 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/madapp/New.css" />
 <?php } ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/validation.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/thickbox.css" />

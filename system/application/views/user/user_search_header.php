@@ -80,7 +80,7 @@ function divupdation() {
     	<div id="head" class="clear"><h1><?php echo $title; ?></h1>
     	
     <div id="actions"> 
-	<a href="<?= site_url('user/popupAdduser')?>" class="thickbox button primary popup" id="example" name="Add User">Add User</a>
+	<a href="<?php echo site_url('user/popupAdduser')?>" class="thickbox button primary popup" id="example" name="Add User">Add User</a>
 	</div>
 	</div>
 

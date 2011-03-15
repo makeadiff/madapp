@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
 tb_init('a.thickbox, input.thickbox');
 
 function triggerSearch()
@@ -8,7 +8,7 @@ function triggerSearch()
 }
 
 $(document).ready(function(){
-	$('#example').each(function(){
+	$('.popup').each(function(){
 		var url = $(this).attr('href') + '?TB_iframe=true&height=300&width=600';
 		$(this).attr('href', url);
 	});
@@ -29,7 +29,7 @@ $(document).ready(function(){
 
             <!-- start page actions-->
         	<div id="actions"> 
-			<a href="<?= site_url('project/popupaddproject')?>" class="thickbox button primary" id="example" name="<strong>Add Projects</strong>">Add Project</a>
+			<a href="<?php echo site_url('project/popupaddproject')?>" class="thickbox button primary popup" id="example" name="Add Projects">Add Project</a>
 			</div>
 			<!-- end page actions-->
 

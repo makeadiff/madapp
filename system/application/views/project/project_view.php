@@ -1,45 +1,37 @@
-<?php include_once('session_timeout.php'); ?>
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
-<link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/thickbox.css">
-
-<script>
-
-	function get_projectlist(page_no,search_query)
-	{
-		
-		$('#loading').show();
-            $.ajax({
-            type: "POST",
-            url: "<?= site_url('project/getprojectlist')?>",
-            data: "pageno="+page_no+"&q="+search_query,
-            success: function(msg){
-            $('#loading').hide();
-            $('#updateDiv').html(msg);
-            }
-            });
-	}
+<script type="text/css">
+function get_projectlist(page_no,search_query)
+{
 	
-	function deleteEntry(entryId,page_no)
-	{
-		var bool = confirm("Are you sure you wish to delete this Project?")
-		if(bool)
-		{
-			$.ajax({
-			type : "POST",
-			url  : "<?= site_url('project/ajax_deleteproject') ?>",
-			data : 'entry_id='+entryId,
-			
-			success : function(data)
-			{		
-			 	get_projectlist(page_no);
-			}
-			
-			});
+	$('#loading').show();
+		$.ajax({
+		type: "POST",
+		url: "<?= site_url('project/getprojectlist')?>",
+		data: "pageno="+page_no+"&q="+search_query,
+		success: function(msg){
+		$('#loading').hide();
+		$('#updateDiv').html(msg);
 		}
-	}	
-	
-	
+		});
+}
+
+function deleteEntry(entryId,page_no)
+{
+	var bool = confirm("Are you sure you wish to delete this Project?")
+	if(bool)
+	{
+		$.ajax({
+		type : "POST",
+		url  : "<?= site_url('project/ajax_deleteproject') ?>",
+		data : 'entry_id='+entryId,
+		
+		success : function(data)
+		{		
+			get_projectlist(page_no);
+		}
+		
+		});
+	}
+}
 </script>
 
 <div style="height:20px;padding-top: 5px;">

@@ -9,7 +9,7 @@ $sdt=date('Y')-20;
 ?>
 <script>
 jQuery(document).ready(function () {
-	$('input#date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?> });
+	$('input#date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2000-01-01')});
 });
 </script>
 
@@ -27,8 +27,6 @@ jQuery(document).ready(function () {
 	<?php } ?>
 </select>
 </div>
-
-
 
 <div class="field clear" style="width:600px;"> 
 	<label for="txtName">Name</label>
@@ -51,7 +49,7 @@ jQuery(document).ready(function () {
 
 <div class="field clear" style="width:600px;"> 
 	<label for="txtName">Description</label>
-	<textarea rows="5" cols="40" id="description" name="description"></textarea> 
+	<textarea rows="5" cols="30" id="description" name="description"></textarea> 
 	<p class="error clear"></p>
 </div>
 

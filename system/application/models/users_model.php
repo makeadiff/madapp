@@ -256,6 +256,8 @@ class Users_model extends Model {
         //Get File Data Info
         $uploads = array($this->upload->data());
         $this->load->library('image_lib');
+        $this->load->library('imageResize');
+        
         //Move Files To User Folder
         foreach($uploads as $key[] => $value)
         {
@@ -263,17 +265,17 @@ class Users_model extends Model {
             $randomcode = $this->generate_code(12);
             $newimagename = $randomcode.$value['file_ext'];
 			rename($value['full_path'],'pictures/'.$newimagename);
-			$this->load->library('imageResize');
+			
             $nwidth='100';
 	        $nheight='90';
-			$fileSavePath='./pictures/'.$newimagename;
+			$fileSavePath= dirname(BASEPATH). '/pictures/'.$newimagename;
 			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
             $imagename = $newimagename;
             $thumbnail = $randomcode.'_tn'.$value['file_ext'];
             $this->db->set('photo', $imagename);
             //$this->db->set('thumbnail', $thumbnail);
 			$this->db->where('id',$id);
-            $this->db->update('user');
+            $this->db->update('User');
 			return ($this->db->affected_rows() > 0) ? true: false ;
 
         }
@@ -349,9 +351,9 @@ class Users_model extends Model {
 				'center_id'=> $data['center'],
 				'city_id'=> $data['city'],
 				'project_id'=>$data['project'],
-				'user_type' => $data['type'],
-				'password' => $data['password']
+				'user_type' => $data['type']
 			);
+			if(isset($data['password'])) $user_array['password'] = $data['password'];
 				
 			$this->db->where('id', $rootId);
 			$this->db->update('User', $user_array);
@@ -619,47 +621,46 @@ class Users_model extends Model {
 	function user_registration($data)
 	{
 		$email = $data['email'];
-        $password  = $data['password'];
+        $password = $data['password'];
+        
         $this->db->select('email');
-        $this->db->from('user');
+        $this->db->from('User');
         $this->db->where('email',$email);
+        
         $result=$this->db->get();
-        if($result->num_rows() == 0) 
-        {
-         		
-                
-                $userdetailsArray = array('name' => $data['firstname'],
-                                          'title' => $data['position'],
-                                          'email' => $data['email'],
-                                          'phone' => $data['mobileno'],
-                                          'password' => $data['password'],
-                                          'city_id'=>$data['city'],
-                                          'center_id'=>$data['center'],
-										  'user_type'=>'applicant',
-                                          );
-                 $this->db->set($userdetailsArray);
-                 $this->db->insert('user');
-				 $user_id=$this->db->insert_id();
-				 
-                       	$this->db->select('User.*,Center.name as center_name,City.name as city_name');
-						$this->db->from('User');
-						$this->db->join('Center', 'Center.id = User.center_id' ,'join');
-						$this->db->join('City', 'City.id = User.city_id' ,'join');
-						$this->db->where('User.id',$user_id);
-						$result=$this->db->get();
-						$user=$result->first_row();
-						$memberCredentials['id'] = $user->id;
-						$memberCredentials['email'] = $user->email;
-						$memberCredentials['name'] = $user->name;
-						$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
-						$memberCredentials['groups'] = $this->get_user_groups($user->id);
-						
-						return $memberCredentials;
-            }
-            else
-            {
-                    return false;
-            }
+        if($result->num_rows() == 0) {
+			$userdetailsArray = array('name' => $data['firstname'],
+										'title' => $data['position'],
+										'email' => $data['email'],
+										'phone' => $data['mobileno'],
+										'password' => $data['password'],
+										'city_id'=>$data['city'],
+										'center_id'=>$data['center'],
+										'user_type'=>'applicant',
+										);
+			$this->db->set($userdetailsArray);
+			$this->db->insert('user');
+			$user_id=$this->db->insert_id();
+				
+			$this->db->select('User.*,Center.name as center_name,City.name as city_name');
+			$this->db->from('User');
+			$this->db->join('Center', 'Center.id = User.center_id' ,'join');
+			$this->db->join('City', 'City.id = User.city_id' ,'join');
+			$this->db->where('User.id',$user_id);
+			$result=$this->db->get();
+			$user=$result->first_row();
+			$memberCredentials['id'] = $user->id;
+			$memberCredentials['email'] = $user->email;
+			$memberCredentials['name'] = $user->name;
+			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
+			$memberCredentials['groups'] = $this->get_user_groups($user->id);
+			
+			return $memberCredentials;
+		}
+		else
+		{
+				return false;
+		}
     }
 	/**
     * Function to get password
@@ -670,7 +671,7 @@ class Users_model extends Model {
 	function get_password($data)
 	{
 	$email=$data['email'];
-	return $this->db->where('email', $email)->get("user")->row();
+	return $this->db->where('email', $email)->get("User")->row();
 	}
 	
 }

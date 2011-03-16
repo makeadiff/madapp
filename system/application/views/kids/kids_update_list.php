@@ -12,12 +12,12 @@
 </thead>
 <tbody>
 <?php
-$center_name=$center_name->result_array();
-foreach($center_name as $row){
-$center_name=$row['name'];
+if($center_name) {
+	$center_name=$center_name->result_array();
+	foreach($center_name as $row){
+		$center_name=$row['name'];
+	}
 }
-?>
-<?php 
 
 $norecord_flag = 1;
 $shadeFlag = 0;
@@ -44,7 +44,7 @@ foreach($content as $row)
     <td class="colCheck1"><?php echo $row['id']; ?></td>
     <td class="colName left"><?php echo $row['name']; ?></td>
     <td class="colCount"><?php echo $row['birthday']; ?></td> 
-    <td class="colStatus" style="text-align:left"><?php echo $center_name;?></td>
+    <td class="colStatus" style="text-align:left"><?php echo ($center_name) ? $center_name : $row['center_name'] ;?></td>
 	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'pictures/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
     
     <td class="colActions right"> 

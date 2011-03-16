@@ -86,11 +86,8 @@ class Kids extends Controller  {
 		$linkCount = $this->kids_model->kids_count();
 		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
 		$data['currentPage'] = $page_no;
-		$user_id=$this->session->userdata('id');
-		$data['details']= $this->kids_model->getkids_details($user_id);
-		
+		$data['details']= $this->kids_model->getkids_details();
 		$data['center_list']=$this->center_model->get_all();
-		//print_r($data['center_list']);
 		$this->load->view('kids/kids_list',$data);
 	
 	}
@@ -102,8 +99,14 @@ class Kids extends Controller  {
 		$linkCount = $this->kids_model->kids_count();
 		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
 		$data['currentPage'] = $page_no;
-		$data['kids_details']=$this->kids_model->get_kidsby_center($center_id);
-		$data['center_name']=$this->center_model->center_name($center_id);
+		if($center_id) {
+			$data['kids_details']=$this->kids_model->get_kidsby_center($center_id);
+			$data['center_name'] = $this->center_model->center_name($center_id);
+		} else {
+			$data['kids_details']=$this->kids_model->getkids_details();
+			$data['center_name'] = '';
+		}
+		
 		$this->load->view('kids/kids_update_list',$data);
 	}
 	/**
@@ -227,38 +230,30 @@ class Kids extends Controller  {
 		
 		$data['date'] = '';
 		if(!empty($_REQUEST['date-pick'])) {
-			$date = $_REQUEST['date-pick'];
-			$newdate=explode("/",$date);
-			$data['date'] = $newdate[2]."/".$newdate[0]."/".$newdate[1];
+			$data['date'] = date('Y-m-d', strtotime($_REQUEST['date-pick']));
 		}
 		$data['description']=$_REQUEST['description'];
 		
 		$returnFlag= $this->kids_model->add_kids($data);
 		$data['id']=$returnFlag;
 		
-		$config['upload_path'] = './uploads/';
+		$config['upload_path'] = dirname(BASEPATH) . '/uploads/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
 		
 		foreach($_FILES as $key => $value) {
-            if( ! empty($key['name']))
-            {
+            if( ! empty($key['name'])) {
                 $this->upload->initialize($config);
         
-                if ( ! $this->upload->do_upload($key))
-                {
+                if ( ! $this->upload->do_upload($key)) {
                     $errors[] = $this->upload->display_errors();
                     
-                }    
-                else
-                {
+                } else {
                     $this->kids_model->process_pic($data);
-
                 }
              }
-        
         }
-	
+        
 		if($returnFlag) {
 			$message['msg']   =  "Student added successfully.";
 			$message['successFlag'] = "1";
@@ -268,7 +263,7 @@ class Kids extends Controller  {
 		
 			$this->load->view('dashboard/errorStatus_view',$message);
 		} else {
-			$message['msg']   =  "no updates performed.";
+			$message['msg']   =  "No Updates Performed.";
 			$message['successFlag'] = "0";
 			$message['link']  =  "popupaddKids";
 			$message['linkText'] = "Add New Student";

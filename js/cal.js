@@ -288,7 +288,8 @@
     // way to do this is to add a property to the already-public plugin fn
 
 	jQuery.fn.simpleDatepicker.formatOutput = function (dateObj) {
-		return (dateObj.getMonth() + 1) + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();	
+		//return (dateObj.getMonth() + 1) + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
+		return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();
 	};
 	
 	jQuery.fn.simpleDatepicker.defaults = {

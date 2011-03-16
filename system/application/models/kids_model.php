@@ -25,12 +25,11 @@ class Kids_model extends Model {
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	function getkids_details($user_id) {
+	function getkids_details() {
 		$this->db->select('Student.*,Center.name as center_name');
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
-		$this->db->join('User', 'User.center_id = Student.center_id' ,'join');
-		$this->db->where('User.id',$user_id);
+		$this->db->where('Center.city_id', $this->city_id);
 		$result=$this->db->get();
 		return $result;
 	}
@@ -181,27 +180,30 @@ class Kids_model extends Model {
     * @return: type: [Boolean,Array() ]
     **/
 	
-	function process_pic($data)
-    {   
-       $id=$data['id'];
+	function process_pic($data) {   
+       	$id=$data['id'];
         //Get File Data Info
         $uploads = array($this->upload->data());
         $this->load->library('image_lib');
+        $this->load->library('imageResize');
+        
         //Move Files To User Folder
         foreach($uploads as $key[] => $value)
         {
             //Gen Random code for new file name
             $randomcode = $this->generate_code(12);
             $newimagename = $randomcode.$value['file_ext'];
-			rename($value['full_path'],'pictures/'.$newimagename);
-			$this->load->library('imageResize');
+            $image_path = dirname(BASEPATH).'/pictures/'.$newimagename;
+			rename($value['full_path'], $image_path);
+			
             $nwidth='100';
 	        $nheight='90';
-			$fileSavePath=base_url().'pictures/'.$newimagename;
-			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
-			
-            $imagename = $newimagename;
+	        $imagename = $newimagename;
             $thumbnail = $randomcode.'_tn'.$value['file_ext'];
+	        
+			$thumbnail_path = dirname(BASEPATH).'/pictures/'.$thumbnail;
+			imagejpeg(imageResize::Resize($image_path, $nwidth, $nheight), $thumbnail_path);
+            
             $this->db->set('photo', $imagename);
             $this->db->set('thumbnail', $thumbnail);
 			$this->db->where('id',$id);

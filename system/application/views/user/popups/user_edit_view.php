@@ -18,9 +18,7 @@ foreach($user_details as $row) {
 
 $group_name=$group_name->result_array();
 foreach($group_name as $row) {
-	$group_id=$row['id'];
-	
-	
+	$group_id=$row['id'];	
 }
 ?>
 <script type="text/javascript">
@@ -30,12 +28,12 @@ alert(city_id);
 
 }
 </script>
-<form id="formEditor" class="mainForm clear" action="<?=site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
+<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
 <div class="field clear" style="width:500px;"> 
 <label for="txtName">Name : </label>
-<input id="user_name" name="name"  type="text" value="<?php echo $name; ?>"/> 
+<input id="user_name" name="name"  type="text" value="<?php echo stripslashes($name); ?>"/> 
 </div>
 
 <div class="field clear" style="width:500px;">
@@ -53,7 +51,7 @@ alert(city_id);
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Position : </label>
-	<input id="user_position" name="position"  type="text" value="<?php echo $title; ?>" /> 
+	<input id="user_position" name="position"  type="text" value="<?php echo stripslashes($title); ?>" /> 
 </div>
 
 <div class="field clear" style="width:500px;"> 

@@ -106,19 +106,19 @@ class User extends Controller  {
 	function adduser()
 	{
 		$this->user_auth->check_permission('user_add');
-		$data['name'] = $_REQUEST['name'];
-		$data['group'] = $_REQUEST['group'];
-		$data['position'] = $_REQUEST['position'];
-		$data['email'] = $_REQUEST['email'];
-		$data['password'] = $_REQUEST['password'];
-		$data['phone'] = $_REQUEST['phone'];
-		$data['city'] = $_REQUEST['city'];
-		$data['center'] = $_REQUEST['center'];
-		$data['project'] = $_REQUEST['project'];
-		$data['type'] = $_REQUEST['type'];
+		$data['name'] = $_POST['name'];
+		$data['group'] = $_POST['group'];
+		$data['position'] = $_POST['position'];
+		$data['email'] = $_POST['email'];
+		$data['password'] = $_POST['password'];
+		$data['phone'] = $_POST['phone'];
+		$data['city'] = $_POST['city'];
+		$data['center'] = $_POST['center'];
+		$data['project'] = $_POST['project'];
+		$data['type'] = $_POST['type'];
 		$data['id']= $this->users_model->adduser($data);
 		
-		$config['upload_path'] = './uploads/';
+		$config['upload_path'] = dirname(BASEPATH) . '/uploads/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
 		foreach($_FILES as $key => $value)
@@ -200,27 +200,19 @@ class User extends Controller  {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function update_user()
-		{
+	function update_user() {
 		$this->user_auth->check_permission('user_edit');
-		$data['rootId'] = $_REQUEST['rootId'];
-		$data['name'] = $_REQUEST['name'];
+		$data['rootId'] = $_POST['rootId'];
+		$data['name'] = $_POST['name'];
 		
 		$data['group'] = array();
-		if(!empty($_REQUEST['group'])) $data['group'] = $_REQUEST['group'];
-		$data['email'] = $_REQUEST['email'];
-		$data['position'] = $_REQUEST['position'];
-		$password=$_REQUEST['password'];
-		if($password=='')
-		{
-			$password=$this->users_model->get_password($data);
-			$password=$password->password;
-			$data['password']=$password;
-		}
-		else{
-		$data['password']=$password;
-		}
+		if(!empty($_REQUEST['group'])) $data['group'] = $_POST['group'];
+		$data['email'] = $_POST['email'];
+		$data['position'] = $_POST['position'];
 		
+		if($_POST['password']) {
+			$data['password'] = $_POST['password'];
+		}
 		
 		$data['phone'] = $_REQUEST['phone'];
 		$data['city'] = $_REQUEST['city'];

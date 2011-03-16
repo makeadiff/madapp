@@ -54,16 +54,19 @@ class Level extends Controller {
 			
 			$center_name = $this->center_model->get_center_name($center_id);
 			$kids = $this->kids_model->get_kids_name($center_id);
+			$all_books = idNameFormat($this->book_lesson_model->get_all_books());
 			
 			$this->load->view('level/form.php', array(
-				'action' => 'New',
-				'center_id' => $center_id,
+				'action'	=> 'New',
+				'center_id'	=> $center_id,
 				'center_name'=>$center_name,
+				'all_books'	=> $all_books,
 				'level'	=> array(
 					'id'		=> 0,
-					'name'		=> 'Level ',
+					'name'		=> '',
 					'center_id'	=> $center_id,
 					'kids'		=> $kids->result(),
+					'book_id'	=> 1,
 					'selected_students'=> array()
 					)
 				));

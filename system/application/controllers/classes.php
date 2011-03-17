@@ -156,43 +156,43 @@ class Classes extends Controller {
 					
 					$last_class_id = 0;
 					$total_classes = count($all_classes); // Don't put this inside the for condition - as we'll unset stuff in between.
+					
+					$class_data = array();
 					for($i=0; $i<$total_classes; $i++) {
 						$class = $all_classes[$i];
 						
-						// To get all the dates the classes happened on. We need this to make the header.
-						$date = date('d M',strtotime($class->class_on));
-						if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
-						
-						// Just one person took the class.
-						$all_classes[$i]->teachers = array(array(
+						// Get the Teacher data.
+						$teacher_data = array(
 							'user_id'		=> $class->user_id,
 							'substitute_id'	=> $class->substitute_id,
 							'status'		=> $class->status,
-						));
+						);
+						
+												
+						// First record of the class happening. Get all the data about the class.
+						if($last_class_id != $class->id) {
+							$class_data[$class->id] = $class;
+							// To get all the dates the classes happened on. We need this to make the header.
+							$date = date('d M',strtotime($class->class_on));
+							if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+							
+							$class_data[$class->id]->teachers = array($teacher_data);
 						
 						// If multiple guys took a class, get that class together.
-						if($last_class_id == $class->id) {
+						} elseif($last_class_id == $class->id) {
 							// ... add one more entry to the list.
-							$all_classes[$i-1]->teachers[] = array(
-								'user_id'		=> $class->user_id,
-								'substitute_id'	=> $class->substitute_id,
-								'status'		=> $class->status,
-							);
-							
-							unset($all_classes[$i]);
+							array_push($class_data[$last_class_id]->teachers, $teacher_data);
 						}
 						
 						$last_class_id = $class->id;
 					}
-					$all_classes = array_values($all_classes);
 					
-					$data[$center->id]['batches'][$batch_id]['levels'][$level->id] = $all_classes;
+					$data[$center->id]['batches'][$batch_id]['levels'][$level->id] = $class_data;
 				}
 				
 				$data[$center->id]['batches'][$batch_id]['days_with_classes'] = $days_with_classes;
 				$days_with_classes = array();
 			}
-			
 		}
 		
 		$this->load->view('classes/madsheet_class_mode', array(

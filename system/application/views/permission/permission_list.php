@@ -96,8 +96,8 @@ foreach($content as $row)
 
 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><a href="#"><?php echo $row['id']; ?></a></td>
-    <td class="colName left"> <a href="#"><?php echo $row['name']; ?></a></td>
+    <td class="colCheck1"><?php echo $row['id']; ?></td>
+    <td class="colName left"><?php echo $row['name']; ?></td>
     
     <td class="colActions right"> 
     <a href="<?= site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit User : <?= strtolower($row['name']) ?></strong>"></a> 

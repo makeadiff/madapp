@@ -238,7 +238,7 @@ class Classes extends Controller {
 		// There might be multiple teachers in a class.
 		for($i = 0; $i<$teacher_count; $i++) {
 			$this->class_model->save_class_teachers($user_class_id[$i], array(
-				//'user_id'	=>	$teacher_ids[$i],
+				'user_id'	=>	$teacher_ids[$i],
 				'substitute_id'=>$substitute_ids[$i],
 				'status'	=> $statuses[$i],
 			));

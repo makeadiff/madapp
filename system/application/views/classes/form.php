@@ -10,6 +10,7 @@
 <label for='user_id[<?php echo $i ?>]'>Teacher</label>
 <span class="form-element-holder"><strong><?php echo $teachers[$class_details['teachers'][$i]['user_id']] ?></strong></span><br />
 <?php //echo form_dropdown('user_id['.$i.']', $teachers, $class_details['teachers'][$i]['user_id']); ?>
+<?php echo form_hidden('user_id['.$i.']', $class_details['teachers'][$i]['user_id']); ?>
 
 <label for='substitute_id[<?php echo $i ?>]'>Substitue</label>
 <?php echo form_dropdown('substitute_id['.$i.']', $substitutes, $class_details['teachers'][$i]['substitute_id']); ?><br />

@@ -107,7 +107,7 @@ function create($holder, $center_id = 0) {
 		$center_name = $this->center_model->get_center_name($center_id);
 		
 		$this->load->view('batch/form.php', array(
-			'action' => 'New',
+			'action' => 'Create',
 			'center_ids' => $center_ids,
 			'center_name'=> $center_name,
 			'batch_volunters'=>$batch_volunters,

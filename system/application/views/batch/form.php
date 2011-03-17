@@ -13,7 +13,7 @@ if(!$batch['id']) $batch = array(
 
 <div id="head" class="clear"><h1><?php echo $action . ' Batch in ' . $center_name ?></h1></div>
 
-<form action="<?php echo site_url('batch/'.$action.'_action'); ?>" class="form-area" method="post">
+<form action="<?php echo site_url('batch/'.strtolower($action).'_action'); ?>" class="form-area" method="post">
 <label for="day">Day</label>
 <?php echo form_dropdown('day', $day_list, $batch['day']); ?><br />
 
@@ -28,7 +28,7 @@ if(!$batch['id']) $batch = array(
 echo form_hidden('id', $batch['id']);
 echo form_hidden('center_id', $batch['center_id']);
 echo form_hidden('project_id', 1);
-echo form_submit('action', $action);
+echo "<label for='action'>&nbsp;</label>"; echo form_submit('action', $action);
 ?>
 </form>
 

@@ -96,6 +96,17 @@ class Exam_model extends Model
 		return ($this->db->affected_rows() > 0) ? true : false;
 	}
 	
+	function delete($exam_id) {
+		// Remove marks...
+		$this->db->where('exam_id', $exam_id)->delete("Exam_Mark");
+		
+		// Remove Subjects...
+		$this->db->where('exam_id', $exam_id)->delete("Exam_Subject");
+		
+		// Remove the exam.
+		$this->db->where('id', $exam_id)->delete("Exam");
+	}
+	
 	function exam_count()
 	{
 	}

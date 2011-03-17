@@ -122,7 +122,6 @@ class Classes extends Controller {
 			
 		}
 		
-		//dump($class_days);
 		$this->load->view('classes/madsheet', array('class_days'=>$class_days, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
 	
@@ -248,5 +247,4 @@ class Classes extends Controller {
 		$this->session->set_flashdata('success', 'Saved the class details');
 		redirect('classes/edit_class/'.$this->input->post('class_id'));
 	}
-
 }

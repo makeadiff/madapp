@@ -1,15 +1,12 @@
 <?php $this->load->view('layout/header', array('title'=>'Edit Class', 'message'=>$message)); ?>
 
-<div id="head" class="clear"><h1>Edit Class on <?php echo $class_details['class_on'] ?></h1></div>
-
-<?php //dump($class_details['teachers'], $teachers); ?>
+<div id="head" class="clear"><h1>Edit Class on <?php echo date('j<\s\u\p>S</\s\u\p> M Y, H:i A', strtotime($class_details['class_on'])) ?></h1></div>
 
 <form action="<?php echo site_url('classes/edit_class_save') ?>" class="form-area" method="post">
 
 <?php for($i=0; $i<count($class_details['teachers']); $i++) { ?>
 <label for='user_id[<?php echo $i ?>]'>Teacher</label>
 <span class="form-element-holder"><strong><?php echo $teachers[$class_details['teachers'][$i]['user_id']] ?></strong></span><br />
-<?php //echo form_dropdown('user_id['.$i.']', $teachers, $class_details['teachers'][$i]['user_id']); ?>
 <?php echo form_hidden('user_id['.$i.']', $class_details['teachers'][$i]['user_id']); ?>
 
 <label for='substitute_id[<?php echo $i ?>]'>Substitue</label>

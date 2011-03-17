@@ -5,7 +5,6 @@
 <script type="text/javascript">
 function get_examlist(page_no,search_query)
 {
-	
 	$('#loading').show();
 	$.ajax({
 		type: "POST",

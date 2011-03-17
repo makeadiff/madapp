@@ -73,6 +73,14 @@ class Exam extends Controller  {
 		$data['sub_name']= $this->exam_model->get_subject_names($exam_id);
 		$this->load->view('student_exam_score/exam_details_view',$data);
 	}
+	
+	function delete($exam_id) {
+		$this->exam_model->delete($exam_id);
+		
+		$this->session->set_flashdata("success", "Exam deleted successfully.");
+		redirect("exam/manage_exam");
+	}
+	
     /**
     * Function to exam_score
     * @author : Rabeesh

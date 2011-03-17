@@ -29,7 +29,7 @@ class Report extends Controller {
 	
 	function absent() {
 		$report_data = $this->report_model->get_users_absent_without_substitute();
-		$this->show_report($report_data, array('name'=>'Name', 'class_on'=>'Class Time', 'center_id'=>'Center Name'), 
+		$this->show_report($report_data, array('name'=>'Name', 'class_on'=>'Class Time', 'center_name'=>'Center Name'), 
 			'Users Who Were Absent Without a Substitute');
 	}
 	

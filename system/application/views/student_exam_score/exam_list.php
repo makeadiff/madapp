@@ -32,25 +32,20 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('exam/add_exam')?>" class="thickbox button primary" id="example" name="<strong>Add New Exam</strong>">Add New Exam</a>
+<a href="<?php echo site_url('exam/add_exam')?>" class="thickbox button primary popup" id="example" name="Add New Exam">Add New Exam</a>
 </div>
-			<!-- end page actions-->
+	<!-- end page actions-->
 
-	    </div>
-
-		<div id="topOptions" class="clear">
-
-		</div>
+</div>
 
 <table id="tableItems" class="clear" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
-	<th class="colName left sortable" style="width:375px; text-align:center">Exam Name</th>
-    <th class="colName left sortable" style="width:375px; text-align:center">Details</th>
-    
-<!--    <th class="colActions"  style="width:225px;">Actions</th>
---></tr>
+	<th class="colName left sortable">Exam Name</th>
+    <th class="colName left sortable">Details</th>
+    <th class="colActions">Actions</th>
+</tr>
 </thead>
 <tbody>
 
@@ -77,29 +72,12 @@ foreach($content as $row)
   		$shadeClass = 'odd';		
 		$shadeFlag = 0;
   	  }
-?> 
-<script>
-	$(document).ready(function(){
-		
-		$('#groupmanage-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=430&width=850';
-	
-			$(this).attr('href', url);
-		});
-		
-		$('#group-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-	
-			$(this).attr('href', url);
-		});
-	
-	}
-	); 
-</script>
+?>
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></a></td>
-    <td class="colName left" style="text-align:center"><?php echo $row['name']; ?></a></td>
-	<td class="colName left" style="text-align:center"> <a href="<?php echo site_url('exam/view_exam_details/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="<strong>Details of <?= strtolower($row['name']) ?></strong>"> View Details</a></td>
+    <td class="colName left"><?php echo $row['name']; ?></a></td>
+	<td class="colName left"><a href="<?php echo site_url('exam/view_exam_details/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="Details of <?= strtolower($row['name']) ?>"> View Details</a></td>
+	<td class="colName left"><a href="<?php echo site_url('exam/delete/'.$row['id']) ?>" class="confirm" title="Delete '<?php echo $row['name']; ?>' Exam">Delete</a></td>
 </tr>
 
 <?php }?>

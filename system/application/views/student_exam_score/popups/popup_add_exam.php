@@ -9,9 +9,9 @@ if($details) {
 <!-- Main Begins -->
 	<div id="main" class="clear" >
 <form id="formEditor" class="mainForm clear" method="post" action="<?=site_url('exam/addMarks')?>"  style="width:500px;"  >
-	<fieldset class="clear" style="margin-top:50px;margin-left:-80px;">
+	<fieldset class="clear" style="margin-top:50px;">
 
-<table cellpadding="0"  cellspacing="0" style="width:auto;" class="clear" id="tableItems">
+<table cellpadding="0"  cellspacing="0" class="clear" id="tableItems">
 <thead>
 <tr id="generated_rows">
 	<th  class="colCheck1">#</th>

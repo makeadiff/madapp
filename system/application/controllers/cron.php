@@ -11,7 +11,7 @@ class Cron extends Controller  {
 		$this->load->model('Class_model','class_model', TRUE);
 		$all_batches = $this->batch_model->get_all_batches();
 		
-		$debug = true;
+		$debug = false;
 		if($debug) $this->load->helper('misc_helper');
 		
 		// Wee have to add all the classes for the next two weeks.
@@ -35,7 +35,7 @@ class Cron extends Controller  {
 				foreach($teachers as $teacher) {
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
-						if($debug) print "{$teacher->id} - $date<br />";
+						print "Class by {$teacher->id} at $date<br />";
 						$this->class_model->save_class(array(
 							'batch_id'	=> $batch->id,
 							'level_id'	=> $teacher->level_id,

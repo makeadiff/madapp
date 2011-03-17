@@ -2,11 +2,14 @@
 
 <div id="head" class="clear"><h1>Edit Class on <?php echo $class_details['class_on'] ?></h1></div>
 
+<?php dump($class_details['teachers'], $teachers); ?>
+
 <form action="<?php echo site_url('classes/edit_class_save') ?>" class="form-area" method="post">
 
 <?php for($i=0; $i<count($class_details['teachers']); $i++) { ?>
 <label for='user_id[<?php echo $i ?>]'>Teacher</label>
-<?php echo form_dropdown('user_id['.$i.']', $teachers, $class_details['teachers'][$i]['user_id']); ?><br />
+<span class="form-element-holder"><strong><?php echo $teachers[$class_details['teachers'][$i]['user_id']] ?></strong></span><br />
+<?php //echo form_dropdown('user_id['.$i.']', $teachers, $class_details['teachers'][$i]['user_id']); ?>
 
 <label for='substitute_id[<?php echo $i ?>]'>Substitue</label>
 <?php echo form_dropdown('substitute_id['.$i.']', $substitutes, $class_details['teachers'][$i]['substitute_id']); ?><br />
@@ -20,12 +23,12 @@
 
 <label for="lesson_id">Feedback</label>
 <?php echo form_dropdown('lesson_id', $all_lessons, $class_details['lesson_id']); ?><br />
-
+<br />
 
 <?php 
 echo form_hidden('class_id', $class_details['id']);
 echo form_hidden('project_id', 1);
-echo form_submit('action', 'Edit');
+echo '<label for="action">&nbsp;</label>' . form_submit('action', 'Edit');
 ?>
 </form>
 

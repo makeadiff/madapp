@@ -5,7 +5,7 @@ $(function() {
 function showClassDetails() {
 	$(this).children(".class-info").css({
 		left:Number($(this).position().left) + Number(this.width), 
-		top:Number($(this).position().top) + 20,
+		top:Number($(this).position().top) + 10,
 	}).show();
 }
 

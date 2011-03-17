@@ -410,7 +410,8 @@ class Users_model extends Model {
 		return $this->db->where('center_id', $center_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->get('User')->result();
 	}
 	
-	function get_users_in_city($city_id) {
+	function get_users_in_city($city_id=0) {
+		if(!$city_id) $city_id = $this->city_id;
 		return $this->db->where('city_id', $city_id)->where('project_id',1)->where('user_type','volunteer')->get('User')->result();
 	}
 	

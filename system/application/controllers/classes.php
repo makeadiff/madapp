@@ -208,7 +208,7 @@ class Classes extends Controller {
 		$class_details = $this->class_model->get_class($class_id);
 		$level_details = $this->level_model->get_level($class_details['level_id']);
 		$teachers = idNameFormat($this->user_model->get_users_in_center($level_details->center_id));
-		$substitutes = idNameFormat($this->user_model->get_users_in_city($level_details->center_id));
+		$substitutes = idNameFormat($this->user_model->get_users_in_city());
 		$substitutes[0] = 'No Substitute';
 		$all_lessons = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_details->book_id));
 		

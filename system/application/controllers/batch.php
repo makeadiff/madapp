@@ -88,6 +88,9 @@ function add_volunteers_action() {
 			}
 		}
 		
+		// :TODO: Call the class scheduler manually.
+		// :TODO: If a volunter was changed, delete the future classes for the old volunter - and put in the new volunter instead.
+		
 		$this->message['success'] = 'Saved the new teachers';
 		$this->add_volunteers($batch_id);
 	}

@@ -207,8 +207,8 @@ class Classes extends Controller {
 	
 		$class_details = $this->class_model->get_class($class_id);
 		$level_details = $this->level_model->get_level($class_details['level_id']);
-		$teachers = idNameFormat($this->user_model->get_users_in_center($level_details->center_id));
-		$substitutes = idNameFormat($this->user_model->get_users_in_city());
+		$teachers = idNameFormat($this->user_model->get_users_in_city());
+		$substitutes = $teachers;
 		$substitutes[0] = 'No Substitute';
 		$all_lessons = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_details->book_id));
 		
@@ -238,7 +238,7 @@ class Classes extends Controller {
 		// There might be multiple teachers in a class.
 		for($i = 0; $i<$teacher_count; $i++) {
 			$this->class_model->save_class_teachers($user_class_id[$i], array(
-				'user_id'	=>	$teacher_ids[$i],
+				//'user_id'	=>	$teacher_ids[$i],
 				'substitute_id'=>$substitute_ids[$i],
 				'status'	=> $statuses[$i],
 			));

@@ -2,7 +2,7 @@
 
 <div id="head" class="clear"><h1>Edit Class on <?php echo $class_details['class_on'] ?></h1></div>
 
-<?php dump($class_details['teachers'], $teachers); ?>
+<?php //dump($class_details['teachers'], $teachers); ?>
 
 <form action="<?php echo site_url('classes/edit_class_save') ?>" class="form-area" method="post">
 

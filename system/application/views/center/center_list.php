@@ -54,23 +54,14 @@ $(document).ready(function(){
 <tbody>
 
 <?php 
-//
-$norecord_flag = 1;
-$shadeFlag = 0;
-$shadeClass = ''; 
+$shadeClass = 'even'; 
 $statusIco = '';
 $statusText = '';
 $content = $details->result_array();
 foreach($content as $row) {
-	$norecord_flag = 0;
 
-	if($shadeFlag == 0) {
-  		$shadeClass = 'even';
-		$shadeFlag = 1;
-  	} else {
-  		$shadeClass = 'odd';		
-		$shadeFlag = 0;
-  	}
+	if($shadeClass == 'odd') $shadeClass = 'even';
+	else $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
 <!--    <td class="colCheck"> <input name="cbSelect[]" type="checkbox" value="<?php echo $row['id']; ?>"/></td> -->    
@@ -80,7 +71,6 @@ foreach($content as $row) {
 	<td class="colCount"><a href="<?php echo site_url('level/index/center/'.$row['id']) ?>">Levels</a></td>
 	<td class="colCount"><a href="<?php echo site_url('batch/index/center/'.$row['id']) ?>">Batches</a></td>
 	<td class="colStatus" style="text-align:left"><?php echo $row['user_name'];?></td>
-	<!--<td class="colPosition"></td>-->
 	<td class="colActions right">
 	<?php if($this->user_auth->get_permission('center_edit')) { ?><a href="<?php echo site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" class="group" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a><?php } ?>
 	<?php if($this->user_auth->get_permission('center_delete')) { ?><a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a></td><?php } ?>
@@ -90,15 +80,8 @@ foreach($content as $row) {
 </tbody>
 </table>
 
-<?php if($norecord_flag == 1) 
-{ 
-	  if($currentPage != '0'): ?>
-       <script>
-      	 get_centerlist('<?php echo $currentPage-1; ?>');
-	   </script>
-<?php else: 
-	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
-	  endif;
-}    ?>
+<?php if(!count($content)) { ?>
+<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>
+<?php } ?>
 </div>
 </div>

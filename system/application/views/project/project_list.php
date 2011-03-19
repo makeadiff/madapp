@@ -1,10 +1,14 @@
 <script type="text/javascript">
 tb_init('a.thickbox, input.thickbox');
-
-function triggerSearch()
-{
-	q = $('#searchQuery').val();
-	get_groupList('0',q);
+function get_projects(pageno){
+	$.ajax({
+		type: "POST",
+		url: "<?php echo site_url('project/getprojectlist') ?>",
+		data: "page_no="+pageno,
+		success: function(msg){
+			$('#kids_list').html(msg);
+		}
+		});
 }
 
 $(document).ready(function(){
@@ -34,7 +38,8 @@ $(document).ready(function(){
 			<!-- end page actions-->
 
 	    </div>
-
+	    
+<div id="project_list">
 <table id="tableItems" class="clear" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
@@ -76,7 +81,7 @@ foreach($content as $row)
     <td class="colName left"> <?php echo $row['name']; ?></td>
     <td class="colCount"><?php echo $row['added_on']; ?></td> 
     <td class="colActions right"> 
-    <a href="<?php echo site_url('project/popupEdit_project/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" class="group" name="<strong>Edit student : <?= strtolower($row['name']) ?></strong>">Edit</a> 
+    <a href="<?php echo site_url('project/popupEdit_project/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" class="group" name="Edit Project">Edit</a> 
     <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a>
     </td>
 </tr>
@@ -84,11 +89,12 @@ foreach($content as $row)
 <?php  }?>
 </tbody>
 </table>
+</div>
 
 <?php if($norecord_flag == 1) { 
 	  if($currentPage != '0') { ?>
 <script>
-	get_centerlist('<?php echo $currentPage-1; ?>');
+	get_projects('<?php echo $currentPage-1; ?>');
 </script>
 <?php } else {
 	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- No Records Found -</div>";

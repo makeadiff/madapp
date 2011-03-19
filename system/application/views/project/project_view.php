@@ -1,12 +1,12 @@
-<script type="text/css">
-function get_projectlist(page_no,search_query)
+<script type="text/javascript">
+function get_projectlist(page_no)
 {
 	
 	$('#loading').show();
 		$.ajax({
 		type: "POST",
 		url: "<?= site_url('project/getprojectlist')?>",
-		data: "pageno="+page_no+"&q="+search_query,
+		data: "pageno="+page_no,
 		success: function(msg){
 		$('#loading').hide();
 		$('#updateDiv').html(msg);
@@ -21,7 +21,7 @@ function deleteEntry(entryId,page_no)
 	{
 		$.ajax({
 		type : "POST",
-		url  : "<?= site_url('project/ajax_deleteproject') ?>",
+		url  : "<?php echo site_url('project/ajax_deleteproject') ?>",
 		data : 'entry_id='+entryId,
 		
 		success : function(data)
@@ -42,8 +42,8 @@ function deleteEntry(entryId,page_no)
 
 <div id="updateDiv" >
     
-<script>
-    get_projectlist('0','');
+<script type="text/javascript">
+get_projectlist('0');
 </script>
 
 </div>

@@ -68,7 +68,7 @@ class Center extends Controller  {
 	function getcenterlist()
 	{
 	
-		$page_no = $_REQUEST['pageno'];
+		$page_no = empty($_REQUEST['pageno']) ? $_REQUEST['pageno'] : 0;
 		$data['title'] = 'Manage Centers';
 		$linkCount = $this->center_model->getcenter_count();
 		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);

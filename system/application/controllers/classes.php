@@ -44,6 +44,7 @@ class Classes extends Controller {
 		if(!$batch_id) $batch_id = $this->user_model->get_users_batch($this->user_details->id);
 		
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
+		
 		$all_classes = $this->class_model->get_all_by_batch($batch_id);
 		
 		$all_levels = array();

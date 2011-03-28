@@ -1,5 +1,4 @@
 <?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 
 <form id="formEditor" class="mainForm clear" action="<?=site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
 <fieldset class="clear" style="margin-top:70px;width:500px;margin-left:-30px;">

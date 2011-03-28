@@ -130,6 +130,8 @@ foreach($content as $row)
 
 
 </div>
+<br /><br />
+<a href="<?php echo site_url('kids/import'); ?>">Import Kids</a>
 
 
 </div>

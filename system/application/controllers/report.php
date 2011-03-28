@@ -33,6 +33,12 @@ class Report extends Controller {
 			'Users Who Were Absent Without a Substitute');
 	}
 	
+	function volunteer_requirement() {
+		$report_data = $this->report_model->get_volunteer_requirements();
+		$this->show_report($report_data, array('name'=>'Center', 'requirement'=>'Volunteers Required'), 
+			'Volunteer Required for all Centers');
+	}
+	
 	function show_report($data, $fields, $title) {
 		$this->user_auth->check_permission('report_view');
 		$this->load->view('report/report', array('data'=>$data, 'fields'=>$fields, 'title'=>$title));

@@ -46,13 +46,16 @@ foreach($batch_info['levels'][$level->id] as $classes) {
 	foreach($classes->teachers as $teacher) {
 		print "<td class='class-{$teacher['status']}'>&nbsp;";
 		if($teacher['substitute_id'] != 0) print 'S';
+		
 		?><div class="class-info"><ul>
+		<?php if($teacher['status'] != 'cancelled') { ?>
 		<li><strong>Volunteer:</strong> <?php echo $all_users[$teacher['user_id']]; ?></li>
 		<?php if($teacher['substitute_id'] != 0) { ?><li><strong>Substitute:</strong> <?php echo $all_users[$teacher['substitute_id']]; ?></li><?php } ?>
 		<li><strong>Status:</strong> <?php echo ucfirst($teacher['status']); ?></li>
 		<?php if($classes->lesson_id) { ?><li><strong>Lesson:</strong> <?php echo $all_lessons[$classes->lesson_id]; ?></li><?php } ?>
-		<li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li>
 		<li><a href="<?php echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li>
+		<?php } ?>
+		<li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li>
 		</dl>
 		</div><?php
 		print "</td>";

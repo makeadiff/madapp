@@ -625,6 +625,77 @@ class User extends Controller  {
 		}
 	}
 	
+	
+	/// Importing the CSV file
+	function import() {
+		$this->load->view('user/import');
+	}
+	
+	function import_field_select() {
+		// Read the CSV file and analyis it. Give the user a chance to make sure the connections are correct.
+		if(!empty($_FILES['csv_file']['tmp_name'])) {
+			$handle = fopen($_FILES['csv_file']['tmp_name'],'r');
+			if(!$handle) die('Cannot open uploaded file.');
+		
+			$row_count = 0;
+			$rows = array();
+		
+			//Read the file as csv
+			while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+				$row_count++;
+				$rows[] = $data;
+				if($row_count > 5) break;
+			}
+			fclose($handle);
+			move_uploaded_file($_FILES['csv_file']['tmp_name'], $_FILES['csv_file']['tmp_name']."_saved");
+			
+			$this->load->view('user/import_field_select', array('all_rows'=>$rows));
+		}
+	}
+	
+	/// User has made the choice - add the data into the database
+	function import_action() {
+		if($this->input->post('uploaded_file')) {
+			if(!preg_match('/^\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
+			
+			$handle = fopen($this->input->post('uploaded_file'),'r');
+			if(!$handle) die('Cannot open uploaded file.');
+		
+			$row_count = 0;
+			$rows = array();
+			$fields = $this->input->post('field');
+
+			//Read the file as csv
+			while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+				$row_count++;
+				if($this->input->post('ignore_header') == 1 and $row_count == 1) continue; // Ignore the first row.
+				
+				$insert = array();
+				$emails = array();
+				$phones = array();
+				
+				foreach($data as $key=>$value) {
+					if(empty($fields[$key])) continue;
+					
+					if($fields[$key] == 'Name') $insert['name'] = $value;
+					elseif($fields[$key] == 'Role') $insert['title'] = $value;
+					elseif($fields[$key] == 'Email') $insert['email'] = $value;
+					elseif($fields[$key] == 'Phone') $insert['phone'] = $value;
+				}
+				$insert['city_id'] = $this->session->userdata('city_id');
+				$insert['project_id'] = $this->session->userdata('project_id');
+				$insert['user_type'] = 'volunteer';
+				$insert['password'] = 'network'; //Default Password.
+				$insert['credit'] = 3;
+				
+				$this->db->insert('User', $insert);
+			}
+			fclose($handle);
+			unlink($this->input->post('uploaded_file'));
+			$this->load->view('user/import_success');
+		}
+	}
+	
 }	
 
 

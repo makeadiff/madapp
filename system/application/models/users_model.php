@@ -433,6 +433,7 @@ class Users_model extends Model {
     	return $this->db->query("SELECT batch_id FROM UserBatch WHERE user_id=$user_id")->row()->batch_id;
     }
 	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
     * Function to searchuser_details
     * @author:Rabeesh 
@@ -569,11 +570,15 @@ class Users_model extends Model {
 	}	
 	
 	function search_users($data) {
+		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name, City.name as city_name');
 		$this->db->from('User');
-		if(!empty($data['project_id'])) $this->db->where('project_id', $data['project_id']);
-		else $this->db->where('project_id', $this->project_id);
-		if(!empty($data['city_id'])) $this->db->where('city_id', $data['city_id']);
-		else $this->db->where('city_id', $this->city_id);
+		$this->db->join('Center', 'Center.id = User.center_id' ,'left');
+		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		
+		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
+		else $this->db->where('User.project_id', $this->project_id);
+		if(!empty($data['city_id'])) $this->db->where('User.city_id', $data['city_id']);
+		else $this->db->where('User.city_id', $this->city_id);
 		
 		if(!empty($data['center_id'])) $this->db->where('center_id', $data['center_id']);
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
@@ -582,13 +587,13 @@ class Users_model extends Model {
 		$return = array();
 		foreach($all_users as $user) {
 			// Get the batches for this User. An user can have two batches. That's why I don't do join to get this date.
-			$user->batches = colFormat($this->db->where('user_id',$user->id)->get('UserBatch')->result_array()); // :SLOW:
+			//$user->batches = colFormat($this->db->where('user_id',$user->id)->get('UserBatch')->result_array()); // :SLOW:
 			
 			$return[$user->id] = $user;
 		}
 		return $return;
 	}
-	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/// Returns all the permissions for the given user as an array.
 	function get_user_permissions($user_id) {

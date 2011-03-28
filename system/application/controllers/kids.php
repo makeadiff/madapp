@@ -290,4 +290,75 @@ class Kids extends Controller  {
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->kids_model->delete_kids($data);
 	}
+	
+	
+	
+	/// Importing the CSV file
+	function import() {
+		$this->load->view('kids/import');
+	}
+	
+	function import_field_select() {
+		// Read the CSV file and analyis it. Give the user a chance to make sure the connections are correct.
+		if(!empty($_FILES['csv_file']['tmp_name'])) {
+			$handle = fopen($_FILES['csv_file']['tmp_name'],'r');
+			if(!$handle) die('Cannot open uploaded file.');
+		
+			$row_count = 0;
+			$rows = array();
+		
+			//Read the file as csv
+			while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+				$row_count++;
+				$rows[] = $data;
+				if($row_count > 5) break;
+			}
+			fclose($handle);
+			move_uploaded_file($_FILES['csv_file']['tmp_name'], $_FILES['csv_file']['tmp_name']."_saved");
+			
+			$center_list = $this->center_model->get_all();
+			
+			$this->load->view('kids/import_field_select', array('all_rows'=>$rows, 'center_list'=>$center_list));
+		}
+	}
+	
+	/// User has made the choice - add the data into the database
+	function import_action() {
+		if($this->input->post('uploaded_file')) {
+			if(!preg_match('/^\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
+			
+			$handle = fopen($this->input->post('uploaded_file'),'r');
+			if(!$handle) die('Cannot open uploaded file.');
+		
+			$row_count = 0;
+			$rows = array();
+			$fields = $this->input->post('field');
+
+			//Read the file as csv
+			while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+				$row_count++;
+				if($this->input->post('ignore_header') == 1 and $row_count == 1) continue; // Ignore the first row.
+				
+				$insert = array();
+				$emails = array();
+				$phones = array();
+				
+				foreach($data as $key=>$value) {
+					if(empty($fields[$key])) continue;
+					
+					if($fields[$key] == 'Name') $insert['name'] = $value;
+					elseif($fields[$key] == 'Description') $insert['description'] = $value;
+					elseif($fields[$key] == 'Birthday') $insert['birthday'] = date('Y-m-d', strtotime($value));
+				}
+				$insert['center_id'] = $this->input->post('center_id');
+				
+				$this->db->insert('Student', $insert);
+			}
+			fclose($handle);
+			unlink($this->input->post('uploaded_file'));
+			$this->load->view('kids/import_success');
+		}
+	}
+	
+	
 }

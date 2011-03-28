@@ -60,6 +60,7 @@ class Batch extends Controller {
 		// Get the rest of the necessary stuff...
 		$levels_in_center = $this->level_model->get_all_levels_in_center($batch->center_id);
 		$all_teachers = $this->user_model->get_users_in_city($this->session->userdata('city_id'));
+		$volunteer_requirement = idNameFormat($this->model->get_volunteer_requirement_in_batch($batch->id));
 		
 		// This array will be used later to decide who belongs to which level.
 		$level_teacher = array();
@@ -70,7 +71,7 @@ class Batch extends Controller {
 			}
 		}
 		
-		$this->load->view('batch/add_volunteers', array('batch' => $batch,'batch_name'=>$batch_name, 'center_id'=>$batch->center_id, 
+		$this->load->view('batch/add_volunteers', array('batch' => $batch,'batch_name'=>$batch_name, 'center_id'=>$batch->center_id, 'volunteer_requirement'=>$volunteer_requirement,
 				'levels_in_center'=>$levels_in_center,'all_teachers'=>$all_teachers, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
 	}
 	
@@ -79,10 +80,16 @@ function add_volunteers_action() {
 		
 		$batch_id = $this->input->post('batch_id');
 		$teacher_levels = $this->input->post('teachers_in_level');
+		$volunteer_requirement = $this->input->post('volunteer_requirement');
+		
+		foreach($volunteer_requirement as $level_id => $requirement) {
+			// First delete all the users in this batch/level before insert the new data(even the old ones).
+			$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
+			
+			$this->model->set_volunteer_requirement($batch_id, $level_id, $requirement);
+		}
 		
 		foreach($teacher_levels as $level_id => $teacher_ids) {
-			// First delete all the users in this batch/level before insert the new teachers(even the old ones).
-			$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
 			foreach($teacher_ids as $user_id) {
 				$this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
 			}
@@ -91,8 +98,8 @@ function add_volunteers_action() {
 		// :TODO: Call the class scheduler manually.
 		// :TODO: If a volunter was changed, delete the future classes for the old volunter - and put in the new volunter instead.
 		
-		$this->message['success'] = 'Saved the new teachers';
-		$this->add_volunteers($batch_id);
+		$this->session->set_flashdata('success','Saved the new teachers');
+		redirect('batch/add_volunteers/'.$batch_id);
 	}
 	
 function create($holder, $center_id = 0) {

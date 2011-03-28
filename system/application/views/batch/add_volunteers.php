@@ -18,7 +18,13 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 	if(!empty($level_teacher[$level->id][$user->id])) print ' selected="selected"';
 ?>><?php echo $user->name ?></option>
 <?php } ?>
-</select></td>
+</select><br /><br />
+
+<label for="volunteer_requirement[<?php echo $level->id ?>]">Extra Volunteers Required</label>
+<input type="text" size="2" name="volunteer_requirement[<?php echo $level->id ?>]" value="<?php 
+	echo empty($volunteer_requirement[$level->id]) ? 0 : $volunteer_requirement[$level->id] ?>" />
+
+</td>
 <?php } ?>
 </tr></table>
 <br />

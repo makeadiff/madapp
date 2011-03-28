@@ -37,6 +37,10 @@ class Batch_model extends Model {
     	return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id WHERE UserBatch.level_id=$level_id AND Batch.project_id={$this->project_id}")->result();
     }
     
+    function get_volunteer_requirement_in_batch($batch_id) {
+    	return $this->db->query("SELECT level_id AS id, requirement AS name FROM UserBatch WHERE batch_id=$batch_id AND user_id=0")->result();
+    }
+    
     function get_levels_in_batch($batch_id) {
     	return $this->db->query("SELECT Level.id,Level.name FROM Level INNER JOIN UserBatch ON Level.id=UserBatch.level_id WHERE UserBatch.batch_id=$batch_id AND Level.project_id={$this->project_id}")->result();
     }
@@ -53,6 +57,17 @@ class Batch_model extends Model {
 			$return[$batch->id] = $day_list[$batch->day] . ' ' . date('h:i A', strtotime('2011-01-01 '.$batch->class_time));
 		}
 		return $return;
+	}
+	
+	function set_volunteer_requirement($batch_id, $level_id, $requirement) {
+		if(!$requirement) return;
+		
+		$this->db->insert("UserBatch", array(
+			'batch_id'	=> $batch_id,
+			'level_id'	=> $level_id,
+			'requirement'=>$requirement,
+			'user_id'	=> 0
+		));
 	}
 	
     function create($data) {

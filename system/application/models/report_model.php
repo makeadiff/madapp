@@ -23,5 +23,12 @@ class Report_model extends Model {
     			AND UserClass.substitute_id=0 AND UserClass.status='absent'")->result();
     }
     
+    function get_volunteer_requirements() {
+    	return $this->db->query("SELECT Center.name, SUM(requirement) AS requirement
+    		FROM UserBatch 
+    		INNER JOIN `Level` ON UserBatch.level_id = Level.id 
+    		INNER JOIN Center ON Center.id=Level.center_id 
+    		WHERE requirement > 0 AND Center.city_id={$this->city_id} GROUP BY Level.center_id")->result();
+    }
 
 }

@@ -36,6 +36,7 @@
 }
 .teacher td {
 	border:0 !important;
+	border-left:1px solid #aaa !important;
 }
 .class-info {
 	display:none;

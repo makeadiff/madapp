@@ -10,7 +10,7 @@ class City_model extends Model {
     }
     
     function getCities() {
-    	$cities = $this->db->get('City')->result();
+    	$cities = $this->db->orderby('name')->get('City')->result();
     	
     	// Highlight the errors in the center - if any.
 		for($i=0; $i<count($cities); $i++) {

@@ -178,6 +178,7 @@ class Center_model extends Model
 	
 	// Find the errors in the center - if any.
 	function find_issuse($center_id) {
+		$center_head_id = $this->db->query("SELECT center_head_id FROM Center WHERE id=$center_id")->row()->center_head_id;
 		$level_count = $this->db->query("SELECT COUNT(id) AS level_count FROM Level WHERE center_id=$center_id AND project_id={$this->project_id}")->row()->level_count;
 		$batch_count = $this->db->query("SELECT COUNT(id) AS batch_count FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id}")->row()->batch_count;
 		$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id}")->row()->count;
@@ -186,6 +187,11 @@ class Center_model extends Model
 		
 		$problem_flag = 0;
 		$information = array();
+		
+		if(!$center_head_id) {
+			$information[] = "Center does not have a center head. <span class='warning icon'>!</span>";
+			$problem_flag++;
+		}
 		if(!$level_count) {
 			$information[] = "No levels added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;

@@ -9,10 +9,14 @@
 <?php } ?>
 </div>
 
-<table id="main" class="data-table">
-<tr><th>Name</th><th colspan="2">Action</th></tr>
+<table id="main" class="data-table tablesorter info-box-table">
+<thead><tr><th>Name</th><th colspan="2">Action</th></tr></thead>
 <?php foreach($all_cities as $result) { ?>
-<tr><td><?php echo $result->name ?></td>
+<tr><td><?php echo $result->name;
+	if($result->problem_count) print "<span class='warning icon'>!</span>";
+	?><div class="center-info info-box"><ul><li><?php
+		print implode('</li><li>', $result->information);
+	?></li></ul></div></td>
 <td><a href="<?php echo site_url('city/edit/'.$result->id); ?>">Edit</a></td>
 </tr>
 <?php } ?>

@@ -1,26 +1,8 @@
-<script type="text/javascript">
-tb_init('a.thickbox, input.thickbox');
-
-$(document).ready(function(){
-	$('#example').each(function(){
-		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-
-		$(this).attr('href', url);
-	});
-	
-	$('.groupmanage').each(function(){
-		var url = $(this).attr('href') + '?TB_iframe=true&height=430&width=850';
-
-		$(this).attr('href', url);
-	});
-	
-	$('.group').each(function(){
-		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-
-		$(this).attr('href', url);
-	});
-});  
-</script>
+<div style="height:20px;padding-top: 5px;">
+<div id="loading" name="loading" style="display: none;">
+    <img src="<?php echo base_url()?>images/ico/loading.gif" height="25" width="25" style="border: none;margin-left: 300px;" /> loading...
+</div>
+</div>
 
 <div id="content" class="clear">
 
@@ -31,16 +13,15 @@ $(document).ready(function(){
 
 	<?php if($this->user_auth->get_permission('center_add')) { ?>
 	<div id="actions"> 
-	<a href="<?php echo site_url('center/popupaddCneter')?>" class="thickbox button primary" id="example" name="Add New Center">Add New Center</a>
+	<a href="<?php echo site_url('center/popupaddCenter')?>" class="thickbox button primary popup" id="example" name="Add New Center">Add New Center</a>
 	</div>
 	<?php } ?>
 
 </div>
 
-<table id="tableItems" class="clear" cellpadding="0" cellspacing="0">
+<table id="tableItems" class="clear info-box-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<!--<th class="colCheck"> <input id="cbSelectAll" type="checkbox" onclick="toggleChecked(this.checked)" /></th>-->
 	<th class="colCheck1">Id</th>
 	<th class="colName left sortable">Center Name</th>
     
@@ -57,31 +38,38 @@ $(document).ready(function(){
 $shadeClass = 'even'; 
 $statusIco = '';
 $statusText = '';
-$content = $details->result_array();
-foreach($content as $row) {
+foreach($details as $row) {
 
 	if($shadeClass == 'odd') $shadeClass = 'even';
 	else $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-<!--    <td class="colCheck"> <input name="cbSelect[]" type="checkbox" value="<?php echo $row['id']; ?>"/></td> -->    
-	<td class="colCheck1"><?php echo $row['id']; ?></td>
-	<td class="colName left"><?php echo $row['name']; ?></td>
-	<td class="colCount"><?php echo $row['city_name']; ?></td> 
-	<td class="colCount"><a href="<?php echo site_url('level/index/center/'.$row['id']) ?>">Levels</a></td>
-	<td class="colCount"><a href="<?php echo site_url('batch/index/center/'.$row['id']) ?>">Batches</a></td>
-	<td class="colStatus" style="text-align:left"><?php echo $row['user_name'];?></td>
+	<td class="colCheck1"><?php echo $row->id; ?></td>
+	<td class="colName left"><?php echo $row->name; 
+	if($row->problem_count) print "<span class='warning icon'>!</span>";
+	?><div class="center-info info-box"><ul><li><?php
+		print implode('</li><li>', $row->information);
+	?></li></ul></div></td>
+	<td class="colCount"><?php echo $row->city_name; ?></td> 
+	<td class="colCount"><a href="<?php echo site_url('level/index/center/'.$row->id) ?>">Levels</a></td>
+	<td class="colCount"><a href="<?php echo site_url('batch/index/center/'.$row->id) ?>">Batches</a></td>
+	<td class="colStatus" style="text-align:left"><?php echo $row->user_name;?></td>
 	<td class="colActions right">
-	<?php if($this->user_auth->get_permission('center_edit')) { ?><a href="<?php echo site_url('center/popupEdit_center/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" class="group" name="<strong>Edit Center : <?= strtolower($row['name']) ?></strong>">Edit</a><?php } ?>
-	<?php if($this->user_auth->get_permission('center_delete')) { ?><a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a></td><?php } ?>
+	<?php if($this->user_auth->get_permission('center_edit')) { ?><a href="<?php echo site_url('center/popupEdit_center/'.$row->id); ?>" class="thickbox popup with-icon edit" name="Edit Center : <?php echo $row->name ?>">Edit</a><?php } ?>
+	<?php if($this->user_auth->get_permission('center_delete')) { ?><a href="<?php echo site_url("center/deletecenter/".$row->id); ?>" class="confirm delete with-icon" title="Delete <?php echo $row->name ?>">Delete</a></td><?php } ?>
 </tr>
 
 <?php }?>
 </tbody>
 </table>
 
-<?php if(!count($content)) { ?>
+<?php if(!count($details)) { ?>
 <div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>
 <?php } ?>
 </div>
+</div>
+
+
+</div>
+
 </div>

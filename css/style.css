@@ -1,13 +1,3 @@
-body {
-	margin:0px;
-	background:#fff;
-	color:#000;
-	font:76%/140% Verdana,Geneva,Arial,Helvetica,sans-serif;
-}
-a {
-	text-decoration:none;
-	color:blue;
-}
 .form-area label {
 	width:100px;
 	display:block;
@@ -20,25 +10,6 @@ a {
 }
 .form-area p.info {
 	float:left;
-}
-br {
-	clear:both;
-}
-img {
-	border:0;
-}
-
-#loading {
-	position:fixed;
-	background-color:#f00;
-	top:0;
-	left:0;
-	color:#fff;
-	padding:2px 2px 2px 2px;
-	display:none;
-	z-index:9;
-	opacity:.6;
-	filter: alpha(opacity=60);
 }
 
 /*Lists*/
@@ -62,7 +33,7 @@ ul.horizontal li {
 	font-weight:bold;
 }
 #success-message,.success, .success-message {
-	color:darkgreen;
+	color:#b6ffaf;
 	font-weight:bold;
 }
 	
@@ -93,3 +64,20 @@ ul.horizontal li {
 .no-icon {
 	background-image:none !important;
 }
+
+.info-box {
+	display:none;
+	position:absolute;
+	background-color:#ccc;
+	border:1px solid #666;
+	text-align:left;
+	font-size:14px;
+	font-weight:normal;
+}
+.info-box ul {
+	list-style:none;
+}
+div.info-box li {
+	line-height:1em !important;
+}
+

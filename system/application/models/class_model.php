@@ -21,6 +21,13 @@ class Class_model extends Model {
     		WHERE Class.project_id={$this->project_id} AND Class.batch_id=$batch_id")->result();
     }
     
+    function get_class_for_last_three_week_by_batch($batch_id) {
+    	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
+    		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id 
+    		WHERE Class.project_id={$this->project_id} AND Class.batch_id=$batch_id AND Class.class_on > DATE_SUB(NOW(), INTERVAL 21 DAY)
+    		ORDER BY Class.class_on DESC")->result();
+    }
+    
     function save_class($data) {
     	// Try to find the class if the necessay data. Any class can be identified with the batch_id, level_id and the time of the class.
     	$class_id = $this->get_by_batch_level_time($data['batch_id'], $data['level_id'], $data['class_on']);

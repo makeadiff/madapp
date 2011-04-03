@@ -120,5 +120,8 @@ foreach($content as $row)
 }    ?>
 
 </div>
+<br /><br />
+
+<a href="<?php echo site_url('user/import'); ?>">Import Users...</a>
 
 </div>

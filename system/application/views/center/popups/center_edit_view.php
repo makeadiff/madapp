@@ -11,8 +11,8 @@ foreach($details as $row) {
 
 ?>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/update_Center')?>" method="post" style="width:500px;"  onsubmit="return validate();">
-<fieldset class="clear" style="margin-top:70px;width:500px;margin-left:-30px;">
-<div class="field clear" style="width:500px;">
+<fieldset class="clear" style="margin-top:70px;margin-left:-30px;">
+<div class="field clear">
 <label for="selBulkActions">Select City:</label> 
 <select id="city" name="city" > 
 <option selected="selected"  value="-1">- Select -</option> 
@@ -29,7 +29,7 @@ foreach($details as $row) {
 </select>
 </div>
 
-<div class="field clear" style="width:500px;">
+<div class="field clear">
 <label for="selBulkActions">Select Head:</label> 
 <select id="user_id" name="user_id" > 
 <option selected="selected" value="-1" >- Select -</option> 
@@ -46,13 +46,13 @@ foreach($details as $row) {
 </select>
 </div>
 
-<div class="field clear" style="width:500px;"> 
+<div class="field clear"> 
 			<label for="txtName">Center : </label>
 			<input id="center" name="center"  type="text" value="<?php echo $name; ?> " /> 
 			
 </div>
 
-<div class="field clear" style="width:550px;"> 
+<div class="field clear"> 
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
 		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
 </div>

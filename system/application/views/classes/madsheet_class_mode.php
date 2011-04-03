@@ -25,7 +25,7 @@ foreach($all_centers as $center) {
 <?php foreach($batches as $id=>$batch_info) {
 	if(empty($batch_info['days_with_classes'])) continue;
 ?>
-<table class="madsheet data-table">
+<table class="madsheet data-table info-box-table">
 <tr>
 <th><?php echo $batch_info['name']; ?></th>
 <?php
@@ -47,7 +47,7 @@ foreach($batch_info['levels'][$level->id] as $classes) {
 		print "<td class='class-{$teacher['status']}'>&nbsp;";
 		if($teacher['substitute_id'] != 0) print 'S';
 		
-		?><div class="class-info"><ul>
+		?><div class="class-info info-box"><ul>
 		<?php if($teacher['status'] != 'cancelled') { ?>
 		<li><strong>Volunteer:</strong> <?php echo $all_users[$teacher['user_id']]; ?></li>
 		<?php if($teacher['substitute_id'] != 0) { ?><li><strong>Substitute:</strong> <?php echo $all_users[$teacher['substitute_id']]; ?></li><?php } ?>

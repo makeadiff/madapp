@@ -51,9 +51,16 @@ class Center extends Controller  {
 		
 		$data['currentPage'] = 'db';
 		$data['navId'] = '1';
+		
+		$page_no = !empty($_REQUEST['pageno']) ? $_REQUEST['pageno'] : 0;
+		$data['title'] = 'Manage Centers';
+		$linkCount = $this->center_model->getcenter_count();
+		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
+		$data['currentPage'] = $page_no;
+		$data['details']= $this->center_model->getcenter_details($page_no);
+		
 		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('center/addcenter_view');
+		$this->load->view('center/center_list',$data);
 		$this->load->view('dashboard/includes/footer');
 	
 	}
@@ -68,14 +75,7 @@ class Center extends Controller  {
 	function getcenterlist()
 	{
 	
-		$page_no = empty($_REQUEST['pageno']) ? $_REQUEST['pageno'] : 0;
-		$data['title'] = 'Manage Centers';
-		$linkCount = $this->center_model->getcenter_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
-		$data['details']= $this->center_model->getcenter_details($page_no);
 		
-		$this->load->view('center/center_list',$data);
 	}
 	/**
     *
@@ -85,7 +85,7 @@ class Center extends Controller  {
     * @return : type : []
     *
     **/
-	function popupaddCneter()
+	function popupaddCenter()
 	{
 		$this->user_auth->check_permission('center_add');
 		$data['details']= $this->center_model->getcity();
@@ -190,10 +190,9 @@ class Center extends Controller  {
     * @return : type : []
     *
     **/
-	function ajax_deletecenter()
+	function deletecenter($center_id)
 	{
 		$this->user_auth->check_permission('center_delete');
-		$center_id = $data['entry_id'] = $_REQUEST['entry_id'];
 		
 		if($this->level_model->get_all_levels_in_center($center_id)) {
 			show_error("This Center has levels under it. Please delete those first.");
@@ -203,5 +202,8 @@ class Center extends Controller  {
 		}
 		
 		$this->center_model->delete_center($data);
+		
+		$this->session->set_flashdata("success", "Center deleted");
+		redirect("center/manageaddcenters");
 	}
 }

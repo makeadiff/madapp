@@ -51,7 +51,17 @@ class Center_model extends Model
 		$this->db->join('City', 'City.id = Center.city_id' ,'join');
 		$this->db->join('User', 'Center.center_head_id = User.id' ,'left');
 		
-		$result = $this->db->get();
+		$result = $this->db->get()->result();
+		
+		// Highlight the errors in the center - if any.
+		for($i=0; $i<count($result); $i++) {
+			$center_id = $result[$i]->id;
+			
+			list($information, $problem_count) = $this->find_issuse($center_id);
+			$result[$i]->problem_count = $problem_count;
+			$result[$i]->information = $information;
+		}
+		
 		return $result;	
     }
 	 /**
@@ -166,6 +176,52 @@ class Center_model extends Model
 		return $this->db->where('city_id',$this->city_id)->get('Center')->result();
 	}
 	
+	// Find the errors in the center - if any.
+	function find_issuse($center_id) {
+		$level_count = $this->db->query("SELECT COUNT(id) AS level_count FROM Level WHERE center_id=$center_id AND project_id={$this->project_id}")->row()->level_count;
+		$batch_count = $this->db->query("SELECT COUNT(id) AS batch_count FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id}")->row()->batch_count;
+		$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id}")->row()->count;
+		$requirement_count = $this->db->query("SELECT SUM(UserBatch.requirement) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id}")->row()->count;
+		$kids_count = $this->db->query("SELECT COUNT(id) AS count FROM Student WHERE center_id=$center_id")->row()->count;
+		
+		$problem_flag = 0;
+		$information = array();
+		if(!$level_count) {
+			$information[] = "No levels added to the center <span class='warning icon'>!</span>";
+			$problem_flag++;
+		} else {
+			$information[] = "Levels in this center: $level_count";
+		}
+		
+		if(!$batch_count) {
+			$information[] = "No batches added to the center <span class='warning icon'>!</span>";
+			$problem_flag++;
+		} else {
+			$information[] = "Batch in this center: $batch_count";
+		}
+		
+		if(!$teacher_count) {
+			$information[] = "No teachers added to the center <span class='warning icon'>!</span>";
+			$problem_flag++;
+		} else {
+			$information[] = "Teachers in this center: $teacher_count";
+		}
+		
+		if($requirement_count) {
+			$information[] = "More volunteers needed for this center <span class='warning icon'>!</span>";
+			$problem_flag++;
+		}
+		
+		if(!$kids_count) {
+			$information[] = "No students added to the center <span class='warning icon'>!</span>";
+			$problem_flag++;
+		} else {
+			$information[] = "Kids in this center: $kids_count";
+		}
+		
+		return array($information, $problem_flag);
+	}
+	
 	
 	/**
     * Function to getcenter
@@ -180,4 +236,6 @@ class Center_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
+	
+	
 }

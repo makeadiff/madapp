@@ -8,8 +8,28 @@ function siteInit() {
 			return false;
 		}
 	});
-
+	
+	tb_init("a.thickbox, input.thickbox");
+	$(".popup").each(function() {
+		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
+	
+		$(this).attr('href', url);
+	});
+	
+	$(".info-box-table td").hover(showInfoBox, hideInfoBox);
+	
 	if(window.init && typeof window.init == "function") init(); //If there is a function called init(), call it on load
+}
+
+function showInfoBox() {
+	$(this).children(".info-box").css({
+		left:Number($(this).position().left), 
+		top:Number($(this).position().top) + Number($(this).height()) - 2,
+	}).show();
+}
+
+function hideInfoBox() {
+	$(".info-box").hide();
 }
 
 $(siteInit);

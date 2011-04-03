@@ -45,18 +45,19 @@ class Classes extends Controller {
 		
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
 		
-		$all_classes = $this->class_model->get_all_by_batch($batch_id);
+		//$all_classes = $this->class_model->get_all_by_batch($batch_id);
+		$three_weeks_classes = $this->class_model->get_class_for_last_three_week_by_batch($batch_id);
 		
 		$all_levels = array();
 		$center_id = $this->batch_model->get_batch($batch_id)->center_id;
 		
-		foreach($all_classes as $class_info) {
+		foreach($three_weeks_classes as $class_info) {
 			if(isset($all_levels[$class_info->level_id])) continue;
 			
 			$all_levels[$class_info->level_id] = $this->level_model->get_level_details($class_info->level_id);
 		}
 		
-		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model, 'all_users'=>$all_users));
+		$this->load->view('classes/index', array('all_classes' => $three_weeks_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model, 'all_users'=>$all_users));
 	}
 	
 	function mark_attendence($class_id) {

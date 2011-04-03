@@ -29,7 +29,7 @@ foreach($all_centers as $center) {
 	
 	//dump($batch_info);
 ?>
-<table class="madsheet data-table">
+<table class="madsheet data-table info-box-table">
 <tr>
 <th colspan="2"><?php echo $batch_info['name']; ?></th>
 <?php

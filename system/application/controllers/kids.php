@@ -295,7 +295,8 @@ class Kids extends Controller  {
 	
 	/// Importing the CSV file
 	function import() {
-		$this->load->view('kids/import');
+		$centers = $this->center_model->get_all();
+		$this->load->view('kids/import', array('centers'=>$centers));
 	}
 	
 	function import_field_select() {

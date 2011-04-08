@@ -102,7 +102,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
 <?php } ?>
 
-<div class="field clear" style="width:500px;"> 
+<div class="field clear"> 
 <label for="type">User Type : </label>
 <select name="type">
 	<option value="applicant">Applicant</option>
@@ -113,8 +113,8 @@ if($this->user_auth->get_permission('change_city')) { ?>
 </select>
 </div>
 
-<div  class="field clear" style="width:600px; margin-left:100px;">
-	<label for="date">Upload Photo</label>
+<div  class="field clear">
+	<label for="image">Upload Photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
 </div>

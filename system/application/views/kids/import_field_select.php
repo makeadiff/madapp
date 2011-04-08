@@ -4,10 +4,6 @@ $this->load->view('layout/header', array('title' => "Import Configuration..."));
 <div id="head" class="clear"><h1>Import Configuration...</h1></div>
 
 <form action="<?php echo site_url('kids/import_action') ?>" method="post" enctype="multipart/form-data">
-<label for="center_id">Select Center</label> <select name="center_id"><?php foreach($center_list as $row){ ?>
-<option value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option>
-<?php } ?></select><br />
-
 <label for="ignore_header">Ignore First Line(Header)</label> <input type="checkbox" name="ignore_header" id="ignore_header" value="1" /><br />
 
 <table id="main">
@@ -47,6 +43,7 @@ foreach($all_rows as $row) {
 </table>
 
 <input type="hidden" name="uploaded_file" value="<?php echo $_FILES['csv_file']['tmp_name'] ?>_saved" />
+<input type="hidden" name="center_id" value="<?php echo $center_id ?>" />
 <input type="submit" name="action" value="Import Data" />
 </form>
 

@@ -17,7 +17,7 @@
 	?><div class="center-info info-box"><ul><li><?php
 		print implode('</li><li>', $result->information);
 	?></li></ul></div></td>
-<td><a href="<?php echo site_url('city/edit/'.$result->id); ?>">Edit</a></td>
+<td><a href="<?php echo site_url('city/edit/'.$result->id); ?>" class="edit with-icon">Edit</a></td>
 </tr>
 <?php } ?>
 </table>

@@ -14,8 +14,8 @@
 <tr>
 <td><?php echo $level->name ?></td>
 <td><a href="<?php echo base_url() ?>index.php/batch/index/center/<?php echo $center_id ?>">Batches in <?php echo $level->name ?></a></td>
-<td><a href="<?php echo base_url() ?>index.php/level/edit/<?php echo $level->id ?>" class="edit">Edit</a></td>
-<td><a href="<?php echo base_url() ?>index.php/level/delete/<?php echo $level->id ?>" class="confirm delete" title="Delete <?php echo addslashes($level->name) ?>">Delete</a></td>
+<td><a href="<?php echo base_url() ?>index.php/level/edit/<?php echo $level->id ?>" class="edit with-icon">Edit</a></td>
+<td><a href="<?php echo base_url() ?>index.php/level/delete/<?php echo $level->id ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($level->name) ?>">Delete</a></td>
 </tr>
 <?php } ?>
 </table>

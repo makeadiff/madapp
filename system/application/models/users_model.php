@@ -412,7 +412,7 @@ class Users_model extends Model {
 	
 	function get_users_in_city($city_id=0) {
 		if(!$city_id) $city_id = $this->city_id;
-		return $this->db->where('city_id', $city_id)->where('project_id',1)->where('user_type','volunteer')->get('User')->result();
+		return $this->db->where('city_id', $city_id)->where('project_id',1)->where('user_type','volunteer')->orderby('name')->get('User')->result();
 	}
 	
 	function set_user_batch_and_level($user_id, $batch_id, $level_id) {

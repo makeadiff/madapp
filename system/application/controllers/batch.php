@@ -59,7 +59,7 @@ class Batch extends Controller {
 		
 		// Get the rest of the necessary stuff...
 		$levels_in_center = $this->level_model->get_all_levels_in_center($batch->center_id);
-		$all_teachers = $this->user_model->get_users_in_city($this->session->userdata('city_id'));
+		$all_teachers = idNameFormat($this->user_model->get_users_in_city($this->session->userdata('city_id')));
 		$volunteer_requirement = idNameFormat($this->model->get_volunteer_requirement_in_batch($batch->id));
 		
 		// This array will be used later to decide who belongs to which level.

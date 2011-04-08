@@ -57,9 +57,9 @@ class Center_model extends Model
 		for($i=0; $i<count($result); $i++) {
 			$center_id = $result[$i]->id;
 			
-			list($information, $problem_count) = $this->find_issuse($center_id);
-			$result[$i]->problem_count = $problem_count;
-			$result[$i]->information = $information;
+			$details = $this->find_issues($center_id);
+			$result[$i]->problem_count = $details['problem_count'];
+			$result[$i]->information = $details['information'];
 		}
 		
 		return $result;	
@@ -173,20 +173,24 @@ class Center_model extends Model
 	}
 	
 	function get_all() {
-		return $this->db->where('city_id',$this->city_id)->get('Center')->result();
+		return $this->db->where('city_id',$this->city_id)->orderby('name')->get('Center')->result();
 	}
 	
 	// Find the errors in the center - if any.
-	function find_issuse($center_id) {
+	function find_issues($center_id) {
+		$teacher_count = 0;
+		$problem_flag = 0;
+		$information = array();
+		
 		$center_head_id = $this->db->query("SELECT center_head_id FROM Center WHERE id=$center_id")->row()->center_head_id;
 		$level_count = $this->db->query("SELECT COUNT(id) AS level_count FROM Level WHERE center_id=$center_id AND project_id={$this->project_id}")->row()->level_count;
 		$batch_count = $this->db->query("SELECT COUNT(id) AS batch_count FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id}")->row()->batch_count;
-		$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id}")->row()->count;
 		$requirement_count = $this->db->query("SELECT SUM(UserBatch.requirement) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id}")->row()->count;
 		$kids_count = $this->db->query("SELECT COUNT(id) AS count FROM Student WHERE center_id=$center_id")->row()->count;
-		
-		$problem_flag = 0;
-		$information = array();
+		$total_volunteer_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id={$this->city_id} AND project_id={$this->project_id}")->row()->count;
+		if($total_volunteer_count) {
+			$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id}")->row()->count;
+		}
 		
 		if(!$center_head_id) {
 			$information[] = "Center does not have a center head. <span class='warning icon'>!</span>";
@@ -225,7 +229,17 @@ class Center_model extends Model
 			$information[] = "Kids in this center: $kids_count";
 		}
 		
-		return array($information, $problem_flag);
+		$details = array(
+			'center_head_id'	=> $center_head_id,
+			'level_count'		=> $level_count,
+			'batch_count'		=> $batch_count,
+			'teacher_count'		=> $teacher_count,
+			'requirement_count'	=> $requirement_count,
+			'kids_count'		=> $kids_count,
+			'total_volunteer_count'=>$total_volunteer_count,
+		);
+		
+		return array('information'=>$information, 'problem_count'=>$problem_flag, 'details'=>$details);
 	}
 	
 	

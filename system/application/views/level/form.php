@@ -55,12 +55,7 @@ echo '<label for="action">&nbsp;</label>';echo form_submit('action', $action, $j
 ?>
 </form><br />
 <?php if($action == 'Edit') { ?>
-<div class="more-links">
-<ul>
-<li><a href="<?php echo site_url('batch/index/level/'.$level['id']) ?>">Batches in <?php echo $level['name'] ?></a></li>
-<li><a href="<?php echo site_url('student/index/level/'.$level['id']) ?>">Kids in <?php echo $level['name'] ?></a></li>
-</ul>
-</div>
+
 <?php } ?>
 
 <?php $this->load->view('layout/footer');

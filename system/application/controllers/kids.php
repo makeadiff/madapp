@@ -317,9 +317,9 @@ class Kids extends Controller  {
 			fclose($handle);
 			move_uploaded_file($_FILES['csv_file']['tmp_name'], $_FILES['csv_file']['tmp_name']."_saved");
 			
-			$center_list = $this->center_model->get_all();
+			$center_id = $this->input->post('center_id');
 			
-			$this->load->view('kids/import_field_select', array('all_rows'=>$rows, 'center_list'=>$center_list));
+			$this->load->view('kids/import_field_select', array('all_rows'=>$rows, 'center_id'=>$center_id));
 		}
 	}
 	

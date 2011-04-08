@@ -16,20 +16,25 @@ function siteInit() {
 		$(this).attr('href', url);
 	});
 	
-	$(".info-box-table td").hover(showInfoBox, hideInfoBox);
+	$(".info-box-table td").click(showInfoBox);
+	
+	$(".data-table").tablesorter();
 	
 	if(window.init && typeof window.init == "function") init(); //If there is a function called init(), call it on load
 }
 
 function showInfoBox() {
-	$(this).children(".info-box").css({
-		left:Number($(this).position().left), 
-		top:Number($(this).position().top) + Number($(this).height()) - 2,
-	}).show();
+	if($(this).children(".info-box").css("display") == "none") {
+		$(".info-box").hide();
+		
+		$(this).children(".info-box").css({
+			left:Number($(this).position().left), 
+			top:Number($(this).position().top) + Number($(this).height()) - 2,
+		}).show();
+	} else {
+		$(this).children(".info-box").hide();
+	}
 }
 
-function hideInfoBox() {
-	$(".info-box").hide();
-}
 
 $(siteInit);

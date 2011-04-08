@@ -1,9 +1,3 @@
-<div style="height:20px;padding-top: 5px;">
-<div id="loading" name="loading" style="display: none;">
-    <img src="<?php echo base_url()?>images/ico/loading.gif" height="25" width="25" style="border: none;margin-left: 300px;" /> loading...
-</div>
-</div>
-
 <div id="content" class="clear">
 
 <!-- Main Begins -->
@@ -26,8 +20,6 @@
 	<th class="colName left sortable">Center Name</th>
     
     <th class="colStatus sortable">City</th>
-    <th class="colStatus">View Levels</th>
-    <th class="colStatus">View Batches</th>
     <th class="colStatus">Center Head</th>
    <th class="colActions">Actions</th>
 </tr>
@@ -51,12 +43,10 @@ foreach($details as $row) {
 		print implode('</li><li>', $row->information);
 	?></li></ul></div></td>
 	<td class="colCount"><?php echo $row->city_name; ?></td> 
-	<td class="colCount"><a href="<?php echo site_url('level/index/center/'.$row->id) ?>">Levels</a></td>
-	<td class="colCount"><a href="<?php echo site_url('batch/index/center/'.$row->id) ?>">Batches</a></td>
 	<td class="colStatus" style="text-align:left"><?php echo $row->user_name;?></td>
 	<td class="colActions right">
-	<?php if($this->user_auth->get_permission('center_edit')) { ?><a href="<?php echo site_url('center/popupEdit_center/'.$row->id); ?>" class="thickbox popup with-icon edit" name="Edit Center : <?php echo $row->name ?>">Edit</a><?php } ?>
-	<?php if($this->user_auth->get_permission('center_delete')) { ?><a href="<?php echo site_url("center/deletecenter/".$row->id); ?>" class="confirm delete with-icon" title="Delete <?php echo $row->name ?>">Delete</a></td><?php } ?>
+	<?php if($this->user_auth->get_permission('center_edit')) { ?><a href="<?php echo site_url('center/manage/'.$row->id); ?>" class="with-icon edit" name="Manage Center: <?php echo $row->name ?>">Manage</a><?php } ?>
+	</td>
 </tr>
 
 <?php }?>

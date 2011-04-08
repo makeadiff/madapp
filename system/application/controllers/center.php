@@ -206,4 +206,15 @@ class Center extends Controller  {
 		$this->session->set_flashdata("success", "Center deleted");
 		redirect("center/manageaddcenters");
 	}
+	
+	
+	function manage($center_id) {
+		$this->user_auth->check_permission('center_edit');
+		
+		$issues = $this->center_model->find_issues($center_id);
+		$issues['center_name'] = $this->center_model->get_center_name($center_id);
+		$issues['center_id'] = $center_id;
+		
+		$this->load->view('center/manage', $issues);
+	}
 }

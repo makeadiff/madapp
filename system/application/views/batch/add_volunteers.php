@@ -12,11 +12,17 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 <td width="200"><h3><?php echo $level->name ?></h3>
 
 <select name="teachers_in_level[<?php echo $level->id ?>][]" multiple="multiple">
-<?php foreach($all_teachers as $user) { ?>
-<option value="<?php echo $user->id ?>"<?php
-	// If the current user belongs to this level, mark him as selected.
-	if(!empty($level_teacher[$level->id][$user->id])) print ' selected="selected"';
-?>><?php echo $user->name ?></option>
+<?php foreach($level_teacher[$level->id] as $teacher_id=>$value) { // Show the selected volunteers first. ?>
+<option value="<?php echo $teacher_id ?>" selected="selected"><?php echo $all_teachers[$teacher_id] ?></option>
+<?php
+}
+
+// Now show the rest of the volunteers...
+foreach($all_teachers as $id=>$name) {
+	//Don't show the row if its selected - we have already shown it...
+	if(isset($level_teacher[$level->id][$id])) continue;
+?>
+<option value="<?php echo $id ?>"><?php echo $name ?></option>
 <?php } ?>
 </select><br /><br />
 
@@ -27,6 +33,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 </td>
 <?php } ?>
 </tr></table>
+<p class="with-icon info">To select multiple volunteers, use Ctrl+Click</p>
 <br />
 
 <?php 
@@ -37,4 +44,5 @@ echo '<label for="action">&nbsp;</label>';echo form_submit('action', "Save");
 
 <a href="<?php echo site_url('batch/index/center/'.$center_id) ?>">See All Batches</a>
 
-<?php $this->load->view('layout/footer'); ?>
+<?php $this->load->view('layout/footer');
+

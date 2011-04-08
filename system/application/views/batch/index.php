@@ -25,8 +25,8 @@ foreach($all_batches as $batch) {
 
 <td><a href="<?php echo site_url('batch/add_volunteers/'.$batch->id) ?>">Add Volunteers to this Batch</a></td>
 
-<td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="edit">Edit</a></td>
-<td><a href="<?php echo site_url('batch/delete/'.$batch->id); ?>" class="confirm delete" title="Delete <?php echo addslashes($batch_name) ?>">Delete</a></td>
+<td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="edit with-icon">Edit</a></td>
+<td><a href="<?php echo site_url('batch/delete/'.$batch->id); ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($batch_name) ?>">Delete</a></td>
 </tr>
 <?php } ?>
 </table>

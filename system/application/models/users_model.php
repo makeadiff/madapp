@@ -31,7 +31,7 @@ class Users_model extends Model {
       	$username= $data['username'];
         $password = $data['password'];
 		
-		$query = $this->db->where('email', $username)->where('password',$password)->get("User");
+		$query = $this->db->where('email', $username)->where('password',$password)->where('status','1')->get("User");
         if($query->num_rows() > 0) {
 			$user = $query->first_row();
    			$memberCredentials['id'] = $user->id;
@@ -192,7 +192,7 @@ class Users_model extends Model {
 	{
 		$this->db->select('User.*,Center.name as center_name,City.name as city_name');
 		$this->db->from('User');
-		$this->db->where('User.project_id',$this->project_id);
+		$this->db->where('User.project_id',$this->project_id)->where('User.status','1');
 		if($where) {
 			if($where['city_id']) $this->db->where('User.city_id', $where['city_id']);
 		}
@@ -218,7 +218,7 @@ class Users_model extends Model {
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
-		$this->db->where('User.project_id',$this->project_id);
+		$this->db->where('User.project_id',$this->project_id)->where('User.status','1');
 		$result=$this->db->get();
 		return $result;
 	
@@ -232,18 +232,20 @@ class Users_model extends Model {
 	function adduser($data)
 	{
 		$user_array=array('name'=>$data['name'],
-					'title'=> $data['position'],
-					'email' => $data['email'],
-					'phone' => $data['phone'],
-					'password'=> $data['password'],
-					'center_id'=> $data['center'],
-					'city_id'=> $data['city'],
-					'project_id' => $data['project'],
-					'user_type' => $data['type']
+					'title'		=> $data['position'],
+					'email' 	=> $data['email'],
+					'phone'		=> $data['phone'],
+					'password'	=> $data['password'],
+					'center_id'	=> $data['center'],
+					'city_id'	=> $data['city'],
+					'project_id'=> $data['project'],
+					'user_type' => $data['type'],
+					'status'	=> '1',
 					);
 		$this->db->insert('User',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
+	
 	/**
     * Function to process_pic
     * @author:Rabeesh 
@@ -289,20 +291,20 @@ class Users_model extends Model {
 	function generate_code($length = 10)
 	{
 		$this->load->library('image_lib');
-                if ($length <= 0)
-                {
-                    return false;
-                }
-                $code = "";
-                $chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-                srand((double)microtime() * 1000000);
-                for ($i = 0; $i < $length; $i++)
-                {
-                    $code = $code . substr($chars, rand() % strlen($chars), 1);
-                }
-                return $code;
-            
-                }
+		if ($length <= 0) {
+			return false;
+		}
+		
+		$code = "";
+		$chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+		srand((double)microtime() * 1000000);
+		
+		for ($i = 0; $i < $length; $i++) {
+			$code = $code . substr($chars, rand() % strlen($chars), 1);
+		}
+		return $code;
+	
+	}
  
 	
 	/**
@@ -329,7 +331,7 @@ class Users_model extends Model {
 		$this->db->select('User.*,UserGroup.group_id');
 		$this->db->from('User');
 		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'left');
-		$this->db->where('User.id',$uid);
+		$this->db->where('User.id',$uid)->where('User.status','1');
 		//$this->db->where('User.project_id',$this->project_id);
 		$result=$this->db->get();
 		//print_r($result);
@@ -360,6 +362,7 @@ class Users_model extends Model {
 			return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
+	
 	/**
     * Function to updateuser_to_group
     * @author:Rabeesh 
@@ -380,21 +383,15 @@ class Users_model extends Model {
 		}
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
-	/**
-    * Function to delete_groupby_userid
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function delete_groupby_userid($data)
-	{
-		$id = $data['entry_id'];
-		$this->db->where('id',$id);
-		$this->db->delete('User');
-		$this->db->where('user_id',$id);
-		$this->db->delete('Group');
-		return ($this->db->affected_rows() > 0) ? true: false ;
 	
+	function delete($user_id) {
+		$this->db->where('id',$user_id);
+		$this->db->update('User',array('status'=>'0'));
+		
+		$affected = $this->db->affected_rows();
+		
+		if($affected_rows) return true;
+		return false;
 	}
 	
 	function get_user($user_id) {
@@ -403,16 +400,16 @@ class Users_model extends Model {
 	
 	function getUsersById() {
 		$this->load->helper('misc');
-		return getById("SELECT id, name FROM User WHERE city_id={$this->city_id} AND project_id={$this->project_id} AND user_type='volunteer'", $this->db);
+		return getById("SELECT id, name FROM User WHERE city_id={$this->city_id} AND project_id={$this->project_id} AND user_type='volunteer' AND status='1'", $this->db);
 	}
 	
 	function get_users_in_center($center_id) {
-		return $this->db->where('center_id', $center_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->get('User')->result();
+		return $this->db->where('center_id', $center_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->where('status','1')->get('User')->result();
 	}
 	
-	function get_users_in_city($city_id=0) {
-		if(!$city_id) $city_id = $this->city_id;
-		return $this->db->where('city_id', $city_id)->where('project_id',1)->where('user_type','volunteer')->orderby('name')->get('User')->result();
+	function get_users_in_city($city_id=false) {
+		if($city_id === false) $city_id = $this->city_id;
+		return $this->db->where('city_id', $city_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->where('status','1')->orderby('name')->get('User')->result();
 	}
 	
 	function set_user_batch_and_level($user_id, $batch_id, $level_id) {
@@ -570,18 +567,23 @@ class Users_model extends Model {
 	}	
 	
 	function search_users($data) {
-		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name, City.name as city_name');
+		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.title,User.user_type, City.name as city_name');
 		$this->db->from('User');
-		$this->db->join('Center', 'Center.id = User.center_id' ,'left');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		
 		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
 		else $this->db->where('User.project_id', $this->project_id);
-		if(!empty($data['city_id'])) $this->db->where('User.city_id', $data['city_id']);
-		else $this->db->where('User.city_id', $this->city_id);
 		
-		if(!empty($data['center_id'])) $this->db->where('center_id', $data['center_id']);
+		if(!empty($data['city_id']) and $data['city_id'] != 0) $this->db->where('User.city_id', $data['city_id']);
+		else if(empty($data['city_id'])) $this->db->where('User.city_id', $this->city_id);
+		
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
+		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
+		
+		if(!empty($data['user_group'])) {
+			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
+			$this->db->where_in('UserGroup.group_id', $data['user_group']);
+		}
 		
 		$all_users = $this->db->get()->result();
 		$return = array();
@@ -635,14 +637,15 @@ class Users_model extends Model {
         
         $result=$this->db->get();
         if($result->num_rows() == 0) {
-			$userdetailsArray = array('name' => $data['firstname'],
-										'title' => $data['position'],
-										'email' => $data['email'],
-										'phone' => $data['mobileno'],
-										'password' => $data['password'],
-										'city_id'=>$data['city'],
-										'center_id'=>$data['center'],
-										'user_type'=>'applicant',
+			$userdetailsArray = array(	'name'		=> $data['firstname'],
+										'title' 	=> $data['position'],
+										'email'		=> $data['email'],
+										'phone'		=> $data['mobileno'],
+										'password'	=> $data['password'],
+										'city_id'	=>$data['city'],
+										'center_id'	=>$data['center'],
+										'user_type'	=>'applicant',
+										'status'	=> '1'
 										);
 			$this->db->set($userdetailsArray);
 			$this->db->insert('user');
@@ -662,22 +665,21 @@ class Users_model extends Model {
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
 			
 			return $memberCredentials;
-		}
-		else
-		{
-				return false;
+			
+		} else {
+			return false;
 		}
     }
+	
 	/**
     * Function to get password
     * @author:Rabeesh 
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function get_password($data)
-	{
-	$email=$data['email'];
-	return $this->db->where('email', $email)->get("User")->row();
+	function get_password($data) {
+		$email=$data['email'];
+		return $this->db->where('email', $email)->get("User")->row();
 	}
 	
 }

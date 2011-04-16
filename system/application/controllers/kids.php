@@ -63,35 +63,15 @@ class Kids extends Controller  {
 	{
 		$this->user_auth->check_permission('kids_index');
 	
-		$data['currentPage'] = 'db';
-		$data['navId'] = '2';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('kids/addkids_view');
-		$this->load->view('dashboard/includes/footer');
-	
-	}
-   /**
-    *
-    * Function to getkidslist
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function getkidslist()
-	{
-		$page_no = $_REQUEST['pageno'];
-		$data['title'] = 'Manage Kids';
-		$linkCount = $this->kids_model->kids_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
+		$this->load->view('layout/header',array('title'=>'Manage Kids'));
+		
 		$data['details']= $this->kids_model->getkids_details();
 		$data['center_list']=$this->center_model->get_all();
 		$this->load->view('kids/kids_list',$data);
+		$this->load->view('layout/footer');
 	
 	}
-	
+		
 	function get_kids_details()
 	{
 		$center_id=$_REQUEST['center_id'];
@@ -161,9 +141,9 @@ class Kids extends Controller  {
 		$data['id']=$id;
 		$data['center']=$_REQUEST['center'];
 		$data['name']=$_REQUEST['name'];
-		$date=$_REQUEST['date-pick'];
-		$newdate=explode("/",$date);
-		$data['date']=$newdate[2]."-".$newdate[0]."-".$newdate[1];
+		
+		$date= date('Y-m-d', strtotime($_REQUEST['date-pick']));
+		$data['date'] = $date;
 		$data['description']=$_REQUEST['description'];
 		$returnFlag= $this->kids_model->update_student($data);
 		
@@ -205,7 +185,7 @@ class Kids extends Controller  {
 			}
 		else
 			{
-			$message['msg']   =  "Center not edited.";
+			$message['msg']   =  "Student not edited.";
 			$message['successFlag'] = "0";
 			$message['link']  =  "";
 			$message['linkText'] = "";

@@ -33,13 +33,6 @@ class User extends Controller  {
 		$this->load->model('city_model');
 		$this->load->library('upload');
     }
-	
-    /**
-    * Function to 
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
 
     function index()
     {
@@ -225,17 +218,14 @@ class User extends Controller  {
 		$config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
-		foreach($_FILES as $key => $value)
-        {
-            if( ! empty($key['name']))
-            {
+        
+		foreach($_FILES as $key => $value) {
+            if(!empty($key['name'])) {
                 $this->upload->initialize($config);
-                if ( ! $this->upload->do_upload($key))
-                {
+                if (!$this->upload->do_upload($key)) {
                     $errors[] = $this->upload->display_errors();
-                }    
-                else
-                {
+                    
+                } else {
                     $flag1=$this->users_model->process_pic($data);
                 }
              }
@@ -244,35 +234,31 @@ class User extends Controller  {
 		
 		if($flag || $returnFlag ) 
 		{
-				$message['msg']   =  "Profile edited successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "";
-				$message['linkText'] = "";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);		  
-			} else {
-				$message['msg']   =  "Profile not edited.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "";
-				$message['linkText'] = "";
-				$message['icoFile'] = "ico_addScheme.png";
-	
-				$this->load->view('dashboard/errorStatus_view',$message);		  
+			$message['msg']   =  "Profile edited successfully.";
+			$message['successFlag'] = "1";
+			$message['link']  =  "";
+			$message['linkText'] = "";
+			$message['icoFile'] = "ico_addScheme.png";
+			$this->load->view('dashboard/errorStatus_view',$message);
+		} else {
+			$message['msg']   =  "Profile not edited.";
+			$message['successFlag'] = "0";
+			$message['link']  =  "";
+			$message['linkText'] = "";
+			$message['icoFile'] = "ico_addScheme.png";
+
+			$this->load->view('dashboard/errorStatus_view',$message);
 		}
 	}
 	
-	/**
-    * Function to ajax_deleteuser
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function ajax_deleteuser()
-	{	
+	function delete($user_id) {	
 		$this->user_auth->check_permission('user_delete');
-		$data['entry_id'] = $_REQUEST['entry_id'];
-		$flag1= $this->users_model->delete_groupby_userid($data);
+		$this->users_model->delete($user_id);
+		
+		$this->session->set_flashdata('success', 'User deleted successfully');
+		redirect('user/users_view');
 	}
+	
 	/**
     * Function to view_users
     * @author:Rabeesh 
@@ -285,25 +271,25 @@ class User extends Controller  {
 		$data['currentPage'] = 'db';
 		$data['navId'] = '';
 		$data['title'] = 'Users view';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
+		$this->load->view('layout/header',$data);
 		
-		$data['city'] = $this->city_model->get_city();
-		$data['selected_city'] = $this->session->userdata('city_id');
-		$data['group'] = $this->users_model->getgroup_details();
-		$this->load->view('user/user_search_header',$data);
+		$data['all_cities'] = $this->city_model->get_city();
+		$data['city_id'] = $this->session->userdata('city_id');
+		if($this->input->post('city_id') !== false) $data['city_id'] = $this->input->post('city_id');
 		
-		$data['details'] = $this->users_model->getuser_details(array('city_id' => $data['selected_city']));
-		$result=$data['details']->result_array();
-		if($result) {
-			$this->load->view('user/users_search_view_div',$data);
-			$this->load->view('user/user_search_footer',$data);
-			$this->load->view('dashboard/includes/footer');
-		} else {
-			$this->load->view('user/error_list');
-			$this->load->view('dashboard/includes/footer');
+		$data['all_user_group'] = $this->users_model->getgroup_details();
+		if($this->input->post('user_group') !== false) $data['user_group'] = $this->input->post('user_group');
+		else $data['user_group'] = array();
 		
-		}
+		$data['name'] = '';
+		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
+		
+		
+		$data['all_users'] = $this->users_model->search_users($data);
+		
+		$this->load->view('user/view_users', $data);
+		
+		$this->load->view('layout/footer');
 	}
 	/**
     * Function to user_search

@@ -21,13 +21,6 @@ foreach($group_name as $row) {
 	$group_id=$row['id'];	
 }
 ?>
-<script type="text/javascript">
-function get_center_Name(city_id)
-{
-alert(city_id);
-
-}
-</script>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
@@ -109,8 +102,8 @@ if($this->user_auth->get_permission('change_city')) { ?>
 </div>
 
 
-<div class="field clear" style="width:500px;">
-<label for="selBulkActions">Select project:</label> 
+<div class="field clear">
+<label for="selBulkActions">Select Project:</label> 
 <select id="project" name="project">
 	<?php 
 	$project = $project->result_array();
@@ -125,11 +118,11 @@ if($this->user_auth->get_permission('change_city')) { ?>
 </select>
 </div>
 
-<div class="field clear" style="width:600px; margin-left:100px;">
+<div class="field clear">
 	<label for="date">Photo</label>
 	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="100" style="float:left;" height="100" /><?php } ?>
 </div>
- <div  class="field clear" style="width:600px; margin-left:100px;">
+ <div  class="field clear">
 	<label for="date">Change photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>

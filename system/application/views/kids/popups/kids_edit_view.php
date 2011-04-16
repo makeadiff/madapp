@@ -26,9 +26,9 @@ foreach($kids_details as $row) {
 }
 
 ?>
-<form id="formEditor" class="mainForm clear" action="<?php echo site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" style="width:500px;" onsubmit="return validate();" >
-<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
-<div class="field clear" style="width:600px;">
+<form id="formEditor" class="mainForm clear" action="<?php echo site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
+<fieldset class="clear" style="margin-top:50px;margin-left:-30px;">
+<div class="field clear">
 <label for="selBulkActions">Select Center</label> 
 <select id="center" name="center" > 
 <option selected="selected" >- Choose -</option> 
@@ -45,31 +45,31 @@ foreach($kids_details as $row) {
 </select>
 </div>
 
-<div class="field clear" style="width:600px;"> 
+<div class="field clear"> 
 	<label for="txtName">Name</label>
 	<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
 			
 </div>
 
-<div  class="field clear" style="width:600px;">
+<div  class="field clear">
 	<label for="date">Date of Birth</label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?php echo $birthday ; ?>">
 	<p class="error clear"></p>
 </div>
 
 
-<div class="field clear" style="width:600px;">
+<div class="field clear">
 	<label for="date">Photo</label>
 	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="50" style="float:left;" height="50" /><?php } ?>
 </div>
-<div  class="field clear" style="width:600px;">
+<div  class="field clear">
 	<label for="date">Change photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
 </div>
-<div class="field clear" style="width:600px;"> 
+<div class="field clear"> 
 	<label for="txtName">Description</label>
-	<textarea rows="5" cols="40" id="description" name="description"><?php echo $description;  ?></textarea> 
+	<textarea rows="5" cols="30" id="description" name="description"><?php echo $description; ?></textarea> 
 	<p class="error clear"></p>
 </div>
 

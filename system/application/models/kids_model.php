@@ -117,9 +117,9 @@ class Kids_model extends Model {
 	function update_student($data) {
 		$rootId=$data['rootId'];
 		$data = array(	'center_id'	=> $data['center'],
-						'name'		=> $data ['name'],
-						'birthday'	=> $data ['date'],
-						'description'=> $data ['description'],
+						'name'		=> $data['name'],
+						'birthday'	=> $data['date'],
+						'description'=> $data['description'],
 					);
 		$this->db->where('id', $rootId);
 		$this->db->update('Student', $data);

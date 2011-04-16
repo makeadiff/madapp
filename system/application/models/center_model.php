@@ -210,8 +210,8 @@ class Center_model extends Model
 			$information[] = "Batch in this center: $batch_count";
 		}
 		
-		if(!$teacher_count) {
-			$information[] = "No teachers added to the center <span class='warning icon'>!</span>";
+		if($teacher_count < 30) {
+			$information[] = "Too few teachers added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {
 			$information[] = "Teachers in this center: $teacher_count";
@@ -222,8 +222,8 @@ class Center_model extends Model
 			$problem_flag++;
 		}
 		
-		if(!$kids_count) {
-			$information[] = "No students added to the center <span class='warning icon'>!</span>";
+		if($kids_count < 90) {
+			$information[] = "Too few added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {
 			$information[] = "Kids in this center: $kids_count";

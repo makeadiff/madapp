@@ -1,8 +1,3 @@
-<?php include_once('session_timeout.php'); ?>
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
-<link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/thickbox.css">
-
 <script type="text/javascript">
 function get_kidslist(page_no,search_query)
 {
@@ -36,9 +31,7 @@ function deleteEntry(entryId,page_no)
 		
 		});
 	}
-}	
-	
-	
+}
 </script>
 
 <div style="height:20px;padding-top: 5px;">

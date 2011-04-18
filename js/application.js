@@ -18,7 +18,7 @@ function siteInit() {
 	
 	$(".info-box-table td").click(showInfoBox);
 	
-	$(".data-table").tablesorter();
+	if($(".data-table").tablesorter) $(".data-table").tablesorter();
 	
 	if(window.init && typeof window.init == "function") init(); //If there is a function called init(), call it on load
 }

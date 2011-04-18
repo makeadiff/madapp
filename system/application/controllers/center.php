@@ -214,6 +214,7 @@ class Center extends Controller  {
 		$issues = $this->center_model->find_issues($center_id);
 		$issues['center_name'] = $this->center_model->get_center_name($center_id);
 		$issues['center_id'] = $center_id;
+		$this->session->set_userdata("active_center", $center_id);
 		
 		$this->load->view('center/manage', $issues);
 	}

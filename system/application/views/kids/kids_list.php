@@ -43,14 +43,25 @@ function deleteEntry(entryId,page_no)
 </select>
 
 <div id="head" class="clear">
+<h1><?php echo $title; ?></h1>
 
-	<h1><?php echo $title; ?></h1>
+<div id="actions">
+<?php if($this->user_auth->get_permission('kids_add')) { ?>
+<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button primary popup" name="Add Kids">Add Kids</a>
+<?php } ?>
+</div><br class="clear" />
 
-	<div id="actions">
-	<?php if($this->user_auth->get_permission('kids_add')) { ?>
-	<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button primary popup" name="Add Kids">Add Kids</a>
-	<?php } ?>
-	</div>
+<div id="train-nav">
+<ul>
+<li id="train-prev"><a href="<?php echo site_url('user/view_user')?>">&lt; Manage Volunteers</a></li>
+<?php if($this->session->userdata("active_center")) { ?>
+<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
+<li id="train-next"><a href="<?php echo site_url('level/index/center/'.$this->session->userdata("active_center"))?>">Manage Levels &gt;</a></li>
+<?php } else { ?>
+<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
+<?php } ?>
+</ul>
+</div>
 </div>
 
 <div id="kids_list">

@@ -4,8 +4,24 @@
 <div id="head" class="clear">
 <h1><?php echo $title; ?></h1>
 
-<div id="actions"> 
+<div id="actions">
+<?php if($this->user_auth->get_permission('user_add')) { ?>
 <a href="<?php echo site_url('user/popupAdduser')?>" class="thickbox button primary popup" name="Add User">Add User</a>
+<?php } ?>
+</div><br class="clear" />
+
+<div id="train-nav">
+<ul>
+<?php if($this->session->userdata("active_center")) { ?>
+<li id="train-prev"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">&lt; Edit Center Details</a></li>
+<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
+<li id="train-next"><a href="<?php echo site_url('kids/manageaddkids')?>">Manage Kids &gt;</a></li>
+<?php } else { ?>
+<li id="train-prev"></li>
+<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
+<li id="train-next"><a href="<?php echo site_url('kids/manageaddkids')?>">Manage Kids &gt;</a></li>
+<?php } ?>
+</ul>
 </div>
 </div>
 

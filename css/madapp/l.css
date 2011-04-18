@@ -498,7 +498,6 @@ form.sideForm, .sideForm fieldset {
     color: #fff;
     font-weight:normal;
 }
-#main tr:hover { background-color: #dfdfdf; }
 #main tr.even { background-color: #f5f5f5; }
 #main tr.odd { background-color: #fff; }
 #main th.sortable:hover { background: transparent url(../../images/bgTable.gif) repeat-x 0 -30px; }

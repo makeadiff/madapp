@@ -5,6 +5,18 @@
 
 <div id="actions">
 <a id="example" class="button primary" href="<?php echo base_url() ?>index.php/level/create/center/<?php echo $center_id ?>" class="add">Create New Level in <?php echo $center_name ?></a>
+</div><br class="clear" />
+
+<div id="train-nav">
+<ul>
+<li id="train-prev"><a href="<?php echo site_url('kids/manageaddkids')?>">&lt; Manage Kids</a></li>
+<?php if($this->session->userdata("active_center")) { ?>
+<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
+<li id="train-next"><a href="<?php echo site_url('batch/index/center/'.$this->session->userdata("active_center"))?>">Manage Batches &gt;</a></li>
+<?php } else { ?>
+<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
+<?php } ?>
+</ul>
 </div>
 </div>
 

@@ -89,3 +89,21 @@ div.info-box li {
 	font-size:200%;
 	line-height:2em;
 }
+
+#train-nav ul {
+	width:100%;
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+#train-nav li {
+	width:33%;
+	float:left;
+	font-weight:bold;
+}
+#train-top {
+	text-align:center;
+}
+#train-next {
+	text-align:right;
+}

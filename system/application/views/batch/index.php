@@ -7,6 +7,19 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 
 <div id="actions">
 <a id="example" class="button primary" href="<?php echo site_url('batch/create/center/'.$center_id); ?>" class="add">Create New Batch in <?php echo $center_name ?></a>
+</div><br class="clear" />
+
+<div id="train-nav">
+<ul>
+<?php if($this->session->userdata("active_center")) { ?>
+<li id="train-prev"><a href="<?php echo site_url('level/index/center/'.$this->session->userdata("active_center"))?>">&lt; Manage Levels</a></li>
+<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
+<li id="train-next"><a href="<?php echo site_url('batch/index/center/'.$this->session->userdata("active_center"))?>">Assign Volunteers &gt;</a></li>
+<?php } else { ?>
+<li id="train-prev"></li>
+<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
+<?php } ?>
+</ul>
 </div>
 </div>
 

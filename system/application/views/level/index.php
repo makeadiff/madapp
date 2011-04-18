@@ -4,7 +4,7 @@
 <h1>Levels in <?php echo $center_name ?></h1>
 
 <div id="actions">
-<a id="example" class="button primary" href="<?php echo base_url() ?>index.php/level/create/center/<?php echo $center_id ?>" class="add">Create New Level in <?php echo $center_name ?></a>
+<a id="example" class="button primary" href="<?php echo base_url() ?>index.php/level/create/center/<?php echo $center_id ?>" class="add">Create New Level</a>
 </div><br class="clear" />
 
 <div id="train-nav">

@@ -53,7 +53,7 @@ function deleteEntry(entryId,page_no)
 
 <div id="train-nav">
 <ul>
-<li id="train-prev"><a href="<?php echo site_url('user/view_user')?>">&lt; Manage Volunteers</a></li>
+<li id="train-prev"><a href="<?php echo site_url('user/view_users')?>">&lt; Manage Volunteers</a></li>
 <?php if($this->session->userdata("active_center")) { ?>
 <li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
 <li id="train-next"><a href="<?php echo site_url('level/index/center/'.$this->session->userdata("active_center"))?>">Manage Levels &gt;</a></li>

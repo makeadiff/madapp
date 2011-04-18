@@ -1,3 +1,6 @@
+<?php
+$this->load->view('layout/header',array('title'=>$title));
+?>
 <div id="content" class="clear">
 
 <div id="main" class="clear">
@@ -17,7 +20,7 @@
 <li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
 <li id="train-next"><a href="<?php echo site_url('kids/manageaddkids')?>">Manage Kids &gt;</a></li>
 <?php } else { ?>
-<li id="train-prev"></li>
+<li id="train-prev">&nbsp;</li>
 <li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
 <li id="train-next"><a href="<?php echo site_url('kids/manageaddkids')?>">Manage Kids &gt;</a></li>
 <?php } ?>
@@ -25,7 +28,7 @@
 </div>
 </div>
 
-<form action="" method="post">
+<form action="" method="post" id="filters">
 <table style="margin-bottom:25px;">
 <tr>
 <td style="vertical-align:top;"><div class="field clear">
@@ -72,6 +75,7 @@
 </tr>
 </table>
 </form>
+<a href="#" onclick="$('#filters').toggle()">Show/Hide Filters</a>
 
 <table cellpadding="0"  cellspacing="0" class="clear" id="tableItems">
 <thead>
@@ -80,7 +84,7 @@
 	<th class="colName left sortable">Name</th>
     <th class="colStatus sortable">Email</th>
     <th class="colStatus">Mobile No</th>
-    <th class="colPosition">City</th>
+    <?php if($this->input->post('city_id') === '0') { ?><th class="colPosition">City</th><?php } ?>
     <th class="colPosition">User Type</th>
     <th class="colActions">Actions</th>
 </tr>
@@ -99,12 +103,12 @@ foreach($all_users as $id => $user) {
     <td class="colName left"><?php echo $user->name; ?></td>
     <td class="colCount"><?php echo $user->email; ?></td> 
     <td class="colStatus" style="text-align:left"><?php echo $user->phone; ?></td>
-    <td class="colPosition"><?php echo $user->city_name; ?></td>
+    <?php if($this->input->post('city_id') === '0') { ?><td class="colPosition"><?php echo $user->city_name; ?></td><?php } ?>
     <td class="colPosition"><?php echo ucfirst($user->user_type); ?></td>
     
     <td class="colActions right"> 
     <a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="thickbox icon edit popup" name="Edit User : <?php echo $user->name ?>">Edit</a>
-    <a class="delete confirm icon" href="<?php echo site_url('user/delete') ?>">Delete</a>
+    <a class="delete confirm icon" href="<?php echo site_url('user/delete') ?>" title="Delete <?php echo $user->name ?>">Delete</a>
     </td>
 </tr>
 
@@ -120,3 +124,5 @@ foreach($all_users as $id => $user) {
 <a class="with-icon add" href="<?php echo site_url('user/import'); ?>">Import Users...</a>
 
 </div>
+<?php
+$this->load->view('layout/footer');

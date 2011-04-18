@@ -1,6 +1,5 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php $this->load->view('layout/thickbox_header'); ?>
 
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <?php
@@ -77,7 +76,9 @@ foreach($kids_details as $row) {
 
 <div class="field clear" style="width:550px;">
 	<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-	<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+	<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Edit" />
+	
+	<a href="#" class="cancel-button">Cancel</a>
 </div>
 
 
@@ -97,3 +98,4 @@ function validate() {
 		}
 }
 </script>
+<?php $this->load->view('layout/thickbox_footer'); ?>

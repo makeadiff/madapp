@@ -1,6 +1,5 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php $this->load->view('layout/thickbox_header'); ?>
 
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <?php
@@ -55,8 +54,10 @@ jQuery(document).ready(function () {
 
 
 
-<div class="field clear" style="width:550px;"> 
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+<div class="field clear" style="width:550px;">
+<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Add" />
+
+<a href="#" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>
@@ -78,3 +79,5 @@ if(document.getElementById("name").value == '')
 	}
 }
 </script>
+
+<?php $this->load->view('layout/thickbox_footer'); ?>

@@ -25,7 +25,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 
 
 <table class="data-table" id="main">
-<tr><th>Batch Time</th><th>Volunteers</th><th colspan="2">Action</th></tr>
+<tr><th>Batch</th><th>Volunteers</th><th colspan="2">Action</th></tr>
 <?php 
 $day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 $row_class = 'odd';

@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php $this->load->view('layout/thickbox_header'); ?>
 
 <?php
 $details=$details->result_array();
@@ -54,7 +54,9 @@ foreach($details as $row) {
 
 <div class="field clear"> 
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Save" />
+		
+		<a href="#" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>
@@ -78,3 +80,4 @@ function validate()
 		}
 }
 </script>
+<?php $this->load->view('layout/thickbox_footer'); ?>

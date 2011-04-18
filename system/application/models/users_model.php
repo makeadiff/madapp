@@ -584,6 +584,8 @@ class Users_model extends Model {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
 			$this->db->where_in('UserGroup.group_id', $data['user_group']);
 		}
+		$this->db->orderby('User.name');
+		
 		
 		$all_users = $this->db->get()->result();
 		$return = array();

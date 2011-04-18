@@ -1,12 +1,8 @@
 <?php $this->load->view('layout/css'); ?>
 
-<style>
-	a:hover { text-decoration:underline; }
-</style>
-
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
-<script>	tb_init('a.thickbox, input.thickbox');  </script>
+<script type="text/javascript" src="<?php echo base_url()?>js/application.js"></script>
 
 <div id="msgConfirm" class="message" style="margin-left:1px; text-align:center;" align="left"><?php echo $msg; ?></div>
 

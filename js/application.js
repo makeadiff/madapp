@@ -17,6 +17,7 @@ function siteInit() {
 	});
 	
 	$(".info-box-table td").click(showInfoBox);
+	$(".cancel-button").click(function() {top.window.tb_remove();});
 	
 	if($(".data-table").tablesorter) $(".data-table").tablesorter();
 	

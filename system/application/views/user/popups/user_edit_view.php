@@ -1,7 +1,6 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php $this->load->view('layout/thickbox_header');
 
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-<?php
+
 $user_details = $user->result_array();
 foreach($user_details as $row) {	
 	$root_id	= $row['id'];
@@ -142,6 +141,8 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <div class="field clear" style="width:550px;"> 
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
 		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+		
+		<a href="#" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>
@@ -183,3 +184,5 @@ function validate()
 
 }
 </script>
+
+<?php $this->load->view('layout/thickbox_footer'); ?>

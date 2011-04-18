@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php $this->load->view('layout/thickbox_header'); ?>
 
 <form id="formEditor" class="mainForm clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" style="width:500px;" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
@@ -122,7 +122,9 @@ if($this->user_auth->get_permission('change_city')) { ?>
 
 
 <div class="field clear" style="width:550px;"> 
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+
+<a href="#" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>
@@ -161,4 +163,6 @@ function validate() {
 		}
 
 }
-</script>          
+</script>
+
+<?php $this->load->view('layout/thickbox_footer'); ?>

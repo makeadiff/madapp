@@ -268,11 +268,7 @@ class User extends Controller  {
 	function view_users()
 	{
 		$this->user_auth->check_permission('user_index');
-		$data['currentPage'] = 'db';
-		$data['navId'] = '';
-		$data['title'] = 'Users view';
-		$this->load->view('layout/header',$data);
-		
+		$data['title'] = 'Manage Volunteers';
 		$data['all_cities'] = $this->city_model->get_city();
 		$data['city_id'] = $this->session->userdata('city_id');
 		if($this->input->post('city_id') !== false) $data['city_id'] = $this->input->post('city_id');
@@ -284,12 +280,9 @@ class User extends Controller  {
 		$data['name'] = '';
 		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
 		
-		
 		$data['all_users'] = $this->users_model->search_users($data);
 		
 		$this->load->view('user/view_users', $data);
-		
-		$this->load->view('layout/footer');
 	}
 	/**
     * Function to user_search

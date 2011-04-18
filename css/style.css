@@ -107,3 +107,8 @@ div.info-box li {
 #train-next {
 	text-align:right;
 }
+
+.cancel-button {
+	line-height:30px;
+	font-weight:bold;
+}

@@ -46,7 +46,7 @@ class Batch_model extends Model {
     }
     
     function get_batches_in_center($center_id) {
-    	return $this->db->where('center_id',$center_id)->where('project_id', $this->project_id)->get('Batch')->result();
+    	return $this->db->where('center_id',$center_id)->where('project_id', $this->project_id)->orderby('day')->get('Batch')->result();
     }
   	
   	function get_class_days($center_id) {

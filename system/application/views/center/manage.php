@@ -6,10 +6,10 @@ function showMessage($count, $message, $type='') {
 	if($message) $message = "($message)";
 	
 	$threshold = 0; // For most cases, the threshold is 0. We just need one item.
-	if($type == 'kids') $threshold = 90;
+	if($type == 'kids') $threshold = 30;
 	if($type == 'volunteers') $threshold = 30;
 	
-	if($count > $threshold) echo '<span class="success with-icon" style="color:darkgreen;">Completed ' . $message . '</span>'; 
+	if($count >= $threshold) echo '<span class="success with-icon" style="color:darkgreen;">Completed ' . $message . '</span>'; 
 	else echo '<span class="error with-icon">Incomplete ' . $message . '</span>';
 }
 

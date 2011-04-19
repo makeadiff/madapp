@@ -333,7 +333,8 @@ class Kids extends Controller  {
 				}
 				$insert['center_id'] = $this->input->post('center_id');
 				
-				$this->db->insert('Student', $insert);
+				if($insert['name'])
+					$this->db->insert('Student', $insert);
 			}
 			fclose($handle);
 			unlink($this->input->post('uploaded_file'));

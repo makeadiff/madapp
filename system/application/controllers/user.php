@@ -256,7 +256,7 @@ class User extends Controller  {
 		$this->users_model->delete($user_id);
 		
 		$this->session->set_flashdata('success', 'User deleted successfully');
-		redirect('user/users_view');
+		redirect('user/view_users');
 	}
 	
 	/**
@@ -382,7 +382,7 @@ class User extends Controller  {
 		}
 		else
 		{
-		echo "No result fount";
+			echo "No result fount";
 		}
 	}
 	
@@ -667,7 +667,8 @@ class User extends Controller  {
 				$insert['password'] = 'network'; //Default Password.
 				$insert['credit'] = 3;
 				
-				$this->db->insert('User', $insert);
+				if($insert['name'] and $insert['email']) // Make sure that we have the neceassy values before importing.
+					$this->db->insert('User', $insert);
 			}
 			fclose($handle);
 			unlink($this->input->post('uploaded_file'));

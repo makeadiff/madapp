@@ -201,9 +201,9 @@ class Center extends Controller  {
 			show_error("This Center has Kids under it. Please delete them first.");
 		}
 		
-		$this->center_model->delete_center($data);
+		if($this->center_model->delete_center($center_id)) $this->session->set_flashdata("success", "Center deleted");
+		else $this->session->set_flashdata("error", "Error deleting center.");
 		
-		$this->session->set_flashdata("success", "Center deleted");
 		redirect("center/manageaddcenters");
 	}
 	

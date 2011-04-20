@@ -144,10 +144,9 @@ class Center_model extends Model
     * @param :[$data]
     * @return: type: [Boolean]
     **/
-	function delete_center($data)
+	function delete_center($center_id)
 	{
-		 $id = $data['entry_id'];
-		 $this->db->where('id',$id);
+		 $this->db->where('id',$center_id);
 		 $this->db->delete('Center');
 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	

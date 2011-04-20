@@ -11,7 +11,12 @@ class Cron extends Controller  {
 		$this->load->model('Class_model','class_model', TRUE);
 		$all_batches = $this->batch_model->get_all_batches();
 		
-		if($debug) $this->load->helper('misc_helper');
+		if($debug) {
+			print "Debug Mode<hr /><br />";
+			$this->load->helper('misc_helper');
+			print "Batches: " . count($all_batches);
+		}
+		
 		
 		// Wee have to add all the classes for the next two weeks.
 		for($week = 0; $week < 2; $week++) {

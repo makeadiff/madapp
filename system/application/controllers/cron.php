@@ -6,12 +6,11 @@ class Cron extends Controller  {
 	}
 	
 	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
-	function schedule_classes() {
+	function schedule_classes($debug=0) {
 		$this->load->model('Batch_model','batch_model', TRUE);
 		$this->load->model('Class_model','class_model', TRUE);
 		$all_batches = $this->batch_model->get_all_batches();
 		
-		$debug = false;
 		if($debug) $this->load->helper('misc_helper');
 		
 		// Wee have to add all the classes for the next two weeks.

@@ -68,19 +68,19 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
 
-<div class="field clear" style="width:500px;">
+<!--<div class="field clear" style="width:500px;">
 <label for="selBulkActions">Select center:</label> 
 <select id="center" name="center"> 
 <option selected="selected" value="-1" >- Choose -</option> 
-	<?php 
-	$center = $center->result_array();
-	foreach($center as $row)
-	{
+	<?php// 
+	//$center = $center->result_array();
+	//foreach($center as $row)
+	//{
 	?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
-	<?php } ?>
+	<option value="<?php//echo $row['id']; ?>"><?php// echo $row['name']; ?></option> 
+	<?php// } ?>
 </select>
-</div>
+</div>-->
 
 <?php 
 $this_project_id = $this->session->userdata('project_id');

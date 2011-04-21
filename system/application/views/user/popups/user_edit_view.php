@@ -85,20 +85,20 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
 
-<div class="field clear" style="width:500px;">
+<!--<div class="field clear" style="width:500px;">
 <label for="selBulkActions">Select center:</label> 
 <select id="center" name="center"> 
 <option selected="selected" value="-1" >- Choose -</option> 
 	<?php 
-	$center = $center->result_array();
-	foreach($center as $row){ ?>
-	<?php if($center_id==$row['id']){ ?>
-	<option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
-	<?php } else { ?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-	<?php }} ?>
+	//$center = $center->result_array();
+	//foreach($center as $row){ ?>
+	<?php// if($center_id==$row['id']){ ?>
+	<option value="<?php// echo $row['id']; ?>" selected="selected"><?php// echo $row['name']; ?></option> 
+	<?php// } else { ?>
+	<option value="<?php// echo $row['id']; ?>"><?php// echo $row['name']; ?></option>
+	<?php// }} ?>
 </select>
-</div>
+</div>-->
 
 
 <div class="field clear">

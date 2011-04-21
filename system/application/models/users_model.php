@@ -232,15 +232,16 @@ class Users_model extends Model {
 	function adduser($data)
 	{
 		$user_array=array('name'=>$data['name'],
-					'title'		=> $data['position'],
-					'email' 	=> $data['email'],
-					'phone'		=> $data['phone'],
-					'password'	=> $data['password'],
-					'center_id'	=> $data['center'],
-					'city_id'	=> $data['city'],
-					'project_id'=> $data['project'],
-					'user_type' => $data['type'],
-					'status'	=> '1',
+
+					'title'=> $data['position'],
+					'email' => $data['email'],
+					'phone' => $data['phone'],
+					'password'=> $data['password'],
+					//'center_id'=> $data['center'],
+					'city_id'=> $data['city'],
+					'project_id' => $data['project'],
+					'user_type' => $data['type']
+
 					);
 		$this->db->insert('User',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
@@ -350,7 +351,7 @@ class Users_model extends Model {
 				'title'=> $data['position'],
 				'email' => $data['email'],
 				'phone' => $data['phone'],
-				'center_id'=> $data['center'],
+				//'center_id'=> $data['center'],
 				'city_id'=> $data['city'],
 				'project_id'=>$data['project'],
 				'user_type' => $data['type']

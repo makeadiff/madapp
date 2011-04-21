@@ -228,6 +228,7 @@ class Exam extends Controller  {
     **/
 	function getexam_subjects_name() {
 		$exam_id = $_REQUEST['exam_id'];
+
 		$data['subject']=$this->exam_model->get_subject_names($exam_id);
 		$data['details']=$this->exam_model->get_student_names($exam_id);
 		$this->load->view('student_exam_score/popups/popup_add_exam',$data);

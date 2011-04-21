@@ -18,6 +18,7 @@ function mark_view_div(exam_id)
 	}
 	else
 	{
+	
 	$('#score_div').hide();
 	}
 }

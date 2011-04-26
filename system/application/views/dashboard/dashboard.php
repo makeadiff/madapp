@@ -73,14 +73,15 @@
 	<div class="quickLink"> <a href="<?= site_url('permission/manage_permission') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/permission.jpeg" alt="" /> <span>Permissions</span></a></div>
 	<?php } ?>
-    <?php //if($this->user_auth->check_permission('permission_index')) { ?>
+	
+    <?php if($this->user_auth->check_permission('books_index')) { ?>
 	<div class="quickLink"> <a href="<?= site_url('books/manage_books') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Books</span></a></div>
-	<?php //} ?>
-    <?php //if($this->user_auth->check_permission('permission_index')) { ?>
+	<?php } ?>
+    <?php if($this->user_auth->check_permission('chapters_index')) { ?>
 	<div class="quickLink"> <a href="<?= site_url('books/manage_chapters') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Chapters</span></a></div>
-	<?php //} ?>
+	<?php } ?>
     
     
 </div>

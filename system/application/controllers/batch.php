@@ -113,7 +113,7 @@ function create($holder, $center_id = 0) {
 		$this->load->helper('form');
 		
 		$center_ids = idNameFormat($this->center_model->get_all());
-		$batch_volunters = idNameFormat($this->user_model->get_users_in_center($center_id));
+		$batch_volunters = idNameFormat($this->user_model->get_users_in_city());
 		$center_name = $this->center_model->get_center_name($center_id);
 		
 		$this->load->view('batch/form.php', array(

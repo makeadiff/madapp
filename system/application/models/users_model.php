@@ -403,11 +403,7 @@ class Users_model extends Model {
 		$this->load->helper('misc');
 		return getById("SELECT id, name FROM User WHERE city_id={$this->city_id} AND project_id={$this->project_id} AND user_type='volunteer' AND status='1'", $this->db);
 	}
-	
-	function get_users_in_center($center_id) {
-		return $this->db->where('center_id', $center_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->where('status','1')->get('User')->result();
-	}
-	
+		
 	function get_users_in_city($city_id=false) {
 		if($city_id === false) $city_id = $this->city_id;
 		return $this->db->where('city_id', $city_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->where('status','1')->orderby('name')->get('User')->result();

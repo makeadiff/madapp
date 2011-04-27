@@ -4,7 +4,7 @@
  * An open source application development framework for PHP 4.3.2 or newer
  * @package		madapp
  * @author		Rabeesh
- */
+ */  
 class Settings extends Controller {
 	private $message;
 	

@@ -151,7 +151,7 @@ function create($holder, $center_id = 0) {
 		
 		$batch = $this->model->get_batch_as_array($batch_id);
 		$center_ids = idNameFormat($this->center_model->get_all());
-		$batch_volunters = idNameFormat($this->user_model->get_users_in_center($batch['center_id']));
+		$batch_volunters = idNameFormat($this->user_model->get_users_in_city());
 		$center_name = $this->center_model->get_center_name($batch['center_id']);
 		
 		$this->load->view('batch/form.php', array(

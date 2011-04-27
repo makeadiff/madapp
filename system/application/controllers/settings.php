@@ -35,7 +35,7 @@ class Settings extends Controller {
 	}
 	/**
     * Function to create
-    * @author : Rabeesh
+    * @author : Rabeesh 
     * @param  : [$data]
     **/
 	function create() {

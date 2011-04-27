@@ -37,7 +37,7 @@ class Level_model extends Model {
     function get_kids_in_level($level_id) {
     	$students = $this->db->query("SELECT Student.id,Student.name FROM Student 
     		INNER JOIN StudentLevel ON StudentLevel.student_id=Student.id 
-    		WHERE StudentLevel.level_id=$level_id")->result();
+    		WHERE StudentLevel.level_id=$level_id ORDER BY Student.name")->result();
     	
     	$students_ids = array();
     	foreach($students as $student) $students_ids[$student->id] = $student->name;

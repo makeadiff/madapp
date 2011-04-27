@@ -253,9 +253,9 @@ class User extends Controller  {
 	
 	function delete($user_id) {	
 		$this->user_auth->check_permission('user_delete');
-		$this->users_model->delete($user_id);
-		
-		$this->session->set_flashdata('success', 'User deleted successfully');
+	
+		if($this->users_model->delete($user_id)) $this->session->set_flashdata('success', 'User deleted successfully');
+		else $this->session->set_flashdata('error', 'Error deleting User!');
 		redirect('user/view_users');
 	}
 	

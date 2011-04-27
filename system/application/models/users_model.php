@@ -386,12 +386,11 @@ class Users_model extends Model {
 	}
 	
 	function delete($user_id) {
-		$this->db->where('id',$user_id);
-		$this->db->update('User',array('status'=>'0'));
+		$this->db->where('id',$user_id)->update('User',array('status'=>'0'));
 		
 		$affected = $this->db->affected_rows();
 		
-		if($affected_rows) return true;
+		if($affected) return true;
 		return false;
 	}
 	
@@ -427,7 +426,7 @@ class Users_model extends Model {
     	return $this->db->query("SELECT batch_id FROM UserBatch WHERE user_id=$user_id")->row()->batch_id;
     }
 	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*
 	/**
     * Function to searchuser_details
     * @author:Rabeesh 
@@ -562,11 +561,15 @@ class Users_model extends Model {
 		return $result;
 	
 	}	
+///////////////////////////////////////////////////////////////////////////////////////////////////*/
 	
 	function search_users($data) {
 		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.title,User.user_type, City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		
+		if(empty($data['status'])) $data['status'] = 1;
+		$this->db->where('User.status', $data['status']);
 		
 		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
 		else $this->db->where('User.project_id', $this->project_id);

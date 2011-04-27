@@ -1,23 +1,4 @@
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-<script language="javascript">
-function bulk_action(level) {
-	var agents = "";
-	$('#student :checked').each(function(i, selected)
-		{ 
-		agents+=($(selected).val()=="")?$(selected).val():$(selected).val()+",";
-		});
-	$.ajax({
-		type : "POST", 
-		url  : "<?php echo site_url('level/update_student') ?>",
-		data : 'agents='+agents+'&level='+level,
-		success : function(data) 
-		{
-			
-		}
-	});
-}
-</script>
-
 <?php 
 $this->load->view('layout/header', array('title' => $action . ' Level in ' . $center_name));
 
@@ -26,6 +7,7 @@ if(!isset($level)) $level = array(
 	'name'		=> '',
 	'center_id'	=> 0,
 	);
+
 ?>
 
 <h1><?php echo $action . ' Level in ' . $center_name ?></h1>
@@ -50,12 +32,8 @@ if(!isset($level)) $level = array(
 echo form_hidden('center_id', $center_id);
 echo form_hidden('project_id', 1);
 echo form_hidden('id', $level['id']);
-$js = 'id="student" onclick="bulk_action('.$level['id'].');"';
-echo '<label for="action">&nbsp;</label>';echo form_submit('action', $action, $js);
+echo '<label for="action">&nbsp;</label>';echo form_submit('action', $action);
 ?>
 </form><br />
-<?php if($action == 'Edit') { ?>
-
-<?php } ?>
 
 <?php $this->load->view('layout/footer');

@@ -105,10 +105,21 @@ class Kids_model extends Model {
 		$this->db->select('id,name');
 		$this->db->from('Student');
 		$this->db->where('center_id',$uid);
+		$this->db->orderby('name');
 		$result=$this->db->get();
 		return $result;
 	
 	}
+	
+	/// Returns the ID and name of the Kids who are NOT assigned to any levels
+	function get_free_kids($center_id) {
+		$students = $this->db->query("SELECT Student.id,Student.name
+			FROM StudentLevel INNER JOIN Level ON Level.id = StudentLevel.level_id AND Level.project_id={$this->project_id}
+			RIGHT JOIN Student ON student_id = Student.id
+			WHERE student_id IS NULL AND Student.center_id=$center_id");
+		return $students;
+	}
+	
 	/**
     * Function to update_student
     * @author:Rabeesh 

@@ -108,7 +108,7 @@ foreach($all_users as $id => $user) {
     
     <td class="colActions right"> 
     <a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="thickbox icon edit popup" name="Edit User : <?php echo $user->name ?>">Edit</a>
-    <a class="delete confirm icon" href="<?php echo site_url('user/delete') ?>" title="Delete <?php echo $user->name ?>">Delete</a>
+    <a class="delete confirm icon" href="<?php echo site_url('user/delete/'.$user->id) ?>" title="Delete <?php echo $user->name ?>">Delete</a>
     </td>
 </tr>
 

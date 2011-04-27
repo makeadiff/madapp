@@ -53,7 +53,7 @@ class Level extends Controller {
 			$this->load->helper('form');
 			
 			$center_name = $this->center_model->get_center_name($center_id);
-			$kids = $this->kids_model->get_kids_name($center_id);
+			$kids = $this->kids_model->get_free_kids($center_id);
 			$all_books = idNameFormat($this->book_lesson_model->get_all_books());
 			
 			$this->load->view('level/form.php', array(
@@ -95,10 +95,24 @@ class Level extends Controller {
 			$level = $this->db->where('id',$level_id)->get('Level')->row_array();
 			$center_id = $level['center_id'];
 			$center_name = $this->center_model->get_center_name($center_id);
-			$kids = $this->kids_model->get_kids_name($center_id);
-			$level['kids'] = $kids->result();
 			
+			// Make sure only the Kids in this Level and the Free kids are shown. Free kids means that they are not in any other level.
+			//		We do this to bring down the number of kids in the selecte box. Its confusing otherwise.
+			$kids = $this->kids_model->get_free_kids($center_id);
+			$all_kids = idNameFormat($this->kids_model->get_kids_name($center_id)->result());
 			$level['selected_students'] = array_keys($this->model->get_kids_in_level($level_id));
+			
+			$level['kids'] = array();
+			foreach($level['selected_students'] as $kid_id) {
+				$kid_info = (object) 'kid';
+
+				$kid_info->id = $kid_id;
+				$kid_info->name = $all_kids[$kid_id];
+				$level['kids'][] = $kid_info;
+			}
+			foreach($kids->result() as $kid_info) {
+				$level['kids'][] = $kid_info;
+			}
 			
 			$all_books = idNameFormat($this->book_lesson_model->get_all_books());
 

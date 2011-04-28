@@ -387,10 +387,12 @@ class Users_model extends Model {
 	
 	function delete($user_id) {
 		$this->db->where('id',$user_id)->update('User',array('status'=>'0'));
-		
 		$affected = $this->db->affected_rows();
 		
-		if($affected) return true;
+		if($affected) {
+			$this->db->delete('UserBatch',array('user_id'=>$user_id));
+			return true;
+		}
 		return false;
 	}
 	

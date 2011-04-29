@@ -2,10 +2,9 @@
 
 <?php
 $details=$details->result_array();
-foreach($details as $row)
-{
-$root_id=$row['id'];
-$name=$row['name'];
+foreach($details as $row) {
+	$root_id=$row['id'];
+	$name=$row['name'];
 }
 ?>
 
@@ -15,11 +14,11 @@ $permission=$permission->result_array();
 
 $group_permission=$group_permission->result_array();
 $i=0;
-foreach($group_permission as $roll)
-	{
+$perm_id = array();
+foreach($group_permission as $roll) {
  	$perm_id[$i]=$roll['permission_id'];
 	$i++;
-	}
+}
 ?> 
 
          <form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/updategroup_name')?>" method="post" style="width:500px;" onsubmit="return validate();">

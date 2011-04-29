@@ -609,6 +609,12 @@ class Users_model extends Model {
 			INNER JOIN UserGroup ON GroupPermission.group_id=UserGroup.group_id 
 			WHERE UserGroup.user_id=$user_id")->result();
 		
+		if(!count($permissions)) { // If he has no group, he is volunteer group.
+			$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission 
+			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id  
+			WHERE GroupPermission.group_id=4")->result(); // 4 is the volunteer group.
+		}
+		
 		$all_permissions = array();
 		foreach($permissions as $permission) {
 			$all_permissions[] = $permission->name;

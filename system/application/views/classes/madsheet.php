@@ -1,9 +1,11 @@
-<?php $this->load->view('layout/header', array('title'=>'MAD Sheet'));
+<?php
+$this->load->view('layout/header', array('title'=>'MAD Sheet'));
 
 // See the madsheet_class_mode.php - that's the one in active use
 ?>
 <h1>MAD Sheet</h1>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/madsheet.css">
+<script type="text/javascript" src="<?php echo base_url() ?>js/madsheet.js"></script>
 
 <h3>Legend</h3>
 <table border="1">
@@ -17,17 +19,17 @@
 </table>
 
 <?php
-foreach($all_centers as $center) {
-	if(empty($class_days[$center->id])) continue;
+//dump($data);
 
-	$batches = $class_days[$center->id]['batchs'];
+foreach($data as $center_id => $center_info) {
+	if(empty($center_info)) continue;
+
+	$all_batches = $center_info['batches'];
 ?>
-<h3><?php echo $center->name ?></h3>
+<h3><?php echo $center_info['center_name'] ?></h3>
 
-<?php foreach($batches as $id=>$batch_info) {
+<?php foreach($all_batches as $batch_id => $batch_info) {
 	if(empty($batch_info['days_with_classes'])) continue;
-	
-	//dump($batch_info);
 ?>
 <table class="madsheet data-table info-box-table">
 <tr>
@@ -39,36 +41,47 @@ foreach($batch_info['days_with_classes'] as $day) print "<th>$day</th>";
 
 <?php
 $row_count = 0;
-
-foreach($all_levels[$center->id] as $level) {
-	$level_user_count = 0;
-	foreach($batch_info[$level->id]['users'] as $user) {
+foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 ?>
 <tr class="<?php echo ($row_count % 2) ? 'odd' : 'even' ?>">
-<?php if(!$level_user_count) { ?><td rowspan="<?php echo count($batch_info[$level->id]['users']); ?>"><?php echo $level->name ?></td><?php } ?>
-
-<td><?php echo $all_users[$user->id]->name ?></td>
-
 <?php
-foreach($batch_info['levels'][$level->id] as $classes) {
-	if($classes->user_id != $user->id) continue;
-	print "<td class='class-{$classes->status}'>&nbsp;";
-	if($classes->substitute_id != 0) print 'S';
-	print "</td>";
-}
-?>
-
-</tr>
-<?php 
-	$level_user_count++; 
+	$level_user_count = 0;
+	foreach($level_info['users'] as $teacher) {
+		if(!$level_user_count) { 
+			?><td rowspan="<?php echo count($level_info['users']); ?>"><?php echo $level_info['name'] ?></td><?php 
+		}
+		echo "<td>{$teacher['name']}</td>";
+	
+		foreach($teacher['classes'] as $classes) {
+			print "<td class='class-{$classes->status}'>&nbsp;";
+			if($classes->substitute_id != 0) print 'S';
+			
+			?><div class="class-info info-box"><ul>
+			<?php if($classes->teacher['status'] != 'cancelled') { ?>
+			<li><strong>Volunteer:</strong> <?php echo $all_users[$classes->teacher['user_id']]; ?></li>
+			<?php if($classes->teacher['substitute_id'] != 0) { ?><li><strong>Substitute:</strong> <?php echo $all_users[$classes->teacher['substitute_id']]; ?></li><?php } ?>
+			<li><strong>Status:</strong> <?php echo ucfirst($classes->teacher['status']); ?></li>
+			<?php if($classes->lesson_id) { ?><li><strong>Lesson:</strong> <?php echo $all_lessons[$classes->lesson_id]; ?></li><?php } ?>
+			<li><a href="<?php echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li>
+			<?php } ?>
+			<li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li>
+			</dl>
+			</div><?php
+			print "</td>";
+			$level_user_count++; 
+		}
+		
+		print '</tr>';
+	}
+	
 	$row_count++;
-} // User list ?>
-
-<?php 
-} // Level ?>
+} // Level end ?>
 </table>
-
+<br /><br />
 <?php } // Batch ?>
+
+<hr />
 <?php } // Center ?>
+
 
 <?php $this->load->view('layout/footer'); ?>

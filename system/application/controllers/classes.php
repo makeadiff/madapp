@@ -88,46 +88,83 @@ class Classes extends Controller {
 		redirect('classes/mark_attendence/'.$class_id);
 	}
 	
-	function madsheet_old_mode() {
+	// MADSheet in User mode.
+	function madsheet_user_mode() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();
 		
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
+		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer','status'=>false)));
+		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
 		
-		$class_days = array();
+		$data = array();
 		foreach($all_centers as $center) {
+			$data[$center->id] = array(
+				'center_id'	=> $center->id,
+				'center_name'=>$center->name,
+			);
 			$batches = $this->batch_model->get_class_days($center->id);
 			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
 			
+			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {
-				$class_days[$center->id]['batchs'][$batch_id]['name'] = $batch_name;
+				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
-					$class_days[$center->id]['batchs'][$batch_id][$level->id]['users'] = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level->id);
-					
-					$all_classes = $this->class_model->get_by_level($level->id);
+					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 					$days_with_classes = array();
-					foreach($all_classes as $class_date) {
-						$date = date('d M',strtotime($class_date->class_on));
-						if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+					$class_info = array();
+					
+					// Get the list of teachers first.
+					$teachers_info = array();
+					$last_class_id = 0;
+					foreach(array_reverse($all_classes) as $class) { // Reverse because we need the most recent teacher. Even if the first one has left.
+						if($last_class_id != 0 and $last_class_id != $class->id) break; // Get got the list of teachers for the first - don't have to move to the next class.
+						
+						$teachers_info[$class->user_id] = array(
+							'id'		=> $class->user_id,
+							'name'		=> !empty($all_users[$class->user_id]) ? $all_users[$class->user_id] : "",
+							'classes'	=> array()
+						);
+						$last_class_id = $class->id;
 					}
 					
-					$class_days[$center->id]['batchs'][$batch_id]['days_with_classes'] = $days_with_classes;
+					$teacher_classes = array();
+					foreach($teachers_info as $teacher_id=>$teacher_name) {
+						foreach($all_classes as $class) {
+							$date = date('d M',strtotime($class->class_on));
+							if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+							
+							if($class->user_id == $teacher_id) {
+								// Get the Teacher data.
+								$teacher_data = array(
+									'user_id'		=> $class->user_id,
+									'substitute_id'	=> $class->substitute_id,
+									'status'		=> $class->status,
+								);
+								$class->teacher = $teacher_data;
+								$teachers_info[$teacher_id]['classes'][] = $class;
+							}
+						}
+					}
 					
-					$class_days[$center->id]['batchs'][$batch_id]['levels'][$level->id] = $all_classes;
+					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['name'] = $level->name;
+					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['users'] = $teachers_info;
 				}
 				
+				$data[$center->id]['batches'][$batch_id]['days_with_classes'] = $days_with_classes;
+				$days_with_classes = array();
 			}
-			
 		}
 		
-		$this->load->view('classes/madsheet', array('class_days'=>$class_days, 'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
+		$this->load->view('classes/madsheet', array(
+			'data'=>$data, 'all_lessons'=>$all_lessons,
+			'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));	
 	}
 	
-	
+	/// MADSheet in Class Mode.
 	function madsheet() {
 		$this->user_auth->check_permission('classes_madsheet');
 		

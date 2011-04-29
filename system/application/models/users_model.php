@@ -570,8 +570,9 @@ class Users_model extends Model {
 		$this->db->from('User');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		
-		if(empty($data['status'])) $data['status'] = 1;
-		$this->db->where('User.status', $data['status']);
+		
+		if(!isset($data['status'])) $data['status'] = 1;
+		if($data['status'] !== false) $this->db->where('User.status', $data['status']);
 		
 		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
 		else $this->db->where('User.project_id', $this->project_id);

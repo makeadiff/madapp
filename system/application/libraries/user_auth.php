@@ -8,10 +8,11 @@ Class User_auth {
 	function User_auth() {
 		$this->ci = &get_instance();
 		$this->ci->load->model('users_model');
+		$this->ci->load->config('ion_auth', TRUE);
+		$this->ci->lang->load('ion_auth');
 		$this->ci->load->model('ion_auth_model');
 		$this->ci->load->library('email');
 		$this->ci->load->library('session');
-		
 		$this->ci->load->helper('cookie');
 	}
 
@@ -135,7 +136,65 @@ Class User_auth {
 					$this->ci->session->set_userdata('email', $status['email']);
 					$this->ci->session->set_userdata('name', $status['name']);
 					//$this->ci->session->set_userdata('permissions', $status['permissions']);
-					//$this->ci->session->set_userdata('groups', $status['groups']);	
+					//$this->ci->session->set_userdata('groups', $status['groups']);
+					
+								$email=$status['email'];
+								$city_id=$status['city_id'];
+								
+								$new_recruit_mail= $this->ci->users_model->get_new_recruit_mail();
+								$new_recruit_mail=$new_recruit_mail->data;
+								
+								$hr_email= $this->ci->users_model->get_hr_email($city_id);
+								$hr_email=$hr_email->value;
+								
+								$new_registration_notification= $this->ci->users_model->get_new_registration_notification();
+								$new_registration_notification=$new_registration_notification->data;
+								
+								$data = array(
+									
+									'email' => $status['email'],
+									'name' => $status['name'],
+									'phone' => $status['phone'],
+									'new_recruit_mail' => $new_recruit_mail,
+									'new_registration_notification' => $new_registration_notification,
+											);
+											
+			$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').
+			$this->ci->config->item('email_activate', 'ion_auth'), $data, true);
+			$this->ci->email->clear();
+			$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
+			$this->ci->email->initialize($config);
+			$this->ci->email->set_newline("\r\n");
+			$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), $this->ci->config->item('site_title', 'ion_auth'));
+			$this->ci->email->to($email);
+			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - Registration Details');
+			$this->ci->email->message($message);
+
+			if ($this->ci->email->send())
+			{
+				$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').
+				$this->ci->config->item('hr_email', 'ion_auth'), $data, true);
+				$this->ci->email->clear();
+				$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
+				$this->ci->email->initialize($config);
+				$this->ci->email->set_newline("\r\n");
+				$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), 
+				$this->ci->config->item('site_title', 'ion_auth'));
+				$this->ci->email->to($hr_email);
+				$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - New Registration');
+				$this->ci->email->message($message);
+				if ($this->ci->email->send())
+				{
+				$this->set_message('Mail send');
+				return TRUE;
+				}
+			}
+			else
+			{
+				$this->set_error('Error In Mailing');
+				return FALSE;
+			}
+						
 					return $status;
 	        	}
              return false;

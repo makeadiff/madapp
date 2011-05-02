@@ -71,14 +71,10 @@ class Common extends Controller {
 						$status = $this->user_auth->register($data);
 						if($status)		
 							{
-								$email=$status['email'];
-								$city_id=$status['city_id'];
-								$name=$status['name'];
-								$phone=$status['phone'];
-											
+								
 									
 								redirect('dashboard/dashboard_view');
-								$new_recruit_mail= $this->users_model->get_new_recruit_mail();
+								/*$new_recruit_mail= $this->users_model->get_new_recruit_mail();
 								$new_recruit_mail=$new_recruit_mail->data;
 								$hr_email= $this->users_model->get_hr_email($city_id);
 								$hr_email=$hr_email->value;
@@ -95,7 +91,7 @@ class Common extends Controller {
 											$this->email->to($hr_email);
 											$this->email->subject('Notification');
 											$this->email->message($new_registration_notification);
-											$this->email->send(); 
+											$this->email->send(); */
 								
 								
 								

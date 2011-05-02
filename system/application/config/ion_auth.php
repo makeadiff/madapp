@@ -103,6 +103,7 @@ $config['email_type'] = 'html';
      * Default : activate.tpl.php
 	 **/
 	$config['email_activate']   = 'activate.tpl.php';
+	$config['hr_email']   = 'hremail.tpl.php';
 	
 	/**
 	 * Forgot Password Email Template

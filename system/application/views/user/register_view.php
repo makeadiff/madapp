@@ -3,16 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Register</title>
-<link href="<?php echo base_url(); ?>css/register.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo base_url(); ?>css/freeport/register.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 </head>
 <body>
 <div id="container">
   <div id="wraper">
-    <div id="logo"><a href="#"><img src="<?php echo base_url(); ?>images/brilliant.jpg" /></a></div>
     <div id="main-content">
       <div id="title">User Register</div>
-	  <div id="content">
+	  <div id="content"><div style="color:#FF0000; text-align:center;"><?php echo $message; ?></div>
         <form method="post" action="<?=site_url('common/register')?>"  name="regform" id="regForm" onsubmit="return validate();" >
             <div class="content-row-large">
                    <span>Name:</span>

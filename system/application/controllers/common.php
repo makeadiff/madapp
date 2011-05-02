@@ -63,6 +63,7 @@ class Common extends Controller {
 			$this->validation->set_fields($fields);
 			if ($this->validation->run() == FALSE)
 					{	
+							$data['message']= "";
 							$error['details']= $this->center_model->getcity();
 							$this->load->view('user/register_view',$error);
 					}
@@ -71,8 +72,6 @@ class Common extends Controller {
 						$status = $this->user_auth->register($data);
 						if($status)		
 							{
-								
-									
 								redirect('dashboard/dashboard_view');
 								/*$new_recruit_mail= $this->users_model->get_new_recruit_mail();
 								$new_recruit_mail=$new_recruit_mail->data;
@@ -92,13 +91,16 @@ class Common extends Controller {
 											$this->email->subject('Notification');
 											$this->email->message($new_registration_notification);
 											$this->email->send(); */
-								
-								
-								
+							}
+							else{
+							$data['message']= "Registration Failed";
+							$data['details']= $this->center_model->getcity();
+							$this->load->view('user/register_view',$data);
 							}
 					}
           }
         else {
+				$data['message']= "";
 				$data['details']= $this->center_model->getcity();
 				$this->load->view('user/register_view',$data);
         	}

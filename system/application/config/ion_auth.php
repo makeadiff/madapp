@@ -103,6 +103,10 @@ $config['email_type'] = 'html';
      * Default : activate.tpl.php
 	 **/
 	$config['email_activate']   = 'activate.tpl.php';
+	/**
+	 * Mail  Template for hr
+     * Default : hremail.tpl.php
+	 **/
 	$config['hr_email']   = 'hremail.tpl.php';
 	
 	/**

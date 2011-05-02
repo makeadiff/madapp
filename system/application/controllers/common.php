@@ -33,21 +33,12 @@ class Common extends Controller {
     **/
     function register()
     {
-		
-
-        
 		if(Navigation::isPost()){
 
 			$error['city']='0';
-			$error['center']='0';
 			$data['firstname'] = $_POST['firstname'];
-			$data['password'] = $_POST['password'];
-			$data['repassword'] = $_POST['repassword'];
 			$data['email'] = $_POST['email'];
-			$data['position'] = $_POST['position'];	
 			$data['mobileno'] = $_POST['mobileno'];
-			
-			
 			$city = $_POST['city'];
 			if($city== '-1')
 			{
@@ -58,28 +49,15 @@ class Common extends Controller {
 				$data['city']=$city;
 			}
 			
-			$center= $_POST['center'];
-			if($center== '-1')
-			{
-				$error['center']='1';
-			}
-			else
-			{
-				$data['center']=$center;
-			}
 			
 			//set Rules..........
 			$rules['firstname']	= "required|alpha_numeric";
 			$rules['email']	= "required|valid_email";
 			$rules['mobileno'] = "trim|required|min_length[8]|max_length[12]|callback__validate_phone_number";
-
 			$this->validation->set_rules($rules);
-
 			$fields['firstname'] = "Firstname";
-			$fields['position']	= "Position";
 			$fields['email']	= "Email";
 			$fields['mobileno']	= "mobileno";
-			$fields['center']	= "center";
 			$fields['city']	= "City";
 
 			$this->validation->set_fields($fields);
@@ -91,10 +69,33 @@ class Common extends Controller {
 					else
 					{
 						$status = $this->user_auth->register($data);
-						//print_r($status->result());
 						if($status)		
 							{
+								$email=$status['email'];
+								$city_id=$status['city_id'];
+											
+									
 								redirect('dashboard/dashboard_view');
+								$new_recruit_mail= $this->users_model->get_new_recruit_mail();
+								$new_recruit_mail=$new_recruit_mail->data;
+								$hr_email= $this->users_model->get_hr_email($city_id);
+								$hr_email=$hr_email->value;
+								$new_registration_notification= $this->users_model->get_new_registration_notification();
+								$new_registration_notification=$new_registration_notification->data;
+									//mail function
+									
+									$this->email->from('madapp','Maddapp');
+									$this->email->to($email);
+									$this->email->subject('Thanks');
+									$this->email->message($new_recruit_mail);
+									$this->email->send(); 
+											$this->email->from('madapp','Maddapp');
+											$this->email->to($hr_email);
+											$this->email->subject('Notification');
+											$this->email->message($new_registration_notification);
+											$this->email->send(); 
+								
+								
 								
 							}
 					}

@@ -640,8 +640,7 @@ class Users_model extends Model {
 	function user_registration($data)
 	{
 		$email = $data['email'];
-        $password = $data['password'];
-        
+       // $password = $data['password'];
         $this->db->select('email');
         $this->db->from('User');
         $this->db->where('email',$email);
@@ -649,12 +648,9 @@ class Users_model extends Model {
         $result=$this->db->get();
         if($result->num_rows() == 0) {
 			$userdetailsArray = array(	'name'		=> $data['firstname'],
-										'title' 	=> $data['position'],
 										'email'		=> $data['email'],
 										'phone'		=> $data['mobileno'],
-										'password'	=> $data['password'],
 										'city_id'	=>$data['city'],
-										'center_id'	=>$data['center'],
 										'user_type'	=>'applicant',
 										'status'	=> '1'
 										);
@@ -662,9 +658,8 @@ class Users_model extends Model {
 			$this->db->insert('user');
 			$user_id=$this->db->insert_id();
 				
-			$this->db->select('User.*,Center.name as center_name,City.name as city_name');
+			$this->db->select('User.*,City.name as city_name,city.id as city_id');
 			$this->db->from('User');
-			$this->db->join('Center', 'Center.id = User.center_id' ,'join');
 			$this->db->join('City', 'City.id = User.city_id' ,'join');
 			$this->db->where('User.id',$user_id);
 			$result=$this->db->get();
@@ -672,9 +667,9 @@ class Users_model extends Model {
 			$memberCredentials['id'] = $user->id;
 			$memberCredentials['email'] = $user->email;
 			$memberCredentials['name'] = $user->name;
-			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
-			$memberCredentials['groups'] = $this->get_user_groups($user->id);
-			
+			$memberCredentials['city_id'] = $user->city_id;
+			//$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
+			//$memberCredentials['groups'] = $this->get_user_groups($user->id);
 			return $memberCredentials;
 			
 		} else {
@@ -691,6 +686,50 @@ class Users_model extends Model {
 	function get_password($data) {
 		$email=$data['email'];
 		return $this->db->where('email', $email)->get("User")->row();
+	}
+	/**
+    * Function to get_new_recruit_mail
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function get_new_recruit_mail()
+	{
+		$this->db->select('data');
+		$this->db->from('setting');
+		$this->db->where('name','new_recruit_mail');
+		$result=$this->db->get();
+		return $result->row();
+	}
+	/**
+    * Function to get_hr_email
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function get_hr_email($city_id)
+	{
+		$this->db->select('value');
+		$this->db->from('setting');
+		$this->db->where('name','hr_email_city_'.$city_id);
+		$result=$this->db->get();
+		return $result->row();
+	
+	}
+	/**
+    * Function to get get_new_registration_notification
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function get_new_registration_notification()
+	{
+		$this->db->select('data');
+		$this->db->from('setting');
+		$this->db->where('name','new_registration_notification');
+		$result=$this->db->get();
+		return $result->row();
+	
 	}
 	
 }

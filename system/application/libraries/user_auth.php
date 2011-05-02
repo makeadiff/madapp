@@ -134,8 +134,8 @@ Class User_auth {
 					$this->ci->session->set_userdata('id', $status['id']);
 					$this->ci->session->set_userdata('email', $status['email']);
 					$this->ci->session->set_userdata('name', $status['name']);
-					$this->ci->session->set_userdata('permissions', $status['permissions']);
-					$this->ci->session->set_userdata('groups', $status['groups']);	
+					//$this->ci->session->set_userdata('permissions', $status['permissions']);
+					//$this->ci->session->set_userdata('groups', $status['groups']);	
 					return $status;
 	        	}
              return false;

@@ -73,6 +73,8 @@ class Common extends Controller {
 							{
 								$email=$status['email'];
 								$city_id=$status['city_id'];
+								$name=$status['name'];
+								$phone=$status['phone'];
 											
 									
 								redirect('dashboard/dashboard_view');

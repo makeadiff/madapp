@@ -9,7 +9,8 @@ class Welcome extends Controller {
 	
 	function index()
 	{
-		$this->load->view('welcome_message');
+		//$this->load->view('welcome_message');
+		redirect('auth/login');
 	}
 }
 

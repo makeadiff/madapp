@@ -19,7 +19,6 @@ $this->load->view('layout/header', array('title'=>'MAD Sheet'));
 </table>
 
 <?php
-//dump($data);
 
 foreach($data as $center_id => $center_info) {
 	if(empty($center_info)) continue;

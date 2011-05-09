@@ -8,82 +8,82 @@
 	
 <div id="quick" class="clear" style="margin-top:-15px;">
 	<?php if($this->user_auth->get_permission('city_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('city/') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('city/') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/city.jpeg" alt="" /> <span>Cities</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('project_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('project/manage_project') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('project/manage_project') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/Project-icon.png" alt="" /> <span>Projects</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('center_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('center/manageaddcenters') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('center/manageaddcenters') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/center_right.png" alt="" /> <span>Centers</span></a></div>
 	<?php } ?>
 	
 	<br />
 	
 	<?php if($this->user_auth->get_permission('classes_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('classes/') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('classes/') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/class.png" alt="" /> <span>Classes</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('report_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('report/') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('report/') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Reports</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('classes_madsheet')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('classes/madsheet') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('classes/madsheet') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/stock_new-spreadsheet.png" alt="" /> <span>MAD Sheet</span></a></div>
 	<?php } ?>
 	
 	<br />
 
 	<?php if($this->user_auth->get_permission('kids_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('kids/manageaddkids') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('kids/manageaddkids') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/user.png" alt="" /> <span>Kids</span></a></div>
 	<?php } ?>
 	
 	
 	<?php if($this->user_auth->get_permission('exam_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('exam/manage_exam') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('exam/manage_exam') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/exam_icon.jpg" alt="" /> <span>Exams</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('exam_marks_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('exam/exam_score') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('exam/exam_score') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/mark.png" alt="" /> <span>Exam Marks</span></a></div>
 	<?php } ?>
 		
 	<br />
 	
 	<?php if($this->user_auth->get_permission('user_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('user/view_users') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('user/view_users') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/user_groups.jpeg" alt="" /> <span>View Users</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('user_group_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('user_group/manageadd_group') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('user_group/manageadd_group') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/group.jpeg" alt="" /> <span>User Groups</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('permission_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('permission/manage_permission') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('permission/manage_permission') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/permission.jpeg" alt="" /> <span>Permissions</span></a></div>
 	<?php } ?>
 	<br />
     <?php if($this->user_auth->get_permission('books_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('books/manage_books') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('books/manage_books') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Books</span></a></div>
 	<?php } ?>
     <?php if($this->user_auth->get_permission('chapters_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('books/manage_chapters') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('books/manage_chapters') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Chapters</span></a></div>
 	<?php } ?>
     <?php if($this->user_auth->get_permission('setting_index')) { ?>
-	<div class="quickLink"> <a href="<?= site_url('settings/index') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('settings/index') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Settings</span></a></div>
 	<?php } ?>
     	<br />

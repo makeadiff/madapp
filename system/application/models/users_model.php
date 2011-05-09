@@ -231,18 +231,20 @@ class Users_model extends Model {
     **/
 	function adduser($data)
 	{
-		$user_array=array('name'=>$data['name'],
-
-					'title'=> $data['position'],
-					'email' => $data['email'],
-					'phone' => $data['phone'],
-					'password'=> $data['password'],
-					//'center_id'=> $data['center'],
-					'city_id'=> $data['city'],
-					'project_id' => $data['project'],
-					'user_type' => $data['type']
-
-					);
+		$user_array = array(
+			'name'		=>$data['name'],
+			'title'		=> $data['position'],
+			'email'		=> $data['email'],
+			'phone'		=> $data['phone'],
+			'password'	=> $data['password'],
+			'address'	=> $data['address'],
+			'city_id'	=> $data['city'],
+			'project_id'=> $data['project'],
+			'user_type' => $data['type']
+		);
+		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
+		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
+		
 		$this->db->insert('User',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}

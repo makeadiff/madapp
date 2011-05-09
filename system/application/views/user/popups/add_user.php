@@ -1,5 +1,15 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
+<script src="<?php echo base_url()?>js/cal.js"></script>
+<?php
+$sdt=2006;
+$edt=date('Y');
+?>
+<script>
+jQuery(document).ready(function () {
+	$('input.date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
+});
+</script>
 <form id="formEditor" class="mainForm clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" style="width:500px;" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
@@ -45,9 +55,9 @@
 	<input id="phone" name="phone"  type="text" /> 
 </div>
 
-<div class="field clear" style="width:500px;"> 
+<div class="field clear"> 
 	<label for="txtName">Address : </label>
-	<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea> 
+	<textarea id="address" name="address"  rows="5" cols="30"></textarea> 
 </div>
 
 <?php 
@@ -91,6 +101,16 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
 <?php } ?>
 
+<div class="field clear" style="width:500px;"> 
+	<label for="txtName">Joined On : </label>
+	<input id="joined_on" name="joined_on" class="date-pick" type="text" value=""  /> 
+</div>
+
+<div class="field clear" style="width:500px;"> 
+	<label for="txtName">Left On : </label>
+	<input id="left_on" name="left_on" class="date-pick" type="text" value=""  /> 
+</div>
+
 <div class="field clear"> 
 <label for="type">User Type : </label>
 <select name="type">
@@ -127,11 +147,14 @@ function validate() {
 		}
 	if(document.getElementById("email").value == '')
 		{
-			alert("Enter Email.");
+			alert("Enter Email");
 			return false;
 		}
-		
-		
+	if(!document.getElementById("email").value.match(/^\w+\@\w+\.\w+/))
+		{
+			alert("Enter Valid Email");
+			return false;
+		}
 
 	if(document.getElementById("password").value == '')
 		{

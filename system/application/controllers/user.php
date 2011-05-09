@@ -106,7 +106,9 @@ class User extends Controller  {
 		$data['password'] = $_POST['password'];
 		$data['phone'] = $_POST['phone'];
 		$data['city'] = $_POST['city'];
-		//$data['center'] = $_POST['center'];
+		$data['address'] = $_POST['address'];
+		$data['joined_on'] = $_REQUEST['joined_on'];
+		$data['left_on'] = $_REQUEST['left_on'];
 		$data['project'] = $_POST['project'];
 		$data['type'] = $_POST['type'];
 		$data['id']= $this->users_model->adduser($data);

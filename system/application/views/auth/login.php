@@ -23,7 +23,9 @@ form {
 input {
 	font-size:1em;
 }
-
+.small {
+	font-size:16px;
+}
 </style>
 
 </head>
@@ -45,13 +47,13 @@ input {
 </div><br /><br />
 
 <div class="field">
-<label for="remember">Remember Me</label>
+<label for="remember" class="small">Remember Me</label>
 <?php echo form_checkbox('remember', '1', FALSE);?>
 </div><br />
 
 <div class="field">
 <?php echo form_submit('submit', 'Login');?><br />
-<a href="<?php echo site_url('auth/forgotpassword') ?>">Forgot Password?</a>
+<a class="small" href="<?php echo site_url('auth/forgotpassword') ?>">Forgot Password?</a>
 
 </div>
 

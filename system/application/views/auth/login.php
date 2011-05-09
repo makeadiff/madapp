@@ -1,54 +1,62 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
 <head>
-<title>madapp Admin Login</title>
+<title>MADApp Login</title>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/custom.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
+<style type="text/css">
+body {
+	text-align:center;
+	font-size:1.5em;
+}
+form {
+	background-color:#eee;
+	width:400px;
+	padding:10px;
+	margin:100px auto;
+	text-align:left;
+}
+input {
+	font-size:1em;
+}
+
+</style>
 
 </head>
 <body id="pageLogin">
-<div class="field" style="color:#CC0000; text-align:center; margin-top:50px;">
-	<?php echo $message;?>
-	</div>
-<div id="login" class="centerbox">
-<h2 align="center">Login</h2>
-<div class="boxInside">
+<div class="field" style="color:#CC0000; text-align:center; margin-top:50px;"><?php echo $message;?></div>
+    
+<?php echo form_open("auth/login");?>
+<fieldset>
+<legend>MADApp Login</legend>
 
-	
-    <?php echo form_open("auth/login");?>
-    <fieldset>
-	<legend>Login</legend>
-    
-    <div class="field"> 
-      	<label for="email">Email:</label>
-      	<?php  echo form_input($email);?>
-      </div>
-      
-      <div class="field">
-      	<label for="password">Password:</label>
-      	<?php echo form_input($password);?>
-      </div>
-      
-      <div class="field" style="margin-top:10px;">
-	      <label for="remember">Remember Me:</label></div>
-          <div  style=" float:left; margin-left:-50px; margin-top:10px;">
-	      <?php echo form_checkbox('remember', '1', FALSE);?>
-	 </div>
-      
-      <div class="field" style="margin-top:-21px; margin-left:150px;">
-      <?php echo form_submit('submit', 'Login');?>
-	</div>
-    
-    <div class="field" style="margin-left:5px; margin-top:10px;"><a href="<?php echo site_url('auth/forgotpassword') ?>"> Forgot password ?</a></div>
-    <div class="field" style="margin-left:149px; margin-top:-14px;"><a href="<?php echo site_url('common/register') ?>">New Registration</a></div>
-      </fieldset>
-    <?php echo form_close();?>
+<div class="field"> 
+<label for="email">Email</label><br />
+<?php echo form_input($email); ?>
+</div><br /><br />
+
+<div class="field">
+<label for="password">Password</label><br />
+<?php echo form_input($password); ?>
+</div><br /><br />
+
+<div class="field">
+<label for="remember">Remember Me</label>
+<?php echo form_checkbox('remember', '1', FALSE);?>
+</div><br />
+
+<div class="field">
+<?php echo form_submit('submit', 'Login');?><br />
+<a href="<?php echo site_url('auth/forgotpassword') ?>">Forgot Password?</a>
 
 </div>
+
+</fieldset>
+<?php echo form_close();?>
 
 </body>
 

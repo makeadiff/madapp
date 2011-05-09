@@ -209,9 +209,11 @@ class User extends Controller  {
 		
 		$data['phone'] = $_REQUEST['phone'];
 		$data['city'] = $_REQUEST['city'];
-		//$data['center'] = $_REQUEST['center'];
+		$data['address'] = $_REQUEST['address'];
 		$data['project'] = $_REQUEST['project'];
 		$data['type'] = $_REQUEST['type'];
+		$data['joined_on'] = $_REQUEST['joined_on'];
+		$data['left_on'] = $_REQUEST['left_on'];
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
 		$data['id']=$data['rootId'];

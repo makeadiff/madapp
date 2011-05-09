@@ -1,6 +1,5 @@
 <?php $this->load->view('layout/thickbox_header');
 
-
 $user_details = $user->result_array();
 foreach($user_details as $row) {	
 	$root_id	= $row['id'];
@@ -8,10 +7,13 @@ foreach($user_details as $row) {
 	$title		= $row['title'];
 	$email		= $row['email'];
 	$phone		= $row['phone'];
+	$address	= $row['address'];
 	$center_id	= $row['center_id'];
 	$city_id	= $row['city_id'];
 	$project_id	= $row['project_id'];
 	$user_type	= $row['user_type'];
+	$joined_on	= $row['joined_on'];
+	$left_on	= $row['left_on'];
 	$photo=$row['photo'];
 }
 
@@ -20,6 +22,17 @@ foreach($group_name as $row) {
 	$group_id=$row['id'];	
 }
 ?>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
+<script src="<?php echo base_url()?>js/cal.js"></script>
+<?php
+$sdt=2006;
+$edt=date('Y');
+?>
+<script>
+jQuery(document).ready(function () {
+	$('input.date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
+});
+</script>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
 <fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
 
@@ -64,6 +77,11 @@ foreach($group_name as $row) {
 	<input id="phone" name="phone"  type="text" value="<?php echo $phone; ?>"  /> 
 </div>
 
+<div class="field clear"> 
+	<label for="txtName">Address : </label>
+	<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea> 
+</div>
+
 <?php 
 $this_city_id = $this->session->userdata('city_id');
 if($this->user_auth->get_permission('change_city')) { ?>
@@ -84,22 +102,6 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <?php } else { ?>
 	<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
-
-<!--<div class="field clear" style="width:500px;">
-<label for="selBulkActions">Select center:</label> 
-<select id="center" name="center"> 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<?php 
-	//$center = $center->result_array();
-	//foreach($center as $row){ ?>
-	<?php// if($center_id==$row['id']){ ?>
-	<option value="<?php// echo $row['id']; ?>" selected="selected"><?php// echo $row['name']; ?></option> 
-	<?php// } else { ?>
-	<option value="<?php// echo $row['id']; ?>"><?php// echo $row['name']; ?></option>
-	<?php// }} ?>
-</select>
-</div>-->
-
 
 <div class="field clear">
 <label for="selBulkActions">Select Project:</label> 
@@ -125,6 +127,16 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<label for="date">Change photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
+</div>
+
+<div class="field clear" style="width:500px;"> 
+	<label for="txtName">Joined On : </label>
+	<input id="joined_on" name="joined_on" class="date-pick" type="text" value="<?php echo $joined_on; ?>"  /> 
+</div>
+
+<div class="field clear" style="width:500px;"> 
+	<label for="txtName">Left On : </label>
+	<input id="left_on" name="left_on" class="date-pick" type="text" value="<?php echo $left_on; ?>"  /> 
 </div>
 
 <div class="field clear" style="width:500px;"> 

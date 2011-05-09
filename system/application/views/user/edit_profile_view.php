@@ -12,6 +12,7 @@ foreach($user_details as $row) {
 	$title		= $row['title'];
 	$email		= $row['email'];
 	$phone		= $row['phone'];
+	$address	= $row['address'];
 	$center_id	= $row['center_id'];
 	$city_id	= $row['city_id'];
 	$project_id	= $row['project_id'];
@@ -27,10 +28,7 @@ foreach($group_name as $row) {
 }
 ?>
 <script type="text/javascript">
-function get_center_Name(city_id)
-{
-alert(city_id);
-
+function get_center_Name(city_id) {
 }
 </script>
 <form id="formEditor" class="mainForm clear" action="<?=site_url('user/update_profile')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
@@ -77,11 +75,16 @@ alert(city_id);
 				<input id="phone" name="phone"  type="text" value="<?php echo $phone; ?>"  /> 
             </div>
             
+            <div class="field clear">
+				<label for="txtName">Address : </label>
+				<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea>
+            </div>
+            
             <?php 
 			$this_city_id = $this->session->userdata('city_id');
 			if($this->user_auth->get_permission('change_city')) { ?>
 			<div class="field clear" style="width:500px;">
-            <label for="selBulkActions">Select city:</label> 
+            <label for="selBulkActions">Select City:</label> 
             <select id="city" name="city"  onchange="javascript:get_center_Name(this.value);">
             <option selected="selected" value="-1" >- choose action -</option> 
 				<?php 
@@ -99,23 +102,7 @@ alert(city_id);
     		<?php } ?>
             
             <div class="field clear" style="width:500px;">
-            <label for="selBulkActions">Select center:</label> 
-            <select id="center" name="center"> 
-            <option selected="selected" value="-1" >- Choose -</option> 
-				<?php 
-                $center = $center->result_array();
-                foreach($center as $row){ ?>
-                <?php if($center_id==$row['id']){ ?>
-                <option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
-                <?php } else { ?>
-                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-                <?php }} ?>
-            </select>
-            </div>
-            
-            
-            <div class="field clear" style="width:500px;">
-            <label for="selBulkActions">Select project:</label> 
+            <label for="selBulkActions">Select Project:</label> 
             <select id="project" name="project">
 				<?php 
                 $project = $project->result_array();

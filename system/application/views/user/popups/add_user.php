@@ -37,14 +37,17 @@
 			
 </div>
 <div class="field clear" style="width:500px;"> 
-			<label for="cpassword">Confirm Password : </label>
-			<input id="cpassword" name="cpassword"  type="password" /> 
-			
+	<label for="cpassword">Confirm Password : </label>
+	<input id="cpassword" name="cpassword"  type="password" /> 
 </div>
 <div class="field clear" style="width:500px;"> 
-			<label for="txtName">Phone : </label>
-			<input id="phone" name="phone"  type="text" /> 
-			
+	<label for="txtName">Phone : </label>
+	<input id="phone" name="phone"  type="text" /> 
+</div>
+
+<div class="field clear" style="width:500px;"> 
+	<label for="txtName">Address : </label>
+	<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea> 
 </div>
 
 <?php 
@@ -67,20 +70,6 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <?php } else { ?>
 <input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
-
-<!--<div class="field clear" style="width:500px;">
-<label for="selBulkActions">Select center:</label> 
-<select id="center" name="center"> 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<?php// 
-	//$center = $center->result_array();
-	//foreach($center as $row)
-	//{
-	?>
-	<option value="<?php//echo $row['id']; ?>"><?php// echo $row['name']; ?></option> 
-	<?php// } ?>
-</select>
-</div>-->
 
 <?php 
 $this_project_id = $this->session->userdata('project_id');

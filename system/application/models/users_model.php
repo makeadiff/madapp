@@ -351,11 +351,13 @@ class Users_model extends Model {
 				'title'=> $data['position'],
 				'email' => $data['email'],
 				'phone' => $data['phone'],
-				//'center_id'=> $data['center'],
+				'address'=>$data['address'],
 				'city_id'=> $data['city'],
 				'project_id'=>$data['project'],
 				'user_type' => $data['type']
 			);
+			if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
+			if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
 			if(isset($data['password'])) $user_array['password'] = $data['password'];
 				
 			$this->db->where('id', $rootId);

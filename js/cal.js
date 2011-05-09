@@ -289,7 +289,12 @@
 
 	jQuery.fn.simpleDatepicker.formatOutput = function (dateObj) {
 		//return (dateObj.getMonth() + 1) + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
-		return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();
+		var month = dateObj.getMonth() + 1;
+		if(month < 10) month = "0" + month;
+		var day = dateObj.getDate();
+		if(day < 10) day = "0" + day;
+		
+		return dateObj.getFullYear() + "-" + month + "-" + day;
 	};
 	
 	jQuery.fn.simpleDatepicker.defaults = {

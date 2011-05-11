@@ -231,6 +231,16 @@ class Users_model extends Model {
     **/
 	function adduser($data)
 	{
+		$email=$data['email'];
+		$this->db->select('email');
+		$this->db->from('user');
+		$this->db->where('email',$email);
+		$result=$this->db->get();
+		if($result->num_rows() > 0){
+		return false;
+		
+		} else { 
+		
 		$user_array = array(
 			'name'		=>$data['name'],
 			'title'		=> $data['position'],
@@ -247,8 +257,19 @@ class Users_model extends Model {
 		
 		$this->db->insert('User',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
+		}
 	}
-	
+	function check_email_availability($insert)
+	{
+		$email=$insert['email'];
+		$this->db->select('email');
+		$this->db->from('user');
+		$this->db->where('email',$email);
+		$result=$this->db->get();
+		if($result->num_rows() > 0){
+		return false;
+		}else{ return true; }
+	}
 	/**
     * Function to process_pic
     * @author:Rabeesh 

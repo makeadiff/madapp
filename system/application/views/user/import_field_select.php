@@ -9,11 +9,9 @@ $this->load->view('layout/header', array('title' => "Import Configuration..."));
 <table id="main">
 <?php
 $fields = array('Name','Email','Phone','Title', 'Ignore');
-
 print '<tr>';
 for($i=0; $i<count($all_rows[0]); $i++) {
 	print "<td><select name='field[]'>\n";
-	
 	$selected = false;
 	$current_field_name = $fields[$i];
 	

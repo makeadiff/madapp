@@ -156,7 +156,8 @@ class User extends Controller  {
 		}
 		else	
 		{
-			$message['msg']   =  "No Group created.";
+			
+			$message['msg']   =  "The User can't be added because mailid '".$data['email']."' is already taken";
 			$message['successFlag'] = "0";
 			$message['link']  =  "popupAdduser";
 			$message['linkText'] = "Add New User";
@@ -640,14 +641,13 @@ class User extends Controller  {
 	function import_action() {
 		if($this->input->post('uploaded_file')) {
 			if(!preg_match('/^\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
-			
 			$handle = fopen($this->input->post('uploaded_file'),'r');
 			if(!$handle) die('Cannot open uploaded file.');
 		
 			$row_count = 0;
 			$rows = array();
 			$fields = $this->input->post('field');
-
+			//print_r($fields);
 			//Read the file as csv
 			while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 				$row_count++;
@@ -670,9 +670,14 @@ class User extends Controller  {
 				$insert['user_type'] = 'volunteer';
 				$insert['password'] = 'network'; //Default Password.
 				$insert['credit'] = 3;
-				
 				if($insert['name'] and $insert['email']) // Make sure that we have the neceassy values before importing.
+				//$flag= $this->users_model->check_email_availability($insert);
+				//if($flag != ''){
 					$this->db->insert('User', $insert);
+					//} else {
+					
+					//echo "'".$insert['name']."' can't be imported - the email '".$insert['email']."'
+					//is already in the database";}
 			}
 			fclose($handle);
 			unlink($this->input->post('uploaded_file'));
@@ -681,5 +686,6 @@ class User extends Controller  {
 	}
 	
 }	
+	
 
 

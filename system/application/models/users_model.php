@@ -266,9 +266,10 @@ class Users_model extends Model {
 		$this->db->from('user');
 		$this->db->where('email',$email);
 		$result=$this->db->get();
-		if($result->num_rows() > 0){
-		return false;
-		}else{ return true; }
+		if($result->num_rows() > 0)
+		{
+		return true;
+		}//else{ return true; }
 	}
 	/**
     * Function to process_pic

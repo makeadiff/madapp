@@ -656,7 +656,7 @@ class User extends Controller  {
 				$insert = array();
 				$emails = array();
 				$phones = array();
-				
+				$message = array();
 				foreach($data as $key=>$value) {
 					if(empty($fields[$key])) continue;
 					
@@ -671,17 +671,25 @@ class User extends Controller  {
 				$insert['password'] = 'network'; //Default Password.
 				$insert['credit'] = 3;
 				if($insert['name'] and $insert['email']) // Make sure that we have the neceassy values before importing.
-				//$flag= $this->users_model->check_email_availability($insert);
-				//if($flag != ''){
+				$flag= $this->users_model->check_email_availability($insert);
+				$i=0;
+				if($flag)
+					{
+					$message['message'.$i]= "'".$insert['name']."' can't be imported - the email '".$insert['email']
+					."'is already in the database";
+					$i++;
+					} else {
 					$this->db->insert('User', $insert);
-					//} else {
-					
-					//echo "'".$insert['name']."' can't be imported - the email '".$insert['email']."'
-					//is already in the database";}
+					}
 			}
 			fclose($handle);
 			unlink($this->input->post('uploaded_file'));
+			if($message != '')
+			{
+			$this->load->view('user/import_error',$message);
+			} else {
 			$this->load->view('user/import_success');
+			}
 		}
 	}
 	

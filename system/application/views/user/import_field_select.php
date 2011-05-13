@@ -8,30 +8,19 @@ $this->load->view('layout/header', array('title' => "Import Configuration..."));
 
 <table id="main">
 <?php
-$fields = array('Name','Email','Phone','Title', 'Ignore');
+$fields = array('Name','Phone','Email','Title', 'Ignore');
 print '<tr>';
 for($i=0; $i<count($all_rows[0]); $i++) {
 	print "<td><select name='field[]'>\n";
-	$selected = false;
 	$current_field_name = $fields[$i];
 	
-	switch($current_field_name) {
-		case 'Name': 
-					if(preg_match('/^[A-Za-z ]+$/', $all_rows[2][$i])) $selected = true;
-					break;
-		case 'Phone':
-					if(preg_match('/^[0-9\+\- ]+$/', $all_rows[2][$i])) $selected = true;
-					break;
-		case 'Email':
-					if(preg_match('/@.+\./', $all_rows[2][$i])) $selected = true;
-					break;
-		case 'URL':
-					if(preg_match('/^http\:/', $all_rows[2][$i])) $selected = true;
-					break;
-	}
+	$selected = 'Name';
+	if(preg_match('/^[0-9\+\- ]+$/', $all_rows[2][$i])) $selected = 'Phone';
+	if(preg_match('/^.+\@.+\..+$/', $all_rows[2][$i])) $selected = 'Email';
+	if(preg_match('/^http\:/', $all_rows[2][$i])) $selected = 'URL';
 	
 	foreach($fields as $field_name) {
-		$selected_code = ($field_name == $current_field_name and $selected) ? " selected='selected'" : "";
+		$selected_code = ($field_name == $selected) ? " selected='selected'" : "";
 		
 		print "<option value='$field_name'$selected_code>$field_name</option>\n";
 	}

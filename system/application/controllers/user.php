@@ -27,6 +27,7 @@ class User extends Controller  {
 		$this->load->helper('url');
         $this->load->helper('form');
 		$this->load->helper('csv');
+		$this->load->helper('misc');
 		$this->load->model('center_model');
 		$this->load->model('project_model');
 		$this->load->model('users_model');
@@ -632,7 +633,8 @@ class User extends Controller  {
 			$row_count = 0;
 			$rows = array();
 			$fields = $this->input->post('field');
-			//print_r($fields);
+			
+			$message = array();
 			//Read the file as csv
 			while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 				$row_count++;
@@ -641,7 +643,6 @@ class User extends Controller  {
 				$insert = array();
 				$emails = array();
 				$phones = array();
-				$message = array();
 				foreach($data as $key=>$value) {
 					if(empty($fields[$key])) continue;
 					
@@ -655,25 +656,25 @@ class User extends Controller  {
 				$insert['user_type'] = 'volunteer';
 				$insert['password'] = 'network'; //Default Password.
 				$insert['credit'] = 3;
-				if($insert['name'] and $insert['email']) // Make sure that we have the neceassy values before importing.
-				$flag= $this->users_model->check_email_availability($insert);
-				$i=0;
-				if($flag)
-					{
-					$message['message'.$i]= "'".$insert['name']."' can't be imported - the email '".$insert['email']
-					."'is already in the database";
-					$i++;
+				$insert['joined_on'] = date('Y-m-d');
+				
+				if($insert['name'] and $insert['email']) { // Make sure that we have the neceassy values before importing.
+					$flag = $this->users_model->check_email_availability($insert);
+				
+					if($flag) {
+						$message[] = "'$insert[name]' can't be imported - the email '$insert[email]' is already in the database";
 					} else {
-					$this->db->insert('User', $insert);
+						$this->db->insert('User', $insert);
 					}
+				}
 			}
 			fclose($handle);
 			unlink($this->input->post('uploaded_file'));
-			if($message != '')
-			{
-			$this->load->view('user/import_error',$message);
+			
+			if($message) {
+				$this->load->view('user/import_error',array('message'=>$message));
 			} else {
-			$this->load->view('user/import_success');
+				$this->load->view('user/import_success');
 			}
 		}
 	}

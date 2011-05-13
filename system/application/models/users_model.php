@@ -263,13 +263,11 @@ class Users_model extends Model {
 	{
 		$email=$insert['email'];
 		$this->db->select('email');
-		$this->db->from('user');
+		$this->db->from('User');
 		$this->db->where('email',$email);
 		$result=$this->db->get();
-		if($result->num_rows() > 0)
-		{
-		return true;
-		}//else{ return true; }
+		if($result->num_rows() > 0) return true;
+		return false;
 	}
 	/**
     * Function to process_pic
@@ -545,7 +543,7 @@ class Users_model extends Model {
 										'status'	=> '1'
 										);
 			$this->db->set($userdetailsArray);
-			$this->db->insert('user');
+			$this->db->insert('User');
 			$user_id=$this->db->insert_id();
 				
 			$this->db->select('User.*,City.name as city_name,city.id as city_id');
@@ -587,7 +585,7 @@ class Users_model extends Model {
 	function get_new_recruit_mail()
 	{
 		$this->db->select('data');
-		$this->db->from('setting');
+		$this->db->from('Setting');
 		$this->db->where('name','new_recruit_mail');
 		$result=$this->db->get();
 		return $result->row();
@@ -601,7 +599,7 @@ class Users_model extends Model {
 	function get_hr_email($city_id)
 	{
 		$this->db->select('value');
-		$this->db->from('setting');
+		$this->db->from('Setting');
 		$this->db->where('name','hr_email_city_'.$city_id);
 		$result=$this->db->get();
 		return $result->row();
@@ -616,7 +614,7 @@ class Users_model extends Model {
 	function get_new_registration_notification()
 	{
 		$this->db->select('data');
-		$this->db->from('setting');
+		$this->db->from('Setting');
 		$this->db->where('name','new_registration_notification');
 		$result=$this->db->get();
 		return $result->row();

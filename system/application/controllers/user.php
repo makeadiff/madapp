@@ -38,23 +38,7 @@ class User extends Controller  {
     {
         
     }
-	/**
-    * Function to manageadd_user
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function manageadd_user()
-	{
-		$this->user_auth->check_permission('user_index');
-		$data['currentPage'] = 'db';
-		$data['navId'] = '';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('user/user_view');
-		$this->load->view('dashboard/includes/footer');
-	
-	}
+
 	/**
     * Function to get_userlist
     * @author:Rabeesh 
@@ -289,6 +273,7 @@ class User extends Controller  {
 		
 		$this->load->view('user/view_users', $data);
 	}
+	
 	/**
     * Function to user_search
     * @author:Rabeesh 

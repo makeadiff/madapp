@@ -1,1 +1,1 @@
-<?php include('madapp/css.php');
+<?php include('camp/css.php');

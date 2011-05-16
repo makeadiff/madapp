@@ -1,9 +1,6 @@
 <?php
 $this->load->view('layout/header', array('title'=>'MAD Sheet'));
-
-
 ?>
-<h1>MAD Sheet</h1>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/madsheet.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/madsheet.js"></script>
 

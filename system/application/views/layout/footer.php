@@ -1,1 +1,1 @@
-<?php include('madapp/footer.php');
+<?php include('camp/footer.php');

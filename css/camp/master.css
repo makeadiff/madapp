@@ -1,0 +1,152 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+br {
+	clear:both;
+}
+
+body { font: 13px/13px "Lucida Sans", Arial, sans-serif; color:#333333; background: url(../../images/camp/noisepattern.png); line-height:140%;  }
+a,
+a:link
+a:hover
+a:active { color:#441681; text-decoration:none; border-bottom:1px dotted #441681; }
+a:hover  { border-bottom:none; }
+
+.left    { float:left; }
+.right   { float:right; }
+
+
+/*********************** [Layout] **********************/
+
+.line    { max-width: 1040px; min-width:665px; padding:0 10px; overflow:hidden; margin:0 auto; }
+.head    { height: 110px; background: #0F071B url(../../images/camp/bg-sprite.png) 0 30px repeat-x; border-bottom:1px solid #DDD;  }
+.main    { width:623px; padding:10px; margin-top:10px; min-height:500px; float:left; background: url(../../images/camp/bg-trans.png); overflow:hidden; }
+.sidebar { width:355px; padding:10px; float:left;overflow:hidden;min-height:500px; margin-left:20px; }
+.footer  { height: 110px; background:#0E051F; }
+
+h1 { font-size:19px; color:#BF98E0; text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5); width:290px; float:left;  padding-top: 36px; text-transform:uppercase; font-weight:normal;  }
+h2 { font-size:18px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); text-transform:uppercase; margin-bottom:20px;    padding-bottom: 10px; border-bottom: 1px solid #BBBBBB; font-family:Arial, Helvetica, sans-serif; letter-spacing:1px;  }
+ 
+.logo    { font-weight:bold; font-size:16px; color:#58656D; padding-top:5px; }
+.welcome { color:#473265; padding-top:5px;}
+
+.tools           { margin-top:28px;     width: 352px;}
+.tools a         { float:left; height:38px; width:40px; margin-left:30px; background: url(../../images/camp/icons-sprite.png); text-indent:-9999px; border:none; opacity:.4;}
+.tools a:hover   { opacity:1;}
+.tools a.sheet   { background-position: 0px 0px; }
+.tools a.dash    { background-position: -81px 0px; }
+.tools a.class   { background-position: -164px 0px; }
+.tools a.profile { background-position: -239px 0px; }
+.tools a.setting { background-position: -316px 0px; }
+
+.tools a { -moz-transition-property: opacity;     -moz-transition-duration: 1s;    -moz-transition-timing-function: ease-out;	
+           -webkit-transition-property: opacity;  -webkit-transition-duration: 1s; -webkit-transition-timing-function: ease-out;
+		   -o-transition-property: opacity;       -o-transition-duration: 1s;      -o-transition-timing-function: ease-out; }
+.tools a:hover  { -moz-transition-property: opacity;  -moz-transition-duration: 300ms; -moz-transition-timing-function:  cubic-bezier(0.19,0.49,0.41,1.00);
+-webkit-transition-property: opacity;  -webkit-transition-duration: 300ms; -webkit-transition-timing-function:  cubic-bezier(0.19,0.49,0.41,1.00);
+-o-transition-property: opacity;  -o-transition-duration: 300ms; -o-transition-timing-function:  cubic-bezier(0.19,0.49,0.41,1.00);  }
+
+
+
+/*********************** [Common Elements] **********************/
+
+.button { display: inline-block; outline: none;	cursor: pointer;	text-align: left;	text-decoration: none;	font: 17px/100% Arial, Helvetica, sans-serif;	padding: .5em 2em .55em 1.5em;	text-shadow: 0 1px 1px rgba(0,0,0,.3);	-webkit-border-radius: 2em; 	-moz-border-radius: 2em;	border-radius: 2em;	-webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);	-moz-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);	box-shadow:0px 1px 3px rgba(0, 0, 0, 0.3));	border: solid 2px #fff;
+}
+.button:hover { text-decoration: none;	border: solid 2px #fff;}
+.button:active { position: relative;	top: 1px; }
+
+.orange { 	color: #fef4e9;	background: #f78d1d;	background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+	background: -moz-linear-gradient(top,  #faa51a,  #f47a20);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+}
+.orange:hover {	background: #f47c20;	background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015));
+	background: -moz-linear-gradient(top,  #f88e11,  #f06015);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015');}
+.orange:active {background: -webkit-gradient(linear, left top, left bottom, from(#f47a20), to(#faa51a));	background: -moz-linear-gradient(top,  #f47a20,  #faa51a);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20', endColorstr='#faa51a');
+}
+
+
+.green{ 	color: #fef4e9;		background: #8ECD1B;	background: -webkit-gradient(linear, left top, left bottom, from(#AFE901), to(#f06015));
+	background: -moz-linear-gradient(top,  #AFE901,  #44A615);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#AFE901', endColorstr='#44A615');}
+.green:hover  {background: #8ECD1B;	background: -webkit-gradient(linear, left top, left bottom, from(#BFFE01), to(#44A615));
+	background: -moz-linear-gradient(top,  #BFFE01, #44A615);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#BFFE01', endColorstr='#44A615');
+}.green:active {	background: -webkit-gradient(linear, left top, left bottom, from(#44A615), to(#AFE901));	background: -moz-linear-gradient(top,  #44A615,  #AFE901);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#44A615', endColorstr='#AFE901'); }
+
+
+.sidebar .button { min-width:220px; margin-right:20px;}
+
+
+.form  { margin:20px 0px; padding-bottom:10px; overflow:hidden; border-bottom:1px solid #BBB; }
+.form li { float:left; margin-bottom:10px;}
+.form label { float:left; width:100px; text-align:right; margin-right:10px; padding-top:3px;  }
+.form input,
+.form select { width:220px; padding:3px;  }
+
+/*
+.nodisplay { display:none; }
+.nodisplay .sec-action { display:none; } 
+*/
+
+
+.data-table  { width:100%;}
+.data-table td,
+.data-table th  { border:1px solid #999; padding:5px; }
+.data-table th  { background-color:#AAA; }
+.data-table .left,
+.data-table .right { float:none; }
+
+.info-box-table .info-box { display:none; }
+
+
+/******************** [Page Specific]*******************************/
+
+#pg-manage-centers {}
+
+
+/******************* Removing unwanted elements *******************/
+#head {
+	display:none;
+}

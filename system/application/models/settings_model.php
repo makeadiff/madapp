@@ -19,7 +19,7 @@ class Settings_model extends Model {
     * @return : type: [Array]
     **/
     function getsettings() {
-    	$settings = $this->db->orderby('name')->get('setting')->result();
+    	$settings = $this->db->orderby('name')->get('Setting')->result();
     	return $settings;
     }
     /**
@@ -29,7 +29,7 @@ class Settings_model extends Model {
     * @return : type: [Array]
     **/
     function addsetting($data) {
-		$success = $this->db->insert('setting', 
+		$success = $this->db->insert('Setting', 
 			array(
 				'name'			=>	$data['name'], 
 				'value'	=>	$data['value'],
@@ -45,7 +45,7 @@ class Settings_model extends Model {
     * @return : type: [Array]
     **/
     function editsetting($data) {
-    	$this->db->where('id', $this->input->post('id'))->update('setting', $data);
+    	$this->db->where('id', $this->input->post('id'))->update('Setting', $data);
     }
     /**
     * Function to get_settings
@@ -54,11 +54,12 @@ class Settings_model extends Model {
     * @return : type: [Array]
     **/
     function get_settings($setting_id) {
-    	return $this->db->where('id',$setting_id)->get('setting')->row_array();
+    	return $this->db->where('id',$setting_id)->get('Setting')->row_array();
     }
+    
 	function deletesetting($id)
 	{
-	$this->db->where('id', $id)->delete('setting');
+	$this->db->where('id', $id)->delete('Setting');
 	
 	}
 }

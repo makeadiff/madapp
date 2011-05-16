@@ -2,7 +2,7 @@
 $this->load->view('layout/header', array('title'=>'Classes')); ?>
 <div id="head" class="clear"><h1>Classes</h1></div>
 
-<table id="main">
+<table id="main" class="data-table">
 <tr><th>Center</th><th>Class</th><th>Time</th><th>Volunteer</th><th>Status</th><th>Action</th></tr>
 <?php foreach($all_classes as $class) {
 	if(empty($all_levels[$class->level_id])) { // This one user might be handling two different classes. Different center, different level, etc.

@@ -20,7 +20,7 @@ function showMessage($count, $message, $type='') {
 </div>
 
 <div id="main">
-<table id="tableItems" class="clear info-box-table" cellpadding="0" cellspacing="0">
+<table id="tableItems" class="clear data-table info-table-box" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
 	<th class="colCheck1">Step #</th>

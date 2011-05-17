@@ -11,16 +11,9 @@
  * @since           Version 1.0
  * @filesource
  */
- 
 class Dashboard extends Controller  {
-
-    /**
-    * constructor 
-    **/
-    function Dashboard()
-    {
+    function Dashboard() {
         parent::Controller();
-       
 		$this->load->library('session');
         $this->load->library('user_auth');
 		$logged_user_id = $this->session->userdata('id');
@@ -36,36 +29,15 @@ class Dashboard extends Controller  {
     }
 	
     /**
-    *
-    * Function to 
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-
-    function index()
-    {
-        
-    }
-
-    /**
-    *
     * Function to dashboard
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
-    function dashboard_view()
-    {	
-		
-			$data['currentPage'] = 'db';
-			$data['navId'] = '0';
-			$this->load->view('dashboard/includes/header',$data);
-			$this->load->view('dashboard/includes/superadminNavigation',$data);
-			$this->load->view('dashboard/dashboard');
-			$this->load->view('dashboard/includes/footer');
-
+    function dashboard_view() {	
+		$data['title'] = 'MADApp Dashboard';
+		$this->load->view('layout/header',$data);
+		$this->load->view('dashboard/dashboard');
+		$this->load->view('layout/footer');
     }
 }

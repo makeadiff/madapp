@@ -8,10 +8,13 @@ foreach($exam_name as $row) {
 ?>
 
 <style type="text/css">
+label {
+	float:left;
+	font-weight:bold;
+}
 div.ans {
 	float:left;
 	text-align:left;
-	margin-top:5px;
 }
 div.field {
 	width:300px;
@@ -26,7 +29,7 @@ div.field {
 		<div class="ans"><?php echo $exam_name; ?> </div>
                       
 	</div>
-	
+	<br />
 	<div class="field clear">
 		<label for="txtName">Subject Name : </label>
 		<div class="ans"><?php 
@@ -35,6 +38,7 @@ div.field {
 		<?php echo $row['name']; ?><br />
 		<?php } ?></div>
 	</div>
+	<br />
 	
 	<div class="field clear">
 		<label for="txtName">Student Name : </label>

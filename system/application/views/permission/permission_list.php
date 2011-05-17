@@ -1,28 +1,3 @@
-<script>
-	
-	tb_init('a.thickbox, input.thickbox');
-	
-	function triggerSearch()
-	{
-		q = $('#searchQuery').val();
-		get_groupList('0',q);
-	}
-	
-	$(document).ready(function(){
-	
-		
-		$('#example').each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
-	
-			$(this).attr('href', url);
-		});
-		
-	
-	}
-	);  
-	
-</script>
-
 <div id="content" class="clear">
 
 <!-- Main Begins -->
@@ -32,7 +7,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('permission/popupAddPermission')?>" class="thickbox button primary" id="example" name="Add Permission">Add Permission</a>
+<a href="<?= site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" id="example" name="Add Permission">Add Permission</a>
 </div>
 			<!-- end page actions-->
 
@@ -40,7 +15,7 @@
 
 		
 
-<table cellpadding="0"  cellspacing="0" class="clear" id="tableItems">
+<table cellpadding="0"  cellspacing="0" class="clear data-table" id="tableItems">
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
@@ -75,33 +50,14 @@ foreach($content as $row)
 		$shadeFlag = 0;
   	  }
 ?> 
-<script>
-	$(document).ready(function(){
-		
-		$('#groupmanage-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=430&width=850';
-	
-			$(this).attr('href', url);
-		});
-		
-		$('#group-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=800';
-	
-			$(this).attr('href', url);
-		});
-	
-	}
-	); 
-</script>
-
 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $row['id']; ?></td>
     <td class="colName left"><?php echo $row['name']; ?></td>
     
     <td class="colActions right"> 
-    <a href="<?= site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url(<?php echo base_url(); ?>/images/ico/icoEdit.png)" id="group-<?php echo $row['id']; ?>" name="<strong>Edit User : <?= strtolower($row['name']) ?></strong>"></a> 
-    <a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>');"></a>
+    <a href="<?php echo site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox popup icon edit" name="<strong>Edit User : <?php echo strtolower($row['name']) ?></strong>">Edit</a>
+    <a class="actionDelete icon edit" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>');">Delete</a>
     </td>
 </tr>
 

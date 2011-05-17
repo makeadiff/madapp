@@ -2,7 +2,7 @@
 
 <div id="head" class="clear"><h1>Reports</h1></div>
 
-<table id="main">
+<table id="main" class="data-table">
 <tr><?php foreach($fields as $field_name=>$field_title) { ?>
 <th><?php echo $field_title ?></th>
 <?php } ?></tr>

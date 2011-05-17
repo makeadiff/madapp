@@ -1,5 +1,5 @@
 <div id="kids_list">
-<table id="tableItems" class="clear" cellpadding="0" cellspacing="0">
+<table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>

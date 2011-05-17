@@ -12,7 +12,7 @@ $this->load->view('layout/header',array('title'=>$title));
 <a href="<?php echo site_url('user/popupAdduser')?>" class="thickbox button primary popup" name="Add User">Add User</a>
 <?php } ?>
 </div><br class="clear" />
-
+</div>
 <div id="train-nav">
 <ul>
 <?php if($this->session->userdata("active_center")) { ?>
@@ -25,8 +25,7 @@ $this->load->view('layout/header',array('title'=>$title));
 <li id="train-next"><a href="<?php echo site_url('kids/manageaddkids')?>">Manage Kids &gt;</a></li>
 <?php } ?>
 </ul>
-</div>
-</div>
+</div><br />
 
 <form action="" method="post" id="filters">
 <table style="margin-bottom:25px;">
@@ -77,7 +76,7 @@ $this->load->view('layout/header',array('title'=>$title));
 </form>
 <a href="#" onclick="$('#filters').toggle()">Show/Hide Filters</a>
 
-<table cellpadding="0"  cellspacing="0" class="clear" id="tableItems">
+<table cellpadding="0"  cellspacing="0" class="clear data-table">
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>

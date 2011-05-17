@@ -49,7 +49,7 @@ foreach($group_permission as $roll)
           <?php if($a==1) {?>
           <img src="<?php echo base_url(); ?>/images/ico/tick-icon.png" style="border:none; float:left;"/>
            <?php } ?>
-			</div>
+			</div><br />
         
            <?php } ?>
            </div>

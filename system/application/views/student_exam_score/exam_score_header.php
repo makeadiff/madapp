@@ -41,7 +41,7 @@
 
 		
 
-<table cellpadding="0"  cellspacing="0" class="clear" id="tableItems">
+<table cellpadding="0"  cellspacing="0" class="clear data-table" id="tableItems">
 <thead>
 <tr>
 <th class="colName left sortable" style="width:10px;">Id</th>

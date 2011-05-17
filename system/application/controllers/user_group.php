@@ -45,34 +45,16 @@
 	function manageadd_group()
 	{
 		$this->user_auth->check_permission('user_group_index');
-		$data['currentPage'] = 'db';
-		$data['navId'] = '';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('user_group/add_groupname_view');
-		$this->load->view('dashboard/includes/footer');
-	
-	}
-	 /**
-    *
-    * Function to get_grouplist
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function get_grouplist()
-	{
-		$page_no = $_REQUEST['pageno'];
-		$data['title'] = 'Manage Group';
-		$linkCount = $this->users_model->group_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
+		
+		$data['title'] = 'Manage User Group';
 		$data['details']= $this->users_model->getgroup_details();
-		$this->load->view('user_group/group_list',$data);
-	
+		
+		$this->load->view('layout/header',$data);
+		$this->load->view('user_group/add_groupname_view', $data);
+		$this->load->view('layout/footer');
 	
 	}
+	
     /**
     *
     * Function to popupaddgroup

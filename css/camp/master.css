@@ -150,3 +150,8 @@ h2 { font-size:18px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); text-trans
 #head {
 	display:none;
 }
+.message {
+	float:left;
+	margin-left: -290px;
+    margin-top: 60px;
+}

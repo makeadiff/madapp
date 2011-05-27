@@ -75,7 +75,7 @@ class Batch extends Controller {
 				'levels_in_center'=>$levels_in_center,'all_teachers'=>$all_teachers, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
 	}
 	
-function add_volunteers_action() {
+	function add_volunteers_action() {
 		$this->user_auth->check_permission('batch_add_volunteers');
 		
 		$batch_id = $this->input->post('batch_id');

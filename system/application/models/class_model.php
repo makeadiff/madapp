@@ -188,4 +188,14 @@ class Class_model extends Model {
     		}
     	}
     }
+    
+    function search_classes($data) {
+    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Level.id AS level_id,Level.name,UserClass.user_id,UserClass.substitute_id,UserClass.status
+			FROM Class
+			INNER JOIN Level ON Class.level_id=Level.id
+			INNER JOIN UserClass ON UserClass.class_id=Class.id
+			WHERE Class.batch_id=$data[batch_id] AND DATE(Class.class_on)='$data[from_date]'";
+		$data = $this->db->query($query)->result();
+		return $data;
+    }
 }

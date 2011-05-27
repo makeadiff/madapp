@@ -460,7 +460,7 @@ class Users_model extends Model {
 		
 		
 		if(!isset($data['status'])) $data['status'] = 1;
-		if($data['status'] !== false) $this->db->where('User.status', $data['status']);
+		if($data['status'] !== false) $this->db->where('User.status', $data['status']); // Setting status as 'false' gets you even the deleted users
 		
 		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
 		else $this->db->where('User.project_id', $this->project_id);
@@ -629,11 +629,11 @@ class Users_model extends Model {
 	function get_usercredits()
 	{
 		$current_user_id=$this->session->userdata('id');
-		$this->db->select('userclass.*,class.class_on');
-		$this->db->from('userclass');
-		$this->db->join('class','class.id=userclass.class_id','join');
-		$this->db->where('userclass.user_id',$current_user_id);
-		$this->db->or_where('userclass.substitute_id',$current_user_id);
+		$this->db->select('UserClass.*,Class.class_on');
+		$this->db->from('UserClass');
+		$this->db->join('Class','Class.id=UserClass.class_id','join');
+		$this->db->where('UserClass.user_id',$current_user_id);
+		$this->db->or_where('UserClass.substitute_id',$current_user_id);
 		return $this->db->get();
 	
 	}
@@ -646,7 +646,7 @@ class Users_model extends Model {
 	function get_name_of_Substitute($substitute_id)
 	{
 		$this->db->select('name');
-		$this->db->from('user');
+		$this->db->from('User');
 		$this->db->where('id',$substitute_id);
 		$result=$this->db->get();
 		return $result->row();

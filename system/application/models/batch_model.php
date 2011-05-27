@@ -10,7 +10,9 @@ class Batch_model extends Model {
     }
     
     function get_batch($batch_id) {
-    	return $this->db->where('id', $batch_id)->get("Batch")->row();
+    	$data = $this->db->where('id', $batch_id)->get("Batch")->row();
+    	$data->name = $this->create_batch_name($data->day, $data->class_time);
+    	return $data;
     }
     function get_batch_as_array($batch_id) {
     	return $this->db->where('id', $batch_id)->get("Batch")->row_array();
@@ -48,13 +50,17 @@ class Batch_model extends Model {
     function get_batches_in_center($center_id) {
     	return $this->db->where('center_id',$center_id)->where('project_id', $this->project_id)->orderby('day')->get('Batch')->result();
     }
+    
+    function create_batch_name($day, $time) {
+    	$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
+		return $day_list[$day] . ' ' . date('h:i A', strtotime('2011-01-01 '.$time));
+    }
   	
   	function get_class_days($center_id) {
 		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} ORDER BY day")->result();
 		$return = array();
-		$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 		foreach($class_days as $batch) {
-			$return[$batch->id] = $day_list[$batch->day] . ' ' . date('h:i A', strtotime('2011-01-01 '.$batch->class_time));
+			$return[$batch->id] = $this->create_batch_name($batch->day, $batch->class_time);
 		}
 		return $return;
 	}

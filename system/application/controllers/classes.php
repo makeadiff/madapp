@@ -38,26 +38,55 @@ class Classes extends Controller {
 		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model));
 	}
 	
-	function batch_view($batch_id=0) {
+	function batch_view($batch_id, $from_date='', $to_date='') {
 		$this->user_auth->check_permission('classes_batch_view');
 		
 		if(!$batch_id) $batch_id = $this->user_model->get_users_batch($this->user_details->id);
 		
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer'));
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => false));
+		$batch = $this->batch_model->get_batch($batch_id);
+		$center_id = $batch->center_id;
+		$center_name = $this->center_model->get_center_name($center_id);
+		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
+		$all_lessons[0] = 'None';
 		
-		//$all_classes = $this->class_model->get_all_by_batch($batch_id);
-		$three_weeks_classes = $this->class_model->get_class_for_last_three_week_by_batch($batch_id);
+		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date, 'to_date'=>$to_date));
 		
-		$all_levels = array();
-		$center_id = $this->batch_model->get_batch($batch_id)->center_id;
-		
-		foreach($three_weeks_classes as $class_info) {
-			if(isset($all_levels[$class_info->level_id])) continue;
+		$classes = array();
+		foreach($data as $row) {
+			$attendence = $this->class_model->get_attendence($row->id);
+			$present_count = 0;
+			$total_kids_in_level = count($this->level_model->get_kids_in_level($row->level_id));
+			foreach($attendence as $id=>$status) if($status == 1) $present_count++;
+			$attendence_count = $present_count . '/' . $total_kids_in_level;
 			
-			$all_levels[$class_info->level_id] = $this->level_model->get_level_details($class_info->level_id);
+			if(!isset($classes[$row->id])) { // First time we are encounting such a class.
+				$classes[$row->id] = array(
+					'id'			=> $row->id,
+					'level_name'	=> $row->name,
+					'lesson'		=> $all_lessons[$row->lesson_id],
+					'student_attendence'	=> $attendence_count,
+					'teachers'		=> array(array(
+						'id'	=> $row->user_id,
+						'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
+						'status'=> $row->status,
+						'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
+											$all_users[$row->substitute_id]->name : 'None'
+					)),
+				);
+			} else { // We got another class with same id. Which means more than one teachers in the same class. Add the teacher to the class.
+				$classes[$row->id]['teachers'][] = array(
+					'id'	=> $row->user_id,
+					'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
+					'status'=> $row->status,
+					'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
+											$all_users[$row->substitute_id]->name : 'None'
+				);
+			}
 		}
 		
-		$this->load->view('classes/index', array('all_classes' => $three_weeks_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model, 'all_users'=>$all_users));
+		$this->load->view('classes/batch_view', 
+			array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name, 'from_date'=>$from_date, 'to_date'=>$to_date));
 	}
 	
 	function mark_attendence($class_id) {

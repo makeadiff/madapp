@@ -620,5 +620,37 @@ class Users_model extends Model {
 		return $result->row();
 	
 	}
+	/**
+    * Function to  get_usercredits
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function get_usercredits()
+	{
+		$current_user_id=$this->session->userdata('id');
+		$this->db->select('userclass.*,class.class_on');
+		$this->db->from('userclass');
+		$this->db->join('class','class.id=userclass.class_id','join');
+		$this->db->where('userclass.user_id',$current_user_id);
+		$this->db->or_where('userclass.substitute_id',$current_user_id);
+		return $this->db->get();
+	
+	}
+	/**
+    * Function to  get_name_of_Substitute
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function get_name_of_Substitute($substitute_id)
+	{
+		$this->db->select('name');
+		$this->db->from('user');
+		$this->db->where('id',$substitute_id);
+		$result=$this->db->get();
+		return $result->row();
+	
+	}
 	
 }

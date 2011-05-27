@@ -511,7 +511,12 @@ class User extends Controller  {
 			 query_to_csv($query,TRUE,'user_details.csv');
 		 }
 	}
-	
+	/**
+    * Function to edit_profile
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function edit_profile()
 	{	
 		$data['msg']='';
@@ -534,6 +539,12 @@ class User extends Controller  {
 		$this->load->view('user/edit_profile_view',$data);
 	
 	}
+	/**
+    * Function to update_profile
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function update_profile()
 	{
 		$data['rootId'] = $this->session->userdata('id');
@@ -678,6 +689,63 @@ class User extends Controller  {
 			}
 		}
 	}
+	/**
+    * Function to credithistory
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
+	function credithistory()
+	{
+		//$this->user_auth->check_permission('user_group_index');
+		$i=0;
+		$data['title'] = 'Credit History';
+		$current_user_id=$this->session->userdata('id');
+		$this->load->view('layout/header',$data);
+		$this->load->view('user/usercredit_head', $data);
+		$data['details']= $this->users_model->get_usercredits();
+		$details=$data['details']->result_array();
+		foreach($details as $row){
+		$credit = 3;
+		if ($row['user_id'] == $current_user_id && $row['substitute_id'] == 0 && $row['status'] == 'absent')
+		{	
+			$i++;
+			$data['i']=$i;
+			$credit = $credit - 2;
+			$data['message']="Class on '".$row['class_on']."' - Absent - lost 2 credits - $credit";
+			$this->load->view('user/user_credit', $data);
+    	}
+		else if ($row['user_id'] == $current_user_id && $row['substitute_id'] != 0 )
+		{
+			$i++;
+			$data['i']=$i;
+			$substitute_id=$row['substitute_id'];
+			$Name_of_Substitute=$this->users_model->get_name_of_Substitute($substitute_id);
+			$Name_of_Substitute=$Name_of_Substitute->name;
+			$credit = $credit - 1;
+			$data['message']= "Class on '".$row['class_on']."' - Substituted by $Name_of_Substitute - lost 1 credit - $credit";
+			$this->load->view('user/user_credit', $data);
+		}
+		else if($row['substitute_id'] == $current_user_id && $row['status'] == 'absent')
+		{
+			$i++;
+			$data['i']=$i;
+			$credit = $credit - 2;
+			$data['message']="Substituted Class on '".$row['class_on']."' - Absent - lost 2 credits - $credit";
+			$this->load->view('user/user_credit', $data);
+   		 }
+		else if ($row['substitute_id'] == $current_user_id && $row['status'] == 'attended')
+		{
+			$i++;
+			$data['i']=$i;
+			$credit = $credit + 1;
+			$data['message']= "Substitute Class on '".$row['class_on']."' - Took Class - gained 1 credit - $credit";
+			$this->load->view('user/user_credit', $data);
+		}
+		}
+		$this->load->view('user/usercredit_footer');
+		$this->load->view('layout/footer');
+		}
 	
 }	
 	

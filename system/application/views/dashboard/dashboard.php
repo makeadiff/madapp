@@ -87,6 +87,11 @@
 	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Settings</span></a></div>
 	<?php } ?>
     	<br />
+        <?php if($this->user_auth->get_permission('setting_index')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('user/credithistory') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/credit.jpg" alt="" /> <span>Credit History</span></a></div>
+	<?php } ?>
+    	
 </div>
 </div>
 </div>

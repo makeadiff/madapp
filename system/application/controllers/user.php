@@ -712,7 +712,10 @@ class User extends Controller  {
 			$i++;
 			$data['i']=$i;
 			$credit = $credit - 2;
-			$data['message']="Class on '".$row['class_on']."' - Absent - lost 2 credits - $credit";
+			$data['class_on']=$row['class_on'];
+			$data['Substitutedby']='Absent';
+			$data['lost']="lost 2 credits";
+			$data['credit']=$credit;
 			$this->load->view('user/user_credit', $data);
     	}
 		else if ($row['user_id'] == $current_user_id && $row['substitute_id'] != 0 )
@@ -723,7 +726,10 @@ class User extends Controller  {
 			$Name_of_Substitute=$this->users_model->get_name_of_Substitute($substitute_id);
 			$Name_of_Substitute=$Name_of_Substitute->name;
 			$credit = $credit - 1;
-			$data['message']= "Class on '".$row['class_on']."' - Substituted by $Name_of_Substitute - lost 1 credit - $credit";
+			$data['class_on']= $row['class_on'];
+			 $data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
+			 $data['lost']="lost 1 credits";
+			 $data['credit']=$credit;
 			$this->load->view('user/user_credit', $data);
 		}
 		else if($row['substitute_id'] == $current_user_id && $row['status'] == 'absent')
@@ -731,7 +737,11 @@ class User extends Controller  {
 			$i++;
 			$data['i']=$i;
 			$credit = $credit - 2;
-			$data['message']="Substituted Class on '".$row['class_on']."' - Absent - lost 2 credits - $credit";
+			$data['class_on']= $row['class_on'];
+			$data['Substitutedby']='Substitute Class Absent';
+			 $data['lost']="lost 2 credits";
+			 $data['credit']=$credit;
+			//$data['lost']= - Absent - lost 2 credits - $credit";
 			$this->load->view('user/user_credit', $data);
    		 }
 		else if ($row['substitute_id'] == $current_user_id && $row['status'] == 'attended')
@@ -739,7 +749,11 @@ class User extends Controller  {
 			$i++;
 			$data['i']=$i;
 			$credit = $credit + 1;
-			$data['message']= "Substitute Class on '".$row['class_on']."' - Took Class - gained 1 credit - $credit";
+			$data['class_on']= $row['class_on'];
+			$data['Substitutedby']="Substitute Class Attended";
+			$data['lost']="gained 1 credits";
+			 $data['credit']=$credit;
+			//$data['message']= "Substitute Class on '".$row['class_on']."' - Took Class - gained 1 credit - $credit";
 			$this->load->view('user/user_credit', $data);
 		}
 		}

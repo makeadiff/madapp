@@ -15,7 +15,10 @@
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
-    <th class="colName left sortable" style="width:375px; text-align:center">Credit</th>
+    <th class="colCheck1">Class on</th>
+    <th class="colCheck1">Class status</th>
+    <th class="colCheck1">los/gain</th>
+    <th class="colName left sortable" style="text-align:center">Credit</th>
 </tr>
 </thead>
 <tbody>

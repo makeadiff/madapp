@@ -233,7 +233,7 @@ class Users_model extends Model {
 	{
 		$email=$data['email'];
 		$this->db->select('email');
-		$this->db->from('user');
+		$this->db->from('User');
 		$this->db->where('email',$email);
 		$result=$this->db->get();
 		if($result->num_rows() > 0){

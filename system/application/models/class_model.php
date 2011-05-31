@@ -117,6 +117,11 @@ class Class_model extends Model {
 	    }
     }
     
+    /// See if the given class has a teacher with the giver user id. Returns true if yes. False otherwise
+    function is_class_teacher($class_id, $user_id) {
+    	return ($this->db->where(array('class_id'=>$class_id, 'user_id'=>$user_id))->get('UserClass'));
+    }
+    
     function get_class($class_id) {
     	$class_details = $this->db->where('id',$class_id)->get('Class')->row_array();
     	$class_details['teachers'] = $this->db->where('class_id',$class_id)->get("UserClass")->result_array();
@@ -128,7 +133,6 @@ class Class_model extends Model {
     	// When editing the class info, make sure that the credits asigned durring the last edit is removed...
     	$previous_class_data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
     	$this->revert_user_class_credit($user_class_id, $previous_class_data);
-    	
     	
     	$this->db->update('UserClass', $data, array('id'=>$user_class_id));
     	$this->calculate_users_class_credit($user_class_id, $data);

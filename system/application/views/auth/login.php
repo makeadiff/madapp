@@ -48,7 +48,7 @@ input {
 
 <div class="field">
 <label for="remember" class="small">Remember Me</label>
-<?php echo form_checkbox('remember', '1', FALSE);?>
+<?php echo form_checkbox(array('name'=>'remember','id'=>'remember','value'=>'1', 'checked'=>FALSE));?>
 </div><br />
 
 <div class="field">

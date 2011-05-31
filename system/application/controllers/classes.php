@@ -268,7 +268,10 @@ class Classes extends Controller {
 	}
 	
 	function edit_class($class_id) {
-		$this->user_auth->check_permission('class_edit_class');
+		// First see if the user takes this class. Then he has premission to edit it.
+		if(!$this->class_model->is_class_teacher($class_id, $this->session->userdata('id'))) {
+			$this->user_auth->check_permission('class_edit_class');
+		}
 		
 		$this->load->helper('form');
 	
@@ -294,7 +297,9 @@ class Classes extends Controller {
 	}
 	
 	function edit_class_save() {
-		$this->user_auth->check_permission('class_edit_class');
+		if(!$this->class_model->is_class_teacher($class_id, $this->session->userdata('id'))) {
+			$this->user_auth->check_permission('class_edit_class');
+		}
 		
 		$teacher_ids = $this->input->post('user_id');
 		$user_class_id = $this->input->post('user_class_id');

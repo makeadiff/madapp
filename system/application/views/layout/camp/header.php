@@ -33,11 +33,11 @@
 		<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
 		<?php } ?>
        <div class="tools right">
-         <a href="<?php echo site_url('classes/madsheet') ?>#" class="sheet <?php if($this->uri->segment(2) == 'madsheet') echo 'active'; ?> ">MAD Sheet</a>
-         <a href="<?php echo site_url('dashboard/dashboard_view') ?>" class="dash <?php if($this->uri->segment(1) == 'dashboard') echo 'active'; ?>">Dash</a>
-         <a href="<?php echo site_url('classes/') ?>#" class="class <?php if($this->uri->segment(1) == 'classes' and ($this->uri->segment(2) == 'index' or !$this->uri->segment(2))) echo 'active'; ?>">Classes</a>
-         <a href="<?php echo site_url('user/edit_profile') ?>" class="profile">Profile</a>
-         <a href="#" class="setting">Settings</a>
+       	 <a href="<?php echo site_url('dashboard/dashboard_view') ?>" class="dash <?php if($this->uri->segment(1) == 'dashboard') echo 'active'; ?>" title="Dashboard">Dashboard</a>
+         <a href="<?php echo site_url('classes/madsheet') ?>#" class="sheet <?php if($this->uri->segment(2) == 'madsheet') echo 'active'; ?> " title="MAD Sheet">MAD Sheet</a>
+         <a href="<?php echo site_url('classes/') ?>#" class="class <?php if($this->uri->segment(1) == 'classes' and ($this->uri->segment(2) == 'index' or !$this->uri->segment(2))) echo 'active'; ?>" title="Classes">Classes</a>
+         <a href="<?php echo site_url('user/edit_profile') ?>" class="profile" title="Profile">Profile</a>
+         <!-- <a href="#" class="setting" title="Settings">Settings</a> -->
        </div>
      </div>
      

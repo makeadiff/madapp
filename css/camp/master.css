@@ -69,7 +69,7 @@ a:hover  { border-bottom:none; }
 .sidebar { width:355px; padding:10px; float:left;overflow:hidden;min-height:500px; margin-left:20px; }
 .footer  { height: 110px; background:#0E051F; }
 
-h1 { font-size:19px; color:#BF98E0; text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5); width:290px; float:left;  padding-top: 36px; text-transform:uppercase; font-weight:normal;  }
+h1 { font-size:19px; color:#BF98E0; text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5); float:left;  padding-top: 36px; text-transform:uppercase; font-weight:normal;  }
 h2 { font-size:18px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); text-transform:uppercase; margin-bottom:20px;    padding-bottom: 10px; border-bottom: 1px solid #BBBBBB; font-family:Arial, Helvetica, sans-serif; letter-spacing:1px;  }
  
 .logo    { font-weight:bold; font-size:16px; color:#58656D; padding-top:5px; }
@@ -156,6 +156,9 @@ h2 { font-size:18px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); text-trans
 
 .message {
 	float:left;
-	margin-left: -290px;
+	margin-left: -110px;
     margin-top: 60px;
+}
+#train-nav {
+	clear:both;
 }

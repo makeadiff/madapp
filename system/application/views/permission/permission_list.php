@@ -1,19 +1,16 @@
 <div id="content" class="clear">
 
 <!-- Main Begins -->
-	<div id="main" class="clear">
-   	  <div id="head" class="clear">
-        	<h1><?php echo $title; ?></h1>
+<div id="main" class="clear">
+<div id="head" class="clear">
+<h1><?php echo $title; ?></h1>
 
-            <!-- start page actions-->
-        	<div id="actions"> 
+<!-- start page actions-->
+<div id="actions"> 
 <a href="<?= site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" id="example" name="Add Permission">Add Permission</a>
+</div><br />
+<!-- end page actions-->
 </div>
-			<!-- end page actions-->
-
-      </div>
-
-		
 
 <table cellpadding="0"  cellspacing="0" class="clear data-table" id="tableItems">
 <thead>
@@ -57,7 +54,7 @@ foreach($content as $row)
     
     <td class="colActions right"> 
     <a href="<?php echo site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox popup icon edit" name="<strong>Edit User : <?php echo strtolower($row['name']) ?></strong>">Edit</a>
-    <a class="actionDelete icon edit" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>');">Delete</a>
+    <a class="actionDelete icon delete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>');">Delete</a>
     </td>
 </tr>
 

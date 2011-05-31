@@ -42,6 +42,8 @@ class Users_model extends Model {
 			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
 			
+			print "<pre>";print_r($memberCredentials);print "</pre>";
+			
             return $memberCredentials;
         
         } else {

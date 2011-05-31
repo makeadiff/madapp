@@ -10,8 +10,7 @@
 	<a href="<?php echo site_url('center/popupaddCenter')?>" class="thickbox button primary popup" id="example" name="Add New Center">Add New Center</a>
 	</div>
 	<?php } ?>
-
-</div>
+</div><br />
 
 <table id="tableItems" class="clear info-box-table data-table" cellpadding="0" cellspacing="0">
 <thead>

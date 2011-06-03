@@ -1,7 +1,7 @@
-<?php $this->load->view('layout/thickbox_header'); ?>
+<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 
 <form id="formEditor" class="mainForm clear" action="<?=site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
-<fieldset class="clear" style="margin-top:70px;margin-left:-30px;">
+<fieldset class="clear">
 	<?php 
 	$this_city_id = $this->session->userdata('city_id');
 	if($this->user_auth->get_permission('change_city')) { ?>
@@ -65,4 +65,3 @@ if(document.getElementById("center").value == '')
 	}
 }
 </script>
-<?php $this->load->view('layout/thickbox_footer'); ?>

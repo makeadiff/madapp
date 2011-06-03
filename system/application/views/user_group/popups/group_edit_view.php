@@ -21,32 +21,32 @@ foreach($group_permission as $roll) {
 }
 ?> 
 
-         <form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/updategroup_name')?>" method="post" style="width:500px;" onsubmit="return validate();">
-	<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
-    
-		<div id="right-column">
-        </div> 
-        <div class="field clear" style="width:600px;"> 
-           <label for="txtName">Group Name : </label>
-           <input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>" /> 
-    </div>
-			<div class="field clear" style="width:600px; "> 
-            <label for="txtName">Permissions :</label>
-				<?php 
-                $j=0;
-                foreach($permission as $row)
-                { 
-                ?>
-                
-            <div class="field clear" style="width:600px; margin-left:100px;"> 
-           <label for="txtName"><?php echo $row['name']; ?></label>
-           <?php 
-		    $a=0;
-		   	for($j=0;$j<count($perm_id);$j++) {
-		  	 if($perm_id[$j]==$row['id'])
-		    { $a=1;} }
-		    ?>
-          <input type="checkbox" value="<?php echo $row['id']; ?>" id="permission" name="permission[]" <?php if($a==1 ){ echo "checked"; }?>  />    
+	<form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/updategroup_name')?>" method="post" style="width:500px;" onsubmit="return validate();">
+<fieldset class="clear">
+
+	<div id="right-column">
+	</div> 
+	<div class="field clear" style="width:600px;"> 
+		<label for="txtName">Group Name : </label>
+		<input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>" /> 
+</div>
+		<div class="field clear" style="width:600px; "> 
+		<label for="txtName">Permissions :</label>
+			<?php 
+			$j=0;
+			foreach($permission as $row)
+			{ 
+			?>
+			
+		<div class="field clear" style="width:600px; margin-left:100px;"> 
+		<label for="txtName"><?php echo $row['name']; ?></label>
+		<?php 
+		$a=0;
+		for($j=0;$j<count($perm_id);$j++) {
+			if($perm_id[$j]==$row['id'])
+		{ $a=1;} }
+		?>
+		<input type="checkbox" value="<?php echo $row['id']; ?>" id="permission" name="permission[]" <?php if($a==1 ){ echo "checked"; }?>  />    
  </div>
            <?php } ?>
     <div class="field clear" style="width:550px;"> 

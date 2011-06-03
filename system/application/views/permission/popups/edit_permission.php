@@ -7,8 +7,8 @@ $root_id=$row['id'];
 $name=$row['name'];
 }
 ?>
-<form id="formEditor" class="mainForm clear"action="<?=site_url('permission/edit_permission')?>" method="post" style="width:500px;" onsubmit="return validate();">
-<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
+<form id="formEditor" class="mainForm clear" action="<?=site_url('permission/edit_permission')?>" method="post" style="width:500px;" onsubmit="return validate();">
+<fieldset class="clear">
 
 <div class="field clear" style="width:600px;"> 
 		<label for="txtName">Permission Name : </label>

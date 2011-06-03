@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/thickbox_header'); ?>
+<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 
 <?php
 $details=$details->result_array();
@@ -11,7 +11,7 @@ foreach($details as $row) {
 
 ?>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/update_Center')?>" method="post" style="width:500px;"  onsubmit="return validate();">
-<fieldset class="clear" style="margin-top:70px;margin-left:-30px;">
+<fieldset class="clear">
 <div class="field clear">
 <label for="selBulkActions">Select City:</label> 
 <select id="city" name="city" > 

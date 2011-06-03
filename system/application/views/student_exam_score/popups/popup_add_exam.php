@@ -1,9 +1,3 @@
-
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-
 <?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 
 <?php 
@@ -14,7 +8,7 @@ if($details) {
 <div id="content" class="clear">
 <!-- Main Begins -->
 	<div id="main" class="clear" >
-<form id="formEditor" class="mainForm clear" method="post" action="<?=site_url('exam/addMarks')?>"  style="width:500px;"  >
+<form id="formEditor" class="mainForm clear" method="post" action="<?php echo site_url('exam/addMarks')?>"  style="width:500px;"  >
 	<fieldset class="clear" style="margin-top:50px;">
 
 <table cellpadding="0"  cellspacing="0" class="clear" id="tableItems">

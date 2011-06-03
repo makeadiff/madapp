@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/thickbox_header'); ?>
+<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <?php
@@ -10,11 +10,11 @@ jQuery(document).ready(function () {
 	$('input.date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
 });
 </script>
-<form id="formEditor" class="mainForm clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" style="width:500px;" >
-<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
+<form id="formEditor" class="mainForm form-area clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" style="width:500px;" >
+<fieldset class="clear">
 
 <div class="field clear" style="width:500px;"> 
-<label for="txtName">Name : </label> <input id="name" name="name"  type="text" /> 
+<label for="txtName">Name : </label> <input id="name" name="name"  type="text" /><br />
 </div>
 
 <div class="field clear" style="width:500px;">
@@ -28,36 +28,35 @@ jQuery(document).ready(function () {
 	?>
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 	<?php } ?>
-</select>
+</select><br />
 </div>
 <div class="field clear" style="width:500px;"> 
 			<label for="position">Position : </label>
-			<input id="position" name="position"  type="text" /> 
-			
+			<input id="position" name="position"  type="text" /><br />
 </div>
 
 <div class="field clear" style="width:500px;"> 
 			<label for="email">Email : </label>
-			<input id="email" name="email"  type="text" /> 
+			<input id="email" name="email"  type="text" /><br />
 			
 </div>
 <div class="field clear" style="width:500px;"> 
 			<label for="password">Password : </label>
-			<input id="password" name="password"  type="password" /> 
+			<input id="password" name="password"  type="password" /><br />	 
 			
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="cpassword">Confirm Password : </label>
-	<input id="cpassword" name="cpassword"  type="password" /> 
+	<input id="cpassword" name="cpassword"  type="password" /><br />	 
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Phone : </label>
-	<input id="phone" name="phone"  type="text" /> 
+	<input id="phone" name="phone"  type="text" /><br />	 
 </div>
 
 <div class="field clear"> 
 	<label for="txtName">Address : </label>
-	<textarea id="address" name="address"  rows="5" cols="30"></textarea> 
+	<textarea id="address" name="address"  rows="5" cols="30"></textarea><br />	 
 </div>
 
 <?php 
@@ -75,7 +74,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 		if($row['id'] == $this_city_id) echo 'selected';
 	?>><?php echo $row['name']; ?></option> 
 	<?php } ?>
-</select>
+</select><br />	
 </div>
 <?php } else { ?>
 <input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
@@ -95,7 +94,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 		if($row['id'] == $this_project_id) echo 'selected';
 	?>><?php echo $row['name']; ?></option> 
 	<?php } ?>
-</select>
+</select><br />	
 </div>
 <?php } else { ?>
 <input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
@@ -103,12 +102,12 @@ if($this->user_auth->get_permission('change_city')) { ?>
 
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Joined On : </label>
-	<input id="joined_on" name="joined_on" class="date-pick" type="text" value=""  /> 
+	<input id="joined_on" name="joined_on" class="date-pick" type="text" value=""  /><br />	 
 </div>
 
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Left On : </label>
-	<input id="left_on" name="left_on" class="date-pick" type="text" value=""  /> 
+	<input id="left_on" name="left_on" class="date-pick" type="text" value=""  /><br />	 
 </div>
 
 <div class="field clear"> 
@@ -119,7 +118,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<option value="well_wisher">Well Wisher</option>
 	<option value="alumni">Alumni</option>
 	<option value="other">Other</option>
-</select>
+</select><br />	
 </div>
 
 <div  class="field clear">
@@ -167,8 +166,7 @@ function validate() {
 			return false;
 		}
 	
-		
-		if(document.getElementById("password").value != document.getElementById("cpassword").value)
+	document.getElementById("password").value != document.getElementById("cpassword").value)
 		{
 			alert("Password Mismatch.");
 			return false;

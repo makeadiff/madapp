@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/thickbox_header');
+<?php $this->load->view('layout/css',array('thickbox'=>true));
 
 $user_details = $user->result_array();
 foreach($user_details as $row) {	
@@ -34,7 +34,7 @@ jQuery(document).ready(function () {
 });
 </script>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
-<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
+<fieldset class="clear">
 
 <div class="field clear" style="width:500px;"> 
 <label for="txtName">Name : </label>

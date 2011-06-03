@@ -22,8 +22,8 @@ foreach($group_permission as $roll)
 	}
 ?> 
 
-         <form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/updategroup_name')?>" method="post" style="width:500px;">
-	<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
+         <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user_group/updategroup_name')?>" method="post" style="width:500px;">
+	<fieldset class="clear">
     
 		
         <div class="field clear" style="width:600px;"> 

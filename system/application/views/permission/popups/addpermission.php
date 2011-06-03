@@ -2,7 +2,7 @@
 
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <form id="formEditor" class="mainForm clear" action="<?=site_url('permission/addpermission')?>" method="post" style="width:500px;" onsubmit="return validate();">
-<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
+<fieldset class="clear">
 
 <div class="field clear" style="width:600px;"> 
 		<label for="txtName">Permission Name : </label>

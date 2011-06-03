@@ -7,7 +7,7 @@
 <?php $book_name=$book_name->result_array(); ?>
 
 <form id="formEditor" class="mainForm clear" action="<?=site_url('books/update_lesson')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
-<fieldset class="clear" style="margin-top:70px;width:500px;margin-left:-30px;">
+<fieldset class="clear">
 			<?php foreach($book_name as $row){
 			$name=$row['name'];
 			$root_id=$row['id'];

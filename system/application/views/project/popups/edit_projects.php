@@ -11,7 +11,7 @@ $name=$row['name'];
 
 ?>
 <form id="formEditor" class="mainForm clear" action="<?=site_url('project/update_project')?>" method="post" style="width:500px;" onsubmit="return validate();" >
-<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
+<fieldset class="clear">
 <div class="field clear" style="width:600px;"> 
 			<label for="txtName">Name : </label>
 			<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 

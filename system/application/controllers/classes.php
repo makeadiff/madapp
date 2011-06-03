@@ -118,7 +118,7 @@ class Classes extends Controller {
 	}
 	
 	// MADSheet in User mode.
-	function madsheet_user_mode() {
+	function madsheet() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
 		$all_centers = $this->center_model->get_all();
@@ -194,7 +194,7 @@ class Classes extends Controller {
 	}
 	
 	/// MADSheet in Class Mode.
-	function madsheet() {
+	function madsheet_class_mode() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
 		$all_centers = $this->center_model->get_all();

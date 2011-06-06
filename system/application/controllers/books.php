@@ -82,19 +82,10 @@ class Books extends Controller
 		$data['bookname']=$_REQUEST['bookname'];
 		$returnFlag=$this->book_model->add_book($data);
 		if($returnFlag) {
-			$message['msg']   =  "Book added successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "Add New Center";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);
+		echo "Successfully Inserted!";
+			
 		} else {
-			$message['msg']   =  "Book Not Added.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "Add new Center";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);
+			echo "Bookname not Inserted!!";
 			}
 	}
 	/**
@@ -105,6 +96,7 @@ class Books extends Controller
     **/
 	function popupEdit_books()
 	{
+		
 		//$this->user_auth->check_permission('');
 			$uid = $this->uri->segment(3);
 			$data['book_name']= $this->book_model->getbook_name($uid);
@@ -118,23 +110,13 @@ class Books extends Controller
     **/
 	function updatebook()
 	{
-			$data['root_id']=$_REQUEST['rootId'];
+			$data['root_id']=$uid = $this->uri->segment(3);
 			$data['bookname']=$_REQUEST['bookname'];
 			$returnFlag= $this->book_model->update_bookname($data);
 			if($returnFlag == true) {
-				$message['msg']   =  "Book edited successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "manage_books";
-				$message['linkText'] = "";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);		  
+					echo "successfully updated!!";		  
 			} else {
-				$message['msg']   =  "Book not edited.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "manage_books";
-				$message['linkText'] = "";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);		  
+			echo "Updation Failed!!";
 		}
 	
 	}
@@ -200,23 +182,13 @@ class Books extends Controller
     **/
 	function addlesson()
 	{
-			$data['book']=$_REQUEST['book'];
+			$data['book']=$_REQUEST['book_id'];
 			$data['lessonname']=$_REQUEST['lessonname'];
 			$returnFlag= $this->book_model->add_lesson($data);
 			if($returnFlag) {
-			$message['msg']   =  "Book added successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "Add New Center";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);
+			echo "Successfully Inserted!";
 		} else {
-			$message['msg']   =  "Book Not Added.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "Add new Center";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);
+			echo "Insertion Failed!!";
 			}
 	}
 	/**
@@ -241,24 +213,15 @@ class Books extends Controller
     **/
 	function update_lesson()
 	{
-			$data['book_id']=$_REQUEST['book'];
-			$data['rootId']=$_REQUEST['rootId'];
+			$data['rootId']=$this->uri->segment(3);
+			$data['book_id']=$_REQUEST['book_id'];
+			
 			$data['lessonname']=$_REQUEST['lessonname'];
 			$returnFlag=$this->book_model->update_lesson($data);
 			if($returnFlag == true) {
-				$message['msg']   =  "Book edited successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "manage_books";
-				$message['linkText'] = "";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);		  
+				echo "Successfully Updated";  
 			} else {
-				$message['msg']   =  "Book not edited.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "manage_books";
-				$message['linkText'] = "";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);		  
+				echo "Updation Failed"; 
 		}
 			
 	}

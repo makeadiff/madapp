@@ -6,7 +6,7 @@
 		Welcome, <?php echo $this->session->userdata('name'); ?>.</div>
 </div>
 	
-<div id="quick" class="clear" style="margin-top:-15px;">
+<div id="quick" class="clear" style="margin-top:-1px;">
 	<?php if($this->user_auth->get_permission('city_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('city/') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/city.jpeg" alt="" /> <span>Cities</span></a></div>

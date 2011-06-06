@@ -1,12 +1,28 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
+<div style="float:left;"><h1>Edit Lessons</h1></div>
 <?php $book_name=$book_name->result_array(); ?>
-
-<form id="formEditor" class="mainForm clear" action="<?=site_url('books/update_lesson')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
+<script>
+function update_lesson(id){
+var book_id=$('#book').val();
+var lessonname=$('#lessonname').val();
+if(book_id != 0 )
+{
+if(lessonname != '' ){
+	$.ajax({
+		type: "POST",
+		url: "<?=site_url('books/update_lesson')?>"+'/'+id,
+		data: "book_id="+book_id+"&lessonname="+lessonname,
+		success: function(msg){
+			$('#message').html(msg);
+			window.parent.get_chapterlist(0,'');
+		}
+		});
+}else{alert("Enter Bookname");}
+}else{alert("Select Booknam");}
+}
+</script>
+<div id="message"></div>
+<div style="float:left; margin-top:20px;">
+<form id="formEditor" class="mainForm clear" action="" method="post" style="width:500px;" onsubmit="return false"  >
 <fieldset class="clear">
 			<?php foreach($book_name as $row){
 			$name=$row['name'];
@@ -30,32 +46,14 @@
             			</select>
                       
             </div>
-            <div class="field clear" style="width:500px;"> 
+            <div class="field clear" style="width:600px; margin-top:10px;"> 
                         <label for="txtName">BookName : </label>
-                        <input id="lessonname" name="lessonname"  type="text" value="<?=$name?>" /> 
-                      
+                        <input id="lessonname" style="height:20px;" name="lessonname"  type="text" value="<?=$name?>" /> 
             </div>
-            
             <div class="field clear" style="width:550px;"> 
-            <input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-     				<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+     				<input style="margin-left:50px; margin-top:30px;" onclick="javascript:update_lesson('<?=$root_id?>');" id="btnSubmit" class="button primary" type="submit" value="Submit" />
             </div>
             </fieldset>
             </form>
             
-            
-            <script>
-     function validate()
-     {
-        if(document.getElementById("city").value == '0')
-          {		
-              alert("Select a City.");
-              return false;
-          }
-       if(document.getElementById("center").value == '')
-          {
-              alert("Center Missing.");
-              return false;
-          }
-	}
-		</script>
+         </div>

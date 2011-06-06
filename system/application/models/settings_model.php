@@ -44,8 +44,8 @@ class Settings_model extends Model {
     * @param  : [$data]
     * @return : type: [Array]
     **/
-    function editsetting($data) {
-    	$this->db->where('id', $this->input->post('id'))->update('Setting', $data);
+    function editsetting($data,$settings_id) {
+    	$this->db->where('id', $settings_id)->update('Setting', $data);
     }
     /**
     * Function to get_settings

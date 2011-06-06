@@ -18,10 +18,13 @@ class Settings extends Controller {
 		if($logged_user_id == NULL ) {
 			redirect('auth/login');
 		}
-	
+		$this->load->helper('url');
+		$this->load->helper('form');
+		$this->load->helper('misc');
 		$this->load->scaffolding('Setting');
 		$this->load->model('settings_model','model', TRUE);
-		$this->load->helper('url');
+		
+		$this->load->model('Users_model','user_model');
 	}
 	/**
     * Function to index
@@ -33,6 +36,15 @@ class Settings extends Controller {
 		$all_settings = $this->model->getsettings();
 		$this->load->view('settings/settings_index', array('all_settings'	=> $all_settings, 'message'=>$this->message));
 	}
+	function add_settings()
+	{
+	$this->load->view('settings/settings_view.php');
+	}
+	function setting_list_refresh()
+	{
+		$all_settings = $this->model->getsettings();
+		$this->load->view('settings/setting_update', array('all_settings'	=> $all_settings, 'message'=>$this->message));
+	}
 	/**
     * Function to create
     * @author : Rabeesh 
@@ -40,28 +52,23 @@ class Settings extends Controller {
     **/
 	function create() {
 		$this->user_auth->check_permission('setting_create');
-		
 		// Make a new setting.
-		if($this->input->post('action') == 'New') {
+		$name=$_REQUEST['name'];
+		$value=$_REQUEST['value'];
+		$data=$_REQUEST['data'];
 			$data = array(
-						'name'			=>	$this->input->post('name'), 
-						'value'	=>	$this->input->post('value'),
-						'data'	=>	$this->input->post('data'),
+						'name'	=>	$name, 
+						'value'	=>	$value,
+						'data'	=>	$data,
 					);
 			$this->model->addsetting($data);
-			$this->message['success'] = 'The Setting has been added';
-			$this->index();
-		
-		} else {
-		// Show the form to make a new setting.
-			$this->load->helper('form');
-			$this->load->helper('misc');
-			$this->load->model('Users_model','user_model');
-			$this->load->view('settings/settings_view.php', array(
-				'action' => 'New',
-				
-				));
-		}
+			echo  "The Setting has been added";
+	}
+	function edit_settings()
+	{
+		$settings_id = $this->uri->segment(3);
+		$settings = $this->model->get_settings($settings_id);
+		$this->load->view('settings/settings_editview.php', array('setting'=> $settings));
 	}
 	/**
     * Function to edit
@@ -70,26 +77,19 @@ class Settings extends Controller {
     **/
 	function edit() {
 		$this->user_auth->check_permission('setting_edit');
-		if($this->input->post('action') == 'Edit') {
+		 $settings_id = $this->uri->segment(3);
+			$name=$_REQUEST['name'];
+			$value=$_REQUEST['value'];
+			$data=$_REQUEST['data'];
 			$data = array(
-						'name'			=>	$this->input->post('name'), 
-						'value'	=>	$this->input->post('value'),
-						'data'	=>	$this->input->post('data'),
+						'name'	=>	$name, 
+						'value'	=>	$value,
+						'data'	=>	$data,
 					);
-			$this->model->editsetting($data);
-			$this->message['success'] = 'The Setting has been edited successfully';
-			$this->index();
+			$this->model->editsetting($data,$settings_id);
+			echo "The Setting has been edited ";
 		
-		} else {
-			$this->load->helper('misc');
-			$this->load->helper('form');
-			$settings_id = $this->uri->segment(3);
-			$settings = $this->model->get_settings($settings_id);
-			$this->load->view('settings/settings_view.php', array(
-				'action' 		=> 'Edit',
-				'setting'			=> $settings
-				));
-		}
+		
 	}
 	function delete()
 	{

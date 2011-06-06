@@ -1,44 +1,15 @@
 <script>
 tb_init('a.thickbox, input.thickbox');
 
-function triggerSearch() {
-	q = $('#searchQuery').val();
-	get_groupList('0',q);
-}
-
-function get_kids_Name(center_id,pageno){
-//alert(center_id);
+function addbook(){
 	$.ajax({
 		type: "POST",
-		url: "<?= site_url('kids/get_kids_details') ?>",
-		data: "center_id="+center_id+"&page_no="+pageno,
+		url: "<?php echo site_url('books/popupaddbooks')?>",
 		success: function(msg){
-			$('#kids_list').html(msg);
+			$('#sidebar').html(msg);
 		}
 		});
 }
-
-
-$(document).ready(function(){
-	$('#example').each(function(){
-		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-
-		$(this).attr('href', url);
-	});
-	
-	$('.groupmanage').each(function(){
-		var url = $(this).attr('href') + '?TB_iframe=true&height=430&width=850';
-	
-		$(this).attr('href', url);
-	});
-		
-	$('.group').each(function(){
-		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-	
-		$(this).attr('href', url);
-	});
-}
-);
 </script>
 
 <div id="content" class="clear">
@@ -51,7 +22,7 @@ $(document).ready(function(){
 
 		<div id="actions">
 		<?php //if($this->user_auth->get_permission('kids_add')) { ?>
-		<a href="<?php echo site_url('books/popupaddbooks')?>" class="thickbox button primary" id="example" name="<strong>Add Books</strong>">Add  Books</a>
+		<a href="javascript:addbook()" class=" button primary" >Add  Books</a>
 		<?php //} ?>
 		</div>
 	</div>
@@ -90,39 +61,31 @@ foreach($content as $row)
   	  }
 ?> 
 
+
 <script>
-	$(document).ready(function(){
-		
-		$('#groupmanage-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=430&width=850';
-	
-			$(this).attr('href', url);
+function editbook(id)
+{
+$.ajax({
+		type: "POST",
+		url: "<?= site_url('books/popupEdit_books')?>"+'/'+id,
+		success: function(msg){
+			$('#sidebar').html(msg);
+		}
 		});
-		
-		$('#group-'+<?php echo $row['id']; ?>).each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-	
-			$(this).attr('href', url);
-		});
-	
-	}
-	); 
+}
 </script>
-
-
 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $row['id']; ?></td>
     <td class="colName left"><?php echo $row['name']; ?></td>
     
     <td class="colActions right"> 
-    <?php if($this->user_auth->get_permission('')) { ?><a href= "<?= site_url('books/popupEdit_books/'.$row['id'])?>" class="thickbox" style="cursor:pointer;background-image:url (<?php echo base_url(); ?>/images/ico/icoEdit.png)" class="group" 
-    id="group-<?php echo $row['id']; ?>" name="<strong>Edit student : <?= strtolower($row['name']) ?></strong>">Edit</a><?php } ?>
+    <?php if($this->user_auth->get_permission('')) { 
+	?><a href= "javascript:editbook('<?=$row['id']?>');"  style="cursor:pointer;background-image:url (<?php echo base_url(); ?>/images/ico/icoEdit.png)" >Edit</a><?php } ?>
     <?php if($this->user_auth->get_permission('kids_delete')) { ?><a class="actionDelete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>')">Delete</a><?php } ?>
    
     </td>
 </tr>
-
 <?php  }?>
 </tbody>
 </table>

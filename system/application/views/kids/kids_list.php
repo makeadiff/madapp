@@ -62,7 +62,7 @@ function deleteEntry(entryId,page_no)
 <?php } ?>
 </ul>
 </div>
-</div>
+</div><br />
 
 <div id="kids_list">
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">

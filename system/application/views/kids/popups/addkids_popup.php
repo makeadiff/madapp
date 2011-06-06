@@ -12,8 +12,8 @@ jQuery(document).ready(function () {
 });
 </script>
 
-<form id="formEditor" class="mainForm clear" action="<?php echo site_url('kids/addkids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
-<fieldset class="clear" style="margin-top:50px;width:500px;margin-left:-30px;">
+<form id="formEditor" class="mainForm clear form-area" action="<?php echo site_url('kids/addkids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
+<fieldset class="clear">
 <div class="field clear">
 <label for="selBulkActions">Select Center</label> 
 <select id="center" name="center" > 
@@ -25,32 +25,32 @@ jQuery(document).ready(function () {
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 	<?php } ?>
 </select>
-</div>
+</div><br />
 
 <div class="field clear"> 
 	<label for="txtName">Name</label>
 	<input id="name" name="name"  type="text" /> 
 			
-</div>
+</div><br />
 
 <div  class="field clear">
 	<label for="date">Date of Birth</label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text">
 	<p class="error clear"></p>
-</div>
+</div><br />
 
 <div  class="field clear">
 	<label for="date">Upload Photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
-</div>
+</div><br />
 
 
 <div class="field clear"> 
 	<label for="txtName">Description</label>
 	<textarea rows="5" cols="30" id="description" name="description"></textarea> 
 	<p class="error clear"></p>
-</div>
+</div><br />
 
 
 

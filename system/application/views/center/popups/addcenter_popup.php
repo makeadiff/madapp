@@ -1,6 +1,6 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php // $this->load->view('layout/css',array('thickbox'=>true)); ?>
 
-<form id="formEditor" class="mainForm clear" action="<?=site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
+<form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
 <fieldset class="clear">
 	<?php 
 	$this_city_id = $this->session->userdata('city_id');
@@ -38,13 +38,11 @@
 <div class="field clear"> 
 			<label for="txtName">Center Name : </label>
 			<input id="center" name="center"  type="text" /> 
-			
-</div>
+</div><br />
 
 <div class="field clear"> 
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Save" />
-		
-		<a href="#" class="cancel-button">Cancel</a>
+<input id="btnSubmit" class="button primary" type="submit" value="Save" />
+<a href="#" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>

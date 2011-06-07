@@ -102,8 +102,8 @@ foreach($all_users as $id => $user) {
     <td class="colCheck1"><?php echo $user->id; ?></td>
     <td class="colName left"><?php echo $user->name; ?></td>
     <td class="colCount"><?php echo $user->email; ?></td>
-    <td class="colCount"><?php echo date('d M, Y', strtotime($user->joined_on)); ?></td> 
     <td class="colStatus" style="text-align:left"><?php echo $user->phone; ?></td>
+    <td class="colCount"><?php echo date('d M, Y', strtotime($user->joined_on)); ?></td>
     <?php if($this->input->post('city_id') === '0') { ?><td class="colPosition"><?php echo $user->city_name; ?></td><?php } ?>
     <td class="colPosition"><?php echo ucfirst($user->user_type); ?></td>
     

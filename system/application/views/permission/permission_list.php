@@ -7,7 +7,7 @@
 
 <!-- start page actions-->
 <div id="actions"> 
-<a href="<?= site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" id="example" name="Add Permission">Add Permission</a>
+<a href="<?php echo site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" name="Add Permission">Add Permission</a>
 </div><br />
 <!-- end page actions-->
 </div>

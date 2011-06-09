@@ -30,7 +30,7 @@ class Kids_model extends Model {
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
 		$this->db->where('Center.city_id', $this->city_id);
-		$this->db->orderby('Student.name');
+		$this->db->orderby('Student.id');
 		$result=$this->db->get();
 		return $result;
 	}

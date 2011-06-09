@@ -1,11 +1,18 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
-
+<div style="float:left;"><h1>Edit Kids</h1></div>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <?php
 $edt=date('Y')-2;
 $sdt=date('Y')-20;
 ?>
+<style>
+.fields{
+float:left;
+width:300px;
+padding-bottom:5px;
+padding-top:5px;
+}
+</style>
 <script>
 jQuery(document).ready(function () {
 	$('input#date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?> });
@@ -25,6 +32,7 @@ foreach($kids_details as $row) {
 }
 
 ?>
+<div style="float:left; margin-top:20px;">
 <form id="formEditor" class="mainForm clear form-area" action="<?php echo site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
 <fieldset class="clear">
 <div class="field clear">
@@ -44,13 +52,13 @@ foreach($kids_details as $row) {
 </select>
 </div><br />
 
-<div class="field clear"> 
+<div class="fields"> 
 	<label for="txtName">Name</label>
 	<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
 			
 </div><br />
 
-<div  class="field clear">
+<div  class="fields">
 	<label for="date">Date of Birth</label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?php echo $birthday ; ?>">
 	<p class="error clear"></p>
@@ -68,8 +76,8 @@ foreach($kids_details as $row) {
 	<p class="error clear"></p>
 </div><br />
 
-<div class="field clear"> 
-	<label for="txtName">Description</label>
+<div class="field clear " style="margin-top:10px;"> 
+	<label for="txtName"  >Description</label>
 	<textarea rows="5" cols="30" id="description" name="description"><?php echo $description; ?></textarea> 
 	<p class="error clear"></p>
 </div><br />
@@ -77,14 +85,16 @@ foreach($kids_details as $row) {
 
 <div class="field clear" style="width:550px;">
 	<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-	<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Edit" />
+	<input style="margin-left:50px; margin-top:30px;" id="btnSubmit" class="button primary" type="submit" value="Edit" />
 	
-	<a href="#" class="cancel-button">Cancel</a>
+	<div style="float:left;clear:right; margin-top:30px"><a href="<?=site_url('kids/manageaddkids')?>" style="margin-left:0px; " class="cancel-button">Cancel</a></div>
+</div>
 </div>
 
 
 </fieldset>
 </form>
+</div>
 <script> 
 function validate() {
 	if(document.getElementById("center").value == '-1')

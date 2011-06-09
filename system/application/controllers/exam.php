@@ -148,11 +148,11 @@ class Exam extends Controller  {
 		$flag=$this->exam_model->insert_exam_mark($choiceText,$exam_id,$agents);
 		if($flag)
 		{
-		$this->load->view('student_exam_score/succes_div');
+		echo "Successfully inserted!!";
 		}
 		else
 		{
-		$this->load->view('student_exam_score/error_div');
+		echo "Insertion Failed!!";
 		}
 	}
 	/**
@@ -228,7 +228,9 @@ class Exam extends Controller  {
     **/
 	function getexam_subjects_name() {
 		$exam_id = $_REQUEST['exam_id'];
-
+		$Exam_name=$this->exam_model->get_exam_name($exam_id);
+		$data['exam_name']=$Exam_name->name;
+		$data['exam_details']=$this->exam_model->get_exam();
 		$data['subject']=$this->exam_model->get_subject_names($exam_id);
 		$data['details']=$this->exam_model->get_student_names($exam_id);
 		$this->load->view('student_exam_score/popups/popup_add_exam',$data);
@@ -257,15 +259,14 @@ class Exam extends Controller  {
 				$returnFlag=$this->exam_model->store_marks($data);
 			}
 		}
-		$message['msg']   =  "Mark Added succeessfully";
-		$message['successFlag'] = "0";
-		$message['link']  =  "addMarks";
-		$message['linkText'] = "add new Center";
-		$message['icoFile'] = "ico_addScheme.png";
-		$this->load->view('dashboard/close_thickbox',$message);
-		 
+		$this->exam_score();
 		}
-		
+		/**
+    * Function to delete_exam
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    **/
 	function delete_exam($exam_id) {
 		$this->user_auth->check_permission('exam_delete');
 		$this->exam_model->delete($exam_id);

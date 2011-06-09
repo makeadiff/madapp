@@ -138,11 +138,11 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
-	function update_permission($data)
+	function update_permission($data,$permission)
 	{
 		$rootId=$data['rootId'];
 		$group_id=$data['groupname'];
-		$permission=$data['permission'];
+		//$permission=$data['permission'];
 		$this->db->where('group_id',$rootId);
 		$this->db->delete('GroupPermission');
 		$count=sizeof($permission);

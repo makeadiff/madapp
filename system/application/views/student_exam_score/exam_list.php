@@ -1,25 +1,30 @@
 <script>
-	
-	tb_init('a.thickbox, input.thickbox');
-	
-	function triggerSearch()
-	{
-		q = $('#searchQuery').val();
-		get_groupList('0',q);
-	}
-	
-	$(document).ready(function(){
-	
-		
-		$('#example').each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=900';
-	
-			$(this).attr('href', url);
-		});
-		
-	
-	}
-	);  
+function view_details(id)
+{
+	$('#loading').show();
+	$.ajax({
+		type: "POST",
+		url: "<?php echo site_url('exam/view_exam_details') ?>"+'/'+id,
+		//data: "pageno="+page_no+"&q="+search_query,
+		success: function(msg){
+		$('#loading').hide();
+		$('#sidebar').html(msg);
+		}
+	});
+}
+function add_exam(id)
+{
+	$('#loading').show();
+	$.ajax({
+		type: "POST",
+		url: "<?php echo site_url('exam/add_exam')?>"+'/'+id,
+		//data: "pageno="+page_no+"&q="+search_query,
+		success: function(msg){
+		$('#loading').hide();
+		$('#sidebar').html(msg);
+		}
+	});
+}
 	
 </script>
 
@@ -29,16 +34,15 @@
 	<div id="main" class="clear">
     	<div id="head" class="clear">
         	<h1><?php echo $title; ?></h1>
-
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?php echo site_url('exam/add_exam')?>" class="thickbox button primary popup" id="example" name="Add New Exam">Add New Exam</a>
+<a href="javascript:add_exam();" class="button primary" >Add New Exam</a>
 </div>
 	<!-- end page actions-->
 
 </div>
 
-<table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
+<table id="tableItems" style="margin-top:50px;" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
@@ -76,7 +80,7 @@ foreach($content as $row)
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></a></td>
     <td class="colName left"><?php echo $row['name']; ?></a></td>
-	<td class="colName left"><a href="<?php echo site_url('exam/view_exam_details/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="Details of <?= strtolower($row['name']) ?>"> View Details</a></td>
+	<td class="colName left"><a href="javascript:view_details('<?=$row['id']?>')"> View Details</a></td>
 	<td class="colName left"><a href="<?php echo site_url('exam/delete/'.$row['id']) ?>" class="confirm" title="Delete '<?php echo $row['name']; ?>' Exam">Delete</a></td>
 </tr>
 

@@ -26,18 +26,18 @@ foreach($group_permission as $roll)
 	<fieldset class="clear">
     
 		
-        <div class="field clear" style="width:600px;"> 
-           <label for="txtName">Group Name : <?php echo $name; ?></label>
-    </div>
+        <div class="field clear"> 
+           <h1>Group Name : <?php echo $name; ?></h1>
+    	</div>
 			<div  class="field clear" style="width:680px;"> 
-            <label for="txtName">Permissions :</label>
+          <p style="clear:both; "><h2 style="margin-top:65px;">Permissions :</h2>
 				<?php 
                 $j=0;
                 foreach($permission as $row)
                 { 
                 ?>
                 
-            <div class="field clear" style="width:600px;"> 
+            <div class="field clear" style="margin-left:150px;"> 
           	<label for="txtName"><?php echo $row['name']; ?></label>
             <?php 
 		    $a=0;
@@ -52,8 +52,9 @@ foreach($group_permission as $roll)
 			</div><br />
         
            <?php } ?>
+            </p>
            </div>
-   
+  
    </fieldset>
    </form>		
    			

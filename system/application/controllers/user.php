@@ -84,11 +84,11 @@ class User extends Controller  {
 	function adduser()
 	{
 		$this->user_auth->check_permission('user_add');
-		$data['name'] = $_POST['name'];
+		$data['name'] = $_POST['names'];
 		$data['group'] = $_POST['group'];
 		$data['position'] = $_POST['position'];
-		$data['email'] = $_POST['email'];
-		$data['password'] = $_POST['password'];
+		$data['email'] = $_POST['emails'];
+		$data['password'] = $_POST['spassword'];
 		$data['phone'] = $_POST['phone'];
 		$data['city'] = $_POST['city'];
 		$data['address'] = $_POST['address'];
@@ -122,32 +122,19 @@ class User extends Controller  {
 			$returnFlag= $this->users_model->adduser_to_group($data);
 			if($returnFlag)
 			{
-				$message['msg']   =  "User Added successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "popupAdduser";
-				$message['linkText'] = "Add New User";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_userdata('message', 'User Inserted successfully');
+			$this->view_users();
 			}
 			else
 			{
-				$message['msg']   =  "No Action performed.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupAdduser";
-				$message['linkText'] = "Add New User";
-				$message['icoFile'] = "ico_addScheme.png";
-				$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_userdata('message', 'No Action performed.');	
+			$this->view_users();
 			}
 		}
 		else	
 		{
-			
-			$message['msg']   =  "The User can't be added because mailid '".$data['email']."' is already taken";
-			$message['successFlag'] = "0";
-			$message['link']  =  "popupAdduser";
-			$message['linkText'] = "Add New User";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);
+		$this->session->set_userdata('message', "The User can't be added because mailid '".$data['email']."' is already taken");
+		redirect('user/view_users');
 		}
 	}
 	/**
@@ -184,15 +171,15 @@ class User extends Controller  {
 	function update_user() {
 		$this->user_auth->check_permission('user_edit');
 		$data['rootId'] = $_POST['rootId'];
-		$data['name'] = $_POST['name'];
+		$data['name'] = $_POST['names'];
 		
 		$data['group'] = array();
 		if(!empty($_REQUEST['group'])) $data['group'] = $_POST['group'];
-		$data['email'] = $_POST['email'];
+		$data['email'] = $_POST['emails'];
 		$data['position'] = $_POST['position'];
 		
-		if($_POST['password']) {
-			$data['password'] = $_POST['password'];
+		if($_POST['spassword']) {
+			$data['password'] = $_POST['spassword'];
 		}
 		
 		$data['phone'] = $_REQUEST['phone'];
@@ -224,20 +211,11 @@ class User extends Controller  {
 		
 		if($flag || $returnFlag ) 
 		{
-			$message['msg']   =  "Profile edited successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_userdata('message', 'User Updated successfully');
+			$this->view_users();
 		} else {
-			$message['msg']   =  "Profile not edited.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-
-			$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_userdata('message', 'Updation Failed!!');
+			$this->view_users();
 		}
 	}
 	

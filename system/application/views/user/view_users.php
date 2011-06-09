@@ -1,3 +1,25 @@
+<script>
+function add_user()
+{
+	$.ajax({
+		type: "POST",
+		url: "<?php echo site_url('user/popupAdduser')?>",
+		success: function(msg){
+			$('#sidebar').html(msg);
+		}
+		});
+}
+function edit_users(id)
+{
+	$.ajax({
+		type: "POST",
+		url: "<?php echo site_url('user/popupEditusers');?>"+'/'+id,
+		success: function(msg){
+			$('#sidebar').html(msg);
+		}
+		});
+}
+</script>
 <?php
 $this->load->view('layout/header',array('title'=>$title));
 ?>
@@ -6,10 +28,11 @@ $this->load->view('layout/header',array('title'=>$title));
 <div id="main" class="clear">
 <div id="head" class="clear">
 <h1><?php echo $title; ?></h1>
+<div style="color:#FF0000;"><?php if($this->session->userdata('message') ){ echo $this->session->userdata('message'); $this->session->unset_userdata('message');}?></div>
 
 <div id="actions">
 <?php if($this->user_auth->get_permission('user_add')) { ?>
-<a href="<?php echo site_url('user/popupAdduser')?>" class="thickbox button primary popup" name="Add User">Add User</a>
+<a href="javascript:add_user();" class=" button primary " name="Add User">Add User</a>
 <?php } ?>
 </div><br class="clear" />
 </div>
@@ -102,13 +125,13 @@ foreach($all_users as $id => $user) {
     <td class="colCheck1"><?php echo $user->id; ?></td>
     <td class="colName left"><?php echo $user->name; ?></td>
     <td class="colCount"><?php echo $user->email; ?></td>
+    <td class="colCount"><?php echo date('d M, Y', strtotime($user->joined_on)); ?></td> 
     <td class="colStatus" style="text-align:left"><?php echo $user->phone; ?></td>
-    <td class="colCount"><?php echo date('d M, Y', strtotime($user->joined_on)); ?></td>
     <?php if($this->input->post('city_id') === '0') { ?><td class="colPosition"><?php echo $user->city_name; ?></td><?php } ?>
     <td class="colPosition"><?php echo ucfirst($user->user_type); ?></td>
     
     <td class="colActions right"> 
-    <a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="thickbox icon edit popup" name="Edit User : <?php echo $user->name ?>">Edit</a>
+    <a href="javascript:edit_users('<?=$user->id?>')" class=" icon edit " >Edit</a>
     <a class="delete confirm icon" href="<?php echo site_url('user/delete/'.$user->id) ?>" title="Delete <?php echo $user->name ?>">Delete</a>
     </td>
 </tr>
@@ -126,4 +149,4 @@ foreach($all_users as $id => $user) {
 
 </div>
 <?php
-$this->load->view('layout/footer');
+$this->load->view('layout/settings_footer');

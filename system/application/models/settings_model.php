@@ -56,7 +56,12 @@ class Settings_model extends Model {
     function get_settings($setting_id) {
     	return $this->db->where('id',$setting_id)->get('Setting')->row_array();
     }
-    
+     /**
+    * Function to deletesetting
+    * @author : Rabeesh
+    * @param  : [$data]
+    * @return : type: [Array]
+    **/
 	function deletesetting($id)
 	{
 	$this->db->where('id', $id)->delete('Setting');

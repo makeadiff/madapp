@@ -36,10 +36,20 @@ class Settings extends Controller {
 		$all_settings = $this->model->getsettings();
 		$this->load->view('settings/settings_index', array('all_settings'	=> $all_settings, 'message'=>$this->message));
 	}
+	/**
+    * Function to add_settings
+    * @author : Rabeesh
+    * @param  : [$data]
+    **/
 	function add_settings()
 	{
 	$this->load->view('settings/settings_view.php');
 	}
+	/**
+    * Function to setting_list_refresh
+    * @author : Rabeesh
+    * @param  : [$data]
+    **/
 	function setting_list_refresh()
 	{
 		$all_settings = $this->model->getsettings();
@@ -64,6 +74,11 @@ class Settings extends Controller {
 			$this->model->addsetting($data);
 			echo  "The Setting has been added";
 	}
+	/**
+    * Function to edit_settings
+    * @author : Rabeesh
+    * @param  : [$data]
+    **/
 	function edit_settings()
 	{
 		$settings_id = $this->uri->segment(3);
@@ -91,6 +106,11 @@ class Settings extends Controller {
 		
 		
 	}
+	/**
+    * Function to delete
+    * @author : Rabeesh
+    * @param  : [$data]
+    **/
 	function delete()
 	{
 		$id = $this->uri->segment(3);

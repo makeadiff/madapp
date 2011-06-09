@@ -1,6 +1,48 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
+<script type="text/javascript">
+function validate() 
+{
+if(document.getElementById("names").value == '')
+	{
+		alert("Name Missing");
+		document.getElementById("names").focus();
+		return false;
+	}
+if(document.getElementById("emails").value == '')
+	{
+		alert("Enter Email");
+		document.getElementById("emails").focus();
+		return false;
+	}	
+if(!document.getElementById("emails").value.match(/^\w+\@\w+\.\w+/))
+		{
+			alert("Enter Valid Email");
+			document.getElementById("emails").focus();
+			return false;
+		}
+if(document.getElementById("spassword").value == '')
+		{
+			alert("Password Missing.");
+			document.getElementById("spassword").focus();
+			return false;
+		}
+if(document.getElementById("scpassword").value == '')
+		{
+			alert("Confirm your Password.");
+			document.getElementById("scpassword").focus();
+			return false;
+		}
+	
+if(document.getElementById("spassword").value != document.getElementById("scpassword").value)
+		{
+			alert("Password Mismatch.");
+			document.getElementById("cpassword").focus();
+			return false;
+		}
+}
+</script>
+
 <?php
 $sdt=2006;
 $edt=date('Y');
@@ -10,11 +52,13 @@ jQuery(document).ready(function () {
 	$('input.date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
 });
 </script>
-<form id="formEditor" class="mainForm form-area clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" style="width:500px;" >
+
+<body>
+<form id="formEditor" name="formEditor" class="mainForm form-area clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();">
 <fieldset class="clear">
 
 <div class="field clear" style="width:500px;"> 
-<label for="txtName">Name : </label> <input id="name" name="name"  type="text" /><br />
+<label for="txtName">Name : </label> <input id="names" name="names"  type="text" /><br />
 </div>
 
 <div class="field clear" style="width:500px;">
@@ -37,17 +81,17 @@ jQuery(document).ready(function () {
 
 <div class="field clear" style="width:500px;"> 
 			<label for="email">Email : </label>
-			<input id="email" name="email"  type="text" /><br />
+			<input id="emails" name="emails"  type="text" /><br />
 			
 </div>
 <div class="field clear" style="width:500px;"> 
 			<label for="password">Password : </label>
-			<input id="password" name="password"  type="password" /><br />	 
+			<input id="spassword" name="spassword"  type="password" /><br />	 
 			
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="cpassword">Confirm Password : </label>
-	<input id="cpassword" name="cpassword"  type="password" /><br />	 
+	<input id="scpassword" name="scpassword"  type="password" /><br />	 
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Phone : </label>
@@ -130,49 +174,10 @@ if($this->user_auth->get_permission('change_city')) { ?>
 
 
 <div class="field clear" style="width:550px;"> 
-<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
-
-<a href="#" class="cancel-button">Cancel</a>
+<input style="margin-left:50px; margin-top:30px;"  class="button primary"  type="submit"  value="Submit" />
+<a href="<?=site_url('user/view_users');?>" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>
-  
- <script language="javascript">
-function validate() {
-	if(document.getElementById("name").value == '')
-		{
-			alert("Name Missing.");
-			return false;
-		}
-	if(document.getElementById("email").value == '')
-		{
-			alert("Enter Email");
-			return false;
-		}
-	if(!document.getElementById("email").value.match(/^\w+\@\w+\.\w+/))
-		{
-			alert("Enter Valid Email");
-			return false;
-		}
-
-	if(document.getElementById("password").value == '')
-		{
-			alert("Password Missing.");
-			return false;
-		}
-	if(document.getElementById("cpassword").value == '')
-		{
-			alert("Confirm your Password.");
-			return false;
-		}
-	
-	document.getElementById("password").value != document.getElementById("cpassword").value)
-		{
-			alert("Password Mismatch.");
-			return false;
-		}
-
-}
-</script>
 
 <?php $this->load->view('layout/thickbox_footer'); ?>

@@ -127,6 +127,11 @@ class Exam_model extends Model
 		return $result;
 	
 	}
+	function get_exam_name($exam_id)
+	{
+	$data = $this->db->where('id', $exam_id)->get("Exam")->row();
+	return $data;
+	}
 	function get_exam_name_by_id($exam_id)
 	{
 		$this->db->select('*');

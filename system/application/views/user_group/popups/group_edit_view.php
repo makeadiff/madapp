@@ -1,5 +1,34 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
-
+<script>
+function update_group(id)
+{
+var permission = "";
+$('#formEditor :checked').each(function(i, selected)
+{ 
+ permission+=($(selected).val()=="")?$(selected).val():$(selected).val()+",";
+});
+var groupname=$('#groupname').val();
+if(groupname != '')
+{ 
+if(permission !='')
+{
+$.ajax({
+		type: "POST",
+		url: "<?=site_url('user_group/updategroup_name')?>"+'/'+id,
+		data: "permission="+permission+"&groupname="+groupname,
+		success: function(msg){
+			$('#message').html(msg);
+			window.parent.refresh_group();
+		}
+		});
+		}else{
+		alert("Select  Permission");
+}
+}else 
+{
+alert(" Enter Group Name");
+}
+}
+</script>
 <?php
 $details=$details->result_array();
 foreach($details as $row) {
@@ -7,11 +36,8 @@ foreach($details as $row) {
 	$name=$row['name'];
 }
 ?>
-
-
 <?php 
 $permission=$permission->result_array();
-
 $group_permission=$group_permission->result_array();
 $i=0;
 $perm_id = array();
@@ -20,15 +46,17 @@ foreach($group_permission as $roll) {
 	$i++;
 }
 ?> 
-
-	<form id="formEditor" class="mainForm clear" action="<?= site_url('user_group/updategroup_name')?>" method="post" style="width:500px;" onsubmit="return validate();">
+<div style="float:left;"><h1>Edit Group</h1></div>
+<div id="message"></div>
+<div style="float:left; margin-top:20px;">
+	<form id="formEditor" class="mainForm clear" action="" method="post" style="width:500px;" onsubmit="return false">
 <fieldset class="clear">
 
 	<div id="right-column">
 	</div> 
 	<div class="field clear" style="width:600px;"> 
 		<label for="txtName">Group Name : </label>
-		<input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>" /> 
+		<input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>"/> 
 </div>
 		<div class="field clear" style="width:600px; "> 
 		<label for="txtName">Permissions :</label>
@@ -50,19 +78,8 @@ foreach($group_permission as $roll) {
  </div>
            <?php } ?>
     <div class="field clear" style="width:550px;"> 
-    		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-     	   <input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit"  />
+     	   <input style="margin-left:50px; margin-top:30px;" onclick="javascript:update_group('<?=$root_id?>');"btnSubmit" class="button primary" type="submit" value="Submit"  />
     </div>
     </fieldset>
     </form>		
-   	<script>
-     function validate()
-     {
-        if(document.getElementById("groupname").value == '')
-          {		
-              alert("Groupname missing.");
-              return false;
-          }
-       
-	}
-		</script>		
+</div>

@@ -68,7 +68,7 @@ class Kids extends Controller  {
 		$data['details']= $this->kids_model->getkids_details();
 		$data['center_list']=$this->center_model->get_all();
 		$this->load->view('kids/kids_list',$data);
-		$this->load->view('layout/footer');
+		$this->load->view('layout/settings_footer');
 	
 	}
 		
@@ -167,30 +167,18 @@ class Kids extends Controller  {
         }
 		if($returnFlag != '') 
 			{
-			$message['msg']   =  "Student updated successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);		  
+			$this->session->set_userdata('message', 'Student updated successfully.');
+			$this->manageaddkids();	  
 			}
 		elseif($flag!= '')
 		{
-			$message['msg']   =  "Student updated successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_userdata('message', 'Student updated successfully.');
+			$this->manageaddkids();
 			}
 		else
 			{
-			$message['msg']   =  "Student not edited.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);		  
+			$this->session->set_userdata('message', 'Student not edited.');
+			$this->manageaddkids();	  
 			}
 	}
 	
@@ -235,21 +223,11 @@ class Kids extends Controller  {
         }
         
 		if($returnFlag) {
-			$message['msg']   =  "Student added successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "popupaddKids";
-			$message['linkText'] = "Add New Student";
-			$message['icoFile'] = "ico_addScheme.png";
-		
-			$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_userdata('message', 'Kid Inserted successfully');
+			$this->manageaddkids();
 		} else {
-			$message['msg']   =  "No Updates Performed.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "popupaddKids";
-			$message['linkText'] = "Add New Student";
-			$message['icoFile'] = "ico_addScheme.png";
-		
-			$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_userdata('message', 'Insertion Failed');
+			$this->manageaddkids();
 		}
 	}
 	

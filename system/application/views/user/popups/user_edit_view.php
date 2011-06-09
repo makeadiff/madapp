@@ -1,5 +1,4 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true));
-
+<?php 
 $user_details = $user->result_array();
 foreach($user_details as $row) {	
 	$root_id	= $row['id'];
@@ -38,7 +37,7 @@ jQuery(document).ready(function () {
 
 <div class="field clear" style="width:500px;"> 
 <label for="txtName">Name : </label>
-<input id="user_name" name="name"  type="text" value="<?php echo stripslashes($name); ?>"/> 
+<input id="names" name="names"  type="text" value="<?php echo stripslashes($name); ?>"/> 
 </div>
 
 <div class="field clear" style="width:500px;">
@@ -61,16 +60,16 @@ jQuery(document).ready(function () {
 
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Email : </label>
-	<input id="email" name="email"  type="text"  value="<?php echo $email; ?>"/> 
+	<input id="emails" name="emails"  type="text"  value="<?php echo $email; ?>"/> 
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Password : </label>
-	<input id="password" name="password"  type="password"   /> 
+	<input id="spassword" name="spassword"  type="password"   /> 
 			
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Confirm Password : </label>
-	<input id="cpassword" name="cpassword"  type="password" /> 
+	<input id="scpassword" name="scpassword"  type="password" /> 
 </div>
 <div class="field clear" style="width:500px;"> 
 	<label for="txtName">Phone : </label>
@@ -152,9 +151,9 @@ if($this->user_auth->get_permission('change_city')) { ?>
 
 <div class="field clear" style="width:550px;"> 
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+		<input style="margin-left:50px; margin-top:50px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
 		
-		<a href="#" class="cancel-button">Cancel</a>
+		<a href="<?=site_url('user/view_users');?>" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>
@@ -162,18 +161,23 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <script language="javascript">
 function validate()
 {
-	if(document.getElementById("user_name").value == '')
+	if(document.getElementById("names").value == '')
 			{
 				alert("Name Missing.");
 				return false;
 			}
-	if(document.getElementById("email").value == '')
+	if(document.getElementById("emails").value == '')
 			{
 				alert("Select Email.");
 				return false;
 			}
+	if(document.getElementById("spassword").value == '')
+			{
+				alert("Enter Password.");
+				return false;
+			}
 		
-	if(document.getElementById("password").value != document.getElementById("cpassword").value)
+	if(document.getElementById("spassword").value != document.getElementById("scpassword").value)
 			{
 				alert("Password Missmatch.");
 				return false;

@@ -95,23 +95,11 @@ class Permission extends controller {
 		$returnFlag= $this->permission_model->add_permission($permission);
 		if($returnFlag)
 		  {
-		  		$message['msg']   =  "Permission added successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "popupAddPermission";
-				$message['linkText'] = "add new Permission";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
+		  echo "Successfully Inserted!!";
 		  }
 		else
 		  {
-		  		$message['msg']   =  "no Actions performed.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupAddPermission";
-				$message['linkText'] = "add new Permission";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
+		  echo "Insertion failed!!";
 		  }
 	
 	}
@@ -138,28 +126,16 @@ class Permission extends controller {
 	{
 		$this->user_auth->check_permission('permission_edit');
 		$data['permission'] = $_REQUEST['permission'];
-		$data['rootId'] = $_REQUEST['rootId'];
+		$data['rootId'] = $this->uri->segment(3);
 		$returnFlag= $this->permission_model->update_permission($data);
 		
 		if($returnFlag == true) 
 			  {
-					$message['msg']   =  "Permission edited successfully.";
-					$message['successFlag'] = "1";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
+				echo "Successfully Updated!!"; 
 			  }
 			else
 			  {
-					$message['msg']   =  "Permission not edited.";
-					$message['successFlag'] = "0";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
+				echo "Updation failed!!	 "; 
 			 }
 	}
 	/**

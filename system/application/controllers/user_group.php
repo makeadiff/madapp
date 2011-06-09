@@ -48,13 +48,25 @@
 		
 		$data['title'] = 'Manage User Group';
 		$data['details']= $this->users_model->getgroup_details();
-		
 		$this->load->view('layout/header',$data);
 		$this->load->view('user_group/add_groupname_view', $data);
 		$this->load->view('layout/footer');
-	
 	}
-	
+	/**
+    *
+    * Function to manageadd_group
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function refresh_group()
+	{
+		$this->user_auth->check_permission('user_group_index');
+		$data['title'] = 'Manage User Group';
+		$data['details']= $this->users_model->getgroup_details();
+		$this->load->view('user_group/refresh_group', $data);
+	}
     /**
     *
     * Function to popupaddgroup
@@ -81,6 +93,8 @@
 	{	
 		$this->user_auth->check_permission('user_group_add');
 		$permission = $_REQUEST['permission'];
+		$permission = substr($permission,0,strlen($permission)-1);
+		$permission=explode(",",trim($permission));
 		$groupname = $_REQUEST['groupname'];
 		$group_id= $this->users_model->add_group_name($groupname);
 		if($group_id)
@@ -88,23 +102,11 @@
 		$returnFlag= $this->users_model->add_group_permission($permission,$group_id);
 		if($returnFlag)
 		  {
-		  		$message['msg']   =  "Group added successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "popupaddgroup";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
+		  echo "Successfully Inserted";
 		  }
 		else
 		  {
-		  		$message['msg']   =  "No actions performed.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupaddgroup";
-				$message['linkText'] = "add new Center";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
+		  echo "Insertion Failed";
 		  }
 		}
 		
@@ -138,33 +140,22 @@
 	{
 		$this->user_auth->check_permission('user_group_edit');
 	
-		
-		$data['rootId'] = $_REQUEST['rootId'];
+		$data['rootId'] = $this->uri->segment(3);
 		$data['groupname']=$_REQUEST['groupname'];
-		$data['permission'] = $_REQUEST['permission'];
+		$permission = $_REQUEST['permission'];
+		$permission = substr($permission,0,strlen($permission)-1);
+		$permission=explode(",",trim($permission));
 		$this->users_model->update_group($data);
 		
-		$returnFlag=$this->users_model->update_permission($data);
+		$returnFlag=$this->users_model->update_permission($data,$permission);
 		
 		if($returnFlag == true) 
 			  {
-					$message['msg']   =  "Group edited successfully.";
-					$message['successFlag'] = "1";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
+					echo "Successfully Updated";	  
 			  }
 			else
 			  {
-					$message['msg']   =  "Group not edited.";
-					$message['successFlag'] = "0";
-					$message['link']  =  "";
-					$message['linkText'] = "";
-					$message['icoFile'] = "ico_addScheme.png";
-		
-					$this->load->view('dashboard/errorStatus_view',$message);		  
+				echo "Updation Failed";	  
 			 }
 	
 	}

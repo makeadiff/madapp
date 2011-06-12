@@ -1,3 +1,4 @@
+<?php $this->load->view('layout/thickbox_header'); ?>
 <script>
 function update_permission(id)
 {
@@ -19,8 +20,6 @@ $.ajax({
 }
 </script>
 
-
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
 <?php
 $details=$content->result_array();
 foreach($details as $row)

@@ -1,4 +1,5 @@
-<div style="float:left;"><h1>Edit Kids</h1></div>
+<?php $this->load->view('layout/thickbox_header'); ?>
+<h1>Edit Kids</h1>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <?php

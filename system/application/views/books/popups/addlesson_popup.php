@@ -1,3 +1,4 @@
+<?php $this->load->view('layout/thickbox_header'); ?>
 <div style="float:left;"><h1>Add Lessons</h1></div>
 <script>
 function insert_lesson(){

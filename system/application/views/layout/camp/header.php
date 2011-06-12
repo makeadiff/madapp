@@ -4,10 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo empty($title) ? 'MADApp - ' . ucfirst($this->uri->segment(1)) : $title; ?></title>
 <?php $this->load->view('layout/css'); ?>
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
-<script type="text/javascript" src="<?php echo base_url()?>js/application.js"></script>
 </head>
 
 <body id="pg-<?php echo $this->uri->segment(1) . '-' . $this->uri->segment(2); ?>">

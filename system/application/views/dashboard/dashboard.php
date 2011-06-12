@@ -3,8 +3,14 @@
 <div id="main" class="clear">
 	<div id="head" class="clear" style="border-bottom:none;">
 	<div style="font-size:14px;background-color:#FFF89D;height:15px;padding-top:18px;padding-bottom:20px;padding-left:10px;">
-		Welcome, <?php echo $this->session->userdata('name'); ?>.</div>
-</div>
+			Welcome, <?php echo $this->session->userdata('name'); ?>.</div>
+	</div><br />
+	
+<?php if($upcomming_classes) {
+foreach($upcomming_classes as $class) { ?>
+<div class="upcomming">You have a class at <?php echo $class->name ?> on <?php echo $class->class_on ?>.</div>
+<?php } 
+} ?>
 	
 <div id="quick" class="clear" style="margin-top:-1px;">
 	<?php if($this->user_auth->get_permission('city_index')) { ?>

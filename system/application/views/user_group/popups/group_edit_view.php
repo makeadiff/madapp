@@ -1,3 +1,5 @@
+<?php $this->load->view('layout/thickbox_header'); ?>
+
 <script>
 function update_group(id)
 {
@@ -78,8 +80,10 @@ foreach($group_permission as $roll) {
  </div>
            <?php } ?>
     <div class="field clear" style="width:550px;"> 
-     	   <input style="margin-left:50px; margin-top:30px;" onclick="javascript:update_group('<?=$root_id?>');"btnSubmit" class="button primary" type="submit" value="Submit"  />
+     	   <input style="margin-left:50px; margin-top:30px;" onclick="javascript:update_group('<?=$root_id?>');" btnSubmit" class="button primary" type="submit" value="Submit"  />
     </div>
     </fieldset>
     </form>		
 </div>
+
+<?php $this->load->view('layout/thickbox_footer'); ?>

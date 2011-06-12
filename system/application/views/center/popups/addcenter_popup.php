@@ -1,4 +1,4 @@
-<?php // $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php $this->load->view('layout/thickbox_header'); ?>
 
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
 <fieldset class="clear">

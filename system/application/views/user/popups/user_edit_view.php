@@ -1,3 +1,4 @@
+<?php $this->load->view('layout/thickbox_header'); ?>
 <?php 
 $user_details = $user->result_array();
 foreach($user_details as $row) {	

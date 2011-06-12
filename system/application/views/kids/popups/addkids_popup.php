@@ -1,18 +1,8 @@
-<div style="float:left;"><h1>Add Kids</h1></div>
-
-<style>
-
-.fields{
-float:left;
-width:300px;
-padding-bottom:5px;
-padding-top:5px;
-}
-
-
-</style>
+<?php $this->load->view('layout/thickbox_header'); ?>
+<h1>Add Kids</h1>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
+
 <?php
 $edt=date('Y')-2;
 $sdt=date('Y')-20;

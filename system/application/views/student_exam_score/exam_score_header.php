@@ -1,14 +1,27 @@
+
 <script>
-function add_group()
-{
-	$.ajax({
-		type: "POST",
-		url: "<?= site_url('exam/popupAddMark')?>",
-		success: function(msg){
-			$('#sidebar').html(msg);
-		}
+	
+	tb_init('a.thickbox, input.thickbox');
+	
+	function triggerSearch()
+	{
+		q = $('#searchQuery').val();
+		get_groupList('0',q);
+	}
+	
+	$(document).ready(function(){
+	
+		
+		$('#example').each(function(){
+			var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=900';
+	
+			$(this).attr('href', url);
 		});
-}
+		
+	
+	}
+	);  
+	
 </script>
 
 <div id="content" class="clear">
@@ -20,7 +33,7 @@ function add_group()
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="javascript:add_group();" class=" button primary"  name="<strong>Add Mark</strong>">Add Exam Mark</a>
+<a href="<?= site_url('exam/popupAddMark')?>" class="thickbox button primary" id="example" name="<strong>Add Mark</strong>">Add Exam Mark</a>
 </div>
 			<!-- end page actions-->
 
@@ -28,7 +41,7 @@ function add_group()
 
 		
 
-<table cellpadding="0"  style="margin-top:50px;" cellspacing="0" class="clear data-table" id="tableItems">
+<table cellpadding="0"  cellspacing="0" class="clear data-table" id="tableItems">
 <thead>
 <tr>
 <th class="colName left sortable" style="width:10px;">Id</th>

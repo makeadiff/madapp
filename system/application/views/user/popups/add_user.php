@@ -1,3 +1,4 @@
+<?php $this->load->view('layout/thickbox_header'); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <script type="text/javascript">

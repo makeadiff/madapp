@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/css',array('thickbox'=>true)); ?>
+<?php $this->load->view('layout/thickbox_header'); ?>
 
 <?php
 $details=$details->result_array();

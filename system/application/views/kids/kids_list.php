@@ -28,34 +28,8 @@ function deleteEntry(entryId,page_no)
 		});
 	}
 }
-function add_kids()
-{
-	$('#loading').show();
-	$.ajax({
-		type: "POST",
-		url: "<?php echo site_url('kids/popupaddKids')?>",
-		//data: "pageno="+page_no+"&q="+search_query,
-		success: function(msg){
-		$('#loading').hide();
-		$('#sidebar').html(msg);
-		}
-	});
-}
-function edit_kids(id)
-{
-	$('#loading').show();
-	$.ajax({
-		type: "POST",
-		url: "<?php echo site_url('kids/popupEdit_kids');?>"+'/'+id,
-		//data: "pageno="+page_no+"&q="+search_query,
-		success: function(msg){
-		$('#loading').hide();
-		$('#sidebar').html(msg);
-		}
-	});
-}
 </script>
-<div style="color:#FF0000; margin-left:220px;"><?php if($this->session->userdata('message') ){ echo $this->session->userdata('message'); $this->session->unset_userdata('message');}?></div>
+
 <div id="content" class="clear">
 
 <!-- Main Begins -->
@@ -73,7 +47,7 @@ function edit_kids(id)
 
 <div id="actions">
 <?php if($this->user_auth->get_permission('kids_add')) { ?>
-<a href="javascript:add_kids();" class=" button primary " name="Add Kids">Add Kids</a>
+<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button primary popup" name="Add Kids">Add Kids</a>
 <?php } ?>
 </div><br class="clear" />
 
@@ -122,7 +96,7 @@ foreach($content as $row) {
 	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'pictures/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
     
     <td class="colActions right"> 
-    <?php if($this->user_auth->get_permission('kids_edit')) { ?><a href="javascript:edit_kids('<?=$row['id']?>');" class=" with-icon edit ">Edit</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_edit')) { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox with-icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
     <?php if($this->user_auth->get_permission('kids_delete')) { ?><a class="with-icon delete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','0')">Delete</a><?php } ?>
     </td>
 </tr>

@@ -1,28 +1,3 @@
-<script>
-function add_permission()
-{
-	$.ajax({
-		type: "POST",
-		url: "<?= site_url('permission/popupAddPermission')?>",
-		success: function(msg){
-			$('#sidebar').html(msg);
-		}
-		});
-}
-
-function edit_permission(id)
-{
-	$.ajax({
-		type: "POST",
-		url: "<?php echo site_url('permission/popupEdit_permission')?>"+'/'+id,
-		success: function(msg){
-			$('#sidebar').html(msg);
-		}
-		});
-}
-</script>
-
-
 <div id="content" class="clear">
 
 <!-- Main Begins -->
@@ -32,12 +7,12 @@ function edit_permission(id)
 
 <!-- start page actions-->
 <div id="actions"> 
-<a href="javascript:add_permission();" class=" button primary popup" name="Add Permission">Add Permission</a>
+<a href="<?php echo site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" name="Add Permission">Add Permission</a>
 </div><br />
 <!-- end page actions-->
 </div>
 
-<table cellpadding="0" style="margin-top:10px;"  cellspacing="0" class="clear data-table" id="tableItems">
+<table cellpadding="0"  cellspacing="0" class="clear data-table" id="tableItems">
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
@@ -78,7 +53,7 @@ foreach($content as $row)
     <td class="colName left"><?php echo $row['name']; ?></td>
     
     <td class="colActions right"> 
-    <a href="javascript:edit_permission('<?=$row['id']?>');" class="popup icon edit"?></strong>">Edit</a>
+    <a href="<?php echo site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox popup icon edit" name="<strong>Edit User : <?php echo strtolower($row['name']) ?></strong>">Edit</a>
     <a class="actionDelete icon delete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>');">Delete</a>
     </td>
 </tr>

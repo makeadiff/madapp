@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
+<?php $this->load->view('layout/thickbox_header'); ?>
 <script>
 function insert_permission(id)
 {

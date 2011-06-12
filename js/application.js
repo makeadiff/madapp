@@ -9,15 +9,22 @@ function siteInit() {
 		}
 	});
 	
-	tb_init("a.thickbox, input.thickbox");
-	$(".popup").each(function() {
-		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-	
-		$(this).attr('href', url);
+//	tb_init("a.thickbox, input.thickbox");
+// 	$(".popup").each(function() {
+// 		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
+// 	
+// 		$(this).attr('href', url);
+// 	});
+//	$(".cancel-button").click(function() {top.window.tb_remove();});
+
+	$(".popup").click(function(event) {
+		var url = $(this).attr("href");
+		$("#sidebar").html("<iframe src='"+url+"' width='350' height='500'></iframe>");
+		event.stopPropagation();
+		return false;
 	});
 	
 	$(".info-box-table td").click(showInfoBox);
-	$(".cancel-button").click(function() {top.window.tb_remove();});
 	
 	if($(".data-table").tablesorter) $(".data-table").tablesorter();
 	

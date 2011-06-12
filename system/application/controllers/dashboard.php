@@ -24,6 +24,7 @@ class Dashboard extends Controller  {
 		$this->load->helper('url');
         $this->load->helper('form');
 		$this->load->model('center_model');
+		$this->load->model('class_model');
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
     }
@@ -37,7 +38,9 @@ class Dashboard extends Controller  {
     function dashboard_view() {	
 		$data['title'] = 'MADApp Dashboard';
 		$this->load->view('layout/header',$data);
-		$this->load->view('dashboard/dashboard');
+		
+		$upcomming_classes = $this->class_model->get_upcomming_unconfirmed_classes();
+		$this->load->view('dashboard/dashboard', array('upcomming_classes'=>$upcomming_classes));
 		$this->load->view('layout/footer');
     }
 }

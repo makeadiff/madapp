@@ -193,6 +193,20 @@ class Class_model extends Model {
     	}
     }
     
+    function get_upcomming_unconfirmed_classes($user_id = false) {
+    	if(!$user_id) $user_id = $this->ci->session->userdata('id');
+    	
+    	$query = "SELECT Center.name, Class.class_on FROM UserClass 
+    					INNER JOIN Class ON Class.id=UserClass.class_id 
+    					INNER JOIN Level ON Class.level_id=Level.id
+    					INNER JOIN Center ON Level.center_id=Center.id
+    					WHERE UserClass.user_id=$user_id AND UserClass.status='projected' 
+    						AND Class.project_id={$this->project_id}
+    						AND Class.class_on BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY)";
+    				
+    	return $this->db->query($query)->result();
+    }
+    
     function search_classes($data) {
     	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Level.id AS level_id,Level.name,UserClass.user_id,UserClass.substitute_id,UserClass.status
 			FROM Class

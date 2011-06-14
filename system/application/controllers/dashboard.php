@@ -16,8 +16,8 @@ class Dashboard extends Controller  {
         parent::Controller();
 		$this->load->library('session');
         $this->load->library('user_auth');
-		$logged_user_id = $this->session->userdata('id');
-		if($logged_user_id == NULL ) {
+		$logged_user_id = $this->user_auth->logged_in();
+		if(!$logged_user_id) {
 			redirect('auth/login');
 		}
 		
@@ -39,7 +39,7 @@ class Dashboard extends Controller  {
 		$data['title'] = 'MADApp Dashboard';
 		$this->load->view('layout/header',$data);
 		
-		$upcomming_classes = $this->class_model->get_upcomming_unconfirmed_classes();
+		$upcomming_classes = $this->class_model->get_upcomming_classes();
 		$this->load->view('dashboard/dashboard', array('upcomming_classes'=>$upcomming_classes));
 		$this->load->view('layout/footer');
     }

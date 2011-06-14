@@ -15,7 +15,7 @@ $this->load->view('layout/header', array('title'=>'Classes')); ?>
 <tr>
 <td><?php echo $level_details->center_name ?></td>
 <td><?php echo $level_details->name ?></td>
-<td><?php echo $class->class_on ?></td>
+<td><?php echo date('M d\<\s\u\p\>S\<\/\s\u\p\>(D), h:i A', strtotime($class->class_on)); ?></td>
 <td><?php echo (empty($all_users) ? 'You' : $all_users[$class->user_id]->name) ?></td>
 <td><?php echo ucfirst($class->status) ?></td>
 <td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>" class="edit with-icon">Edit</a></td>

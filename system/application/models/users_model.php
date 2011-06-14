@@ -213,8 +213,7 @@ class Users_model extends Model {
     **/
 	function getuser_details_csv()
 	{
-		$this->db->select('User.id,User.name,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name,
-		City.name as city_name');
+		$this->db->select('User.id,User.name,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name, City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');

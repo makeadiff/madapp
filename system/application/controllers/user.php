@@ -533,14 +533,12 @@ class User extends Controller  {
 		$data['email'] = $_REQUEST['email'];
 		$data['position'] = $_REQUEST['position'];
 		$password=$_REQUEST['password'];
-		if($password=='')
-		{
+		if($password=='') {
 			$password=$this->users_model->get_password($data);
 			$password=$password->password;
 			$data['password']=$password;
-		}
-		else{
-		$data['password']=$password;
+		} else {
+			$data['password'] = $password;
 		}
 		
 		
@@ -572,15 +570,14 @@ class User extends Controller  {
         }
 		
 		
-		if($flag || $returnFlag ) 
-		{
-				$message['msg']   =  "Profile edited successfully.";
-				$this->load->view('layout/header');
-				$this->load->view('user/popups/profile_successview',$message);		  
-			} else {
-				$message['msg']   =  "Profile not edited.";
-				$this->load->view('layout/header');
-				$this->load->view('user/popups/profile_failview',$message);		  
+		if($flag || $returnFlag )  {
+			$this->session->set_userdata('success', "Profile edited successfully.");
+			$this->load->view('layout/header');
+			$this->load->view('user/popups/profile_successview',$message);		  
+		} else {
+			$this->session->set_userdata('error', 'Profile not edited.');
+			$this->load->view('layout/header');
+			$this->load->view('user/popups/profile_failview',$message);		  
 		}
 	}
 	
@@ -737,7 +734,7 @@ class User extends Controller  {
 		}
 		$this->load->view('user/usercredit_footer');
 		$this->load->view('layout/footer');
-		}
+	}
 	
 }	
 	

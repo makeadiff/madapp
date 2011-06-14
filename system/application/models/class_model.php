@@ -12,7 +12,8 @@ class Class_model extends Model {
     function get_all($user_id) {
     	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
     		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id 
-    		WHERE Class.project_id={$this->project_id} AND UserClass.user_id=$user_id")->result();
+    		WHERE Class.project_id={$this->project_id} AND UserClass.user_id=$user_id
+    		ORDER BY Class.class_on DESC")->result();
     }
     
     function get_all_by_batch($batch_id) {
@@ -21,11 +22,8 @@ class Class_model extends Model {
     		WHERE Class.project_id={$this->project_id} AND Class.batch_id=$batch_id")->result();
     }
     
-    function get_class_for_last_three_week_by_batch($batch_id) {
-    	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
-    		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id 
-    		WHERE Class.project_id={$this->project_id} AND Class.batch_id=$batch_id AND Class.class_on > DATE_SUB(NOW(), INTERVAL 21 DAY)
-    		ORDER BY Class.class_on DESC")->result();
+    function confirm_class($class_id, $user_id) {
+    	return $this->db->query("UPDATE UserClass SET status='confirmed' WHERE user_id=$user_id AND class_id=$class_id");
     }
     
     function save_class($data) {
@@ -193,14 +191,14 @@ class Class_model extends Model {
     	}
     }
     
-    function get_upcomming_unconfirmed_classes($user_id = false) {
+    function get_upcomming_classes($user_id = false) {
     	if(!$user_id) $user_id = $this->ci->session->userdata('id');
     	
-    	$query = "SELECT Center.name, Class.class_on FROM UserClass 
+    	$query = "SELECT Class.id, Center.name, Class.class_on, UserClass.status FROM UserClass 
     					INNER JOIN Class ON Class.id=UserClass.class_id 
     					INNER JOIN Level ON Class.level_id=Level.id
     					INNER JOIN Center ON Level.center_id=Center.id
-    					WHERE UserClass.user_id=$user_id AND UserClass.status='projected' 
+    					WHERE UserClass.user_id=$user_id 
     						AND Class.project_id={$this->project_id}
     						AND Class.class_on BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY)";
     				

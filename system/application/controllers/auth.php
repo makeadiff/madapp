@@ -29,17 +29,10 @@ class Auth extends Controller {
 	}
 
 	//redirect if needed, otherwise display the user list
-	function index()
-	{
-		if (!$this->user_auth->logged_in())
-		{
-			//redirect them to the login page
+	function index() {
+		if (!$this->user_auth->logged_in()) {
 			redirect('auth/login');
-		}
-		else
-		{
-			//set the flash data error message if there is one
-			$this->session->set_flashdata('message', "Welcome...");
+		} else {
 			redirect('dashboard/dashboard_view');
 		}
 	}

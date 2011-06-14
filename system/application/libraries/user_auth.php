@@ -68,7 +68,7 @@ Class User_auth {
 			
 			if($user_details) {
 				$status = $this->login($user_details->email, $user_details->password);
-				return $status->id;
+				return $status['id'];
 			}
 		}
 		return false;

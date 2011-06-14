@@ -4,8 +4,6 @@ class Classes extends Controller {
 	
 	function Classes() {
 		parent::Controller();
-		$this-> message = array('success'=>false, 'error'=>false);
-		
 		$this->load->model('Users_model','user_model');
 		$this->load->model('Class_model','class_model');
 		$this->load->model('Level_model','level_model');
@@ -18,11 +16,13 @@ class Classes extends Controller {
 		
 		$this->load->library('session');
         $this->load->library('user_auth');
-        $this->user_details = $this->user_auth->getUser();
-		if(!$this->user_details) {
+        
+        $logged_user_id = $this->user_auth->logged_in();
+		if(!$logged_user_id) {
+			exit;
 			redirect('auth/login');
 		}
-		
+        $this->user_details = $this->user_auth->getUser();
 	}
 	
 	/// Shows all the classes the current user is resposible for.
@@ -309,15 +309,24 @@ class Classes extends Controller {
 		$teacher_count = count($user_class_id);
 		// There might be multiple teachers in a class.
 		for($i = 0; $i<$teacher_count; $i++) {
+			if(!$teacher_ids[$i]) continue;
+			
 			$this->class_model->save_class_teachers($user_class_id[$i], array(
 				'user_id'	=>	$teacher_ids[$i],
 				'substitute_id'=>$substitute_ids[$i],
 				'status'	=> $statuses[$i],
 			));
 		}
-		$this->class_model->save_class_lesson($this->input->post('class_id'), $this->input->post('lesson_id'));
+		
+		if($this->input->post('lesson_id'))
+			$this->class_model->save_class_lesson($this->input->post('class_id'), $this->input->post('lesson_id'));
 		
 		$this->session->set_flashdata('success', 'Saved the class details');
 		redirect('classes/edit_class/'.$this->input->post('class_id'));
+	}
+	
+	function confirm_class($class_id) {
+		$this->class_model->confirm_class($class_id, $this->session->userdata('id'));
+		echo '{"success": "Confirmed"}';
 	}
 }

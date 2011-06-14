@@ -58,14 +58,3 @@ foreach($details as $row) {
 </div>
 </div>
 
-</div>
-
-
-<div style="float:right;" class="sidebar" id="sidebar" >
-<?php 
-$data['details']= $this->center_model->getcity();
-$data['user_name']= $this->center_model->getheadname();
-$this->load->view('center/popups/addcenter_popup',$data);
-?>
-</div>
-    

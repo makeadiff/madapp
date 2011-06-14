@@ -11,7 +11,7 @@
 <div class="wrap">
     <!-- HEAD BEGINS -->
     <div class="head">
-     <div class="line">
+     <div class="line">	
        <div class="logo left"><a href="<?php echo site_url('dashboard/dashboard_view') ?>">MAD Camp</a></div>
        <div class="welcome right"><a href="<?php echo site_url('auth/logout') ?>" class="tool" style="margin-left: 10px; float:right;">Logout</a>
 	<?php echo $this->session->userdata('name');

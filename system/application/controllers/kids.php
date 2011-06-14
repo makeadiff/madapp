@@ -167,17 +167,17 @@ class Kids extends Controller  {
         }
 		if($returnFlag != '') 
 			{
-			$this->session->set_userdata('message', 'Student updated successfully.');
+			$this->session->set_userdata('success', 'Student updated successfully.');
 			$this->manageaddkids();	  
 			}
 		elseif($flag!= '')
 		{
-			$this->session->set_userdata('message', 'Student updated successfully.');
+			$this->session->set_userdata('success', 'Student updated successfully.');
 			$this->manageaddkids();
 			}
 		else
 			{
-			$this->session->set_userdata('message', 'Student not edited.');
+			$this->session->set_userdata('error', 'Student not edited.');
 			$this->manageaddkids();	  
 			}
 	}
@@ -223,10 +223,10 @@ class Kids extends Controller  {
         }
         
 		if($returnFlag) {
-			$this->session->set_userdata('message', 'Kid Inserted successfully');
+			$this->session->set_userdata('success', 'Kid Inserted successfully');
 			$this->manageaddkids();
 		} else {
-			$this->session->set_userdata('message', 'Insertion Failed');
+			$this->session->set_userdata('error', 'Insertion Failed');
 			$this->manageaddkids();
 		}
 	}
@@ -319,6 +319,4 @@ class Kids extends Controller  {
 			$this->load->view('kids/import_success');
 		}
 	}
-	
-	
 }

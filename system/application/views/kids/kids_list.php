@@ -29,9 +29,9 @@ function deleteEntry(entryId,page_no)
 	}
 }
 </script>
+<div align="center"><?php if($this->session->userdata('success') ){ echo $this->session->userdata('success'); $this->session->unset_userdata('success');}?></div>
 
 <div id="content" class="clear">
-
 <!-- Main Begins -->
 <div id="main" class="clear"> 
 

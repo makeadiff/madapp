@@ -226,7 +226,7 @@ class Kids extends Controller  {
 			$this->session->set_userdata('success', 'Kid Inserted successfully');
 			$this->manageaddkids();
 		} else {
-			$this->session->set_userdata('error', 'Insertion Failed');
+			$this->session->set_userdata('success', 'Insertion Failed');
 			$this->manageaddkids();
 		}
 	}

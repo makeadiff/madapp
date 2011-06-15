@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-<h1>Edit Kids</h1>
+<h2>Edit Kids</h2>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <?php
@@ -33,11 +33,9 @@ foreach($kids_details as $row) {
 }
 
 ?>
-<div style="float:left; margin-top:20px;">
-<form id="formEditor" class="mainForm clear form-area" action="<?php echo site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
-<fieldset class="clear">
-<div class="field clear">
-<label for="selBulkActions">Select Center</label> 
+<form class="mainForm clear" id="formEditor" action="<?php echo site_url('kids/update_kids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
+<ul class="form city-form">
+<li><label for="selBulkActions">Select Center</label> 
 <select id="center" name="center" > 
 <option selected="selected" >- Choose -</option> 
 	<?php 
@@ -51,51 +49,35 @@ foreach($kids_details as $row) {
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 	<?php } }?>
 </select>
-</div><br />
-
-<div class="fields"> 
-	<label for="txtName">Name</label>
+</li>
+<li><label for="txtName">Name</label>
 	<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
 			
-</div><br />
-
-<div  class="fields">
-	<label for="date">Date of Birth</label>
+</li>
+<li><label for="date">Date of Birth</label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?php echo $birthday ; ?>">
 	<p class="error clear"></p>
-</div><br />
-
-
-<div class="field clear">
-	<label for="date">Photo</label>
+</li><br />
+<li><label for="date">Photo</label>
 	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="50" style="float:left;" height="50" /><?php } ?>
-</div><br />
-
-<div  class="field clear">
-	<label for="date">Change photo</label>
+</li><br />
+<li><label for="date">Change photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
-</div><br />
-
-<div class="field clear " style="margin-top:10px;"> 
-	<label for="txtName"  >Description</label>
-	<textarea rows="5" cols="30" id="description" name="description"><?php echo $description; ?></textarea> 
+</li><br />
+<li><label for="txtName"  >Description</label>
+	<textarea rows="5" cols="24" id="description" name="description"><?php echo $description; ?></textarea> 
 	<p class="error clear"></p>
-</div><br />
-
-
-<div class="field clear" style="width:550px;">
+</li>
+</ul>
+<ul>
+<li>
 	<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-	<input style="margin-left:50px; margin-top:30px;" id="btnSubmit" class="button primary" type="submit" value="Edit" />
+	<input id="btnSubmit" class="button green" type="submit" value="Update" />
 	
-	<div style="float:left;clear:right; margin-top:30px"><a href="<?=site_url('kids/manageaddkids')?>" style="margin-left:0px; " class="cancel-button">Cancel</a></div>
-</div>
-</div>
-
-
-</fieldset>
+	<a href="<?=site_url('kids/manageaddkids')?>" class="sec-action">Cancel</a>
+</li>
 </form>
-</div>
 <script> 
 function validate() {
 	if(document.getElementById("center").value == '-1')
@@ -110,4 +92,3 @@ function validate() {
 		}
 }
 </script>
-<?php $this->load->view('layout/thickbox_footer'); ?>

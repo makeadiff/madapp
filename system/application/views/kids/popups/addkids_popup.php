@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-<h1>Add Kids</h1>
+<h2>Add Kids</h2>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 
@@ -13,11 +13,9 @@ jQuery(document).ready(function () {
 });
 </script>
 <div id="message"></div>
-<div style="float:left; margin-top:20px;">
-<form id="formEditor" class="mainForm clear form-area" action="<?php echo site_url('kids/addkids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
-<fieldset class="clear">
-<div class="field clear">
-<label for="selBulkActions">Select Center: </label> 
+<form  class="mainForm clear" id="formEditor"  action="<?php echo site_url('kids/addkids')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
+<ul class="form city-form">
+<li><label for="selBulkActions">Select Center: </label> 
 <select id="center" name="center" > 
 <option selected="selected" value="-1" >- Choose -</option> 
 	<?php
@@ -27,45 +25,31 @@ jQuery(document).ready(function () {
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 	<?php } ?>
 </select>
-</div><br />
+</li>
 
-<div class="fields"> 
-	<label for="txtName">Name: </label>
+	<li><label for="txtName">Name: </label>
 	<input id="name" name="name"  type="text" /> 
-			
-</div><br />
+	</li>		
 
-<div  class="fields">
-	<label for="date">Date of Birth: </label>
+<li><label for="date">Date of Birth: </label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text">
 	<p class="error clear"></p>
-</div><br />
-
-<div  class="field clear">
-	<label for="date">Upload Photo: </label>
+</li>
+<li><label for="date">Upload Photo: </label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
-</div><br />
+</li>
 
-
-<div class="field clear" style="margin-top:10px;"> 
-	<label for="txtName">Description: </label>
-	<textarea rows="5" cols="30" id="description" name="description"></textarea> 
-	<p class="error clear"></p>
-</div><br />
-
-
-
-<div class="field clear" style="width:550px;">
-<input style="margin-left:50px; margin-top:50px;" id="btnSubmit" class="button primary" type="submit" value="Add" />
-
-<div style="float:left;clear:right; margin-top:60px"><a href="<?=site_url('kids/manageaddkids')?>" style="margin-left:0px; " class="cancel-button">Cancel</a></div>
-</div>
-</fieldset>
+<li><label for="txtName">Description: </label>
+	<textarea rows="5" cols="24" id="description" name="description"></textarea> 
+</li>
+ </ul>
+ <ul>
+<li>
+<input  id="btnSubmit" class="button green" type="submit" value="+ Add New Kid" />
+<a href="<?=site_url('kids/manageaddkids')?>" class="sec-action">Cancel</a></li>
+</ul>
 </form>
-</div>
-
-	
 <script>
 function validate()
 {
@@ -82,4 +66,3 @@ if(document.getElementById("name").value == '')
 }
 </script>
 
-<?php $this->load->view('layout/thickbox_footer'); ?>

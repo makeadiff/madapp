@@ -57,27 +57,8 @@ class Project extends Controller  {
 		$this->user_auth->check_permission('project_add');
 		$data['name'] = $_REQUEST['name'];
 	   	$returnFlag=$this->project_model->add_project($data);
-		
-		if($returnFlag)
-		  {
-		  		$message['msg']   =  "Project added successfully.";
-				$message['successFlag'] = "1";
-				$message['link']  =  "popupaddproject";
-				$message['linkText'] = "Add new Project";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
-		else
-		  {
-		  		$message['msg']   =  "No Operations  performed.";
-				$message['successFlag'] = "0";
-				$message['link']  =  "popupaddproject";
-				$message['linkText'] = "Add new Project";
-				$message['icoFile'] = "ico_addScheme.png";
-			
-				$this->load->view('dashboard/errorStatus_view',$message);
-		  }
+	   	$this->session->set_flashdata("success", "Project added.");
+	   	redirect('project/manage_project');
 	}
 	
 	function popupEdit_project()
@@ -94,23 +75,13 @@ class Project extends Controller  {
 		$data['name']=$_REQUEST['name'];
 		$data['rootId'] = $_REQUEST['rootId'];
 		$returnFlag=$this->project_model->update_project($data);
-		if($returnFlag == true) 
-		{
-			$message['msg']   =  "Project updated successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);		  
+		
+		if($returnFlag == true) {
+			$this->session->set_flashdata("success", "Project updated successfully.");
 		} else {
-			$message['msg']   =  "Project not edited.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-
-			$this->load->view('dashboard/errorStatus_view',$message);		  
+			$this->session->set_flashdata("error", "Project not edited.");
 		}
+		redirect('project/manage_project');
 	}
 	
 	function ajax_deleteproject()

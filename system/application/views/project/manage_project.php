@@ -63,7 +63,7 @@ foreach($content as $row)
 </table>
 </div>
 
-<?php if($norecord_flag == 1) { 
+<?php if($norecord_flag == 1) {
    echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- No Records Found -</div>";
 } ?>
 

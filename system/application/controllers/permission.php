@@ -77,9 +77,9 @@ class Permission extends controller {
 		$permission = $_REQUEST['permission'];
 		$returnFlag= $this->permission_model->add_permission($permission);
 		if($returnFlag) {
-			echo "Successfully Inserted!!";
+			echo "Successfully Inserted!";
 		} else {
-			echo "Insertion failed!!";
+			echo "Insertion failed!";
 		}
 	}
 	

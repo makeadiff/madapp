@@ -1,51 +1,71 @@
-<script type="text/javascript">
-function get_permissionlist(page_no,search_query)
-{
-	
-	$('#loading').show();
-		$.ajax({
-		type: "POST",
-		url: "<?= site_url('permission/get_permissionlist')?>",
-		data: "pageno="+page_no+"&q="+search_query,
-		success: function(msg){
-		$('#loading').hide();
-		$('#updateDiv').html(msg);
-		}
-		});
-}
+<div id="content" class="clear">
 
-function deleteEntry(entryId,page_no)
-{
-	var bool = confirm("confirm delete!")
-	if(bool)
-	{
-		$.ajax({
-		type : "POST",
-		url  : "<?= site_url('permission/ajax_deletepermission') ?>",
-		data : 'entry_id='+entryId,
-		
-		success : function(data)
-		{		
-			get_permissionlist(page_no);
-		}
-		
-		});
-	}
-}	
-</script>
+<!-- Main Begins -->
+<div id="main" class="clear">
+<div id="head" class="clear">
+<h1><?php echo $title; ?></h1>
 
-<div style="height:20px;padding-top: 5px;">
-<div id="loading" name="loading" style="display: none;">
-    <img src="<?php echo base_url()?>images/ico/loading.gif" height="25" width="25" style="border: none;margin-left: 300px;" /> loading...
+<!-- start page actions-->
+<div id="actions"> 
+<a href="<?php echo site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" name="Add Permission">Add Permission</a>
+</div><br />
+<!-- end page actions-->
 </div>
-</div>
-<div id="updateDiv" >
+
+<table cellpadding="0"  cellspacing="0" class="clear data-table" id="tableItems">
+<thead>
+<tr>
+	<th class="colCheck1">Id</th>
+	<th class="colName left sortable">Permission</th>
+    <th class="colActions">Actions</th>
+</tr>
+</thead>
+<tbody>
+
+<?php 
+//
+$norecord_flag = 1;
+$shadeFlag = 0;
+$shadeClass = '';
+$statusIco = '';
+$statusText = '';
+//
+$content = $details->result_array();
+//
+foreach($content as $row)
+{
+	$norecord_flag = 0;
+
+	if($shadeFlag == 0)
+	  {
+  		$shadeClass = 'even';
+		$shadeFlag = 1;
+  	  }
+	else if($shadeFlag == 1)
+	  {
+  		$shadeClass = 'odd';		
+		$shadeFlag = 0;
+  	  }
+?> 
+
+<tr class="<?php echo $shadeClass; ?>" id="group">
+    <td class="colCheck1"><?php echo $row['id']; ?></td>
+    <td class="colName left"><?php echo $row['name']; ?></td>
     
-<script>
-    get_permissionlist('0','');
-</script>
+    <td class="colActions right"> 
+    <a href="<?php echo site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox popup icon edit">Edit</a>
+    <a class="actionDelete icon delete confirm" href="<?php echo site_url('permission/ajax_deletepermission/'.$row['id']) ?>">Delete</a>
+    </td>
+</tr>
+
+<?php }?>
+</tbody>
+</table>
+
+<?php if($norecord_flag == 1) 
+{ 
+	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
+} ?>
 
 </div>
-
 </div>
-

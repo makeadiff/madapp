@@ -45,29 +45,12 @@ class Permission extends controller {
 	{
 		$this->user_auth->check_permission('permission_index');
 		
-		$data['currentPage'] = 'db';
-		$data['navId'] = '5';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('permission/permission_view');
-		$this->load->view('dashboard/includes/footer');
-	
-	}
-	/**
-    * Function to get_permissionlist
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function get_permissionlist()
-	{
-		$page_no = $_REQUEST['pageno'];
-		$data['title'] = 'Manage Permission';
-		$linkCount = $this->permission_model->permisssion_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
+		$data = array();
 		$data['details']= $this->permission_model->getpermission_details();
-		$this->load->view('permission/permission_list',$data);
+		$this->load->view('layout/header',array('title'=>"Permission Settings"));
+		$this->load->view('permission/permission_view', $data);
+		$this->load->view('layout/footer');
+	
 	}
 	
 	/**
@@ -93,16 +76,13 @@ class Permission extends controller {
 		$this->user_auth->check_permission('permission_add');
 		$permission = $_REQUEST['permission'];
 		$returnFlag= $this->permission_model->add_permission($permission);
-		if($returnFlag)
-		  {
-		  echo "Successfully Inserted!!";
-		  }
-		else
-		  {
-		  echo "Insertion failed!!";
-		  }
-	
+		if($returnFlag) {
+			echo "Successfully Inserted!!";
+		} else {
+			echo "Insertion failed!!";
+		}
 	}
+	
 	/**
     * Function to popupEdit_permission
     * @author : Rabeesh
@@ -129,15 +109,13 @@ class Permission extends controller {
 		$data['rootId'] = $this->uri->segment(3);
 		$returnFlag= $this->permission_model->update_permission($data);
 		
-		if($returnFlag == true) 
-			  {
-				echo "Successfully Updated!!"; 
-			  }
-			else
-			  {
-				echo "Updation failed!!	 "; 
-			 }
+		if($returnFlag == true) {
+			echo "Successfully Updated.";
+		} else {
+			echo "Updation failed!"; 
+		}
 	}
+	
 	/**
     * Function to ajax_deletepermission
     * @author : Rabeesh
@@ -148,7 +126,8 @@ class Permission extends controller {
 	{
 		$this->user_auth->check_permission('permission_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
-		$returnFlag= $this->permission_model->delete_permission($data);
+		$this->permission_model->delete_permission($data);
+		
+		redirect('permission/manage_permission');
 	}
-	
 }

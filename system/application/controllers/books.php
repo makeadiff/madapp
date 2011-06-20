@@ -37,29 +37,14 @@ class Books extends Controller
     **/
 	function manage_books()
 	{
-		$data['currentPage'] = 'db';
-		$data['navId'] = '1';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('books/addbook_view');
-		$this->load->view('dashboard/includes/footer');
-	}
-	/**
-    * Function to get_booklist
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function get_booklist()
-	{
-		$page_no = $_REQUEST['pageno'];
 		$data['title'] = 'Manage Books';
-		$linkCount = $this->book_model->getbook_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
-		$data['details']= $this->book_model->getbook_details($page_no);
-		$this->load->view('books/book_list',$data);
+		$this->load->view('layout/header',$data);
+		
+		$data['details']= $this->book_model->getbook_details(0);
+		$this->load->view('books/manage_books', $data);
+		$this->load->view('layout/footer');
 	}
+	
 	/**
     * Function to popupaddbooks
     * @author:Rabeesh 
@@ -68,6 +53,7 @@ class Books extends Controller
     **/
 	function popupaddbooks()
 	{
+		$this->user_auth->check_permission('books_add');
 		$this->load->view('books/popups/addbook_popup');
 	
 	}
@@ -79,14 +65,14 @@ class Books extends Controller
     **/
 	function addbook()
 	{
+		$this->user_auth->check_permission('books_add');
 		$data['bookname']=$_REQUEST['bookname'];
 		$returnFlag=$this->book_model->add_book($data);
 		if($returnFlag) {
-		echo "Successfully Inserted!";
-			
+			echo "Successfully Inserted!";
 		} else {
 			echo "Bookname not Inserted!!";
-			}
+		}
 	}
 	/**
     * Function to popupEdit_books
@@ -94,13 +80,11 @@ class Books extends Controller
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function popupEdit_books()
+	function popupEdit_books($uid)
 	{
-		
-		//$this->user_auth->check_permission('');
-			$uid = $this->uri->segment(3);
-			$data['book_name']= $this->book_model->getbook_name($uid);
-			$this->load->view('books/popups/book_edit_view',$data);	
+		$this->user_auth->check_permission('books_edit');
+		$data['book_name']= $this->book_model->getbook_name($uid);
+		$this->load->view('books/popups/book_edit_view',$data);
 	}
 	/**
     * Function to updatebook
@@ -110,13 +94,13 @@ class Books extends Controller
     **/
 	function updatebook()
 	{
-			$data['root_id']=$uid = $this->uri->segment(3);
-			$data['bookname']=$_REQUEST['bookname'];
-			$returnFlag= $this->book_model->update_bookname($data);
-			if($returnFlag == true) {
-					echo "successfully updated!!";		  
-			} else {
-			echo "Updation Failed!!";
+		$data['root_id']=$uid = $this->uri->segment(3);
+		$data['bookname']=$_REQUEST['bookname'];
+		$returnFlag= $this->book_model->update_bookname($data);
+		if($returnFlag == true) {
+			echo "Successfully Updated.";		  
+		} else {
+			echo "Updation Failed!";
 		}
 	
 	}
@@ -128,8 +112,8 @@ class Books extends Controller
     **/
 	function ajax_deletebook()
 	{
-			$data['book_id']=$_REQUEST['entry_id'];
-			$returnFlag= $this->book_model->delete_bookname($data);
+		$data['book_id']=$_REQUEST['entry_id'];
+		$returnFlag= $this->book_model->delete_bookname($data);
 	}
 	/**
     * Function to manage_chapters
@@ -139,30 +123,14 @@ class Books extends Controller
     **/
 	function manage_chapters()
 	{
-			$data['currentPage'] = 'db';
-			$data['navId'] = '1';
-			$this->load->view('dashboard/includes/header',$data);
-			$this->load->view('dashboard/includes/superadminNavigation',$data);
-			$this->load->view('books/addchapter_view');
-			$this->load->view('dashboard/includes/footer');
+		$data['title'] = 'Manage Chapters';
+		$this->load->view('layout/header',$data);
+		$data['details']= $this->book_model->getlesson_details(0);
+		$this->load->view('books/manage_chapters', $data);
+		$this->load->view('layout/footer');
 	
 	}
-	/**
-    * Function to get_chapterlist
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function get_chapterlist()
-	{
-			$page_no = $_REQUEST['pageno'];
-			$data['title'] = 'Manage Books';
-			$linkCount = $this->book_model->getchpater_count();
-			$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-			$data['currentPage'] = $page_no;
-			$data['details']= $this->book_model->getlesson_details($page_no);
-			$this->load->view('books/lesson_list',$data);
-	}
+	
 	/**
     * Function to popupadd_lesson
     * @author:Rabeesh 
@@ -182,14 +150,14 @@ class Books extends Controller
     **/
 	function addlesson()
 	{
-			$data['book']=$_REQUEST['book_id'];
-			$data['lessonname']=$_REQUEST['lessonname'];
-			$returnFlag= $this->book_model->add_lesson($data);
-			if($returnFlag) {
+		$data['book']=$_REQUEST['book_id'];
+		$data['lessonname']=$_REQUEST['lessonname'];
+		$returnFlag= $this->book_model->add_lesson($data);
+		if($returnFlag) {
 			echo "Successfully Inserted!";
 		} else {
 			echo "Insertion Failed!!";
-			}
+		}
 	}
 	/**
     * Function to popupEdit_lesson
@@ -197,13 +165,11 @@ class Books extends Controller
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function popupEdit_lesson()
+	function popupEdit_lesson($uid)
 	{
-			$uid = $this->uri->segment(3);
-			$data['details']= $this->book_model->getbook_details();
-			$data['book_name']= $this->book_model->getlesson_name($uid);
-			$this->load->view('books/popups/lesson_edit_view',$data);	
-	
+		$data['details']= $this->book_model->getbook_details();
+		$data['book_name']= $this->book_model->getlesson_name($uid);
+		$this->load->view('books/popups/lesson_edit_view',$data);	
 	}
 	/**
     * Function to update_lesson

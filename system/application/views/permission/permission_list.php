@@ -53,8 +53,8 @@ foreach($content as $row)
     <td class="colName left"><?php echo $row['name']; ?></td>
     
     <td class="colActions right"> 
-    <a href="<?php echo site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox popup icon edit" name="<strong>Edit User : <?php echo strtolower($row['name']) ?></strong>">Edit</a>
-    <a class="actionDelete icon delete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','<?php echo $currentPage; ?>');">Delete</a>
+    <a href="<?php echo site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox popup icon edit">Edit</a>
+    <a class="actionDelete icon delete" href="<?php echo site_url('permission/ajax_deletepermission') ?>">Delete</a>
     </td>
 </tr>
 
@@ -64,14 +64,8 @@ foreach($content as $row)
 
 <?php if($norecord_flag == 1) 
 { 
-	  if($currentPage != '0'): ?>
-      <script>
-      	 get_groupList('<?php echo $currentPage-1; ?>');
-	   </script>
-<?php else: 
 	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
-	  endif;
-}    ?>
+}  ?>
 
 
 

@@ -26,6 +26,10 @@ class Class_model extends Model {
     	return $this->db->query("UPDATE UserClass SET status='confirmed' WHERE user_id=$user_id AND class_id=$class_id");
     }
     
+    function get_last_class_in_batch($batch_id) {
+    	return $this->db->query("SELECT * FROM Class WHERE batch_id=$batch_id AND class_on<NOW() ORDER BY class_on DESC LIMIT 0,1")->row();
+    }
+    
     function save_class($data) {
     	// Try to find the class if the necessay data. Any class can be identified with the batch_id, level_id and the time of the class.
     	$class_id = $this->get_by_batch_level_time($data['batch_id'], $data['level_id'], $data['class_on']);
@@ -191,6 +195,18 @@ class Class_model extends Model {
     	}
     }
     
+    // Returns all the unconfirmed classes for the next $days days. 
+    function get_unconfirmed_classes($days) {
+    	return $this->db->query("SELECT Level.center_id, Class.class_on, User.name, User.phone
+				FROM UserClass 
+					INNER JOIN Class ON Class.id=UserClass.class_id
+					INNER JOIN `Level` ON Class.level_id=Level.id
+					INNER JOIN User ON UserClass.user_id=User.id
+				WHERE UserClass.status='projected' AND UserClass.substitute_id='0'
+					AND DATE(Class.class_on) = DATE_ADD(CURDATE(), INTERVAL $days DAY)")->result();
+	}
+    
+    // Return all the upcoming classes of the given user. Projected or confirmed.
     function get_upcomming_classes($user_id = false) {
     	if(!$user_id) $user_id = $this->ci->session->userdata('id');
     	
@@ -200,7 +216,9 @@ class Class_model extends Model {
     					INNER JOIN Center ON Level.center_id=Center.id
     					WHERE UserClass.user_id=$user_id 
     						AND Class.project_id={$this->project_id}
-    						AND Class.class_on BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY)";
+    						AND UserClass.status != 'cancelled'
+    						AND Class.class_on > NOW()
+    					ORDER BY Class.class_on";
     				
     	return $this->db->query($query)->result();
     }

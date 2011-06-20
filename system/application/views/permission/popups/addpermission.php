@@ -22,7 +22,7 @@ $.ajax({
 <div style="float:left;"><h1>Add Permission</h1></div>
 <div id="message"></div>
 <div style="float:left; margin-top:20px;">
-<form id="formEditor" class="mainForm clear" action="" method="post" style="width:500px;" onsubmit="return false">
+<form id="formEditor" class="mainForm clear" action="" method="post" onsubmit="return false">
 <fieldset class="clear">
 
 <div class="field clear" style="width:600px;"> 

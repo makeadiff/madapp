@@ -28,7 +28,7 @@
                   <?php } ?>
             </div>
 
-            <div class="content-row-large"><span>Mobile No:</span>
+            <div class="content-row-large"><span>Phone:</span>
                   	<input type="text" class="textfield" id="mobileno" name="mobileno" value="<?php if(isset($this->validation->mobileno)){ echo $this->validation->mobileno; } ?>" />
                   	<?php if(!empty($this->validation->mobileno_error)) { ?>
                   	<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
@@ -52,7 +52,7 @@
                 	<?php } ?>
             </div>
             
-            <input type="hidden" name="password" value="defaultpass" />
+            <input type="hidden" name="password" value="network" />
             <input type="hidden" name="center" value="0" />
             <input type="hidden" name="position" value="" />
             

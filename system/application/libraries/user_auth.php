@@ -130,35 +130,27 @@ Class User_auth {
 	{
 		$status = $this->ci->users_model->user_registration($data);
 		
-			 if($status)
-                {
-					$this->ci->session->set_userdata('id', $status['id']);
-					$this->ci->session->set_userdata('email', $status['email']);
-					$this->ci->session->set_userdata('name', $status['name']);
-					//$this->ci->session->set_userdata('permissions', $status['permissions']);
-					//$this->ci->session->set_userdata('groups', $status['groups']);
-					
-								$email=$status['email'];
-								$city_id=$status['city_id'];
-								
-								$new_recruit_mail= $this->ci->users_model->get_new_recruit_mail();
-								$new_recruit_mail=$new_recruit_mail->data;
-								
-								$hr_email= $this->ci->users_model->get_hr_email($city_id);
-								$hr_email=$hr_email->value;
-								
-								$new_registration_notification= $this->ci->users_model->get_new_registration_notification();
-								$new_registration_notification=$new_registration_notification->data;
-								
-								$data = array(
-									
-									'email' => $status['email'],
-									'name' => $status['name'],
-									'phone' => $status['phone'],
-									'new_recruit_mail' => $new_recruit_mail,
-									'new_registration_notification' => $new_registration_notification,
-											);
-											
+		if($status) {
+			$email=$status['email'];
+			$city_id=$status['city_id'];
+			
+			$new_recruit_mail= $this->ci->users_model->get_new_recruit_mail();
+			$new_recruit_mail=$new_recruit_mail->data;
+			
+			$hr_email= $this->ci->users_model->get_hr_email($city_id);
+			$hr_email= $hr_email->value;
+			
+			$new_registration_notification= $this->ci->users_model->get_new_registration_notification();
+			$new_registration_notification=$new_registration_notification->data;
+			
+			$data = array(
+				'email' => $status['email'],
+				'name' => $status['name'],
+				'phone' => $status['phone'],
+				'new_recruit_mail' => $new_recruit_mail,
+				'new_registration_notification' => $new_registration_notification,
+			);
+										
 			$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').
 			$this->ci->config->item('email_activate', 'ion_auth'), $data, true);
 			$this->ci->email->clear();
@@ -169,9 +161,8 @@ Class User_auth {
 			$this->ci->email->to($email);
 			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - Registration Details');
 			$this->ci->email->message($message);
-
-			if ($this->ci->email->send())
-			{
+		
+			if ($this->ci->email->send()) {
 				$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').
 				$this->ci->config->item('hr_email', 'ion_auth'), $data, true);
 				$this->ci->email->clear();
@@ -183,10 +174,9 @@ Class User_auth {
 				$this->ci->email->to($hr_email);
 				$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - New Registration');
 				$this->ci->email->message($message);
-				if ($this->ci->email->send())
-				{
-				$this->set_message('Mail send');
-				return TRUE;
+				if ($this->ci->email->send()) {
+					$this->set_message('Mail send');
+					return TRUE;
 				}
 			}
 			else
@@ -195,9 +185,9 @@ Class User_auth {
 				return FALSE;
 			}
 						
-					return $status;
-	        	}
-             return false;
+			return $status;
+		}
+		return false;
 		
 	}
 	/**

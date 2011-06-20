@@ -42,6 +42,7 @@ class Classes extends Controller {
 		$this->user_auth->check_permission('classes_batch_view');
 		
 		if(!$batch_id) $batch_id = $this->user_model->get_users_batch($this->user_details->id);
+		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->class_model->get_last_class_in_batch($batch_id)->class_on));
 		
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => false));
 		$batch = $this->batch_model->get_batch($batch_id);

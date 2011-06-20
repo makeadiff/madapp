@@ -52,7 +52,7 @@ class Auth extends Controller {
 
 			if ($this->user_auth->login($this->input->post('email'), $this->input->post('password'), $remember))
 			{
-				 //if the login is successful
+				//if the login is successful
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', "Welcome, ".$this->session->userdata('name'));
 				redirect('dashboard/dashboard_view', 'refresh');
@@ -114,7 +114,6 @@ class Auth extends Controller {
 		
 		if ($this->form_validation->run() == FALSE)
 		{ 
-			//$email =  $this->input->post('email');
 			$this->data['email'] = array('name' => 'email',
 				'id' => 'email',);
 				$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
@@ -123,8 +122,6 @@ class Auth extends Controller {
 		
 		else
 		{
-		//$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-		//$this->load->view('auth/forgotpassword_view', $this->data);
 			$forgotten = $this->user_auth->forgotten_password($this->input->post('email'));
 			if ($forgotten)
 			{ //if there were no errors

@@ -26,23 +26,22 @@ if(lessonname != '' ){
 <fieldset class="clear">
 	
 <div class="field clear" style="width:500px;"> 
-			<label for="txtName">Select Book : </label>
-			<select id="book" name="book" > 
-			<option value="0" >- choose action -</option> 
-			<?php 
-			$details = $details->result_array();
-			foreach($details as $row) {
-			?>
-			<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
-			<?php } ?>
-			</select>
+	<label for="txtName">Book : </label>
+	<select id="book" name="book" >
+	<?php 
+	$details = $details->result_array();
+	foreach($details as $row) {
+	?>
+	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
+	<?php } ?>
+	</select>
 			
 </div>
 
 
 <div class="field clear" style="width:500px; margin-top:10px;"> 
-			<label for="txtName">LessonName: </label>
-			<input id="lessonname" name="lessonname"  type="text" /> 
+	<label for="txtName">Lesson Name: </label>
+	<input id="lessonname" name="lessonname"  type="text" /> 
 			
 </div>
 

@@ -505,16 +505,15 @@ class User extends Controller  {
 		$data['project']= $this->project_model->getproject();
 		$data['user']= $this->users_model->user_details($uid);
 		$content=$data['user']->result_array();
-		//print_r($content);
-		foreach($content as $row) 
-		{
-			$uid=$row['group_id'];
+		
+		foreach($content as $row) {
+			$uid = $row['group_id'];
 		}
 		
 		$data['group_name'] = $this->users_model->edit_group($uid);
 		$data['group_details'] = $this->users_model->getgroup_details();
 		$this->load->view('layout/header');
-		$this->load->view('user/edit_profile_view',$data);
+		$this->load->view('user/edit_profile',$data);
 	
 	}
 	/**
@@ -689,7 +688,7 @@ class User extends Controller  {
 			$credit = $credit - 2;
 			$data['class_on']=$row['class_on'];
 			$data['Substitutedby']='Absent';
-			$data['lost']="lost 2 credits";
+			$data['lost']="Lost 2 credits";
 			$data['credit']=$credit;
 			$this->load->view('user/user_credit', $data);
     	}
@@ -702,9 +701,9 @@ class User extends Controller  {
 			$Name_of_Substitute=$Name_of_Substitute->name;
 			$credit = $credit - 1;
 			$data['class_on']= $row['class_on'];
-			 $data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
-			 $data['lost']="lost 1 credits";
-			 $data['credit']=$credit;
+			$data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
+			$data['lost']="Lost 1 credits";
+			$data['credit']=$credit;
 			$this->load->view('user/user_credit', $data);
 		}
 		else if($row['substitute_id'] == $current_user_id && $row['status'] == 'absent')
@@ -714,11 +713,10 @@ class User extends Controller  {
 			$credit = $credit - 2;
 			$data['class_on']= $row['class_on'];
 			$data['Substitutedby']='Substitute Class Absent';
-			 $data['lost']="lost 2 credits";
-			 $data['credit']=$credit;
-			//$data['lost']= - Absent - lost 2 credits - $credit";
+			$data['lost']="Lost 2 credits";
+			$data['credit']=$credit;
 			$this->load->view('user/user_credit', $data);
-   		 }
+   		}
 		else if ($row['substitute_id'] == $current_user_id && $row['status'] == 'attended')
 		{
 			$i++;
@@ -726,9 +724,8 @@ class User extends Controller  {
 			$credit = $credit + 1;
 			$data['class_on']= $row['class_on'];
 			$data['Substitutedby']="Substitute Class Attended";
-			$data['lost']="gained 1 credits";
-			 $data['credit']=$credit;
-			//$data['message']= "Substitute Class on '".$row['class_on']."' - Took Class - gained 1 credit - $credit";
+			$data['lost']="Gained 1 credits";
+			$data['credit']=$credit;
 			$this->load->view('user/user_credit', $data);
 		}
 		}

@@ -1,14 +1,17 @@
+
+
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends Controller  {
     function Cron() {
         parent::Controller();
+        
+        $this->load->model('Class_model','class_model', TRUE);
 	}
 	
 	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
 	function schedule_classes($debug=0) {
 		$this->load->model('Batch_model','batch_model', TRUE);
-		$this->load->model('Class_model','class_model', TRUE);
 		$all_batches = $this->batch_model->get_all_batches();
 		
 		if($debug) {
@@ -54,6 +57,22 @@ class Cron extends Controller  {
 				if($debug) print "++++++++++++++++++++++++++++++++++++++++++++++<br />";
 			}
 		}
+	}
+	
+	function send_unconfirmed_class_sms() {
+		$this->load->model('Center_model','center_model', TRUE);
+		$this->load->helper('misc_helper');
+		$this->load->library('sms');
+		
+		$all_centers = idNameFormat($this->center_model->get_all_centers());
+		$people = $this->class_model->get_unconfirmed_classes(2);
+		
+		foreach($people as $person) {
+			$this->sms->send($person->phone, "{$person->name}, you have a class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', strtotime($person->class_on))
+ 				. ". Please confirm the class.");
+ 			print "<br />";
+		}
+			
 	}
 }
 

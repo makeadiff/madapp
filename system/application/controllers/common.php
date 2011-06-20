@@ -12,7 +12,7 @@
  * @filesource
  */
 class Common extends Controller {
-    	function Common() {
+   	function Common() {
         parent::Controller();
 		$this->load->library('session');
 		$this->load->library('navigation');
@@ -61,55 +61,27 @@ class Common extends Controller {
 			$fields['city']	= "City";
 
 			$this->validation->set_fields($fields);
-			if ($this->validation->run() == FALSE)
-					{	
-							$data['message']= "";
-							$error['details']= $this->center_model->getcity();
-							$this->load->view('user/register_view',$error);
-					}
-					else
-					{
-						$status = $this->user_auth->register($data);
-						if($status)		
-							{
-								redirect('dashboard/dashboard_view');
-								/*$new_recruit_mail= $this->users_model->get_new_recruit_mail();
-								$new_recruit_mail=$new_recruit_mail->data;
-								$hr_email= $this->users_model->get_hr_email($city_id);
-								$hr_email=$hr_email->value;
-								$new_registration_notification= $this->users_model->get_new_registration_notification();
-								$new_registration_notification=$new_registration_notification->data;
-									//mail function
-									
-									$this->email->from('madapp','Maddapp');
-									$this->email->to($email);
-									$this->email->subject('Thanks');
-									$this->email->message($new_recruit_mail);
-									$this->email->send(); 
-											$this->email->from('madapp','Maddapp');
-											$this->email->to($hr_email);
-											$this->email->subject('Notification');
-											$this->email->message($new_registration_notification);
-											$this->email->send(); */
-							}
-							else{
-							$data['message']= "Registration Failed";
-							$data['details']= $this->center_model->getcity();
-							$this->load->view('user/register_view',$data);
-							}
-					}
+			if ($this->validation->run() == FALSE) {	
+				$data['message']= "";
+				$error['details']= $this->center_model->getcity();
+				$this->load->view('user/register_view',$error);
+				
+			} else {
+				$status = $this->user_auth->register($data);
+				if($status)	{
+					redirect('common/thank_you');
+				
+				} else{
+					$data['message']= "Registration Failed";
+					$data['details']= $this->center_model->getcity();
+					$this->load->view('user/register_view',$data);
+				}
+			}
           }
         else {
-				$data['message']= "";
-				$data['details']= $this->center_model->getcity();
-				$this->load->view('user/register_view',$data);
-        	}
+			$data['message']= "";
+			$data['details']= $this->center_model->getcity();
+			$this->load->view('user/register_view',$data);
+		}
     }
-    
-	function getcenter_name()
-	{
-		$data['centers']= $this->center_model->getcenter();
-		$this->load->view('user/center_update_div',$data);
-		
-	}
 }

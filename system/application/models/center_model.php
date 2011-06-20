@@ -171,8 +171,14 @@ class Center_model extends Model
 		return $center->name;
 	}
 	
+	// Get all the centers in the current city
 	function get_all() {
 		return $this->db->where('city_id',$this->city_id)->orderby('name')->get('Center')->result();
+	}
+	
+	// Get all the centers. No matter what city
+	function get_all_centers() {
+		return $this->db->select(array('id','name'))->get('Center')->result();
 	}
 	
 	// Find the errors in the center - if any.

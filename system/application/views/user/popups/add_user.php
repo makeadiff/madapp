@@ -16,7 +16,7 @@ if(document.getElementById("emails").value == '')
 		document.getElementById("emails").focus();
 		return false;
 	}	
-if(!document.getElementById("emails").value.match(/^\w+\@\w+\.\w+/))
+if(!document.getElementById("emails").value.match(/^[\w\.\-\+]+\@\w+\.[\w\.]{2,5}/))
 		{
 			alert("Enter Valid Email");
 			document.getElementById("emails").focus();

@@ -3,8 +3,6 @@
 <!-- Main Begins -->
 	<div id="main" class="clear">
     	<div id="head" class="clear">
-        	<h1><?php echo $title; ?></h1>
-
             <!-- start page actions-->
         	<div id="actions"> 
 			<a href="<?php echo site_url('project/popupaddproject')?>" class="thickbox button primary popup" id="example" name="Add Projects">Add Project</a>
@@ -66,14 +64,8 @@ foreach($content as $row)
 </div>
 
 <?php if($norecord_flag == 1) { 
-	  if($currentPage != '0') { ?>
-<script>
-	get_projects('<?php echo $currentPage-1; ?>');
-</script>
-<?php } else {
-	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- No Records Found -</div>";
-	}
-}    ?>
+   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- No Records Found -</div>";
+} ?>
 
 </div>
 

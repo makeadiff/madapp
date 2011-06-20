@@ -35,28 +35,18 @@ class Project extends Controller  {
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
     }
+    
 	function manage_project()
 	{
 		$this->user_auth->check_permission('project_index');
-		$data['currentPage'] = 'db';
-		$data['navId'] = '';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('project/project_view');
-		$this->load->view('dashboard/includes/footer');
-	
-	}
-	function getprojectlist()
-	{
-		$page_no = $_REQUEST['pageno'];
-		$data['title'] = 'Manage Projects';
-		$linkCount = $this->project_model->project_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
+		$data['title'] = 'Projects';
+		$this->load->view('layout/header',$data);
+		
 		$data['details']= $this->project_model->getproject();
-		$this->load->view('project/project_list',$data);
-	
+		$this->load->view('project/manage_project', $data);
+		$this->load->view('layout/footer');
 	}
+	
 	function popupaddproject()
 	{
 		$this->user_auth->check_permission('project_add');
@@ -70,7 +60,7 @@ class Project extends Controller  {
 		
 		if($returnFlag)
 		  {
-		  		$message['msg']   =  "project added successfully.";
+		  		$message['msg']   =  "Project added successfully.";
 				$message['successFlag'] = "1";
 				$message['link']  =  "popupaddproject";
 				$message['linkText'] = "Add new Project";
@@ -128,7 +118,7 @@ class Project extends Controller  {
 		$this->user_auth->check_permission('project_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->project_model->delete_project($data);
-	
+		redirect('project/manage_project');
 	}
 	
 }

@@ -1,36 +1,3 @@
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url()?>js/thickbox.js"></script>
-<link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/thickbox.css">
-
-<script>
-	function deleteEntry(entryId)
-	{
-		var bool = confirm("Are you sure you want to delete this?")
-		if(bool)
-		{
-			$.ajax({
-			type : "POST",
-			url  : "<?= site_url('user_group/ajax_deletegroup') ?>",
-			data : 'entry_id='+entryId,
-			
-			success : function(data)
-			{		
-			 	document.location.reload();
-			}
-			
-			});
-		}
-	}	
-</script>
-
-<div style="height:20px;padding-top: 5px;">
-<div id="loading" name="loading" style="display: none;">
-    <img src="<?php echo base_url()?>images/ico/loading.gif" height="25" width="25" style="border: none;margin-left: 300px;" /> loading...
-</div>
-</div>
-<div id="updateDiv" >
-
-
 
 <div id="content" class="clear">
 
@@ -41,7 +8,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-			<a href="<?php site_url('user_group/popupaddgroup')?>" class="thickbox button primary popup" id="example" name="Add New Group">Add New Group</a>
+			<a href="<?php site_url('user_group/popupaddgroup')?>" class="thickbox button primary popup" name="Add New Group">Add New Group</a>
 			</div>
 			<!-- end page actions-->
 
@@ -55,9 +22,9 @@
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
-	<th class="colName left sortable" style="width:375px; text-align:center">Group Name</th>
-    <th class="colName left sortable" style="width:375px; text-align:center">Permissions</th>
-    <th class="colActions"  style="width:225px;">Actions</th>
+	<th class="colName sortable">Group Name</th>
+    <th class="colName sortable">Permissions</th>
+    <th class="colActions">Actions</th>
 </tr>
 </thead>
 <tbody>
@@ -88,11 +55,11 @@ foreach($content as $row)
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></a></td>
-    <td class="colName left" style="text-align:center"><?php echo strtolower($row['name']); ?></a></td>
-    <td class="colName left" style="text-align:center"><img src="<?php echo base_url(); ?>/images/ico/ico_key.gif" style="border:none;"/> <a href="<?=site_url('user_group/view_permission/'.$row['id']) ?> " class="thickbox" id="groupmanage-<?php echo $row['id']; ?>" name="<strong>Permissions of <?= strtolower($row['name']) ?></strong>"> View Permissions</a></td>
+    <td class="colName left"><?php echo $row['name']; ?></a></td>
+    <td class="colName left"><img src="<?php echo base_url(); ?>/images/ico/ico_key.gif" style="border:none;"/> <a href="<?php echo site_url('user_group/view_permission/'.$row['id']) ?> " class="thickbox popup"> View Permissions</a></td>
     <td class="colActions right"> 
-    <a href="<?php echo site_url('user_group/popupEdit_group/'.$row['id'])?>" class="thickbox icon popup edit" name="<strong>Edit Group : <?= strtolower($row['name']) ?></strong>">Edit</a> 
-    <a class="actionDelete icon delete" href="javascript:deleteEntry('<?php echo $row['id']; ?>')">Delete</a>
+    <a href="<?php echo site_url('user_group/popupEdit_group/'.$row['id'])?>" class="thickbox icon popup edit">Edit</a> 
+    <a class="actionDelete icon delete confirm" href="<?php echo site_url('user_group/ajax_deletegroup/'.$row['id']); ?>">Delete</a>
     </td>
 </tr>
 
@@ -103,11 +70,8 @@ foreach($content as $row)
 <?php if($norecord_flag == 1) 
 { 
    echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
-}    ?>
+}  ?>
 </div>
 
-</div>
-
-</div>
 </div>
 

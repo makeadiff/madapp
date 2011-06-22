@@ -22,22 +22,22 @@ foreach($group_permission as $roll)
 	}
 ?> 
 
-         <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user_group/updategroup_name')?>" method="post" style="width:500px;">
+         <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user_group/updategroup_name')?>" method="post">
 	<fieldset class="clear">
     
 		
         <div class="field clear"> 
            <h1>Group Name : <?php echo $name; ?></h1>
     	</div>
-			<div  class="field clear" style="width:680px;"> 
-          <p style="clear:both; "><h2 style="margin-top:65px;">Permissions :</h2>
+			<div  class="field clear"> 
+          <p style="clear:both; "><h2>Permissions :</h2>
 				<?php 
                 $j=0;
                 foreach($permission as $row)
                 { 
                 ?>
                 
-            <div class="field clear" style="margin-left:150px;"> 
+            <div class="field clear"> 
           	<label for="txtName"><?php echo $row['name']; ?></label>
             <?php 
 		    $a=0;

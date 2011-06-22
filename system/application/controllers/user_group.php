@@ -52,21 +52,7 @@
 		$this->load->view('user_group/add_groupname_view', $data);
 		$this->load->view('layout/footer');
 	}
-	/**
-    *
-    * Function to manageadd_group
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function refresh_group()
-	{
-		$this->user_auth->check_permission('user_group_index');
-		$data['title'] = 'Manage User Group';
-		$data['details']= $this->users_model->getgroup_details();
-		$this->load->view('user_group/refresh_group', $data);
-	}
+	
     /**
     *
     * Function to popupaddgroup
@@ -99,17 +85,11 @@
 		$group_id= $this->users_model->add_group_name($groupname);
 		if($group_id)
 		{
-		$returnFlag= $this->users_model->add_group_permission($permission,$group_id);
-		if($returnFlag)
-		  {
-		  echo "Successfully Inserted";
-		  }
-		else
-		  {
-		  echo "Insertion Failed";
-		  }
+			$returnFlag= $this->users_model->add_group_permission($permission,$group_id);
+			if($returnFlag) $this->session->set_flashdata('success', "Successfully Inserted");
+			else $this->session->set_flashdata('error', "Insertion Failed");
 		}
-		
+		redirect('user_group/manageadd_group');
 	}
 	/**
     *
@@ -144,20 +124,20 @@
 		$data['groupname']=$_REQUEST['groupname'];
 		$permission = $_REQUEST['permission'];
 		$permission = substr($permission,0,strlen($permission)-1);
-		$permission=explode(",",trim($permission));
+		$permission = explode(",",trim($permission));
 		$this->users_model->update_group($data);
 		
 		$returnFlag=$this->users_model->update_permission($data,$permission);
 		
 		if($returnFlag == true) 
 			  {
-					echo "Successfully Updated";	  
+				$this->session->set_flashdata('success', "Successfully Updated");
 			  }
 			else
 			  {
-				echo "Updation Failed";	  
+				$this->session->set_flashdata('error', "Updation Failed");
 			 }
-	
+		redirect('user_group/manageadd_group');
 	}
 	/**
     *
@@ -172,7 +152,8 @@
 		$this->user_auth->check_permission('user_group_delete');
 		$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->users_model->delete_group($data);
-	
+		$this->session->set_flashdata('success', "Group Deleted Successfully");
+		redirect('user_group/manageadd_group');
 	}
 	function view_permission()
 	{
@@ -182,6 +163,5 @@
 		$data['permission']= $this->permission_model->getpermission_details();
 		$data['group_permission']= $this->permission_model->getgroup_permission_details($uid);
 		$this->load->view('user_group/popups/view_permission',$data);
-	
 	}
 }

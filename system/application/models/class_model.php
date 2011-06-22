@@ -132,8 +132,12 @@ class Class_model extends Model {
     }
     
     function save_class_teachers($user_class_id, $data) {
+    	if(!$user_class_id) { // Sometimes, the UserClass.id is not provided. Then we find the unique row using UserClass.class_id and UserClass.user_id. Then cache its UserClass.id
+    		$user_class_id = $this->db->where(array('class_id'=>$data['class_id'],'user_id'=>$data['user_id']))->get('UserClass')->row()->id;
+    	}
+    
     	// When editing the class info, make sure that the credits asigned durring the last edit is removed...
-    	$previous_class_data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
+    	$previous_class_data = $this->db->where(array('id'=>$user_class_id))->get('UserClass')->row_array();
     	$this->revert_user_class_credit($user_class_id, $previous_class_data);
     	
     	$this->db->update('UserClass', $data, array('id'=>$user_class_id));

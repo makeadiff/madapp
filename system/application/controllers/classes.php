@@ -40,6 +40,7 @@ class Classes extends Controller {
 	
 	function batch_view($batch_id, $from_date='', $to_date='') {
 		$this->user_auth->check_permission('classes_batch_view');
+		$this->load->helper('form');
 		
 		if(!$batch_id) $batch_id = $this->user_model->get_users_batch($this->user_details->id);
 		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->class_model->get_last_class_in_batch($batch_id)->class_on));
@@ -53,6 +54,10 @@ class Classes extends Controller {
 		
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date, 'to_date'=>$to_date));
 		
+		$all_user_names = array();
+		foreach($all_users as $us) $all_user_names[$us->id] = $us->name;
+		$all_user_names[0] = 'None';
+		
 		$classes = array();
 		foreach($data as $row) {
 			$attendence = $this->class_model->get_attendence($row->id);
@@ -65,12 +70,13 @@ class Classes extends Controller {
 				$classes[$row->id] = array(
 					'id'			=> $row->id,
 					'level_name'	=> $row->name,
-					'lesson'		=> $all_lessons[$row->lesson_id],
+					'lesson_id'		=> $row->lesson_id,
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'	=> $row->user_id,
 						'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
 						'status'=> $row->status,
+						'substitute_id'=>$row->substitute_id,
 						'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
 											$all_users[$row->substitute_id]->name : 'None'
 					)),
@@ -80,6 +86,7 @@ class Classes extends Controller {
 					'id'	=> $row->user_id,
 					'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
 					'status'=> $row->status,
+					'substitute_id'=>$row->substitute_id,
 					'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
 											$all_users[$row->substitute_id]->name : 'None'
 				);
@@ -87,7 +94,30 @@ class Classes extends Controller {
 		}
 		
 		$this->load->view('classes/batch_view', 
-			array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name, 'from_date'=>$from_date, 'to_date'=>$to_date));
+			array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name, 'from_date'=>$from_date, 'to_date'=>$to_date,
+				'all_lessons'=>$all_lessons, 'all_user_names'=>$all_user_names));
+	}
+	
+	function batch_view_save() {
+		$lessons = $this->input->post('lesson_id');
+		$substitutes = $this->input->post('substitute_id');
+		$status = $this->input->post('status');
+		
+		$this->load->helper('misc_helper');
+		foreach($lessons as $class_id => $lesson_id) {
+			$this->class_model->save_class_lesson($class_id, $lesson_id);
+			foreach($substitutes[$class_id] as $teacher_id => $substitute_id) {
+				$this->class_model->save_class_teachers(0, array(
+					'user_id'	=> $teacher_id,
+					'class_id'	=> $class_id,
+					'substitute_id'=>$substitute_id,
+					'status'	=> $status[$class_id][$teacher_id],
+				));
+			}
+		}
+ 	
+		$this->session->set_flashdata('success', 'Batch information saved.');
+		redirect('classes/batch_view/'.$this->input->post('batch_id').'/'.$this->input->post('from_date'));
 	}
 	
 	function mark_attendence($class_id) {

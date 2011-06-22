@@ -679,8 +679,10 @@ class User extends Controller  {
 		$this->load->view('user/usercredit_head', $data);
 		$data['details']= $this->users_model->get_usercredits();
 		$details=$data['details']->result_array();
-		foreach($details as $row){
 		$credit = 3;
+		
+		foreach($details as $row){
+		
 		if ($row['user_id'] == $current_user_id && $row['substitute_id'] == 0 && $row['status'] == 'absent')
 		{	
 			$i++;
@@ -703,7 +705,7 @@ class User extends Controller  {
 			$data['class_on']= $row['class_on'];
 			$data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
 			$data['lost']="Lost 1 credits";
-			$data['credit']=$credit;
+			$data['credit'] = $credit;
 			$this->load->view('user/user_credit', $data);
 		}
 		else if($row['substitute_id'] == $current_user_id && $row['status'] == 'absent')

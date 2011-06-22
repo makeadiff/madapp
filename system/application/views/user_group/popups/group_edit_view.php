@@ -51,16 +51,16 @@ foreach($group_permission as $roll) {
 <div style="float:left;"><h1>Edit Group</h1></div>
 <div id="message"></div>
 <div style="float:left; margin-top:20px;">
-	<form id="formEditor" class="mainForm clear" action="" method="post" style="width:500px;" onsubmit="return false">
+	<form id="formEditor" class="mainForm clear" action="" method="post" onsubmit="return false">
 <fieldset class="clear">
 
 	<div id="right-column">
 	</div> 
-	<div class="field clear" style="width:600px;"> 
+	<div class="field clear"> 
 		<label for="txtName">Group Name : </label>
 		<input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>"/> 
 </div>
-		<div class="field clear" style="width:600px; "> 
+		<div class="field clear"> 
 		<label for="txtName">Permissions :</label>
 			<?php 
 			$j=0;
@@ -68,7 +68,7 @@ foreach($group_permission as $roll) {
 			{ 
 			?>
 			
-		<div class="field clear" style="width:600px; margin-left:100px;"> 
+		<div class="field clear"> 
 		<label for="txtName"><?php echo $row['name']; ?></label>
 		<?php 
 		$a=0;
@@ -79,8 +79,8 @@ foreach($group_permission as $roll) {
 		<input type="checkbox" value="<?php echo $row['id']; ?>" id="permission" name="permission[]" <?php if($a==1 ){ echo "checked"; }?>  />    
  </div>
            <?php } ?>
-    <div class="field clear" style="width:550px;"> 
-     	   <input style="margin-left:50px; margin-top:30px;" onclick="javascript:update_group('<?=$root_id?>');" btnSubmit" class="button primary" type="submit" value="Submit"  />
+    <div class="field clear"> 
+     	   <input style="margin-left:50px; margin-top:30px;" onclick="javascript:update_group('<?=$root_id?>');" class="button primary" type="submit" value="Submit"  />
     </div>
     </fieldset>
     </form>		

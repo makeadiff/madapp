@@ -139,8 +139,10 @@ function create($holder, $center_id = 0) {
 					'project_id'=>	$this->input->post('project_id'),
 				));
 
-			$this->message['success'] = 'The Batch has been added';
-			$this->index('center', $this->input->post('center_id'));
+			
+			$this->session->set_flashdata('success', 'The Batch has been added');
+			/*$this->index('center', $this->input->post('center_id'));*/
+			redirect('batch/index/center/'.$this->input->post('center_id'));
 	}
 	
 	function edit($batch_id) {

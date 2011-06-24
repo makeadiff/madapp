@@ -4,7 +4,7 @@
 <h1>Levels in <?php echo $center_name ?></h1>
 
 <div id="actions">
-<a id="example" class="button primary" href="<?php echo base_url() ?>index.php/level/create/center/<?php echo $center_id ?>" class="add">Create New Level</a>
+<a  id="example" class="thickbox button primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Level</a>
 </div><br class="clear" />
 
 <div id="train-nav">
@@ -25,7 +25,7 @@
 <?php foreach($all_levels as $level) { ?>
 <tr>
 <td><?php echo $level->name ?></td>
-<td><a href="<?php echo base_url() ?>index.php/level/edit/<?php echo $level->id ?>" class="edit with-icon">Edit</a></td>
+<td><a href="<?php echo base_url() ?>index.php/level/edit/<?php echo $level->id ?>" class="thickbox  primary popup edit with-icon" >Edit</a></td>
 <td><a href="<?php echo base_url() ?>index.php/level/delete/<?php echo $level->id ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($level->name) ?>">Delete</a></td>
 </tr>
 <?php } ?>

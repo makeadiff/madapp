@@ -12,7 +12,8 @@ foreach($details as $row) {
 ?>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/update_Center')?>" method="post" style="width:500px;"  onsubmit="return validate();">
 <fieldset class="clear">
-<div class="field clear">
+<ul class="form city-form">
+<li>
 <label for="selBulkActions">Select City:</label> 
 <select id="city" name="city" > 
 <option selected="selected"  value="-1">- Select -</option> 
@@ -27,9 +28,9 @@ foreach($details as $row) {
 	<option value="<?php echo $row['id']; ?>" ><?php echo $row['name']; ?></option> 
 	<?php } }?>
 </select>
-</div>
+</li>
 
-<div class="field clear">
+<li>
 <label for="selBulkActions">Select Head:</label> 
 <select id="user_id" name="user_id" > 
 <option selected="selected" value="-1" >- Select -</option> 
@@ -44,20 +45,23 @@ foreach($details as $row) {
 		<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 		<?php }} ?>
 </select>
-</div>
+</li>
 
-<div class="field clear"> 
+<li>
 			<label for="txtName">Center : </label>
 			<input id="center" name="center"  type="text" value="<?php echo $name; ?> " /> 
 			
-</div>
-
-<div class="field clear"> 
+</li>
+</ul>
+<ul>
+<li>
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Save" />
+		<input id="btnSubmit" class="button green" type="submit" value="Save" />
+        <a href="<?=site_url('center/manage/'.$root_id)?>" class="cancel-button">Cancel</a>
+
 		
-		<a href="#" class="cancel-button">Cancel</a>
-</div>
+</li>
+</ul>
 </fieldset>
 </form>
 <script>

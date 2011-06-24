@@ -35,13 +35,13 @@ jQuery(document).ready(function () {
 </script>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
 <fieldset class="clear">
-
-<div class="field clear" style="width:500px;"> 
+<ul class="form city-form">
+<li>
 <label for="txtName">Name : </label>
 <input id="names" name="names"  type="text" value="<?php echo stripslashes($name); ?>"/> 
-</div>
+</li>
 
-<div class="field clear" style="width:500px;">
+<li>
 <label for="selBulkActions">Select Group:</label> 
 <select id="group" name="group[]" style="width:142px; height:50px;" multiple="multiple"> 
 	<?php 
@@ -53,39 +53,38 @@ jQuery(document).ready(function () {
 		<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 	<?php } }?>
 </select>
-</div>
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 	<label for="txtName">Position : </label>
 	<input id="user_position" name="position"  type="text" value="<?php echo stripslashes($title); ?>" /> 
-</div>
+</li>
 
-<div class="field clear" style="width:500px;"> 
+<li>
 	<label for="txtName">Email : </label>
 	<input id="emails" name="emails"  type="text"  value="<?php echo $email; ?>"/> 
-</div>
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 	<label for="txtName">Password : </label>
 	<input id="spassword" name="spassword"  type="password"   /> 
 			
-</div>
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 	<label for="txtName">Confirm Password : </label>
 	<input id="scpassword" name="scpassword"  type="password" /> 
-</div>
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 	<label for="txtName">Phone : </label>
 	<input id="phone" name="phone"  type="text" value="<?php echo $phone; ?>"  /> 
-</div>
+</li>
 
-<div class="field clear"> 
+<li>
 	<label for="txtName">Address : </label>
 	<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea> 
-</div>
-
+</li>
 <?php 
 $this_city_id = $this->session->userdata('city_id');
 if($this->user_auth->get_permission('change_city')) { ?>
-<div class="field clear" style="width:500px;">
+<li>
 <label for="selBulkActions">Select city:</label> 
 <select id="city" name="city"  onchange="javascript:get_center_Name(this.value);">
 <option selected="selected" value="-1" >- choose action -</option> 
@@ -98,12 +97,12 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
 	<?php }} ?>
 </select>
-</div>
+</li>
 <?php } else { ?>
 	<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
 
-<div class="field clear">
+<li>
 <label for="selBulkActions">Select Project:</label> 
 <select id="project" name="project">
 	<?php 
@@ -117,29 +116,26 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
 	<?php } }?>
 </select>
-</div>
-
-<div class="field clear">
+</li>
+<li>
 	<label for="date">Photo</label>
 	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="100" style="float:left;" height="100" /><?php } ?>
-</div>
- <div  class="field clear">
+</li>
+<li>
 	<label for="date">Change photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
-</div>
+</li>
 
-<div class="field clear" style="width:500px;"> 
+<li>
 	<label for="txtName">Joined On : </label>
 	<input id="joined_on" name="joined_on" class="date-pick" type="text" value="<?php echo $joined_on; ?>"  /> 
-</div>
-
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 	<label for="txtName">Left On : </label>
 	<input id="left_on" name="left_on" class="date-pick" type="text" value="<?php echo $left_on; ?>"  /> 
-</div>
-
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 	<label for="type">User Type : </label>
 	<select name="type">
 		<option value="applicant" <?php if($user_type == 'applicant') echo ' selected="selected"'; ?>>Applicant</option>
@@ -148,12 +144,11 @@ if($this->user_auth->get_permission('change_city')) { ?>
 		<option value="alumni"> <?php if($user_type == 'alumni') echo ' selected="selected"'; ?>Alumni</option>
 		<option value="other" <?php if($user_type == 'other') echo ' selected="selected"'; ?>>Other</option>
 	</select>
-</div>
-
+</li>
+</ul>
 <div class="field clear" style="width:550px;"> 
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input style="margin-left:50px; margin-top:50px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
-		
+		<input  id="btnSubmit" class="button green" type="submit" value="Submit" />
 		<a href="<?=site_url('user/view_users');?>" class="cancel-button">Cancel</a>
 </div>
 </fieldset>

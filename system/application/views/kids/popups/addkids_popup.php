@@ -47,7 +47,8 @@ jQuery(document).ready(function () {
  <ul>
 <li>
 <input  id="btnSubmit" class="button green" type="submit" value="+ Add New Kid" />
-<a href="<?=site_url('kids/manageaddkids')?>" class="sec-action">Cancel</a></li>
+<a href="<?=site_url('kids/manageaddkids')?>" class="sec-action">Cancel</a>
+</li>
 </ul>
 </form>
 <script>

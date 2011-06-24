@@ -108,21 +108,11 @@ class Center extends Controller  {
 		$returnFlag= $this->center_model->add_center($data);
 	
 		if($returnFlag) {
-			$message['msg']   =  "Center added successfully. Next step - <a href='".site_url('level/creater/center/'.$returnFlag)."'>Add Levels</a>.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "Add New Center";
-			$message['icoFile'] = "ico_addScheme.png";
-		
-			$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_flashdata('success', 'The Center has been added successfully');
+			redirect('center/manageaddcenters');
 		} else {
-			$message['msg']   =  "No updates performed.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "popupaddCneter";
-			$message['linkText'] = "Add new Center";
-			$message['icoFile'] = "ico_addScheme.png";
-		
-			$this->load->view('dashboard/errorStatus_view',$message);
+			$this->session->set_flashdata('success', 'Insertion Failed !!');
+			redirect('center/manageaddcenters');
 		}
 	
 	}
@@ -163,20 +153,11 @@ class Center extends Controller  {
 		$returnFlag= $this->center_model->update_center($data);
 		
 		if($returnFlag == true) {
-			$message['msg']   =  "Center edited successfully.";
-			$message['successFlag'] = "1";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-
-			$this->load->view('dashboard/errorStatus_view',$message);		  
+			$this->session->set_flashdata('success', 'The Center has been updated successfully');
+			redirect('center/manage/'.$data['rootId']);		  
 		} else {
-			$message['msg']   =  "Center not edited.";
-			$message['successFlag'] = "0";
-			$message['link']  =  "";
-			$message['linkText'] = "";
-			$message['icoFile'] = "ico_addScheme.png";
-			$this->load->view('dashboard/errorStatus_view',$message);		  
+			$this->session->set_flashdata('success', 'The Center updation failed !!');
+			redirect('center/manage/'.$data['rootId']);	  
 		}
 	
 	}

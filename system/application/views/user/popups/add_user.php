@@ -55,14 +55,14 @@ jQuery(document).ready(function () {
 </script>
 
 <body>
-<form id="formEditor" name="formEditor" class="mainForm form-area clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();">
+<form id="formEditor"  style="width:550px;" name="formEditor" class="mainForm form-area clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onSubmit="return validate();">
 <fieldset class="clear">
-
-<div class="field clear" style="width:500px;"> 
+<ul class="form city-form">
+<li>
 <label for="txtName">Name : </label> <input id="names" name="names"  type="text" /><br />
-</div>
+</li>
 
-<div class="field clear" style="width:500px;">
+<li>
 <label for="selBulkActions">Select Group:</label> 
 <select id="group" name="group" multiple="multiple"> 
 <option selected="selected" value="-1" >- Choose -</option> 
@@ -73,41 +73,39 @@ jQuery(document).ready(function () {
 	?>
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 	<?php } ?>
-</select><br />
-</div>
-<div class="field clear" style="width:500px;"> 
+</select>
+</li>
+<li>
 			<label for="position">Position : </label>
 			<input id="position" name="position"  type="text" /><br />
-</div>
-
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 			<label for="email">Email : </label>
 			<input id="emails" name="emails"  type="text" /><br />
 			
-</div>
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 			<label for="password">Password : </label>
 			<input id="spassword" name="spassword"  type="password" /><br />	 
-			
-</div>
-<div class="field clear" style="width:500px;"> 
+</li>			
+<li>
 	<label for="cpassword">Confirm Password : </label>
 	<input id="scpassword" name="scpassword"  type="password" /><br />	 
-</div>
-<div class="field clear" style="width:500px;"> 
+</li>
+<li>
 	<label for="txtName">Phone : </label>
 	<input id="phone" name="phone"  type="text" /><br />	 
-</div>
+</li>
 
-<div class="field clear"> 
+<li> 
 	<label for="txtName">Address : </label>
 	<textarea id="address" name="address"  rows="5" cols="30"></textarea><br />	 
-</div>
+</li>
 
 <?php 
 $this_city_id = $this->session->userdata('city_id');
 if($this->user_auth->get_permission('change_city')) { ?>
-<div class="field clear" style="width:500px;">
+<li>
 <label for="selBulkActions">Select city:</label> 
 <select id="city" name="city" > 
 <option selected="selected" value="-1" >- Choose -</option> 
@@ -120,7 +118,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	?>><?php echo $row['name']; ?></option> 
 	<?php } ?>
 </select><br />	
-</div>
+</li>
 <?php } else { ?>
 <input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
@@ -128,7 +126,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <?php 
 $this_project_id = $this->session->userdata('project_id');
 if($this->user_auth->get_permission('change_city')) { ?>
-<div class="field clear" style="width:500px;">
+<li>
 <label for="selBulkActions">Select project:</label> 
 <select id="project" name="project"> 
 <option selected="selected" >- Choose -</option> 
@@ -140,22 +138,23 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	?>><?php echo $row['name']; ?></option> 
 	<?php } ?>
 </select><br />	
-</div>
+
+</li>
 <?php } else { ?>
 <input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
 <?php } ?>
 
-<div class="field clear" style="width:500px;"> 
+<li>
 	<label for="txtName">Joined On : </label>
 	<input id="joined_on" name="joined_on" class="date-pick" type="text" value=""  /><br />	 
-</div>
+</li>
 
-<div class="field clear" style="width:500px;"> 
+<li>
 	<label for="txtName">Left On : </label>
 	<input id="left_on" name="left_on" class="date-pick" type="text" value=""  /><br />	 
-</div>
+</li>
 
-<div class="field clear"> 
+<li>
 <label for="type">User Type : </label>
 <select name="type">
 	<option value="applicant">Applicant</option>
@@ -163,22 +162,24 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<option value="well_wisher">Well Wisher</option>
 	<option value="alumni">Alumni</option>
 	<option value="other">Other</option>
-</select><br />	
-</div>
+</select>
+</li>
 
-<div  class="field clear">
+<li>
 	<label for="image">Upload Photo</label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>
-</div>
+</li>
+</ul>
 
-
-
-<div class="field clear" style="width:550px;"> 
-<input style="margin-left:50px; margin-top:30px;"  class="button primary"  type="submit"  value="Submit" />
+<ul>
+<li>
+<input   class="button green"  type="submit"  value="Submit" />
 <a href="<?=site_url('user/view_users');?>" class="cancel-button">Cancel</a>
-</div>
-</fieldset>
+
+</li>
+</ul>
+
 </form>
 
 <?php $this->load->view('layout/thickbox_footer'); ?>

@@ -122,18 +122,20 @@ class User extends Controller  {
 			$returnFlag= $this->users_model->adduser_to_group($data);
 			if($returnFlag)
 			{
-			$this->session->set_userdata('message', 'User Inserted successfully');
-			$this->view_users();
+			$this->session->set_flashdata('success', 'User Inserted successfully');
+			redirect('user/view_users');
 			}
 			else
 			{
-			$this->session->set_userdata('message', 'No Action performed.');	
-			$this->view_users();
+			
+			$this->session->set_flashdata('success', 'User Insertion failed!!');
+			redirect('user/view_users');
 			}
 		}
 		else	
 		{
-		$this->session->set_userdata('message', "The User can't be added because mailid '".$data['email']."' is already taken");
+		//$this->session->set_flashdata('success', 'User Insertion failed!!');
+		$this->session->set_flashdata('success', "The User can't be added because mailid '".$data['email']."' is already taken");
 		redirect('user/view_users');
 		}
 	}
@@ -211,11 +213,15 @@ class User extends Controller  {
 		
 		if($flag || $returnFlag ) 
 		{
-			$this->session->set_userdata('message', 'User Updated successfully');
-			$this->view_users();
+			
+			$this->session->set_flashdata('success', 'User Updated successfully');
+			redirect('user/view_users');
+			
 		} else {
-			$this->session->set_userdata('message', 'Updation Failed!!');
-			$this->view_users();
+			
+			$this->session->set_flashdata('success', 'User Updation failed');
+			redirect('user/view_users');
+			
 		}
 	}
 	

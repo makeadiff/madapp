@@ -6,7 +6,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 <h1><?php echo $title ?></h1>
 
 <div id="actions">
-<a id="example" class="button primary" href="<?php echo site_url('batch/create/center/'.$center_id); ?>" class="add">Create New Batch in <?php echo $center_name ?></a>
+<a  id="example" class="thickbox button primary popup" href="<?php echo site_url('batch/create/center/'.$center_id); ?>" class="add">Create New Batch in <?php echo $center_name ?></a>
 </div><br class="clear" />
 
 <div id="train-nav">
@@ -37,7 +37,7 @@ foreach($all_batches as $batch) {
 
 <td><a href="<?php echo site_url('batch/add_volunteers/'.$batch->id) ?>">Add Volunteers to this Batch</a></td>
 
-<td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="edit with-icon">Edit</a></td>
+<td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="thickbox edit with-icon primary popup"  class="edit with-icon">Edit</a></td>
 <td><a href="<?php echo site_url('batch/delete/'.$batch->id); ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($batch_name) ?>">Delete</a></td>
 </tr>
 <?php } ?>

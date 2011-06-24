@@ -167,18 +167,18 @@ class Kids extends Controller  {
         }
 		if($returnFlag != '') 
 			{
-			$this->session->set_userdata('success', 'Student updated successfully.');
-			$this->manageaddkids();	  
+			$this->session->set_flashdata('success', 'Student updated successfully.');
+			redirect('kids/manageaddkids');  
 			}
 		elseif($flag!= '')
 		{
-			$this->session->set_userdata('success', 'Student updated successfully.');
-			$this->manageaddkids();
+			$this->session->set_flashdata('success', 'Student updated successfully.');
+			redirect('kids/manageaddkids');
 			}
 		else
 			{
-			$this->session->set_userdata('error', 'Student not edited.');
-			$this->manageaddkids();	  
+			$this->session->set_flashdata('error', 'Student not edited.');
+			redirect('kids/manageaddkids');  
 			}
 	}
 	
@@ -223,11 +223,12 @@ class Kids extends Controller  {
         }
         
 		if($returnFlag) {
-			$this->session->set_userdata('success', 'Kid Inserted successfully');
-			$this->manageaddkids();
+			
+			$this->session->set_flashdata('success', 'Student Inserted successfully');
+			redirect('kids/manageaddkids');
 		} else {
-			$this->session->set_userdata('success', 'Insertion Failed');
-			$this->manageaddkids();
+			$this->session->set_flashdata('success', 'Insertion Failed');
+			redirect('kids/manageaddkids');
 		}
 	}
 	

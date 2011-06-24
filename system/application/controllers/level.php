@@ -45,8 +45,9 @@ class Level extends Controller {
 					'students'	=>	$this->input->post('students')
 				));
 				
-			$this->message['success'] = 'The Level has been added';
-			$this->index('center', $this->input->post('center_id'));
+			$this->session->set_flashdata('success', 'The Level has been added');
+			//$this->index('center', $this->input->post('center_id'));
+			redirect('level/index/center/' . $this->input->post('center_id'));
 		
 		} else {
 			$this->load->helper('misc');

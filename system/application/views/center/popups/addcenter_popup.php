@@ -43,7 +43,7 @@
 <ul>
 <li>
 <input id="btnSubmit" class="button green" type="submit" value="Save" />
-<a href="#" class="cancel-button">Cancel</a>
+<a href="<?=site_url('center/manageaddcenters')?>" class="cancel-button">Cancel</a>
 </li>
 </ul>
 </fieldset>

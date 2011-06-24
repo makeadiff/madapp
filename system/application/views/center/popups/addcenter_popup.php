@@ -2,10 +2,11 @@
 
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
 <fieldset class="clear">
+<ul class="form city-form">
 	<?php 
 	$this_city_id = $this->session->userdata('city_id');
 	if($this->user_auth->get_permission('change_city')) { ?>
-		<div class="field clear">
+<li>
 		<label for="selBulkActions">Select city:</label> 
 		<select id="city" name="city" > 
 		<option value="0" >- choose action -</option> 
@@ -16,12 +17,12 @@
 			<option value="<?php echo $row['id']; ?>" <?php if($this_city_id == $row['id']) print ' selected="selected"'; ?>><?php echo $row['name']; ?></option> 
 			<?php } ?>
 		</select>
-		</div>
+		</li>
 <?php } else { ?>
 	<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
 
-<div class="field clear">
+<li>
 <label for="selBulkActions">Select Head:</label> 
 <select id="user_id" name="user_id"> 
 <option selected="selected" value="0" >- Choose -</option> 
@@ -33,17 +34,18 @@
 	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
 	<?php } ?>
 </select>
-</div>
-
-<div class="field clear"> 
+</li>
+<li>
 			<label for="txtName">Center Name : </label>
 			<input id="center" name="center"  type="text" /> 
-</div><br />
-
-<div class="field clear"> 
-<input id="btnSubmit" class="button primary" type="submit" value="Save" />
+</li>
+</ul>
+<ul>
+<li>
+<input id="btnSubmit" class="button green" type="submit" value="Save" />
 <a href="#" class="cancel-button">Cancel</a>
-</div>
+</li>
+</ul>
 </fieldset>
 </form>
 

@@ -31,13 +31,21 @@ class City extends Controller {
 		
 		// Make a new city.
 		if($this->input->post('action') == 'New') {
+			if($this->input->post('name') != '')
+			{
 			$data = array(
 						'name'			=>	$this->input->post('name'), 
 						'president_id'	=>	$this->input->post('president_id'),
 					);
+			
 			$this->model->createCity($data);
 			$this->message['success'] = 'The City has been added';
-			$this->index();
+			$this->session->set_flashdata('success', 'The City has been added successfully');
+			redirect('city/index');
+			} else {
+			$this->session->set_flashdata('success', 'City Not Added ');
+			redirect('city/index');
+			}
 		
 		} else {
 		// Show the form to make a new city.
@@ -52,9 +60,18 @@ class City extends Controller {
 				'action' => 'New',
 				'president_ids' => $president_ids
 				));
+			
 		}
+		
 	}
-	
+	/**
+    *
+    * Function to edit
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function edit() {
 		$this->user_auth->check_permission('city_edit');
 		
@@ -63,10 +80,15 @@ class City extends Controller {
 						'name'			=>	$this->input->post('name'), 
 						'president_id'	=>	$this->input->post('president_id'),
 					);
-			$this->model->editCity($data);
-				
+			$flag=$this->model->editCity($data);
+			if($flag){
 			$this->message['success'] = 'The City has been edited successfully';
-			$this->index();
+			redirect('city/index');
+			} else
+			{
+			$this->message['success'] = 'Failed to edit city';
+			redirect('city/index');
+			}
 		
 		} else {
 			$this->load->helper('misc');

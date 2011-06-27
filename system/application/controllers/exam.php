@@ -85,7 +85,7 @@ class Exam extends Controller  {
 	}
 	
     /**
-    * Function to exam_score
+    * Function to add_exam
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
@@ -174,6 +174,8 @@ class Exam extends Controller  {
 		$this->load->view('dashboard/includes/superadminNavigation',$data);
 		$this->load->view('student_exam_score/score_view');
 		$this->load->view('dashboard/includes/footer');
+		//$this->load->view('layout/footer'); 
+		//$this->load->view('layout/settings_footer'); 
 	
 	}
 	/**

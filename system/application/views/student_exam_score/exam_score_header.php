@@ -1,29 +1,3 @@
-
-<script>
-	
-	tb_init('a.thickbox, input.thickbox');
-	
-	function triggerSearch()
-	{
-		q = $('#searchQuery').val();
-		get_groupList('0',q);
-	}
-	
-	$(document).ready(function(){
-	
-		
-		$('#example').each(function(){
-			var url = $(this).attr('href') + '?TB_iframe=true&height=500&width=900';
-	
-			$(this).attr('href', url);
-		});
-		
-	
-	}
-	);  
-	
-</script>
-
 <div id="content" class="clear">
 
 <!-- Main Begins -->
@@ -33,7 +7,7 @@
 
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?= site_url('exam/popupAddMark')?>" class="thickbox button primary" id="example" name="<strong>Add Mark</strong>">Add Exam Mark</a>
+<a href="<?= site_url('exam/popupAddMark')?>" class="thickbox button primary popup" id="example" name="<strong>Add Mark</strong>">Add Exam Mark</a>
 </div>
 			<!-- end page actions-->
 

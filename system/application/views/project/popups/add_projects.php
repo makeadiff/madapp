@@ -1,16 +1,19 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
 
-<form id="formEditor" class="mainForm clear" action="<?=site_url('project/addproject')?>" method="post" style="width:500px;" onsubmit="return validate();" >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('project/addproject')?>" method="post"  onsubmit="return validate();" >
 <fieldset class="clear">
 
-<div class="field clear" style="width:600px;"> 
+<ul class="form city-form">
+<li>
 			<label for="txtName">Project Name : </label>
 			<input id="name" name="name"  type="text" /> 
-</div>
-
-<div class="field clear" style="width:550px;"> 
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
-</div>
+</li>
+</ul>
+<ul>
+<li>
+		<input id="btnSubmit" class="button green" type="submit" value="Submit" />
+</li>
+</ul>
 </fieldset>
 </form>
 

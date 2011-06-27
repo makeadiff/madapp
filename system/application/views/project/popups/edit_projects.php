@@ -10,17 +10,22 @@ $name=$row['name'];
 }
 
 ?>
-<form id="formEditor" class="mainForm clear" action="<?=site_url('project/update_project')?>" method="post" style="width:500px;" onsubmit="return validate();" >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('project/update_project')?>" method="post" onsubmit="return validate();" >
 <fieldset class="clear">
-<div class="field clear" style="width:600px;"> 
+<ul class="form city-form">
+<li>
+
 			<label for="txtName">Name : </label>
 			<input id="name" name="name"  type="text"  value="<?php echo $name; ?>"/> 
 			
-</div>
-<div class="field clear" style="width:550px;">
+</li>
+</ul>
+<ul>
+<li>
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
-</div>
+		<input  id="btnSubmit" class="button green" type="submit" value="Update" />
+</li>
+</ul>
 </fieldset>
 </form>
 

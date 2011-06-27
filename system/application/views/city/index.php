@@ -4,7 +4,7 @@
 
 <?php if($this->user_auth->get_permission('city_create')) { ?>
 <div id="actions"> 
-<a href="<?= site_url('city/create')?>" class="button primary" id="example" name="Add City">Add City</a>
+<a href="<?= site_url('city/create')?>" class="popup button primary" id="example" name="Add City">Add City</a>
 </div>
 <?php } ?>
 </div>
@@ -17,7 +17,7 @@
 	?><div class="center-info info-box"><ul><li><?php
 		print implode('</li><li>', $result->information);
 	?></li></ul></div></td>
-<td><a href="<?php echo site_url('city/edit/'.$result->id); ?>" class="edit with-icon">Edit</a></td>
+<td><a href="<?php echo site_url('city/edit/'.$result->id); ?>" class=" popup  primary edit with-icon">Edit</a></td>
 </tr>
 <?php } ?>
 </table>

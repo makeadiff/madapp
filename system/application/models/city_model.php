@@ -81,6 +81,7 @@ class City_model extends Model {
     
     function editCity($data) {
     	$this->db->where('id', $this->input->post('id'))->update('City', $data);
+		return ($this->db->affected_rows() > 0) ? true : false;
     }
     
     function getCity($city_id) {

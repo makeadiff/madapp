@@ -28,14 +28,20 @@ class Project extends Controller  {
 		if($logged_user_id == NULL ) {
 			redirect('auth/login');
 		}
-		
 		$this->load->helper('url');
         $this->load->helper('form');
 		$this->load->model('project_model');
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
     }
-    
+    /**
+    *
+    * Function to manage_project
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function manage_project()
 	{
 		$this->user_auth->check_permission('project_index');
@@ -46,21 +52,48 @@ class Project extends Controller  {
 		$this->load->view('project/manage_project', $data);
 		$this->load->view('layout/footer');
 	}
-	
+	/**
+    *
+    * Function to popupaddproject
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function popupaddproject()
 	{
 		$this->user_auth->check_permission('project_add');
 		$this->load->view('project/popups/add_projects');
 	}
+	/**
+    *
+    * Function to addproject
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function addproject()
 	{
 		$this->user_auth->check_permission('project_add');
 		$data['name'] = $_REQUEST['name'];
 	   	$returnFlag=$this->project_model->add_project($data);
-	   	$this->session->set_flashdata("success", "Project added.");
+		if($returnFlag){
+	   	$this->session->set_flashdata("success", "The Project has been added successfully.");
 	   	redirect('project/manage_project');
+		} else {
+		$this->session->set_flashdata("success", "The Project Not Added");
+	   	redirect('project/manage_project');
+		}
 	}
-	
+	/**
+    *
+    * Function to popupEdit_project
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function popupEdit_project()
 	{	
 		$this->user_auth->check_permission('project_edit');
@@ -68,7 +101,14 @@ class Project extends Controller  {
 		$data['details']=$this->project_model->get_project_byid($uid);
 		$this->load->view('project/popups/edit_projects',$data);
 	}
-	
+	/**
+    *
+    * Function to update_project
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function update_project()
 	{
 		$this->user_auth->check_permission('project_edit');
@@ -78,17 +118,27 @@ class Project extends Controller  {
 		
 		if($returnFlag == true) {
 			$this->session->set_flashdata("success", "Project updated successfully.");
+			redirect('project/manage_project');
 		} else {
-			$this->session->set_flashdata("error", "Project not edited.");
+			$this->session->set_flashdata("success", "Failed To Update Project");
+			redirect('project/manage_project');
 		}
-		redirect('project/manage_project');
+		
 	}
-	
+	/**
+    *
+    * Function to ajax_deleteproject
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function ajax_deleteproject()
 	{	
 		$this->user_auth->check_permission('project_delete');
-		$data['entry_id'] = $_REQUEST['entry_id'];
+		$data['entry_id'] = $this->uri->segment(3);
 		$flag= $this->project_model->delete_project($data);
+		$this->session->set_flashdata("success", "Project successfully Deleted.");
 		redirect('project/manage_project');
 	}
 	

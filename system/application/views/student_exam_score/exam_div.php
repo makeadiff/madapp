@@ -2,7 +2,6 @@
 <script>
 function mark_view_div(exam_id)
 {
-//alert(exam_id);
 	if(exam_id != '-1') {
 			$('#loading').show();
 			$('#score_div').show();

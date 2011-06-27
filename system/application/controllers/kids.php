@@ -246,8 +246,14 @@ class Kids extends Controller  {
 	{	
 		$this->user_auth->check_permission('kids_delete');
 		
-		$data['entry_id'] = $_REQUEST['entry_id'];
+		//$data['entry_id'] = $_REQUEST['entry_id'];
+		$data['entry_id'] = $this->uri->segment(3);
 		$flag= $this->kids_model->delete_kids($data);
+		if($flag){
+		$this->session->set_flashdata('success', 'The Kids has been deleted successfully !!');
+		redirect('kids/manageaddkids');
+		}
+		//return true;
 	}
 	
 	

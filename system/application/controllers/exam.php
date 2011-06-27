@@ -42,41 +42,44 @@ class Exam extends Controller  {
     {
         
     }
+	/**
+    * Function to manage_exam
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    **/
 	function manage_exam()
 	{
-		$this->user_auth->check_permission('exam_index');
-		
-		$data['currentPage'] = 'db';
-		$data['navId'] = '3';
-		$this->load->view('layout/header',$data);
-		$this->load->view('student_exam_score/student_exam_view');
-		$this->load->view('layout/footer');
-	}
-	function get_examdetails()
-	{
-		$page_no = $_REQUEST['pageno'];
 		$data['title'] = 'Manage Exam';
-		$linkCount = $this->exam_model->exam_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
+		$this->user_auth->check_permission('exam_index');
+		$this->load->view('layout/header',$data);
 		$data['details']= $this->exam_model->get_exam();
 		$this->load->view('student_exam_score/exam_list',$data);
-	
+		$this->load->view('layout/footer');
 	}
+	/**
+    * Function to view_exam_details
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    **/
 	function view_exam_details()
 	{
 		$this->user_auth->check_permission('exam_view');
-		
 		$exam_id = $this->uri->segment(3);
 		$data['exam_name']= $this->exam_model->get_exam_name_by_id($exam_id);
 		$data['contents']= $this->exam_model->get_exam_details($exam_id);
 		$data['sub_name']= $this->exam_model->get_subject_names($exam_id);
 		$this->load->view('student_exam_score/exam_details_view',$data);
 	}
-	
+	/**
+    * Function to delete
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    **/
 	function delete($exam_id) {
 		$this->exam_model->delete($exam_id);
-		
 		$this->session->set_flashdata("success", "Exam deleted successfully.");
 		redirect("exam/manage_exam");
 	}
@@ -90,10 +93,10 @@ class Exam extends Controller  {
     function add_exam()
     {	
 		$this->user_auth->check_permission('exam_add');
-		
 		$data['centers']= $this->center_model->get_all();
 		$this->load->view('student_exam_score/student_exam', $data);
     }
+	
 	/**
     * Function to ajax_sbjectbox
     * @author : Rabeesh
@@ -142,6 +145,7 @@ class Exam extends Controller  {
 		$agents = $_REQUEST['agents'];
 		$name = $_REQUEST['name'];
 		$choice_text = $_REQUEST['choice_text'];
+		//print_r($choice_text);
 		$exam_id=$this->exam_model->insert_exam_name($name);
 		$choiceText = substr($choice_text,0,strlen($choice_text)-1);
 		$subjects_id=$this->exam_model->insert_subject_name($choiceText,$exam_id);

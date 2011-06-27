@@ -38,10 +38,6 @@ function populat_textbox() {
             }
      });
 }
-
-function get_centers() {
-}
-
 function get_kidslist(center_id)
 {
 	
@@ -121,23 +117,22 @@ function dataGrabber()
         
 <div id="refresh">
 <!--onclick="return false"-->
-<form name="form" id="formEditor" class="mainForm clear"  onclick="return false"   action="" method="post" style="width:500px;" >
+<form name="form" id="formEditor" class="mainForm clear"  onclick="return false"   action="" method="post"  >
 <fieldset class="clear" style="margin-top:50px;width:auto;margin-left:-30px;">
 		
-
-<div class="fields"  > 
+			<ul class="form city-form">
+			<li>
 			<label for="txtName">Exam Name : </label>
 			<input id="name" name="name"  type="text" /> 
-			
-</div>
-<div  class="fields"> 
-			<label for="txtName">Number of Subjects : </label>
+			</li>
+			<li>
+			<label for="txtName">No of Subjects:</label>
 			<input id="sub_no" name="sub_no"  type="text" onkeyup="javascript:populat_textbox();" /> 
-		</div>     
-	<div class="fields" id="subject" > 
-</div>
+			</li>	
+			<div  id="subject" > 
+			</div>
 
-<div  id="center" class="fields">
+	<li>
 	<label for="selBulkActions">Select center:</label> 
 	<select id="centers" name="center">
 	<option  value="0" >- Select -</option> 
@@ -145,19 +140,19 @@ function dataGrabber()
 	<option  value="<?php echo $cen->id ?>"><?php echo $cen->name ?></option> 
 	<?php } ?>
 	</select>
-</div>
-
-
-<div  class="fields">
+	</li>
+<li>
 <label for="selBulkActions">Kids:</label>
 <select id="kids" name="kids"  style="width:142px; height:80px;" multiple >
 <option selected="selected" value="0">- choose action -</option>  
 </select>
-</div>
-<div  style="width:auto;"> 
-<input style="margin-left:50px; margin-top:30px;" id="btnSubmit" class="button primary" type="submit" value="Submit" onclick="javascript:return dataGrabber();"/>
-</div>
-
+</li>
+</ul>
+<ul>
+<li>
+<input  id="btnSubmit" class="button green" type="submit" value="Submit" onclick="javascript:return dataGrabber();"/>
+</li>
+</ul>
 </fieldset>
 </form>
 </div>

@@ -77,10 +77,13 @@ class Permission extends controller {
 		$permission = $_REQUEST['permission'];
 		$returnFlag= $this->permission_model->add_permission($permission);
 		if($returnFlag) {
-			echo "Successfully Inserted!";
+			$this->session->set_flashdata('success', 'Permission Inserted Successfully !');
+			redirect('permission/manage_permission');
 		} else {
-			echo "Insertion failed!";
+			$this->session->set_flashdata('success', 'Permission Insertion Failed !');
+			redirect('permission/manage_permission');
 		}
+		
 	}
 	
 	/**
@@ -110,9 +113,11 @@ class Permission extends controller {
 		$returnFlag= $this->permission_model->update_permission($data);
 		
 		if($returnFlag == true) {
-			echo "Successfully Updated.";
+			$this->session->set_flashdata('success', 'Permission Updated Successfully !');
+			redirect('permission/manage_permission');
 		} else {
-			echo "Updation failed!"; 
+			$this->session->set_flashdata('success', 'Permission Updation Failed !');
+			redirect('permission/manage_permission');
 		}
 	}
 	
@@ -125,9 +130,14 @@ class Permission extends controller {
 	function ajax_deletepermission()
 	{
 		$this->user_auth->check_permission('permission_delete');
-		$data['entry_id'] = $_REQUEST['entry_id'];
-		$this->permission_model->delete_permission($data);
-		
-		redirect('permission/manage_permission');
+		$data['entry_id'] = $this->uri->segment(3);
+		$returnFlag=$this->permission_model->delete_permission($data);
+		if($returnFlag == true) {
+			$this->session->set_flashdata('success', 'Permission Deleted Successfully !');
+			redirect('permission/manage_permission');
+		} else {
+			$this->session->set_flashdata('success', 'Failed to Delete Permission!');
+			redirect('permission/manage_permission');
+		}
 	}
 }

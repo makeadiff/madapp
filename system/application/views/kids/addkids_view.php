@@ -2,6 +2,7 @@
 function get_kidslist(page_no,search_query)
 {
 	
+	alert("hi");
 	$('#loading').show();
 		$.ajax({
 		type: "POST",

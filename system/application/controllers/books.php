@@ -66,12 +66,14 @@ class Books extends Controller
 	function addbook()
 	{
 		$this->user_auth->check_permission('books_add');
-		$data['bookname']=$_REQUEST['bookname'];
+		echo "helo=".$data['bookname']=$_REQUEST['bookname'];
 		$returnFlag=$this->book_model->add_book($data);
 		if($returnFlag) {
-			echo "Successfully Inserted!";
+			$this->session->set_flashdata('success', 'Book Inserted Successfully !');
+			redirect('books/manage_books');
 		} else {
-			echo "Bookname not Inserted!!";
+			$this->session->set_flashdata('success', 'Book Insertion Failed !');
+			redirect('books/manage_books');
 		}
 	}
 	/**
@@ -94,13 +96,15 @@ class Books extends Controller
     **/
 	function updatebook()
 	{
-		$data['root_id']=$uid = $this->uri->segment(3);
+		$data['root_id']=$_REQUEST['root_id'];
 		$data['bookname']=$_REQUEST['bookname'];
 		$returnFlag= $this->book_model->update_bookname($data);
 		if($returnFlag == true) {
-			echo "Successfully Updated.";		  
+			$this->session->set_flashdata('success', 'Book Successfully Updated.');
+			redirect('books/manage_books');	  
 		} else {
-			echo "Updation Failed!";
+			$this->session->set_flashdata('success', 'Book Updation failed !!');
+			redirect('books/manage_books');	  
 		}
 	
 	}
@@ -112,8 +116,13 @@ class Books extends Controller
     **/
 	function ajax_deletebook()
 	{
-		$data['book_id']=$_REQUEST['entry_id'];
+		$data['book_id']=$this->uri->segment(3);
 		$returnFlag= $this->book_model->delete_bookname($data);
+		if($returnFlag)
+		{
+		$this->session->set_flashdata('success', 'Book deleted Successfully !!');
+		redirect('books/manage_books');	  
+		}
 	}
 	/**
     * Function to manage_chapters
@@ -150,13 +159,15 @@ class Books extends Controller
     **/
 	function addlesson()
 	{
-		$data['book']=$_REQUEST['book_id'];
+		$data['book']=$_REQUEST['book'];
 		$data['lessonname']=$_REQUEST['lessonname'];
 		$returnFlag= $this->book_model->add_lesson($data);
 		if($returnFlag) {
-			echo "Successfully Inserted!";
+			$this->session->set_flashdata('success', 'Lesson Successfully Inserted!');
+			redirect('books/manage_chapters');
 		} else {
-			echo "Insertion Failed!!";
+			$this->session->set_flashdata('success', 'Insertion failed!');
+			redirect('books/manage_chapters');
 		}
 	}
 	/**
@@ -179,15 +190,17 @@ class Books extends Controller
     **/
 	function update_lesson()
 	{
-			$data['rootId']=$this->uri->segment(3);
-			$data['book_id']=$_REQUEST['book_id'];
+			$data['rootId']=$_REQUEST['root_id'];;
+			$data['book_id']=$_REQUEST['book'];
 			
 			$data['lessonname']=$_REQUEST['lessonname'];
 			$returnFlag=$this->book_model->update_lesson($data);
 			if($returnFlag == true) {
-				echo "Successfully Updated";  
+				$this->session->set_flashdata('success', 'Lesson Successfully Updated!');
+				redirect('books/manage_chapters');
 			} else {
-				echo "Updation Failed"; 
+				$this->session->set_flashdata('success', 'Lesson Updation Failed!');
+				redirect('books/manage_chapters');
 		}
 			
 	}
@@ -199,7 +212,15 @@ class Books extends Controller
     **/
 	function ajax_deletelesson()
 	{
-			$data['lesson_id']=$_REQUEST['entry_id'];
+			$data['lesson_id']=$this->uri->segment(3);
 			$returnFlag= $this->book_model->delete_lesson($data);
+			if($returnFlag)
+			{
+			$this->session->set_flashdata('success', 'Lesson Successfully Deleted!');
+				redirect('books/manage_chapters');
+			} else{
+			$this->session->set_flashdata('success', 'Failed To delete Lesson!');
+				redirect('books/manage_chapters');
+			}
 	}
 }

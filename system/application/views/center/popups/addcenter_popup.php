@@ -48,8 +48,6 @@
 </ul>
 </fieldset>
 </form>
-
-
 <script>
 function validate()
 {

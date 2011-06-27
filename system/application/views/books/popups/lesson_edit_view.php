@@ -2,36 +2,34 @@
 <div style="float:left;"><h1>Edit Lessons</h1></div>
 <?php $book_name=$book_name->result_array(); ?>
 <script>
-function update_lesson(id){
-var book_id=$('#book').val();
-var lessonname=$('#lessonname').val();
-if(book_id != 0 )
+function validate()
 {
-if(lessonname != '' ){
-	$.ajax({
-		type: "POST",
-		url: "<?=site_url('books/update_lesson')?>"+'/'+id,
-		data: "book_id="+book_id+"&lessonname="+lessonname,
-		success: function(msg){
-			$('#message').html(msg);
-			window.parent.get_chapterlist(0,'');
-		}
-		});
-}else{alert("Enter Bookname");}
-}else{alert("Select Booknam");}
+if(document.getElementById("book").value == '')
+          {		
+              alert("Bookname Missing.");
+			  document.getElementById('book').focus();
+              return false;
+          }
+if(document.getElementById("lessonname").value == '')
+          {		
+              alert("Lesson Name Missing.");
+			  document.getElementById('lessonname').focus();
+              return false;
+          }
 }
 </script>
-<div id="message"></div>
 <div style="float:left; margin-top:20px;">
-<form id="formEditor" class="mainForm clear" action="" method="post" style="width:500px;" onsubmit="return false"  >
+<form id="formEditor" class="mainForm clear" action="<?=site_url('books/update_lesson')?>" method="post"  onsubmit="return validate();">
 <fieldset class="clear">
+<ul class="form city-form">
+
 			<?php foreach($book_name as $row){
 			$name=$row['name'];
 			$root_id=$row['id'];
 			$book_id=$row['book_id'];
 			}
 			 ?>
-            <div class="field clear" style="width:500px;"> 
+           <li>
                         <label for="txtName">Select Book : </label>
                         <select id="book" name="book" > 
             			<option value="0" >- choose action -</option> 
@@ -45,15 +43,21 @@ if(lessonname != '' ){
                         <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
                		 	<?php } }?>
             			</select>
-                      
-            </div>
-            <div class="field clear" style="width:600px; margin-top:10px;"> 
-                        <label for="txtName">BookName : </label>
-                        <input id="lessonname" style="height:20px;" name="lessonname"  type="text" value="<?=$name?>" /> 
-            </div>
-            <div class="field clear" style="width:550px;"> 
-     				<input style="margin-left:50px; margin-top:30px;" onclick="javascript:update_lesson('<?=$root_id?>');" id="btnSubmit" class="button primary" type="submit" value="Submit" />
-            </div>
+                      </li>
+           
+					<li>
+                       <label for="txtName">BookName : </label>
+                       <input id="lessonname" style="height:20px;" name="lessonname"  type="text" value="<?=$name?>" /> 
+            		</li>
+            </ul>
+            <ul>
+            <li>
+            		<input type="hidden" name="root_id" id="root_id" value="<?=$root_id?>" />
+     				<input   id="btnSubmit" class="button green" type="submit" value="Submit" />
+                    <a href="<?=site_url('books/manage_chapters')?>" class="cancel-button">Cancel</a>
+
+            </li>
+            </ul>
             </fieldset>
             </form>
             

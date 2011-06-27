@@ -7,7 +7,7 @@
 
 <!-- start page actions-->
 <div id="actions"> 
-<a href="<?php echo site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" name="Add Permission">Add Permission</a>
+<a href="<?php echo site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" style="margin-bottom:10px;" name="Add Permission">Add Permission</a>
 </div><br />
 <!-- end page actions-->
 </div>
@@ -51,7 +51,6 @@ foreach($content as $row)
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $row['id']; ?></td>
     <td class="colName left"><?php echo $row['name']; ?></td>
-    
     <td class="colActions right"> 
     <a href="<?php echo site_url('permission/popupEdit_permission/'.$row['id'])?>" class="thickbox popup icon edit">Edit</a>
     <a class="actionDelete icon delete confirm" href="<?php echo site_url('permission/ajax_deletepermission/'.$row['id']) ?>">Delete</a>

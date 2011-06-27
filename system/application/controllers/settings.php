@@ -71,8 +71,14 @@ class Settings extends Controller {
 						'value'	=>	$value,
 						'data'	=>	$data,
 					);
-			$this->model->addsetting($data);
-			echo  "The Setting has been added";
+			$returnFlag=$this->model->addsetting($data);
+			if($returnFlag) {
+			$this->session->set_flashdata('success', 'Settings Inserted Successfully !');
+			redirect('settings/index');
+		} else {
+			$this->session->set_flashdata('success', 'Settings Insertion Failed !');
+			redirect('settings/index');
+		}
 	}
 	/**
     * Function to edit_settings
@@ -101,8 +107,14 @@ class Settings extends Controller {
 						'value'	=>	$value,
 						'data'	=>	$data,
 					);
-			$this->model->editsetting($data,$settings_id);
-			echo "The Setting has been edited ";
+			$returnFlag=$this->model->editsetting($data,$settings_id);
+			if($returnFlag) {
+			$this->session->set_flashdata('success', 'The Setting has been edited !');
+			redirect('settings/index');
+			} else {
+			$this->session->set_flashdata('success', 'Settings Updation Failed !');
+			redirect('settings/index');
+		}
 		
 		
 	}

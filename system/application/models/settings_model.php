@@ -35,7 +35,7 @@ class Settings_model extends Model {
 				'value'	=>	$data['value'],
 				'data'		=>	$data['data'],
 			));
-		
+		return ($this->db->affected_rows() > 0 )? true :false;
 		
     }
     /**
@@ -46,6 +46,7 @@ class Settings_model extends Model {
     **/
     function editsetting($data,$settings_id) {
     	$this->db->where('id', $settings_id)->update('Setting', $data);
+		return ($this->db->affected_rows() > 0 )? true :false;
     }
     /**
     * Function to get_settings

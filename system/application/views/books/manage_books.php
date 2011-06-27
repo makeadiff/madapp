@@ -1,5 +1,4 @@
 <div id="content" class="clear">
-
 <!-- Main Begins -->
 <div id="main" class="clear"> 
 	<div id="head" class="clear">

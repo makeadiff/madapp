@@ -1,9 +1,8 @@
 <?php 
 $this->load->view('layout/css');
-
 $exam_name=$exam_name->result_array();
 foreach($exam_name as $row) {
-	$exam_name=$row['name'];
+$exam_name=$row['name'];
 }
 ?>
 

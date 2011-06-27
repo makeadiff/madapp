@@ -86,10 +86,15 @@
 		if($group_id)
 		{
 			$returnFlag= $this->users_model->add_group_permission($permission,$group_id);
-			if($returnFlag) $this->session->set_flashdata('success', "Successfully Inserted");
-			else $this->session->set_flashdata('error', "Insertion Failed");
+			if($returnFlag) {
+			$this->session->set_flashdata('success', "Successfully Inserted");
+			redirect('user_group/manageadd_group');
+			}else {
+			$this->session->set_flashdata('success', "Successfully Inserted");
+			redirect('user_group/manageadd_group');
+			}
 		}
-		redirect('user_group/manageadd_group');
+		
 	}
 	/**
     *
@@ -132,12 +137,13 @@
 		if($returnFlag == true) 
 			  {
 				$this->session->set_flashdata('success', "Successfully Updated");
+				redirect('user_group/manageadd_group');
 			  }
 			else
 			  {
 				$this->session->set_flashdata('error', "Updation Failed");
+				redirect('user_group/manageadd_group');
 			 }
-		redirect('user_group/manageadd_group');
 	}
 	/**
     *
@@ -150,11 +156,24 @@
 	function ajax_deletegroup()
 	{
 		$this->user_auth->check_permission('user_group_delete');
-		$data['entry_id'] = $_REQUEST['entry_id'];
+		$data['entry_id'] = $this->uri->segment(3);
 		$flag= $this->users_model->delete_group($data);
+		if(flag){
 		$this->session->set_flashdata('success', "Group Deleted Successfully");
 		redirect('user_group/manageadd_group');
+		} else {
+		$this->session->set_flashdata('success', "Failed To Delete Group");
+		redirect('user_group/manageadd_group');
+		}
 	}
+	/**
+    *
+    * Function to view_permission
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function view_permission()
 	{
 		$this->user_auth->check_permission('user_group_view');

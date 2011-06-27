@@ -1,37 +1,31 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
 <script>
-function insert_permission(id)
+function validate()
 {
-var permission=$('#permission').val();
-if(permission == '')
-{ alert("Enter Permission Name");
- }else{
-$.ajax({
-		type: "POST",
-		url: "<?=site_url('permission/addpermission')?>",
-		data: "permission="+permission,
-		success: function(msg){
-			$('#message').html(msg);
-			window.parent.get_permissionlist(0,'');
-			
-		}
-		});
-}
+if(document.getElementById("permission").value == '')
+          {		
+              alert("Permission Name Missing.");
+			  document.getElementById('permission').focus();
+              return false;
+          }
 }
 </script>
 <div style="float:left;"><h1>Add Permission</h1></div>
 <div id="message"></div>
 <div style="float:left; margin-top:20px;">
-<form id="formEditor" class="mainForm clear" action="" method="post" onsubmit="return false">
+<form id="formEditor" class="mainForm clear" action="<?=site_url('permission/addpermission')?>" method="post" onsubmit="return validate();">
 <fieldset class="clear">
-
-<div class="field clear" style="width:600px;"> 
-		<label for="txtName">Permission Name : </label>
-		<input id="permission" name="permission" id="permission"  type="text" /> 
-</div>
-<div class="field clear" style="width:550px;"> 
-		<input style="margin-left:50px; margin-top:30px;" onclick="javascript:insert_permission();" id="btnSubmit" class="button primary" type="submit" value="Submit" />
-</div>
-</fieldset>
+	<ul class="form city-form">
+	<li>
+	<label for="txtName">Name : </label>
+	<input id="permission"  name="permission" id="permission"  type="text" /> 
+	</li>
+    </ul>
+    <ul>
+	<li>
+	<input  id="btnSubmit" class="button green" type="submit" value="Submit" />
+	</li>
+	</ul>
+    </fieldset>
 </form>
 </div>

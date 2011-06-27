@@ -10,24 +10,7 @@ function get_kids_Name(center_id,pageno){
 	});
 }
 
-function deleteEntry(entryId,page_no)
-{
-	var bool = confirm("Are you sure you want to delete this?")
-	if(bool)
-	{
-		$.ajax({
-		type : "POST",
-		url  : "<?= site_url('kids/ajax_deleteStudent') ?>",
-		data : 'entry_id='+entryId,
-		
-		success : function(data)
-		{		
-			get_kidslist(page_no);
-		}
-		
-		});
-	}
-}
+
 </script>
 <div align="center"><?php if($this->session->userdata('success') ){ echo $this->session->userdata('success'); $this->session->unset_userdata('success');}?></div>
 
@@ -97,7 +80,10 @@ foreach($content as $row) {
     
     <td class="colActions right"> 
     <?php if($this->user_auth->get_permission('kids_edit')) { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox with-icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
-    <?php if($this->user_auth->get_permission('kids_delete')) { ?><a class="with-icon delete" href="javascript:deleteEntry('<?php echo $row['id']; ?>','0')">Delete</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_delete')) { ?>
+    
+    <a class="actionDelete icon delete confirm" href="<?php echo site_url('kids/ajax_deleteStudent/'.$row['id']); ?>">Delete</a>
+	<?php } ?>
     </td>
 </tr>
 

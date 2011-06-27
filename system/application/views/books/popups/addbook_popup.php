@@ -1,39 +1,34 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-<div style="float:left;"><h1>Add books</h1></div>
 <script>
-function insert_book(id)
+function validate()
 {
-var bookname=$('#bookname').val();
-if(bookname == '')
-{ alert("Enter Bookname");
- }else{
-$.ajax({
-		type: "POST",
-		url: "<?php echo site_url('books/addbook')?>",
-		data: "bookname="+bookname,
-		success: function(msg){
-			$('#message').html(msg);
-			window.parent.get_booklist(0,'');
-			
-		}
-		});
-}
+if(document.getElementById("bookname").value == '')
+          {		
+              alert("Bookname Missing.");
+			  document.getElementById('bookname').focus();
+              return false;
+          }
+
 }
 </script>
-<div id="message"></div>
-<div style="float:left; margin-top:20px;">
-<form id="formEditor" class="mainForm clear" action="" method="post" style="width:500px;" onsubmit="return false"  >
-<fieldset class="clear">
-            
-<div class="field clear" style="width:500px;"> 
-			<label for="txtName">BookName : </label>
-			<input id="bookname" name="bookname"  type="text" /> 
-			
-</div>
 
-<div class="field clear" style="width:550px;"> 
-		<input style="margin-left:50px; margin-top:30px;" id="btnSubmit" class="button primary" onclick="javascript:insert_book();" type="submit" value="Submit" />
-</div>
+<div style="float:left;"><h1>Add books</h1></div>
+<div style="float:left; margin-top:20px;">
+<form id="formEditor" class="mainForm clear" action="<?=site_url('books/addbook')?>" method="post" onsubmit="return validate();" >
+<fieldset class="clear">
+<ul class="form city-form">
+<li>
+<label for="txtName">BookName : </label>
+<input id="bookname" name="bookname"  type="text"  /> 
+</li>
+</ul>
+<ul>
+<li>
+<input  id="btnSubmit" class="button green" type="submit" value="Submit" />
+<a href="<?=site_url('books/manage_books')?>" class="cancel-button">Cancel</a>
+
+</li>
+</ul>
 </fieldset>
 </form>
 </div>

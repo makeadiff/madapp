@@ -1,23 +1,16 @@
-
 <div id="content" class="clear">
-
 <!-- Main Begins -->
 	<div id="main" class="clear">
     	<div id="head" class="clear">
         	<h1><?php echo $title; ?></h1>
-
             <!-- start page actions-->
         	<div id="actions"> 
-			<a href="<?php site_url('user_group/popupaddgroup')?>" class="thickbox button primary popup" name="Add New Group">Add New Group</a>
+			<a href="<?=site_url('user_group/popupaddgroup')?>" class="thickbox button primary popup" style="margin-bottom:10px;" name="Add New Group">Add New Group</a>
 			</div>
 			<!-- end page actions-->
-
 	    </div>
-
 		<div id="topOptions" class="clear">
-
 		</div>
-
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
@@ -30,7 +23,6 @@
 <tbody>
 
 <?php 
-//
 $norecord_flag = 1;
 $shadeFlag = 0;
 $shadeClass = ''; 
@@ -66,7 +58,6 @@ foreach($content as $row)
 <?php }?>
 </tbody>
 </table>
-
 <?php if($norecord_flag == 1) 
 { 
    echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";

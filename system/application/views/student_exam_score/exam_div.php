@@ -22,6 +22,9 @@ function mark_view_div(exam_id)
 }
 	
 </script> 
+<div id="actions"> 
+<a href="<?= site_url('exam/popupAddMark')?>" class="popup button primary" >Add Exam Mark</a>
+</div>
 <div id="content" class="clear">
 <div id="sub-chapter-header">
 <div id="subject-div" style="margin-left:5px;">

@@ -168,27 +168,13 @@ class Exam extends Controller  {
 	function exam_score()
 	{
 		$this->user_auth->check_permission('exam_marks_index');
-		$data['currentPage'] = 'db';
-		$data['navId'] = '4';
-		$this->load->view('dashboard/includes/header',$data);
-		$this->load->view('dashboard/includes/superadminNavigation',$data);
-		$this->load->view('student_exam_score/score_view');
-		$this->load->view('dashboard/includes/footer');
-		//$this->load->view('layout/footer'); 
-		//$this->load->view('layout/settings_footer'); 
-	
-	}
-	/**
-    * Function to get_examlist
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function get_examlist()
-	{
+		$data['title'] = 'Exam Marks';
+		$this->load->view('layout/header',$data);
 		$data['exam_details']=$this->exam_model->get_exam();
 		$this->load->view('student_exam_score/exam_div',$data);	
+		$this->load->view('layout/footer');
 	}
+	
 	/**
     * Function to ajax_getexam_details
     * @author : Rabeesh
@@ -222,7 +208,6 @@ class Exam extends Controller  {
 	function popupAddMark()
 		{
 		$this->user_auth->check_permission('exam_mark_add');
-		
 		$data['exam_details']=$this->exam_model->get_exam();
 		$this->load->view('student_exam_score/popups/popup_getexam',$data);
 		}
@@ -265,7 +250,9 @@ class Exam extends Controller  {
 				$returnFlag=$this->exam_model->store_marks($data);
 			}
 		}
-		$this->exam_score();
+		$this->session->set_flashdata('success', 'Marks Inserted Successfully !');
+		redirect('exam/popupAddMark');
+		
 		}
 		/**
     * Function to delete_exam

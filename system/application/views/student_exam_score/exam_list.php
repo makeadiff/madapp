@@ -5,7 +5,7 @@
         	<h1><?php echo $title; ?></h1>
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?=site_url('exam/add_exam')?>" class="popup button primary" id="example" name="Add New Exam">Add New Exam</a>
+<a href="<?=site_url('exam/add_exam')?>" class="popup button primary" style="margin-bottom:10px;" id="example" name="Add New Exam">Add New Exam</a>
 </div>
 	<!-- end page actions-->
 

@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<h2>Add Permission</h2>
 <script>
 function validate()
 {
@@ -10,7 +11,6 @@ if(document.getElementById("permission").value == '')
           }
 }
 </script>
-<div style="float:left;"><h1>Add Permission</h1></div>
 <div id="message"></div>
 <div style="float:left; margin-top:20px;">
 <form id="formEditor" class="mainForm clear" action="<?=site_url('permission/addpermission')?>" method="post" onsubmit="return validate();">

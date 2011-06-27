@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-
+ <h2>Add Project</h2>
 <form id="formEditor" class="mainForm clear" action="<?=site_url('project/addproject')?>" method="post"  onsubmit="return validate();" >
 <fieldset class="clear">
 

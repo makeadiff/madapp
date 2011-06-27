@@ -1,5 +1,6 @@
-<?php 
- $this->load->view('layout/thickbox_header'); 
+<?php $this->load->view('layout/thickbox_header'); ?>
+ <h2>Add/Edit City</h2>
+ <?php
 if(!isset($city)) $city = array('name'=>'','president_id'=>'', 'id'=>'');
 ?>
 

@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-<div style="float:left;"><h1>Edit Settings</h1></div>
+<h2>Edit Settings</h2>
 <div id="message" style="margin-left:-15px;"></div>
 <div style="float:left; margin-top:20px;">
 <script>

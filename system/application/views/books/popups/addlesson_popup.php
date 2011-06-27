@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<h2>Add Lessons</h2>
 <script>
 function validate()
 {
@@ -16,7 +17,6 @@ if(document.getElementById("lessonname").value == '')
           }
 }
 </script>
-<div style="float:left;"><h1>Add Lessons</h1></div>
 <div style="float:left; margin-top:20px;">
 <form id="formEditor" class="mainForm clear" action="<?=site_url('books/addlesson')?>" method="post" onsubmit="return validate();" >
 <fieldset class="clear">

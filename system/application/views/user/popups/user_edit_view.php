@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<h2>Edit User</h2>
 <?php 
 $user_details = $user->result_array();
 foreach($user_details as $row) {	

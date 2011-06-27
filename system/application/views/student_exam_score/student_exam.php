@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/css'); ?>
+ <h2>Add New Exam</h2>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <style>
 input[type=text], select, textarea{
@@ -109,7 +110,6 @@ function dataGrabber()
 		}
 }
 </script>
-<div style="float:left;"><h1>Add New Exam</h1></div>
 <div id="message"></div>
 <div style="float:left; margin-left:30px; margin-top:10px;">
  <div id="right-column">

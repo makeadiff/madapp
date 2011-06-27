@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<h2>Edit Group</h2>
 <script>
 function validate()
 {
@@ -27,7 +28,6 @@ foreach($group_permission as $roll) {
 	$i++;
 }
 ?> 
-<div style="float:left;"><h1>Edit Group</h1></div>
 <div id="message"></div>
 <div style="float:left; margin-top:20px;">
 	<form id="formEditor" class="mainForm clear" action=" <?=site_url('user_group/updategroup_name/'.$root_id)?>" method="post" onsubmit="return validate();" style="width:355px;">

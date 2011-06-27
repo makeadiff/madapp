@@ -7,7 +7,7 @@
 
 		<div id="actions">
 		<?php if($this->user_auth->get_permission('books_add')) { ?>
-		<a href="<?php echo site_url('books/popupaddbooks') ?>" class="popup button primary">Add Book</a>
+		<a href="<?php echo site_url('books/popupaddbooks') ?>" style="margin-bottom:10px;" class="popup button primary">Add Book</a>
 		<?php } ?>
 		</div>
 	</div>

@@ -706,13 +706,17 @@ class User extends Controller  {
 			$data['i']=$i;
 			$substitute_id=$row['substitute_id'];
 			$Name_of_Substitute=$this->users_model->get_name_of_Substitute($substitute_id);
+			if(sizeof($Name_of_Substitute) >0){
 			$Name_of_Substitute=$Name_of_Substitute->name;
+			 } else { $Name_of_Substitute ='No Name'; }
 			$credit = $credit - 1;
 			$data['class_on']= $row['class_on'];
 			$data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
 			$data['lost']="Lost 1 credits";
 			$data['credit'] = $credit;
+			
 			$this->load->view('user/user_credit', $data);
+			
 		}
 		else if($row['substitute_id'] == $current_user_id && $row['status'] == 'absent')
 		{

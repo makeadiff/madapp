@@ -1,35 +1,14 @@
-<div style="float:left;"><h1>Add Exam Mark</h1></div>
 <?php 
 $details = $details->result_array();
 if($details) { 
 ?>
+
 <div id="main" class="clear" >
-<div id="message"></div>
 <div id="content" class="clear">
 <!-- Main Begins -->
-	<div id="content" class="clear">
-<div id="sub-chapter-header">
-<div id="subject-div" style="margin-left:5px; margin-top:80px;">
-      <?php $exam_details = $exam_details->result_array(); ?>
-      <label>Select Exam : </label>
-      <select name="select_exam" id="select_exam" class="medium" onchange="javascript:mark_view_divs(this.value);">
-      <option value="-1" selected="selected">-- select exam --</option>
-      <?php foreach($exam_details as $row): ?>
-      	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-      <?php endforeach; ?>	
-      </select>
-     
-  </div>
-   <div style="float:left; margin-top:10px;margin-left:5px;">selected Exam:<span style="font-weight:bold;"><?=$exam_name?></span></div>
-  <div id="loading" name="loading" style="display:none;" align="center">
-    <img src="<?php echo base_url()?>images/ico/loading_1.gif" height="18" width="18" style="border: none;" /> 
-    <span style="color:#000;font-weight:bold;">loading...</span>
-  </div>
-  </div>
-  </div>
-<div >
 <form id="formEditor" class="mainForm clear" method="post" action="<?php echo site_url('exam/addMarks')?>"  style="width:500px;"  >
-<fieldset class="clear" style="margin-top:50px;width:300px">
+<fieldset class="clear" style="margin-top:10px;width:300px">
+
 <table cellpadding="0"  cellspacing="5" class="clear" id="tableItems">
 <thead>
 <tr id="generated_rows">
@@ -102,7 +81,7 @@ foreach($details as $row)
 <input type="hidden" value="<?php echo $id_count; ?>" id="stnt_count" name="stnt_count">
 <input type="hidden" value="<?php echo $exam_id; ?>" id="exam_id" name="exam_id">
 
-<input style="margin-left:70px; margin-top:10px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+<input id="btnSubmit" class="button green" type="submit" value="Submit" />
 </div>
 
 </div>
@@ -112,22 +91,14 @@ foreach($details as $row)
 </form>
 </fieldset>
 <?php } else { ?>
-<div style="margin-top:80px;">
+<div style="margin-top:10px;">
 <div id="main" class="clear" >
 <div id="content" class="clear">
 <div id="sub-chapter-header">
 <div id="subject-div" style="margin-left:5px;">
-      <?php $exam_details = $exam_details->result_array(); ?>
-      <label>Select Exam : </label>
-      <select name="select_exam" id="select_exam" class="medium" onchange="javascript:mark_view_divs(this.value);">
-      <option value="-1" selected="selected">-- select exam --</option>
-      <?php foreach($exam_details as $row): ?>
-      	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-      <?php endforeach; ?>	
-      </select>
+     
      
   </div>
-   <div style="float:left; margin-top:10px; margin-left:5px;">selected Exam:<span style="font-weight:bold;"><?=$exam_name?></span></div>
    
   <div id="loading" name="loading" style="display:none;" align="center">
     <img src="<?php echo base_url()?>images/ico/loading_1.gif" height="18" width="18" style="border: none;" /> 

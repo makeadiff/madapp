@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-<div style="float:left;"><h1>Edit Lessons</h1></div>
+<h2>Edit Lessons</h2>
 <?php $book_name=$book_name->result_array(); ?>
 <script>
 function validate()

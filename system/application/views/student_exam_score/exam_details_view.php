@@ -1,5 +1,7 @@
 <?php 
-$this->load->view('layout/css');
+$this->load->view('layout/css');?>
+<h2>Exam Details</h2>
+<?php
 $exam_name=$exam_name->result_array();
 foreach($exam_name as $row) {
 $exam_name=$row['name'];

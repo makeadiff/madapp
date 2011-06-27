@@ -1,14 +1,11 @@
 <div id="content" class="clear">
-
 <!-- Main Begins -->
 	<div id="main" class="clear">
    	  <div id="head" class="clear">
         	<h1><?php echo $title; ?></h1>
 
             <!-- start page actions-->
-        	<div id="actions"> 
-<a href="<?= site_url('exam/popupAddMark')?>" class="thickbox button primary popup" id="example" name="<strong>Add Mark</strong>">Add Exam Mark</a>
-</div>
+        	
 			<!-- end page actions-->
 
       </div>

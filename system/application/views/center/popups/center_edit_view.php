@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-
+<h2>Edit Center</h2>
 <?php
 $details=$details->result_array();
 foreach($details as $row) {

@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-
+<h2>Add Centers</h2>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
 <fieldset class="clear">
 <ul class="form city-form">

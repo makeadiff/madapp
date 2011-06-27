@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<h2>edit permission</h2>
 <script>
 function validate()
 {

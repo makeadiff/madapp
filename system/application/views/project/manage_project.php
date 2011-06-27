@@ -5,7 +5,7 @@
     	<div id="head" class="clear">
             <!-- start page actions-->
         	<div id="actions"> 
-			<a href="<?php echo site_url('project/popupaddproject')?>" class="thickbox button primary popup" id="example" name="Add Projects">Add Project</a>
+			<a href="<?php echo site_url('project/popupaddproject')?>" style="margin-bottom:10px;" class="thickbox button primary popup" id="example" name="Add Projects">Add Project</a>
 			</div>
 			<!-- end page actions-->
 

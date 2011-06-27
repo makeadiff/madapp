@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<h2>Edit Book</h2>
 <script>
 function validate()
 {
@@ -10,7 +11,6 @@ if(document.getElementById("bookname").value == '')
           }
 }
 </script>
-<div style="float:left;"><h1>Edit books</h1></div>
 <?php $book_name=$book_name->result_array(); ?>
 <div style="float:left; margin-top:20px;">
 <form id="formEditor" class="mainForm clear" action="<?=site_url('books/updatebook')?>" method="post" onsubmit="return validate();">

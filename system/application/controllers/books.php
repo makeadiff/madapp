@@ -39,7 +39,6 @@ class Books extends Controller
 	{
 		$data['title'] = 'Manage Books';
 		$this->load->view('layout/header',$data);
-		
 		$data['details']= $this->book_model->getbook_details(0);
 		$this->load->view('books/manage_books', $data);
 		$this->load->view('layout/footer');

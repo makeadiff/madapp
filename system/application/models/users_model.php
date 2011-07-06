@@ -455,7 +455,7 @@ class Users_model extends Model {
 	function search_users($data) {
 		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.joined_on,User.title,User.user_type, City.name as city_name');
 		$this->db->from('User');
-		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->join('City', 'City.id = User.city_id' ,'left');
 		
 		
 		if(!isset($data['status'])) $data['status'] = 1;
@@ -464,8 +464,8 @@ class Users_model extends Model {
 		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
 		else $this->db->where('User.project_id', $this->project_id);
 		
-		if(!empty($data['city_id']) and $data['city_id'] != 0) $this->db->where('User.city_id', $data['city_id']);
-		else if(empty($data['city_id'])) $this->db->where('User.city_id', $this->city_id);
+		if(isset($data['city_id']) and $data['city_id'] != 0) $this->db->where('User.city_id', $data['city_id']);
+		else if(!isset($data['city_id'])) $this->db->where('User.city_id', $this->city_id);
 		
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
@@ -478,6 +478,8 @@ class Users_model extends Model {
 		
 		
 		$all_users = $this->db->get()->result();
+		//echo $this->db->last_query();
+
 		$return = array();
 		foreach($all_users as $user) {
 			// Get the batches for this User. An user can have two batches. That's why I don't do join to get this date.

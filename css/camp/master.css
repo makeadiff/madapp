@@ -66,7 +66,7 @@ a:hover  { border-bottom:none; }
 .line    { max-width: 1040px; min-width:665px; padding:0 10px; overflow:hidden; margin:0 auto; }
 .head    { height: 110px; background: #0F071B url(../../images/camp/bg-sprite.png) 0 30px repeat-x; border-bottom:1px solid #DDD;  }
 .main    { width:623px; padding:10px; margin-top:10px; min-height:500px; float:left; background: url(../../images/camp/bg-trans.png); overflow:hidden; }
-.sidebar { width:355px; padding:10px; float:left;min-height:500px; margin-left:20px;overflow:hidden; }
+.sidebar { width:355px; padding:10px; float:left;min-height:500px; margin-left:20px;overflow-x:hidden; }
 .footer  { height: 110px; background:#0E051F; }
 
 h1 { font-size:19px; color:#BF98E0; text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5); float:left;  padding-top: 36px; text-transform:uppercase; font-weight:normal; width:290px; }
@@ -118,8 +118,8 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 
 
 .sidebar .button { min-width:220px; margin-right:20px;}
-.sidebar  iframe { overflow:hidden; }
-
+.sidebar  iframe { overflow-x:hidden; }
+.sidebar-form .form label { text-align:left; width:200px; }
 
 .form  { margin:20px 0px; padding-bottom:10px; overflow:hidden; border-bottom:1px solid #BBB; }
 .form li { float:left; margin-bottom:10px; width:100%; }
@@ -156,7 +156,6 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 .login-box .login-form input { padding:.5em;  }
 .login-box .login-form .button { float:right; }
 .login-box .login-form  a { float:left; margin-top:12px; }
-
 
 
 /******************* Removing unwanted elements *******************/

@@ -84,4 +84,16 @@ class Common extends Controller {
 			$this->load->view('user/register_view',$data);
 		}
     }
+
+	/// Handle the responses sent as the reply to the confirmation text here.
+	function sms_response() {
+		$data = print_r($_REQUEST, 1);
+		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($data)."' WHERE name='temp'");
+	}
+
+	function show() {
+		print "<pre>";
+		print $this->db->query("SELECT data FROM Setting WHERE name='temp'")->row()->data;
+		print "</pre>";
+	}
 }

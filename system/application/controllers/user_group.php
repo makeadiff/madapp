@@ -125,14 +125,13 @@
 	{
 		$this->user_auth->check_permission('user_group_edit');
 	
-		$data['rootId'] = $this->uri->segment(3);
-		$data['groupname']=$_REQUEST['groupname'];
+		$group_id = $this->uri->segment(3);
+		$group_name = $_REQUEST['groupname'];
 		$permission = $_REQUEST['permission'];
-		$permission = substr($permission,0,strlen($permission)-1);
-		$permission = explode(",",trim($permission));
-		$this->users_model->update_group($data);
 		
-		$returnFlag=$this->users_model->update_permission($data,$permission);
+		$this->users_model->update_group($group_id, $group_name);
+		
+		$returnFlag = $this->users_model->update_permission($group_id, $permission);
 		
 		if($returnFlag == true) 
 			  {

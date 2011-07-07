@@ -30,39 +30,38 @@ foreach($group_permission as $roll) {
 ?> 
 <div id="message"></div>
 <div style="float:left; margin-top:20px;">
-	<form id="formEditor" class="mainForm clear" action=" <?=site_url('user_group/updategroup_name/'.$root_id)?>" method="post" onsubmit="return validate();" style="width:355px;">
+	<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user_group/updategroup_name/'.$root_id)?>" method="post" onsubmit="return validate();" style="width:355px;">
 <fieldset class="clear">
 <ul class="form city-form">
 		<li>
-		<label for="txtName">Group Name : </label>
+		<label for="groupname">Group Name : </label>
 		<input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>"/> 	
         </li>
-       	<li>
-		<label for="txtName">Permissions :</label>
-			<?php 
-			$j=0;
-			foreach($permission as $row)
-			{ 
-			?>
-		</li>
-        <li>	
-		<label for="txtName"><?php echo $row['name']; ?></label>
+        
+       	<li><strong>Permissions :</strong></li>
+		<?php 
+		$j=0;
+		foreach($permission as $row) {
+		?>
+        <li><label for="permission_<?php echo $row['id']; ?>"><?php echo $row['name']; ?></label>
 		<?php 
 		$a=0;
 		for($j=0;$j<count($perm_id);$j++) {
-			if($perm_id[$j]==$row['id'])
-		{ $a=1;} }
+			if($perm_id[$j]==$row['id']) { 
+				$a=1;
+			}
+		}
 		?>
-		<input type="checkbox" value="<?php echo $row['id']; ?>" id="permission" name="permission[]" <?php if($a==1 ){ echo "checked"; }?>  />  
-           <?php } ?>
-           </li> 
-           </ul>
-           <ul>
-           <li>
-            <input id="btnSubmit"  class="button green" type="submit" value="Submit"  />
-          <a href="<?=site_url('user_group/manageadd_group')?>" class="cancel-button">Cancel</a>
-</li>
-</ul>
+		<input type="checkbox" value="<?php echo $row['id']; ?>" id="permission_<?php echo $row['id']; ?>" name="permission[]" <?php if($a==1 ){ echo "checked"; }?>  />  
+		</li>
+		<?php } ?>
+		</ul>
+		
+		<ul>
+		<li><input id="btnSubmit"  class="button green" type="submit" value="Submit"  />
+		<a href="<?=site_url('user_group/manageadd_group')?>" class="cancel-button">Cancel</a>
+		</li>
+		</ul>
     </fieldset>
     </form>		
 </div>

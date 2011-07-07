@@ -124,11 +124,10 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
-	function update_group($data)
+	function update_group($group_id, $group_name)
 	{
-		$rootId=$data['rootId'];
-		$data = array('name' => $data['groupname']);
-		$this->db->where('id', $rootId);
+		$data = array('name' => $group_name);
+		$this->db->where('id', $group_id);
 		$this->db->update('Group', $data);
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	}
@@ -138,16 +137,14 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
-	function update_permission($data,$permission)
+	function update_permission($group_id, $permission)
 	{
-		$rootId=$data['rootId'];
-		$group_id=$data['groupname'];
-		//$permission=$data['permission'];
-		$this->db->where('group_id',$rootId);
+		$this->db->where('group_id',$group_id);
 		$this->db->delete('GroupPermission');
-		$count=sizeof($permission);
+		
+		$count=count($permission);
 		for($j=0;$j<$count;$j++) {
-			$data = array('group_id'=> $rootId, 'permission_id'=>$permission[$j]);
+			$data = array('group_id'=> $group_id, 'permission_id'=>$permission[$j]);
 			$this->db->set($data);
 			$this->db->insert('GroupPermission');
 		}

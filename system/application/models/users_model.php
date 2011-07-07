@@ -244,7 +244,7 @@ class Users_model extends Model {
 			'name'		=>$data['name'],
 			'title'		=> $data['position'],
 			'email'		=> $data['email'],
-			'phone'		=> $data['phone'],
+			'phone'		=> $this->_correct_phone_number($data['phone']),
 			'password'	=> $data['password'],
 			'address'	=> $data['address'],
 			'city_id'	=> $data['city'],
@@ -371,7 +371,7 @@ class Users_model extends Model {
 		$user_array=array('name'=>$data['name'],
 				'title'=> $data['position'],
 				'email' => $data['email'],
-				'phone' => $data['phone'],
+				'phone' => $this->_correct_phone_number($data['phone']),
 				'address'=>$data['address'],
 				'city_id'=> $data['city'],
 				'project_id'=>$data['project'],
@@ -529,7 +529,6 @@ class Users_model extends Model {
 	function user_registration($data)
 	{
 		$email = $data['email'];
-       // $password = $data['password'];
         $this->db->select('email');
         $this->db->from('User');
         $this->db->where('email',$email);
@@ -538,7 +537,7 @@ class Users_model extends Model {
         if($result->num_rows() == 0) {
 			$userdetailsArray = array(	'name'		=> $data['firstname'],
 										'email'		=> $data['email'],
-										'phone'		=> $data['mobileno'],
+										'phone'		=> $this->_correct_phone_number($data['mobileno']),
 										'city_id'	=>$data['city'],
 										'user_type'	=>'applicant',
 										'status'	=> '1'
@@ -652,5 +651,14 @@ class Users_model extends Model {
 		return $result->row();
 	
 	}
+	
+	/// Changes the phone number format from +91976068565 to 9746068565. Remove the 91 at the starting.
+	private function _correct_phone_number($phone) {
+		if(strlen($phone) > 10) {
+			return preg_replace('/^\+?91\D?/', '', $phone);
+		}
+		return $phone;
+	}
+
 	
 }

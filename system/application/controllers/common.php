@@ -87,8 +87,33 @@ class Common extends Controller {
 
 	/// Handle the responses sent as the reply to the confirmation text here.
 	function sms_response() {
-		$data = print_r($_REQUEST, 1);
-		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($data)."' WHERE name='temp'");
+		$this->load->model('class_model');
+		$log = '';
+		
+		$phone = preg_replace('/^91/', '', $_REQUEST['msisdn']);
+		$time = $_REQUEST['timestamp'];
+		$keyword = strtolower($_REQUEST['keyword']);
+		$content = $_REQUEST['content'];
+		$log .= "From $phone at $time:";
+
+		$users = $this->user_model->search_user(array('phone'=>$phone));
+		if(!$users) {
+			$log .= "User Not Found!";
+			$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
+			log_message('error', $log);
+			return;
+		}
+		$user_id = reset($users)->id;
+		
+		$closest_unconfirmed_class = $this->class_model->get_closest_unconfirmed_class($user_id);
+		
+		print $closest_unconfirmed_class;
+		$this->class_model->confirm_class($user_id, $closest_unconfirmed_class);
+		
+		$log .= " User $user_id, Class $closest_unconfirmed_class";
+		log_message('info', $log);
+		
+ 		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
 	}
 
 	function show() {

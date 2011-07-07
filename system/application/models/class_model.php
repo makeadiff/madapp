@@ -227,6 +227,18 @@ class Class_model extends Model {
     	return $this->db->query($query)->result();
     }
     
+    /// Returns the closest unconfirmed class.
+    function get_closest_unconfirmed_class($user_id) {
+		$closest_unconfirmed_class = $this->db->query("SELECT Class.id FROM UserClass
+				INNER JOIN Class ON Class.id=UserClass.class_id
+				WHERE UserClass.user_id=$user_id
+					AND Class.class_on > NOW()
+					AND UserClass.status = 'projected'
+					ORDER BY Class.class_on LIMIT 0,1")->row()->id;
+		return $closest_unconfirmed_class;
+	}
+
+    
     function search_classes($data) {
     	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Level.id AS level_id,Level.name,UserClass.user_id,UserClass.substitute_id,UserClass.status
 			FROM Class

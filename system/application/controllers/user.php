@@ -589,7 +589,8 @@ class User extends Controller  {
 	
 	/// Importing the CSV file
 	function import() {
-		$this->load->view('user/import');
+		$this->user_auth->check_permission('user_add');
+		$this->load->view('user/import/import');
 	}
 	
 	function import_field_select() {
@@ -610,7 +611,7 @@ class User extends Controller  {
 			fclose($handle);
 			move_uploaded_file($_FILES['csv_file']['tmp_name'], $_FILES['csv_file']['tmp_name']."_saved");
 			
-			$this->load->view('user/import_field_select', array('all_rows'=>$rows));
+			$this->load->view('user/import/import_field_select', array('all_rows'=>$rows));
 		}
 	}
 	
@@ -645,7 +646,7 @@ class User extends Controller  {
 				$insert['city_id'] = $this->session->userdata('city_id');
 				$insert['project_id'] = $this->session->userdata('project_id');
 				$insert['user_type'] = 'volunteer';
-				$insert['password'] = 'network'; //Default Password.
+				$insert['password'] = 'pass'; //Default Password.
 				$insert['credit'] = 3;
 				$insert['joined_on'] = date('Y-m-d');
 				
@@ -663,9 +664,9 @@ class User extends Controller  {
 			unlink($this->input->post('uploaded_file'));
 			
 			if($message) {
-				$this->load->view('user/import_error',array('message'=>$message));
+				$this->load->view('user/import/import_error',array('message'=>$message));
 			} else {
-				$this->load->view('user/import_success');
+				$this->load->view('user/import/import_success');
 			}
 		}
 	}

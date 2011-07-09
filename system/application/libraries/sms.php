@@ -26,10 +26,7 @@ class sms {
 		// Comment the line below to disable Messageing
 		//$data = $this->load($url);
 	} 
-	
-	
-	
-	
+
 	
 	function getLink($url,$params=array(),$use_existing_arguments=false) {
 		if(!$params and !$use_existing_arguments) return $url;

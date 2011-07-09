@@ -156,7 +156,7 @@ class Center extends Controller  {
 			$this->session->set_flashdata('success', 'The Center has been updated successfully');
 			redirect('center/manage/'.$data['rootId']);		  
 		} else {
-			$this->session->set_flashdata('success', 'The Center updation failed !!');
+			$this->session->set_flashdata('error', 'The Center updation failed.');
 			redirect('center/manage/'.$data['rootId']);	  
 		}
 	

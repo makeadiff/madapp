@@ -88,14 +88,18 @@ class Common extends Controller {
 	/// Handle the responses sent as the reply to the confirmation text here.
 	function sms_response() {
 		$this->load->model('class_model');
+		$this->load->library('sms');
+		$this->load->helper('misc_helper');
+		
 		$log = '';
 		
-		$phone = preg_replace('/^91/', '', $_REQUEST['msisdn']);
+		$phone = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
 		$time = $_REQUEST['timestamp'];
 		$keyword = strtolower($_REQUEST['keyword']);
 		$content = $_REQUEST['content'];
 		$log .= "From $phone at $time:";
 
+		// Find the user with who sent the SMS - using the phone number.
 		$users = $this->user_model->search_user(array('phone'=>$phone));
 		if(!$users) {
 			$log .= "User Not Found!";
@@ -105,12 +109,19 @@ class Common extends Controller {
 		}
 		$user_id = reset($users)->id;
 		
+		// Find the unconfirmed class closest to today by the person who sent the text.
 		$closest_unconfirmed_class = $this->class_model->get_closest_unconfirmed_class($user_id);
 		
-		print $closest_unconfirmed_class;
-		$this->class_model->confirm_class($user_id, $closest_unconfirmed_class);
+		$this->class_model->confirm_class($user_id, $closest_unconfirmed_class); // ... and confirm it.
 		
-		$log .= " User $user_id, Class $closest_unconfirmed_class";
+		$log .= " User $user_id, Class $closest_unconfirmed_class. ";
+		
+		// Then sent a thank you sms to that user.
+		$name = short_name($this->user_model->get_user($user_id)->name);
+		$this->sms->send($phone, "Thank you for confirming your class. All the best, $name :-)");
+		
+		$log .= " Sent a thank you SMS to $name.";
+		
 		log_message('info', $log);
 		
  		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");

@@ -1,5 +1,3 @@
-
-
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends Controller  {
@@ -59,6 +57,7 @@ class Cron extends Controller  {
 		}
 	}
 	
+	/// Send SMSs to people who haven't confirmed their classes.
 	function send_unconfirmed_class_sms() {
 		$this->load->model('Center_model','center_model', TRUE);
 		$this->load->helper('misc_helper');
@@ -68,8 +67,20 @@ class Cron extends Controller  {
 		$people = $this->class_model->get_unconfirmed_classes(2);
 		
 		foreach($people as $person) {
-			$this->sms->send($person->phone, "{$person->name}, you have a class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', strtotime($person->class_on))
- 				. ". Please confirm the class.");
+			$name = short_name($person->name);
+			$class_timestamp = strtotime($person->class_on);
+			
+			// The class is 2 days away(at least, more than 1 day away).
+			if((time() - $class_timestamp) > 60 * 60 * 24) {
+				$this->sms->send($person->phone, "$name, you have a class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
+					. ". Reply 'confirm' to confirm this class. Visit http://makedaff.in/madapp/ to assign a substitute if you are unable to take the class.");
+			
+			// The class is happening tomorrow.
+			} else {
+				// :TODO: Send a SMS to the batch head saying that there was a person who did not confirm their class.
+				$this->sms->send($person->phone, "$name, this is the final call to confirm your attendance for the class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
+					. ". Reply 'confirm' to confirm this class. Visit http://makedaff.in/madapp/ to assign a substitute if you are unable to take the class.");
+			}
  			print "<br />";
 		}
 			

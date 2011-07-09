@@ -84,3 +84,8 @@ function colFormat($data) {
 	
 	return $return;
 }
+
+/// Returns just the first name of the person.
+function short_name($name) {
+	return reset(explode(' ', $name));
+}

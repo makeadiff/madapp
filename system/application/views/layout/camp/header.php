@@ -13,7 +13,19 @@
     <div class="head">
      <div class="line">	
        <div class="logo left"><a href="<?php echo site_url('dashboard/dashboard_view') ?>">MAD Camp</a></div>
-       <div class="welcome right"><a href="<?php echo site_url('auth/logout') ?>" class="tool" style="margin-left: 10px; float:right;">Logout</a>
+       <div class="welcome right">
+       <?php 
+		if($this->user_auth->get_permission('change_city')) {
+			$all_cities = idNameFormat($this->db->query("SELECT id, name FROM City ORDER BY name")->result());
+			echo form_open(site_url('dashboard/dashboard_view'));
+			echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id')); 
+			echo form_submit('action', "Change City"); 
+			echo form_close();
+		}
+		?>
+		
+       
+       <a href="<?php echo site_url('auth/logout') ?>" class="tool" style="margin-left: 10px; float:right;">Logout</a>
 	<?php echo $this->session->userdata('name');
 	$groups = $this->session->userdata('groups');
 	if($groups) print ' (' . implode(',', $groups) . ')';

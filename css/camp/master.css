@@ -74,6 +74,7 @@ h2 { font-size:18px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); text-trans
  
 .logo    { font-weight:bold; font-size:16px; color:#58656D; padding-top:5px; }
 .welcome { color:#473265; padding-top:5px;}
+.welcome form { display:inline;}
 
 .tools           { margin-top:28px;     width: 352px;}
 .tools a         { float:left; height:38px; width:40px; margin-left:30px; background: url(../../images/camp/icons-sprite.png); text-indent:-9999px; border:none; opacity:.4;}

@@ -199,18 +199,18 @@ class Class_model extends Model {
     	}
     }
     
-    // Returns all the unconfirmed classes for the next $days days. 
+    /// Returns all the unconfirmed classes for the next $days days. 
     function get_unconfirmed_classes($days) {
-    	return $this->db->query("SELECT Level.center_id, Class.class_on, User.name, User.phone
+    	return $this->db->query("SELECT Level.center_id, Class.class_on, User.name, User.phone, Class.batch_id
 				FROM UserClass 
 					INNER JOIN Class ON Class.id=UserClass.class_id
 					INNER JOIN `Level` ON Class.level_id=Level.id
 					INNER JOIN User ON UserClass.user_id=User.id
 				WHERE UserClass.status='projected' AND UserClass.substitute_id='0'
-					AND DATE(Class.class_on) = DATE_ADD(CURDATE(), INTERVAL $days DAY)")->result();
+					AND DATE(Class.class_on) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $days DAY)")->result();
 	}
     
-    // Return all the upcoming classes of the given user. Projected or confirmed.
+    /// Return all the upcoming classes of the given user. Projected or confirmed.
     function get_upcomming_classes($user_id = false) {
     	if(!$user_id) $user_id = $this->ci->session->userdata('id');
     	
@@ -227,7 +227,7 @@ class Class_model extends Model {
     	return $this->db->query($query)->result();
     }
     
-    /// Returns the closest unconfirmed class.
+    /// Returns the closest unconfirmed class. This is the class that get 'confirmed' when a user replies to a text we send.
     function get_closest_unconfirmed_class($user_id) {
 		$closest_unconfirmed_class = $this->db->query("SELECT Class.id FROM UserClass
 				INNER JOIN Class ON Class.id=UserClass.class_id

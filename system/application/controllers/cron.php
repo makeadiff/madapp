@@ -3,6 +3,7 @@
 class Cron extends Controller  {
     function Cron() {
         parent::Controller();
+        header("Content-type: text/plain");
         
         $this->load->model('Class_model','class_model', TRUE);
 	}
@@ -60,30 +61,40 @@ class Cron extends Controller  {
 	/// Send SMSs to people who haven't confirmed their classes.
 	function send_unconfirmed_class_sms() {
 		$this->load->model('Center_model','center_model', TRUE);
-		$this->load->helper('misc_helper');
+		$this->load->model('Batch_model','batch_model', TRUE);
 		$this->load->library('sms');
 		
 		$all_centers = idNameFormat($this->center_model->get_all_centers());
 		$people = $this->class_model->get_unconfirmed_classes(2);
 		
+		$unconfirmed_people = array();
+		
 		foreach($people as $person) {
 			$name = short_name($person->name);
 			$class_timestamp = strtotime($person->class_on);
-			
+
 			// The class is 2 days away(at least, more than 1 day away).
-			if((time() - $class_timestamp) > 60 * 60 * 24) {
-				$this->sms->send($person->phone, "$name, you have a class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
+			if(($class_timestamp - time()) > 60 * 60 * 24) {
+				$this->sms->send('91'.$person->phone, "$name, you have a class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
 					. ". Reply 'confirm' to confirm this class. Visit http://makedaff.in/madapp/ to assign a substitute if you are unable to take the class.");
 			
 			// The class is happening tomorrow.
 			} else {
-				// :TODO: Send a SMS to the batch head saying that there was a person who did not confirm their class.
-				$this->sms->send($person->phone, "$name, this is the final call to confirm your attendance for the class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
+				// Send a SMS to the batch head saying that there was a person who did not confirm their class. First, collect their names.
+				if(!isset($unconfirmed_people[$person->batch_id])) $unconfirmed_people[$person->batch_id] = array();
+				$unconfirmed_people[$person->batch_id][] = $name;
+				
+				$this->sms->send('91'.$person->phone, "$name, this is the final call to confirm your attendance for the class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
 					. ". Reply 'confirm' to confirm this class. Visit http://makedaff.in/madapp/ to assign a substitute if you are unable to take the class.");
 			}
- 			print "<br />";
 		}
-			
+		
+		// Send the batch head a list of people who didn't confirm for the class.
+		foreach($unconfirmed_people as $batch_id => $name_list) {
+			$batch_head = $this->batch_model->get_batch_head($batch_id);
+			$this->sms->send('91'.$batch_head->phone, short_name($batch_head->name) . ", the following people have not yet confirmed their class: " . implode(', ', $name_list)
+					. ". Please take the necessary steps to make sure that the classes happen.");
+		}
 	}
 }
 

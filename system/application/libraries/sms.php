@@ -21,7 +21,7 @@ class sms {
 		$url = str_replace('&amp;', '&', $this->getLink('http://enterprise.smsgupshup.com/GatewayAPI/rest?', 
 			$this->gupshup_param + array('msg'=>$message, 'send_to'=>$number)));
 		
-		print "Sending Text to $number: $message\n\n";
+		print "Sending Text to $number: $message\n";
 		
 		// Comment the line below to disable Messageing
 		//$data = $this->load($url);

@@ -55,6 +55,11 @@ class Batch_model extends Model {
     	$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 		return $day_list[$day] . ' ' . date('h:i A', strtotime('2011-01-01 '.$time));
     }
+    
+    /// Get the details about the batch head of a given batch.
+    function get_batch_head($batch_id) {
+		return $this->db->query("SELECT User.id, User.name, User.phone FROM User INNER JOIN Batch ON User.id=Batch.batch_head_id WHERE Batch.id=$batch_id")->row();
+    }
   	
   	function get_class_days($center_id) {
 		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} ORDER BY day")->result();

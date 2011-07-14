@@ -90,16 +90,20 @@ foreach($upcomming_classes as $class) { ?>
 	<?php } ?>
     <?php if($this->user_auth->get_permission('chapters_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('books/manage_chapters') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Chapters</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/chapters.png" alt="" /> <span>Chapters</span></a></div>
 	<?php } ?>
     <?php if($this->user_auth->get_permission('setting_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('settings/index') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Settings</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/settings.png" alt="" /> <span>Settings</span></a></div>
 	<?php } ?>
     	<br />
         <?php if($this->user_auth->get_permission('setting_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('user/credithistory') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/credit.jpg" alt="" /> <span>Credit History</span></a></div>
+	<?php } ?>
+     <?php if($this->user_auth->get_permission('setting_index')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('event/event') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/event.png" alt="" /> <span>Event</span></a></div>
 	<?php } ?>
     	
 </div>

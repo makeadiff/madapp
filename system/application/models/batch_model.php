@@ -88,6 +88,10 @@ class Batch_model extends Model {
     
     function edit($batch_id, $data) {
 		$this->db->where('id', $batch_id)->update('Batch',$data);
+		if($data['batch_head_id'] > 0) {
+			$this->load->model('users_model');
+			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
+		}
     }
     
     function delete($batch_id) {

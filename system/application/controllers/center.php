@@ -145,8 +145,8 @@ class Center extends Controller  {
 	{
 		$this->user_auth->check_permission('center_edit');
 		$data['rootId'] = $_REQUEST['rootId'];
-		$data['user_id']=$_REQUEST['user_id'];
-		$data['center']=$_REQUEST['center'];
+		$data['user_id']= $_REQUEST['user_id'];
+		$data['center']= $_REQUEST['center'];
 		$returnFlag= $this->center_model->update_center($data);
 		
 		if($returnFlag == true) {

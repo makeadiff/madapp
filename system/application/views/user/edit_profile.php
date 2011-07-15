@@ -1,31 +1,13 @@
 <?php $this->load->view('layout/header'); ?>
 
-<?php
-$user_details = $user->result_array();
-foreach($user_details as $row) {	
-	$root_id	= $row['id'];
-	$name		= $row['name'];
-	$title		= $row['title'];
-	$email		= $row['email'];
-	$phone		= $row['phone'];
-	$address	= $row['address'];
-	$center_id	= $row['center_id'];
-	$city_id	= $row['city_id'];
-	$project_id	= $row['project_id'];
-	$user_type	= $row['user_type'];
-	$photo=$row['photo'];
-}
-
-?>
-
-<form id="formEditor" class="mainForm clear form-area" action="<?=site_url('user/update_profile')?>" method="post" onsubmit="return validate();" enctype="multipart/form-data" >
+<form id="formEditor" class="mainForm clear form-area" action="<?php echo site_url('user/update_profile')?>" method="post" onsubmit="return validate();" enctype="multipart/form-data" >
 <fieldset class="clear">
 <?php echo $msg; ?>
 <label for="txtName">Name : </label>
-<input id="user_name" name="name"  type="text" value="<?php echo $name; ?>"/> <br />
+<input id="user_name" name="name"  type="text" value="<?php echo $user->name; ?>"/> <br />
 
 <label for="txtName">Email : </label>
-<input id="email" name="email"  type="text"  value="<?php echo $email; ?>"/><br /> 
+<input id="email" name="email"  type="text"  value="<?php echo $user->email; ?>"/><br /> 
 
 <label for="txtName">Password : </label>
 <input id="password" name="password"  type="password"   /> <br />
@@ -34,21 +16,23 @@ foreach($user_details as $row) {
 <input id="cpassword" name="cpassword"  type="password" /><br /> 
 
 <label for="txtName">Phone : </label>
-<input id="phone" name="phone"  type="text" value="<?php echo $phone; ?>"  /><br /> 
+<input id="phone" name="phone"  type="text" value="<?php echo $user->phone; ?>"  /><br /> 
 
 <label for="txtName">Address : </label>
-<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea><br />
+<textarea id="address" name="address"  rows="5" cols="30"><?php echo $user->address; ?></textarea><br />
 
+<?php if($user->photo) { ?>
 <label for="date">Photo</label>
-<img src="<?php echo base_url().'pictures/'.$photo; ?>" width="100" style="float:left;" height="100" /><br />
+<img src="<?php echo base_url().'pictures/'.$user->photo; ?>" width="100" style="float:left;" height="100" /><br />
+<?php } ?>
 
 <label for="date">Change photo</label>
 <input name="image"  id="image" type="file"><br />
 <p class="error clear"></p>
 
 <div class="field clear" style="width:550px;"> 
-		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input style="margin-left:250px;" id="btnSubmit" class="button primary" type="submit" value="Submit" />
+		<input type="hidden" value="<?php echo $user->id; ?>"  id="rootId" name="rootId" />
+		<input style="margin-left:250px;" id="btnSubmit" class="button green primary" type="submit" value="Submit" />
 </div>
 </fieldset>
 </form>

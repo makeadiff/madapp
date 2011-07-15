@@ -388,7 +388,6 @@ class User extends Controller  {
 		$uid = $this->session->userdata('id');
 		
 		$data['user']= $this->users_model->user_details($uid);
-		$content=$data['user']->result_array();
 
 		$this->load->view('user/edit_profile',$data);
 	}

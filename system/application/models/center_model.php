@@ -129,12 +129,19 @@ class Center_model extends Model
     **/
 	function update_center($data) {
 		$rootId=$data['rootId'];
-		$data = array('city_id' => $data['city'] ,
+		$data = array(
 				'name' => $data['center'] ,
-				'center_head_id' => $data ['user_id'],
+				'center_head_id' => $data['user_id'],
 				);
 		$this->db->where('id', $rootId);
+		
+		if($data['center_head_id'] > 0) {
+			$this->load->model('users_model');
+			$this->users_model->adduser_to_group($data['center_head_id'], array(7));// Add the center head to Center Head group.
+		}
+		
 		$this->db->update('Center', $data);
+		
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
 	

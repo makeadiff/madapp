@@ -120,7 +120,7 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 
 .sidebar .button { min-width:220px; margin-right:20px;}
 .sidebar  iframe { overflow-x:hidden; }
-.sidebar-form .form label { text-align:left; width:200px; }
+.sidebar-form .form label { text-align:left; width:100px; }
 
 .form  { margin:20px 0px; padding-bottom:10px; overflow:hidden; border-bottom:1px solid #BBB; }
 .form li { float:left; margin-bottom:10px; width:100%; }
@@ -152,7 +152,7 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 
 /******************** [Page Specific]*******************************/
 
-.login-box { width:500px; margin-top:150px; background: url("../images/bg-sprite.png") repeat-x scroll 0 0px; background-color:#DFE1E1; background-color:rgba(256,256,256,0.4); overflow:hidden; padding:0 270px 0 50px; float:right; }
+.login-box { width:500px; margin-top:150px; background: url("../../images/camp/bg-sprite.png") repeat-x scroll 0 0px; background-color:#DFE1E1; background-color:rgba(256,256,256,0.4); overflow:hidden; padding:0 270px 0 50px; float:right; }
 .login-box .login-form { float:left; padding-top:40px;  border:none; width:348px; }
 .login-box .login-form input { padding:.5em;  }
 .login-box .login-form .button { float:right; }
@@ -160,6 +160,18 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 
 #pg-classes-madsheet .main {
 	width:auto !important;
+}
+
+#pg-user-view_users #content {
+	overflow-x:auto;
+}
+
+#pg-classes-batch_view .cancelled a, #pg-classes-batch_view .cancelled select {
+	color:#666;
+	text-decoration:line-through;
+}
+#pg-classes-batch_view .cancelled .uncancel {
+	text-decoration:none;
 }
 
 

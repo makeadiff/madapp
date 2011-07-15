@@ -54,7 +54,7 @@ foreach($details as $row) {
 	<td class="colPosition"><?php echo $row->place; ?></td>
     <td class="colPosition"><?php echo $row->type; ?></td>
     <td class="colPosition"><?php echo $row->city_name; ?></td>
-    <td class="colPosition"><a href="<?=site_url('event/user_event')?>" class="thickbox  popup">manage</a></td>
+    <td class="colPosition"><a href="<?=site_url('event/user_event/'.$row->id)?>" class="thickbox  popup">manage</a> | <a href="<?=site_url('event/mark_attendence/'.$row->id)?>" class="thickbox  popup">attended</a></td>
     <td class="colActions right"> 
     <?php //if($this->user_auth->get_permission('event_edit')) { ?>
     <a href="<?php echo site_url('event/event_edit/'.$row->id)?>" class="thickbox with-icon edit popup" name="Edit Event: <?php echo  $row->name;?>">Edit</a>

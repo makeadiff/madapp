@@ -98,9 +98,10 @@ class Event_model extends Model{
    		* @param :[$data]
     	* @return: type: [ result Array()]
     	**/
-		function get_event_type()
+		function get_event_type($id)
 		{
-			return $event = $this->db->query("SELECT  *  FROM  event WHERE FIELD(type, 'process', 'curriculam', 'teacher')")->result();
+			//return $event = $this->db->query("SELECT  *  FROM  event WHERE FIELD(type, 'process', 'curriculam', 'teacher')")->result();
+			return $event = $this->db->query("SELECT  *  FROM  event WHERE id=$id")->result();
 
 		}
 		/**
@@ -111,11 +112,52 @@ class Event_model extends Model{
     	**/
 		function insert_user_event($data)
 		{
+			$user_id=$data['user_id'];
+			$event_id= $data['event_id'];
+			$this->db->where('user_id',$user_id );
+			$this->db->where('event_id',$event_id);
+        	$this->db->from('userevent');
+			$result = $this->db->get()->row();
+			if(count($result) == 0) {
 			$this->db->insert("userevent", array(
 			'user_id'	=> $data['user_id'],
 			'event_id'	=> $data['event_id'],
-			'present'=>0
+			'present'=>'1'
 			));
+			}
+		}
+		/**
+   		* Function to get_event_users
+    	* @author:Rabeesh 
+   		* @param :[$data]
+    	* @return: type: [ result Array()]
+    	**/
+		function get_event_users($id)
+		{
+			return $event = $this->db->query("
+			SELECT userevent.*,user.name as user_name,user.id as user_id FROM userevent INNER JOIN user ON userevent.user_id = user.id where event_id=$id
+			 ")->result();
+		}
+		/**
+   		* Function to update_user_status
+    	* @author:Rabeesh 
+   		* @param :[$data]
+    	* @return: type: [ result Array()]
+    	**/
+		function update_user_status($data)
+		{
+			$user_id=$data['user_id'];
+			$event_id=$data['event_id'];
+			$this->db->where('user_id', $user_id);
+			$this->db->where('event_id', $event_id);
+        	$this->db->from('userevent');
+       	    $result = $this->db->get()->row();
+			if(count($result) > 0 ){$present=$result->present;}
+			if($present == 1){$status=array('present'=>'0');}else{$status=array('present'=>'1');}
+				$this->db->where('user_id',$user_id );
+				$this->db->where('event_id',$event_id );
+				$this->db->update("userevent",$status);
+		
 		}
 
 }

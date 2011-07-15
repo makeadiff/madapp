@@ -98,10 +98,12 @@ class Event extends controller{
     **/
 	function user_event()
 	{
-		$data['events']= $this->event_model->get_event_type();
+		$id=$this->uri->segment(3);
+		$data['events']= $this->event_model->get_event_type($id);
 		$data['users']= $this->users_model->getuser_details();
 		$this->load->view('event/user_event',$data);
 	}
+	
 	/**
     *
     * Function to insert_userevent
@@ -112,6 +114,7 @@ class Event extends controller{
     **/
 	function insert_userevent()
 	{
+		
 		$data['event_id']=$_REQUEST['event'];
 		$users=$_REQUEST['users'];
 		for($i=0;$i< count($users);$i++)
@@ -184,6 +187,24 @@ class Event extends controller{
 			redirect('event/index');  
 		}
 	}
-
+	function mark_attendence()
+	{
+		$id=$this->uri->segment(3);
+		$data['events']= $this->event_model->get_event_type($id);
+		$data['attended_users']= $this->event_model->get_event_users($id);
+		$this->load->view('event/attended_users',$data);
+	}
+	function update_userstatus()
+	{
+		$data['event_id']=$this->uri->segment(3);
+		$data['user_id']=$this->uri->segment(4);
+		$flag= $this->event_model->update_user_status($data);
+	
+	}
+	function update_user_status()
+	{
+		$this->session->set_flashdata('success', 'Status Updated  Successfully.');
+		redirect('event/index');  
+	}	
 
 }

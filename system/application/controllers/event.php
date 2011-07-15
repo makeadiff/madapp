@@ -187,6 +187,14 @@ class Event extends controller{
 			redirect('event/index');  
 		}
 	}
+	/**
+    *
+    * Function to mark_attendence
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function mark_attendence()
 	{
 		$id=$this->uri->segment(3);
@@ -194,6 +202,14 @@ class Event extends controller{
 		$data['attended_users']= $this->event_model->get_event_users($id);
 		$this->load->view('event/attended_users',$data);
 	}
+	/**
+    *
+    * Function to update_userstatus
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function update_userstatus()
 	{
 		$data['event_id']=$this->uri->segment(3);
@@ -201,6 +217,14 @@ class Event extends controller{
 		$flag= $this->event_model->update_user_status($data);
 	
 	}
+	/**
+    *
+    * Function to update_user_status
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function update_user_status()
 	{
 		$this->session->set_flashdata('success', 'Status Updated  Successfully.');

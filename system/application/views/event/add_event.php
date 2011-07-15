@@ -16,18 +16,6 @@ jQuery(document).ready(function () {
 <div id="message"></div>
 <form  class="mainForm clear" id="formEditor"  action="<?php echo site_url('event/insert_event')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
 <ul class="form city-form">
-<li><label for="selBulkActions">Select City: </label> 
-<select id="city" name="city" > 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<?php
-	$center = $center->result_array();
-	foreach($center as $row) {
-	?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
-	<?php } ?>
-</select>
-</li>
-
 	<li><label for="txtName">Name: </label>
 	<input id="name" name="name"  type="text" /> 
 	</li>		

@@ -2,15 +2,10 @@
 
 <?php
 $details=$details->result_array();
-foreach($details as $row)
-{
-$root_id=$row['id'];
-$name=$row['name'];
+foreach($details as $row) {
+	$root_id=$row['id'];
+	$name=$row['name'];
 }
-?>
-
-
-<?php 
 $permission=$permission->result_array();
 
 $group_permission=$group_permission->result_array();
@@ -20,17 +15,17 @@ foreach($group_permission as $roll)
  	$perm_id[$i]=$roll['permission_id'];
 	$i++;
 	}
-?> 
+?>
 
-         <form id="formEditor" class="mainForm clear" action="<?php echo site_url('user_group/updategroup_name')?>" method="post">
+<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user_group/updategroup_name')?>" method="post">
 	<fieldset class="clear">
     
 		
         <div class="field clear"> 
-           <h1>Group Name : <?php echo $name; ?></h1>
+           <h2>Group Name : <?php echo $name; ?></h2>
     	</div>
 			<div  class="field clear"> 
-          <p style="clear:both; "><h2>Permissions :</h2>
+          <p style="clear:both; ">
 				<?php 
                 $j=0;
                 foreach($permission as $row)

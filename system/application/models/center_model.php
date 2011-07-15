@@ -227,7 +227,7 @@ class Center_model extends Model
 			$problem_flag++;
 		}
 		
-		if($kids_count < 30) {
+		if($kids_count < 12) {
 			$information[] = "Too few kids added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {

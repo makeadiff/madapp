@@ -108,8 +108,6 @@ Class User_auth {
 	function check_permission($permission_name) {
 		if($this->get_permission($permission_name)) return true;
 		
-		//print "<pre>";print_r($this->ci->session->userdata('permissions')); print_r($permission_name); print "</pre>";exit;
-		
 		redirect('auth/no_permission');
 	}
 	

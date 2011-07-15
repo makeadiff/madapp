@@ -12,7 +12,7 @@
 
 <div id="actions">
 <?php //if($this->user_auth->get_permission('event_add')) { ?>
-<a href="<?php echo site_url('event/addevent')?>" class="thickbox button primary popup" name="Add Event">Add Events</a>
+<a href="<?php echo site_url('event/addevent')?>" class="thickbox button green primary popup" name="Add Event">Add Events</a>
 <?php //} ?>
 </div><br class="clear" />
 

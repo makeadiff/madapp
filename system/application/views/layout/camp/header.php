@@ -12,7 +12,7 @@
     <!-- HEAD BEGINS -->
     <div class="head">
      <div class="line">	
-       <div class="logo left"><a href="<?php echo site_url('dashboard/dashboard_view') ?>">MAD Camp</a></div>
+       <div class="logo left"><a href="<?php echo site_url('dashboard/dashboard_view') ?>">MADAp&#946;</a></div>
        <div class="welcome right">
        <?php 
 		if($this->user_auth->get_permission('change_city')) {

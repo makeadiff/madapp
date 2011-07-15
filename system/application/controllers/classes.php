@@ -38,11 +38,17 @@ class Classes extends Controller {
 		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model));
 	}
 	
-	function batch_view($batch_id, $from_date='', $to_date='') {
+	
+	/// This is the batch head view. Sees the entire options of a batch at once.
+	function batch_view($batch_id=0, $from_date='', $to_date='') {
 		$this->user_auth->check_permission('classes_batch_view');
 		$this->load->helper('form');
 		
 		if(!$batch_id) $batch_id = $this->user_model->get_users_batch($this->user_details->id);
+		if(!$batch_id) {
+			$this->session->set_flashdata('error', "You don't have a default batch.");
+			redirect('centers/');
+		}
 		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->class_model->get_last_class_in_batch($batch_id)->class_on));
 		
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => false));
@@ -148,7 +154,21 @@ class Classes extends Controller {
 		redirect('classes/mark_attendence/'.$class_id);
 	}
 	
-	// MADSheet in User mode.
+	/// Cancel a class - the id must be given as the argument. If the batch_id argument is provided, goes batch to that batch's view.
+	function cancel_class($class_id, $batch_id=0) {
+		$this->class_model->cancel_class($class_id);
+		$this->session->set_flashdata('success', 'Class has been cancelled');
+		redirect('classes/batch_view/'.$batch_view);
+	}
+	
+	/// Un-Cancel a class - If the user cancels a class by accident, do this.The id must be given as the argument.
+	function uncancel_class($class_id, $batch_id=0) {
+		$this->class_model->uncancel_class($class_id);
+		$this->session->set_flashdata('success', 'Class cancellation reverted.');
+		redirect('classes/batch_view/'.$batch_view);
+	}
+	
+	/// MADSheet in User mode.
 	function madsheet() {
 		$this->user_auth->check_permission('classes_madsheet');
 		

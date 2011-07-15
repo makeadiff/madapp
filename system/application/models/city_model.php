@@ -89,7 +89,7 @@ class City_model extends Model {
     }
     
     
-	function get_city() {
-		return $this->db->get('City');
+	function get_all() {
+		return $this->db->order_by('name')->get('City')->result();
 	}
 }

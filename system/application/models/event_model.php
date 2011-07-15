@@ -29,9 +29,7 @@ class Event_model extends Model{
     	**/
 		function getevent_list()
 		{
-			return $event = $this->db->query("
-			SELECT event.*,city.name as city_name FROM event INNER JOIN city ON event.city_id = city.id order by event.id desc
-			 ")->result();
+			return $event = $this->db->query("SELECT Event.*,City.name as city_name FROM Event INNER JOIN City ON Event.city_id = City.id order by Event.id desc")->result();
 		}
 		/**
    		* Function to add_event
@@ -41,16 +39,15 @@ class Event_model extends Model{
     	**/
 		function add_event($data)
 		{
-			$this->db->insert("event", array(
-			'name'	=> $data['name'],
-			'starts_on'	=> $data['startdate'],
-			'ends_on'=>$data['enddate'],
-			'place'=>$data['place'],
-			'type'=>$data['type'],
-			'city_id'=>$data['city']
+			$this->db->insert("Event", array(
+				'name'	=> $data['name'],
+				'starts_on'	=> $data['startdate'],
+				'ends_on'=>$data['enddate'],
+				'place'=>$data['place'],
+				'type'=>$data['type'],
+				'city_id'=>$this->city_id
 			));
 			return ($this->db->affected_rows() > 0) ? true : false;
-		
 		}
 		/**
    		* Function to delete_event
@@ -60,7 +57,7 @@ class Event_model extends Model{
     	**/
 		function delete_event($data)
 		{
-			$this->db->delete('event', array('id'=>$data['id']));
+			$this->db->delete('Event', array('id'=>$data['id']));
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}
 		/**
@@ -71,7 +68,7 @@ class Event_model extends Model{
     	**/
 		function getevent($id)
 		{
-		return $this->db->where('id', $id)->get('event')->result();
+		return $this->db->where('id', $id)->get('Event')->result();
 		}
 		/**
    		* Function to update_event
@@ -82,13 +79,12 @@ class Event_model extends Model{
 		function update_event($data)
 		{
 			$this->db->where('id',$data['root_id'] );
-			$this->db->update("event", array(
-			'name'	=> $data['name'],
-			'starts_on'	=> $data['startdate'],
-			'ends_on'=>$data['enddate'],
-			'place'=>$data['place'],
-			'type'=>$data['type'],
-			'city_id'=>$data['city']
+			$this->db->update("Event", array(
+				'name'	=> $data['name'],
+				'starts_on'	=> $data['startdate'],
+				'ends_on'=>$data['enddate'],
+				'place'=>$data['place'],
+				'type'=>$data['type']
 			));
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}
@@ -100,9 +96,7 @@ class Event_model extends Model{
     	**/
 		function get_event_type($id)
 		{
-			//return $event = $this->db->query("SELECT  *  FROM  event WHERE FIELD(type, 'process', 'curriculam', 'teacher')")->result();
-			return $event = $this->db->query("SELECT  *  FROM  event WHERE id=$id")->result();
-
+			return $event = $this->db->query("SELECT * FROM Event WHERE id=$id")->result();
 		}
 		/**
    		* Function to insert_user_event
@@ -116,13 +110,13 @@ class Event_model extends Model{
 			$event_id= $data['event_id'];
 			$this->db->where('user_id',$user_id );
 			$this->db->where('event_id',$event_id);
-        	$this->db->from('userevent');
+        	$this->db->from('UserEvent');
 			$result = $this->db->get()->row();
 			if(count($result) == 0) {
-			$this->db->insert("userevent", array(
+			$this->db->insert("UserEvent", array(
 			'user_id'	=> $data['user_id'],
 			'event_id'	=> $data['event_id'],
-			'present'=>'1'
+			'present'	=> '1'
 			));
 			}
 		}
@@ -134,9 +128,7 @@ class Event_model extends Model{
     	**/
 		function get_event_users($id)
 		{
-			return $event = $this->db->query("
-			SELECT userevent.*,user.name as user_name,user.id as user_id FROM userevent INNER JOIN user ON userevent.user_id = user.id where event_id=$id
-			 ")->result();
+			return $event = $this->db->query("SELECT UserEvent.*,User.name as user_name,User.id as user_id FROM UserEvent INNER JOIN User ON UserEvent.user_id = User.id WHERE event_id=$id")->result();
 		}
 		/**
    		* Function to update_user_status
@@ -150,14 +142,17 @@ class Event_model extends Model{
 			$event_id=$data['event_id'];
 			$this->db->where('user_id', $user_id);
 			$this->db->where('event_id', $event_id);
-        	$this->db->from('userevent');
+        	$this->db->from('UserEvent');
        	    $result = $this->db->get()->row();
 			if(count($result) > 0 ){$present=$result->present;}
-			if($present == 1){$status=array('present'=>'0');}else{$status=array('present'=>'1');}
-				$this->db->where('user_id',$user_id );
-				$this->db->where('event_id',$event_id );
-				$this->db->update("userevent",$status);
-		
+			if($present == 1){
+				$status = array('present'=>'0');
+			} else {
+				$status=array('present'=>'1');
+			}
+			$this->db->where('user_id',$user_id );
+			$this->db->where('event_id',$event_id );
+			$this->db->update("UserEvent",$status);
 		}
 
 }

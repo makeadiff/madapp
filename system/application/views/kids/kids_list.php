@@ -9,8 +9,6 @@ function get_kids_Name(center_id,pageno){
 		}
 	});
 }
-
-
 </script>
 <div align="center"><?php if($this->session->userdata('success') ){ echo $this->session->userdata('success'); $this->session->unset_userdata('success');}?></div>
 
@@ -34,6 +32,7 @@ function get_kids_Name(center_id,pageno){
 <?php } ?>
 </div><br class="clear" />
 
+<?php if($this->user_auth->get_permission('center_edit')) { ?>
 <div id="train-nav">
 <ul>
 <li id="train-prev"><a href="<?php echo site_url('user/view_users')?>">&lt; Manage Volunteers</a></li>
@@ -45,9 +44,12 @@ function get_kids_Name(center_id,pageno){
 <?php } ?>
 </ul>
 </div>
+<?php } ?>
 </div><br />
 
 <div id="kids_list">
+<a class="add with-icon" href="<?php echo site_url('kids/import'); ?>">Import Kids</a>
+
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
@@ -79,11 +81,8 @@ foreach($content as $row) {
 	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'pictures/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
     
     <td class="colActions right"> 
-    <?php if($this->user_auth->get_permission('kids_edit')) { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox with-icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
-    <?php if($this->user_auth->get_permission('kids_delete')) { ?>
-    
-    <a class="actionDelete icon delete confirm" href="<?php echo site_url('kids/ajax_deleteStudent/'.$row['id']); ?>">Delete</a>
-	<?php } ?>
+    <?php if($this->user_auth->get_permission('kids_edit')) { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_delete')) { ?><a class="actionDelete icon delete confirm" href="<?php echo site_url('kids/ajax_deleteStudent/'.$row['id']); ?>">Delete</a><?php } ?>
     </td>
 </tr>
 
@@ -96,7 +95,5 @@ foreach($content as $row) {
 } ?>
 
 </div>
-<br /><br />
-<a class="add with-icon" href="<?php echo site_url('kids/import'); ?>">Import Kids</a>
 
 </div>

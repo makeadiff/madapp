@@ -73,6 +73,10 @@ class Users_model extends Model {
 		$result=$this->db->get();
 		return $result;
 	}
+	function get_all_groups() {
+		return $this->db->from('Group')->get()->result();
+	}
+	
 	/**
     * Function to add_group_name
     * @author:Rabeesh 
@@ -90,7 +94,7 @@ class Users_model extends Model {
     * Function to add_group_permission
     * @author:Rabeesh 
     * @param :[$data]
-    * @return: type: [Boolean,]
+	* @return: type: [Boolean,]
     **/
 	function add_group_permission($permission,$group_id)
 	{
@@ -167,8 +171,17 @@ class Users_model extends Model {
 		$this->db->delete('GroupPermission');
 			
 		return ($this->db->affected_rows() > 0) ? true: false ;
-	
 	}
+	
+	/// Returns the groups the current user belongs to...
+	function get_user_groups_of_user($user_id, $data='name') {
+		$groups = $this->db->query("SELECT Group.$data AS data FROM `Group` INNER JOIN UserGroup ON Group.id=UserGroup.group_id WHERE UserGroup.user_id=$user_id")->result();
+		$all_groups = array();
+		foreach($groups as $g) $all_groups[] = $g->data;
+		
+		return $all_groups;
+	}
+	
 	/**
     * Function to users_count
     * @author:Rabeesh 
@@ -187,15 +200,13 @@ class Users_model extends Model {
     **/
 	function getuser_details($where=array())
 	{
-		$this->db->select('User.*,Center.name as center_name,City.name as city_name');
+		$this->db->select('User.*,City.name as city_name');
 		$this->db->from('User');
 		$this->db->where('User.project_id',$this->project_id)->where('User.status','1');
 		if($where) {
 			if($where['city_id']) $this->db->where('User.city_id', $where['city_id']);
 		}
-		$this->db->join('Center', 'User.center_id = Center.id' ,'left');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
-		
 		
 		$result = $this->db->get();
 		
@@ -215,7 +226,7 @@ class Users_model extends Model {
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		$this->db->where('User.project_id',$this->project_id)->where('User.status','1');
-		$result=$this->db->get();
+		$result = $this->db->get();
 		return $result;
 	
 	}
@@ -332,11 +343,12 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, ]
     **/
-	function adduser_to_group($data)
+	function adduser_to_group($user_id, $group_ids)
 	{
-		$user_array=array('user_id'=>$data['id'],
-					'group_id'=> $data['group']);
-		$this->db->insert('UserGroup',$user_array);
+		foreach($group_ids as $group_id) {
+			$user_array=array('user_id'=>$user_id, 'group_id'=> $group_id);
+			$this->db->insert('UserGroup',$user_array);
+		}
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;		
 	}
 	/**
@@ -347,13 +359,12 @@ class Users_model extends Model {
     **/
 	function user_details($uid)
 	{
-		$this->db->select('User.*,UserGroup.group_id');
 		$this->db->from('User');
-		$this->db->join('UserGroup', 'UserGroup.user_id = User.id' ,'left');
 		$this->db->where('User.id',$uid)->where('User.status','1');
-		//$this->db->where('User.project_id',$this->project_id);
-		$result=$this->db->get();
-		//print_r($result);
+		
+		$result = $this->db->get()->row();
+		$result->groups = $this->get_user_groups_of_user($uid, 'id');
+		
 		return $result;
 	}
 	
@@ -482,6 +493,9 @@ class Users_model extends Model {
 			// Get the batches for this User. An user can have two batches. That's why I don't do join to get this date.
 			//$user->batches = colFormat($this->db->where('user_id',$user->id)->get('UserBatch')->result_array()); // :SLOW:
 			
+			// Gets the UserGroup of the users...
+			if(!empty($data['get_user_groups'])) $user->groups = $this->get_user_groups_of_user($user->id);
+			
 			$return[$user->id] = $user;
 		}
 		return $return;
@@ -496,9 +510,10 @@ class Users_model extends Model {
 			WHERE UserGroup.user_id=$user_id")->result();
 		
 		if(!count($permissions)) { // If he has no group, he is volunteer group.
+			$default_group = 9; //:HARD-CODE: 9 is the teacher group.
 			$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission 
-			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id  
-			WHERE GroupPermission.group_id=4")->result(); // 4 is the volunteer group.
+				INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id  
+				WHERE GroupPermission.group_id=$default_group")->result();
 		}
 		
 		$all_permissions = array();

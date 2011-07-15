@@ -39,6 +39,18 @@ class User extends Controller  {
     {
         
     }
+    
+    /// View all the important details about the user in one convinent location.
+    function view($user_id) {
+		$this->user_auth->check_permission('user_view');
+		$data['all_cities']= idNameFormat($this->city_model->get_all());
+		$data['all_cities'][0] = 'None';
+		$data['user'] = $this->users_model->user_details($user_id);
+	
+		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
+		
+		$this->load->view('user/view',$data);
+    }
 
 	/**
     * Function to get_userlist
@@ -66,12 +78,11 @@ class User extends Controller  {
 	function popupAdduser()
 	{
 		$this->user_auth->check_permission('user_add');
-		$data['center']= $this->center_model->getcenter();
-		$data['details']= $this->center_model->getcity();
-		$data['project']= $this->project_model->getproject();
+		$data['all_cities']= idNameFormat($this->city_model->get_all());
+		$data['all_cities'][0] = 'None';
 		$data['user_group']= $this->users_model->getgroup_details();
-		//$this->load->view('user/popups/user_edit_view',$data);
-		//$this->load->view('user/popups/user_edit_view',$data);	
+		$data['this_city_id'] = $this->session->userdata('city_id');
+		$data['this_project_id'] = $this->session->userdata('project_id');
 		
 		$this->load->view('user/popups/add_user',$data);
 	}
@@ -119,25 +130,16 @@ class User extends Controller  {
         }
 		if($data['id'] !='')
 		{
-			$returnFlag= $this->users_model->adduser_to_group($data);
-			if($returnFlag)
-			{
-			$this->session->set_flashdata('success', 'User Inserted successfully');
-			redirect('user/view_users');
+			$returnFlag= $this->users_model->adduser_to_group($data['id'], $data['group']);
+			if($returnFlag) {
+				$this->session->set_flashdata('success', 'User Inserted successfully');
+			} else {
+				$this->session->set_flashdata('error', 'User Insertion failed!!');
 			}
-			else
-			{
-			
-			$this->session->set_flashdata('success', 'User Insertion failed!!');
-			redirect('user/view_users');
-			}
+		} else  {
+			$this->session->set_flashdata('error', "The User can't be added because email '".$data['email']."' is already taken");
 		}
-		else	
-		{
-		//$this->session->set_flashdata('success', 'User Insertion failed!!');
-		$this->session->set_flashdata('success', "The User can't be added because mailid '".$data['email']."' is already taken");
 		redirect('user/view_users');
-		}
 	}
 	/**
     * Function to popupEditusers
@@ -145,23 +147,17 @@ class User extends Controller  {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function popupEditusers()
+	function popupEditusers($user_id)
 	{	
 		$this->user_auth->check_permission('user_edit');
-		$uid = $this->uri->segment(3);
-		$data['center']= $this->center_model->getcenter();
-		$data['details']= $this->center_model->getcity();
-		$data['project']= $this->project_model->getproject();
-		$data['user']= $this->users_model->user_details($uid);
-		$content=$data['user']->result_array();
-		//print_r($content);
-		foreach($content as $row) 
-		{
-			$uid=$row['group_id'];
-		}
+		$data['all_cities']= idNameFormat($this->city_model->get_all());
+		$data['all_cities'][0] = 'None';
+		$data['user'] = $this->users_model->user_details($user_id);
+	
+		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
+		$data['this_city_id'] = $this->session->userdata('city_id');
+		$data['this_project_id'] = $this->session->userdata('project_id');
 		
-		$data['group_name'] = $this->users_model->edit_group($uid);
-		$data['group_details'] = $this->users_model->getgroup_details();
 		$this->load->view('user/popups/user_edit_view',$data);
 	}
 	/**
@@ -178,7 +174,6 @@ class User extends Controller  {
 		$data['group'] = array();
 		if(!empty($_REQUEST['group'])) $data['group'] = $_POST['group'];
 		$data['email'] = $_POST['emails'];
-		$data['position'] = $_POST['position'];
 		
 		if($_POST['spassword']) {
 			$data['password'] = $_POST['spassword'];
@@ -211,18 +206,10 @@ class User extends Controller  {
         }
 		
 		
-		if($flag || $returnFlag ) 
-		{
-			
-			$this->session->set_flashdata('success', 'User Updated successfully');
-			redirect('user/view_users');
-			
-		} else {
-			
-			$this->session->set_flashdata('success', 'User Updation failed');
-			redirect('user/view_users');
-			
-		}
+		if($flag || $returnFlag ) $this->session->set_flashdata('success', 'User Updated successfully');
+		else $this->session->set_flashdata('error', 'User Updation failed');
+
+		redirect('user/view_users');
 	}
 	
 	function delete($user_id) {	
@@ -233,134 +220,28 @@ class User extends Controller  {
 		redirect('user/view_users');
 	}
 	
-	/**
-    * Function to view_users
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
+	/// The User index is handled by this action
 	function view_users()
 	{
 		$this->user_auth->check_permission('user_index');
 		$data['title'] = 'Manage Volunteers';
-		$data['all_cities'] = $this->city_model->get_city();
+		$data['all_cities'] = $this->city_model->get_all();
 		$data['city_id'] = $this->session->userdata('city_id');
 		if($this->input->post('city_id') !== false) $data['city_id'] = $this->input->post('city_id');
 		
-		$data['all_user_group'] = $this->users_model->getgroup_details();
+		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
 		if($this->input->post('user_group') !== false) $data['user_group'] = $this->input->post('user_group');
 		else $data['user_group'] = array();
 		
 		$data['name'] = '';
 		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
+		$data['get_user_groups'] = true;
 		
 		$data['all_users'] = $this->users_model->search_users($data);
 		
 		$this->load->view('user/view_users', $data);
 	}
-	
-	/**
-    * Function to user_search
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function user_search()
-	{
-		$this->user_auth->check_permission('user_index');
-		$data['city']=$_REQUEST['city'];
-		$data['name']=$_REQUEST['name'];
-		$group = $_REQUEST['group'];
-		$data['title'] = 'Users View';
-		
-		//search by any city with group only
-		if($data['city'] == 0 && $group !='' && $data['name']=='' )
-		{
-			$agents = substr($group,0,strlen($group)-1);
-			$explode_agent = explode(",",trim($agents));
-			for($i=0;$i<sizeof($explode_agent);$i++)
-			{
-		 		$data['group']=$explode_agent[$i];
-		 		$data['details']= $this->users_model->searchuser_by_anycity($data);
-				$flag=$data['details']->result_array();
-				if($flag )
-				{
-				$this->load->view('user/update_search_view_list',$data);
-				}
-			}
-		}
-		//search by any city with group and name.
-		else if($data['city'] == 0 && $group !='' && $data['name'] !='' )
-		{
-		
-			$agents = substr($group,0,strlen($group)-1);
-			$explode_agent = explode(",",trim($agents));
-			for($i=0;$i<sizeof($explode_agent);$i++)
-			{
-		 		$data['group']=$explode_agent[$i];
-		 		$data['details']= $this->users_model->searchuser_by_anycity_grp_name($data);
-				$flag=$data['details']->result_array();
-				if($flag )
-				{
-				$this->load->view('user/update_search_view_list',$data);
-				}
-			}
-		
-		}
-		//search by city only.
-		else if($data['city'] !='' && $data['name']=='' && $group=='')
-		{
-			$data['details']= $this->users_model->search_by_city($data);
-			$this->load->view('user/update_search_view_list',$data);
-		}
-		//search by city with group and name.
-		else if($data['city'] !='' && $data['name'] !='' && $group !='')
-		{
-			$agents = substr($group,0,strlen($group)-1);
-			$explode_agent = explode(",",trim($agents));
-			for($i=0;$i<sizeof($explode_agent);$i++)
-			{
-				$data['group']=$explode_agent[$i];
-				$data['details']= $this->users_model->searchuser_details($data);
-				$flag=$data['details']->result_array();
-				if($flag )
-				{
-				$this->load->view('user/update_search_view_list',$data);
-				}
-				
-			}
-		}
-		//search by city and group.
-		else if($data['city'] !='' && $data['name'] =='' && $group !='')
-		{
-			$agents = substr($group,0,strlen($group)-1);
-			$explode_agent = explode(",",trim($agents));
-			for($i=0;$i<sizeof($explode_agent);$i++)
-			{
-				$data['group']=$explode_agent[$i];
-				$data['details']= $this->users_model->searchuser_details_by_grp_city($data);
-				$flag=$data['details']->result_array();
-				if($flag )
-				{
-				$this->load->view('user/update_search_view_list',$data);
-				}
-				
-			}
-		
-		
-		}
-		//search by city and name.
-		 else if($data['city'] !='' && $data['name'] !='' && $group =='')
-		 {
-			$data['details']= $this->users_model->search_by_city_name($data);
-			$this->load->view('user/update_search_view_list',$data);
-		}
-		else
-		{
-			echo "No result fount";
-		}
-	}
-	
+
 	
 	/**
     * Function to csv_export
@@ -504,24 +385,14 @@ class User extends Controller  {
 	function edit_profile()
 	{	
 		$data['msg']='';
-		//$this->user_auth->check_permission('user_edit');
 		$uid = $this->session->userdata('id');
-		$data['center']= $this->center_model->getcenter();
-		$data['details']= $this->center_model->getcity();
-		$data['project']= $this->project_model->getproject();
+		
 		$data['user']= $this->users_model->user_details($uid);
 		$content=$data['user']->result_array();
-		
-		foreach($content as $row) {
-			$uid = $row['group_id'];
-		}
-		
-		$data['group_name'] = $this->users_model->edit_group($uid);
-		$data['group_details'] = $this->users_model->getgroup_details();
-		$this->load->view('layout/header');
+
 		$this->load->view('user/edit_profile',$data);
-	
 	}
+	
 	/**
     * Function to update_profile
     * @author:Rabeesh 
@@ -657,6 +528,10 @@ class User extends Controller  {
 						$message[] = "'$insert[name]' can't be imported - the email '$insert[email]' is already in the database";
 					} else {
 						$this->db->insert('User', $insert);
+						
+						// Add volunteer to the default user group...
+						$default_group = 9; // :HARD-CODE: 9 being the default group
+						$this->users_model->adduser_to_group($this->db->insert_id(), array($default_group)); 
 					}
 				}
 			}

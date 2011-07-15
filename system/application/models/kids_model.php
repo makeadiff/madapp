@@ -69,15 +69,15 @@ class Kids_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean]
     **/
-	function delete_kids($data) {
-		 $id = $data['entry_id'];
+	function delete_kids($id) {
 		 $this->db->where('id',$id);
 		 $this->db->delete('Student');
+		 $affected = $this->db->affected_rows();
 		 
 		 $this->db->where('student_id',$id);
 		 $this->db->delete('StudentLevel');
 		 
-		 return ($this->db->affected_rows() > 0) ? true: false;
+		 return ($affected) ? true: false;
 	}
 	/**
     * Function to get_kids_details

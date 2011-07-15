@@ -242,16 +242,15 @@ class Kids extends Controller  {
     * @return : type : []
     *
     **/
-	function ajax_deleteStudent()
+	function ajax_deleteStudent($kid_id)
 	{	
 		$this->user_auth->check_permission('kids_delete');
 		
 		//$data['entry_id'] = $_REQUEST['entry_id'];
-		$data['entry_id'] = $this->uri->segment(3);
-		$flag= $this->kids_model->delete_kids($data);
+		$flag= $this->kids_model->delete_kids($kid_id);
 		if($flag){
-		$this->session->set_flashdata('success', 'The Kids has been deleted successfully !!');
-		redirect('kids/manageaddkids');
+			$this->session->set_flashdata('success', 'The Kids has been deleted successfully.');
+			redirect('kids/manageaddkids');
 		}
 		//return true;
 	}

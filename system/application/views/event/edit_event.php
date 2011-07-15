@@ -4,13 +4,13 @@
 <script src="<?php echo base_url()?>js/cal.js"></script>
 
 <?php
-$edt=date('Y')-2;
-$sdt=date('Y')-20;
+$sdt=date('Y')-2;
+$edt=date('Y')+2;
 ?>
 <script>
 jQuery(document).ready(function () {
-	$('input#date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2000-01-01')});
-	$('input#date-pick-ends').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2000-01-01')});
+	$('input#date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2011-01-01')});
+	$('input#date-pick-ends').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2011-01-01')});
 });
 </script>
 <?php 
@@ -19,21 +19,6 @@ foreach($event as $event_row):
 <div id="message"></div>
 <form  class="mainForm clear" id="formEditor"  action="<?php echo site_url('event/update_event')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
 <ul class="form city-form">
-<li><label for="selBulkActions">Select City: </label> 
-<select id="city" name="city" > 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<?php
-	$center = $center->result_array();
-	foreach($center as $row) {
-	?>
-    <?php if($row['id']==$event_row->city_id) {?>
-    <option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
-    <?php } else { ?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
-	<?php } }?>
-</select>
-</li>
-
 	<li><label for="txtName">Name: </label>
 	<input id="name" name="name"  type="text" value="<?=$event_row->name;?>" /> 
 	</li>		

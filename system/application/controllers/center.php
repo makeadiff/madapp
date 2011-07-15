@@ -35,6 +35,7 @@ class Center extends Controller  {
 		$this->load->model('center_model');
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
+		$this->load->model('users_model');
     }
 	
 	/**
@@ -88,8 +89,7 @@ class Center extends Controller  {
 	function popupaddCenter()
 	{
 		$this->user_auth->check_permission('center_add');
-		$data['details']= $this->center_model->getcity();
-		$data['user_name']= $this->center_model->getheadname();
+		$data['all_users']= $this->users_model->get_users_in_city();
 		$this->load->view('center/popups/addcenter_popup',$data);
 	}
 	/**
@@ -102,7 +102,7 @@ class Center extends Controller  {
     **/
 	function addCenter() {
 		$this->user_auth->check_permission('center_add');
-		$data['city']=$_REQUEST['city'];
+		$data['city']= $this->session->userdata('city_id');
 		$data['user_id']=$_REQUEST['user_id'];
 		$data['center']=$_REQUEST['center'];
 		$returnFlag= $this->center_model->add_center($data);
@@ -111,7 +111,7 @@ class Center extends Controller  {
 			$this->session->set_flashdata('success', 'The Center has been added successfully');
 			redirect('center/manageaddcenters');
 		} else {
-			$this->session->set_flashdata('success', 'Insertion Failed !!');
+			$this->session->set_flashdata('error', 'Insertion Failed.');
 			redirect('center/manageaddcenters');
 		}
 	
@@ -125,13 +125,11 @@ class Center extends Controller  {
     * @return : type : []
     *
     **/
-	function popupEdit_center()
+	function popupEdit_center($center_id)
 	{
 		$this->user_auth->check_permission('center_edit');
-		$uid = $this->uri->segment(3);
-		$data['details']= $this->center_model->edit_center($uid);
-		$data['city']=$this->center_model->getcity();
-		$data['user_name']= $this->center_model->getheadname();
+		$data['details']= $this->center_model->edit_center($center_id);
+		$data['all_users']= $this->users_model->get_users_in_city();
 		$this->load->view('center/popups/center_edit_view',$data);
 	}
 	
@@ -147,7 +145,6 @@ class Center extends Controller  {
 	{
 		$this->user_auth->check_permission('center_edit');
 		$data['rootId'] = $_REQUEST['rootId'];
-		$data['city']=$_REQUEST['city'];
 		$data['user_id']=$_REQUEST['user_id'];
 		$data['center']=$_REQUEST['center'];
 		$returnFlag= $this->center_model->update_center($data);

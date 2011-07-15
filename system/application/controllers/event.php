@@ -20,13 +20,13 @@ class Event extends controller{
 	function Event()
 	{
 		parent::Controller();
-			$this-> message = array('success'=>false, 'error'=>false);
-			$this->load->library('session');
-			$this->load->library('user_auth');
-			$logged_user_id = $this->session->userdata('id');
-			if($logged_user_id == NULL ) {
-				redirect('auth/login');
-			}
+		$this-> message = array('success'=>false, 'error'=>false);
+		$this->load->library('session');
+		$this->load->library('user_auth');
+		$logged_user_id = $this->session->userdata('id');
+		if($logged_user_id == NULL ) {
+			redirect('auth/login');
+		}
 		$this->load->helper('url');
 		$this->load->helper('misc');
 		$this->load->helper('form');
@@ -45,10 +45,11 @@ class Event extends controller{
     **/
 	function index()
 	{
+		$this->user_auth->check_permission('event_index');
 		$this->load->view('layout/header',array('title'=>'Manage Event'));
 		$data['details']= $this->event_model->getevent_list();
 		$this->load->view('event/index',$data);
-		$this->load->view('layout/settings_footer');
+		$this->load->view('layout/footer');
 	
 	}
 	/**
@@ -61,6 +62,7 @@ class Event extends controller{
     **/
 	function addevent()
 	{
+		$this->user_auth->check_permission('event_add');
 		$data['center']= $this->center_model->getcity();
 		$this->load->view('event/add_event',$data);
 	}
@@ -74,6 +76,7 @@ class Event extends controller{
     **/
 	function insert_event()
 	{
+		$this->user_auth->check_permission('event_add');
 		$data['city']=$_REQUEST['city'];
 		$data['name']=$_REQUEST['name'];
 		$data['startdate']=$_REQUEST['date-pick'];
@@ -98,6 +101,7 @@ class Event extends controller{
     **/
 	function user_event()
 	{
+		$this->user_auth->check_permission('event_mark_attendance');
 		$id=$this->uri->segment(3);
 		$data['events']= $this->event_model->get_event_type($id);
 		$data['users']= $this->users_model->getuser_details();
@@ -114,7 +118,7 @@ class Event extends controller{
     **/
 	function insert_userevent()
 	{
-		
+		$this->user_auth->check_permission('event_mark_attendance');
 		$data['event_id']=$_REQUEST['event'];
 		$users=$_REQUEST['users'];
 		for($i=0;$i< count($users);$i++)
@@ -122,7 +126,7 @@ class Event extends controller{
 			$data['user_id']=$users[$i];
 			$flag= $this->event_model->insert_user_event($data);
 		}
-		$this->session->set_flashdata('success', 'Users Added Successfully.');
+		$this->session->set_flashdata('success', 'Users attendance marked.');
 		redirect('event/index');  
 	}
 	/**
@@ -135,6 +139,7 @@ class Event extends controller{
     **/
 	function event_edit()
 	{
+		$this->user_auth->check_permission('event_edit');
 		$id=$this->uri->segment(3);
 		$data['center']= $this->center_model->getcity();
 		$data['event']= $this->event_model->getevent($id);
@@ -150,6 +155,7 @@ class Event extends controller{
     **/
 	function update_event()
 	{
+		$this->user_auth->check_permission('event_edit');
 		$data['root_id']=$_REQUEST['root_id'];
 		$data['city']=$_REQUEST['city'];
 		$data['name']=$_REQUEST['name'];
@@ -179,6 +185,7 @@ class Event extends controller{
     **/
 	function event_delete()
 	{
+		$this->user_auth->check_permission('event_delete');
 		$data['id']=$this->uri->segment(3);
 		$flag= $this->event_model->delete_event($data);
 		if($flag)
@@ -197,6 +204,7 @@ class Event extends controller{
     **/
 	function mark_attendence()
 	{
+		$this->user_auth->check_permission('event_mark_attendance');
 		$id=$this->uri->segment(3);
 		$data['events']= $this->event_model->get_event_type($id);
 		$data['attended_users']= $this->event_model->get_event_users($id);
@@ -212,6 +220,7 @@ class Event extends controller{
     **/
 	function update_userstatus()
 	{
+		$this->user_auth->check_permission('event_mark_attendance');
 		$data['event_id']=$this->uri->segment(3);
 		$data['user_id']=$this->uri->segment(4);
 		$flag= $this->event_model->update_user_status($data);
@@ -227,6 +236,7 @@ class Event extends controller{
     **/
 	function update_user_status()
 	{
+		$this->user_auth->check_permission('event_mark_attendance');
 		$this->session->set_flashdata('success', 'Status Updated  Successfully.');
 		redirect('event/index');  
 	}	

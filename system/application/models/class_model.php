@@ -26,6 +26,17 @@ class Class_model extends Model {
     	return $this->db->query("UPDATE UserClass SET status='confirmed' WHERE user_id=$user_id AND class_id=$class_id");
     }
     
+    /// Sets the status of all the teacher in the set class as cancelled. Used to cancel a class.
+    function cancel_class($class_id) {
+		$this->db->query("UPDATE UserClass SET status='cancelled' WHERE class_id=$class_id");
+		return $this->db->affected_rows();
+    }
+    /// Revert a class cancellation. The status becomes projected.
+    function uncancel_class($class_id) {
+		$this->db->query("UPDATE UserClass SET status='projected' WHERE class_id=$class_id");
+		return $this->db->affected_rows();
+    }
+    
     function get_last_class_in_batch($batch_id) {
     	return $this->db->query("SELECT * FROM Class WHERE batch_id=$batch_id AND class_on<NOW() ORDER BY class_on DESC LIMIT 0,1")->row();
     }

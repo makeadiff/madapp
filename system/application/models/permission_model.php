@@ -31,7 +31,7 @@ class Permission_model extends Model
 	{
 		$this->db->select('*');
 		$this->db->from('Permission');
-		$this->db->orderby('id');
+		$this->db->orderby('name');
 		$result=$this->db->get();
 		return $result;
 	

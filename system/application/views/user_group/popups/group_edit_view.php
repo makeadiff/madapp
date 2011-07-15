@@ -27,17 +27,20 @@ foreach($group_permission as $roll) {
  	$perm_id[$i]=$roll['permission_id'];
 	$i++;
 }
-?> 
+?>
+
+<style type="text/css">
+li label { width:200px !important; }
+</style>
+
 <div id="message"></div>
 <div style="float:left; margin-top:20px;">
 	<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user_group/updategroup_name/'.$root_id)?>" method="post" onsubmit="return validate();" style="width:355px;">
 <fieldset class="clear">
+<label for="groupname">Group Name : </label>
+<input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>"/><br />
+
 <ul class="form city-form">
-		<li>
-		<label for="groupname">Group Name : </label>
-		<input id="groupname" name="groupname"  type="text" value="<?php echo $name; ?>"/> 	
-        </li>
-        
        	<li><strong>Permissions :</strong></li>
 		<?php 
 		$j=0;

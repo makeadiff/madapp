@@ -36,21 +36,24 @@ foreach($classes as $class) {
 	if($teacher_count > 1) $rowspan = "rowspan='$teacher_count'";
 	
 	for($teacher_index=0; $teacher_index < $teacher_count; $teacher_index++) {
+	?>
+<tr class="<?php echo ($row_count % 2) ? 'odd' : 'even'; if($class['teachers'][0]['status'] == 'cancelled') echo ' cancelled';  ?>">
+<?php
 		if($teacher_index == 0) {
 ?>
-<tr class="<?php echo ($row_count % 2) ? 'odd' : 'even' ?>">
 <td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/edit_class/'.$class['id']) ?>"><?php echo $class['level_name'] ?></a></td>
 <td <?php echo $rowspan ?>><?php echo form_dropdown('lesson_id['.$class['id'].']', $all_lessons, $class['lesson_id'], 'style="width:100px;"'); ?></td>
 <td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/mark_attendence/'.$class['id']); ?>"><?php echo $class['student_attendence'] ?></a></td>
 
 <?php } ?>
-<td><?php echo $class['teachers'][$teacher_index]['name'] ?></td>
+<td><a href="<?php echo site_url('user/view/'.$class['teachers'][$teacher_index]['id']) ?>"><?php echo $class['teachers'][$teacher_index]['name'] ?></a></td>
 <td><?php echo form_dropdown('substitute_id['.$class['id'].']['.$class['teachers'][$teacher_index]['id'].']', $all_user_names, $class['teachers'][$teacher_index]['substitute_id'], 'style="width:100px;"'); ?></td>
 <td><?php echo form_dropdown('status['.$class['id'].']['.$class['teachers'][$teacher_index]['id'].']', $statuses, $class['teachers'][$teacher_index]['status'], 'style="width:100px;"'); ?></td>
 
-<?php if($teacher_index == 0) { ?>
-<td <?php echo $rowspan ?>>Cancel Class</td>
-<?php } ?>
+<?php if($teacher_index == 0) { ?><td <?php echo $rowspan ?>>
+<?php if($class['teachers'][0]['status'] == 'cancelled') { ?><a class="uncancel" href="<?php echo site_url('classes/uncancel_class/'.$class['id'].'/'.$batch_id) ?>">Undo Class Cancellation<a/>
+<?php } else { ?><a href="<?php echo site_url('classes/cancel_class/'.$class['id'].'/'.$batch_id) ?>">Cancel Class<a/><?php } ?>
+</td><?php } ?>
 </tr>
 <?php
 	}
@@ -61,7 +64,7 @@ foreach($classes as $class) {
 <input type="hidden" name="batch_id" value="<?php echo $batch_id ?>" />
 <input type="hidden" name="from_date" value="<?php echo $from_date ?>" />
 <input type="hidden" name="to_date" value="<?php echo $to_date ?>" />
-<input type="submit" value="Save" name="action" />
+<input type="submit" value="Save" class="button green" name="action" />
 </form>
 
 <?php $this->load->view('layout/footer');

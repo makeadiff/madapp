@@ -66,7 +66,6 @@ jQuery(document).ready(function () {
 <li>
 <label for="selBulkActions">Select Group:</label> 
 <select id="group" name="group" multiple="multiple"> 
-<option selected="selected" value="-1" >- Choose -</option> 
 	<?php 
 	$user_group = $user_group->result_array();
 	foreach($user_group as $row)
@@ -77,17 +76,12 @@ jQuery(document).ready(function () {
 </select>
 </li>
 <li>
-			<label for="position">Position : </label>
-			<input id="position" name="position"  type="text" /><br />
+	<label for="email">Email : </label>
+	<input id="emails" name="emails"  type="text" /><br />
 </li>
 <li>
-			<label for="email">Email : </label>
-			<input id="emails" name="emails"  type="text" /><br />
-			
-</li>
-<li>
-			<label for="password">Password : </label>
-			<input id="spassword" name="spassword"  type="password" /><br />	 
+	<label for="password">Password : </label>
+	<input id="spassword" name="spassword"  type="password" /><br />	 
 </li>			
 <li>
 	<label for="cpassword">Confirm Password : </label>
@@ -102,48 +96,6 @@ jQuery(document).ready(function () {
 	<label for="txtName">Address : </label>
 	<textarea id="address" name="address"  rows="5" cols="30"></textarea><br />	 
 </li>
-
-<?php 
-$this_city_id = $this->session->userdata('city_id');
-if($this->user_auth->get_permission('change_city')) { ?>
-<li>
-<label for="selBulkActions">Select city:</label> 
-<select id="city" name="city" > 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<?php 
-	$details = $details->result_array();
-	foreach($details as $row) {
-	?>
-	<option value="<?php echo $row['id']; ?>" <?php
-		if($row['id'] == $this_city_id) echo 'selected';
-	?>><?php echo $row['name']; ?></option> 
-	<?php } ?>
-</select><br />	
-</li>
-<?php } else { ?>
-<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
-<?php } ?>
-
-<?php 
-$this_project_id = $this->session->userdata('project_id');
-if($this->user_auth->get_permission('change_city')) { ?>
-<li>
-<label for="selBulkActions">Select project:</label> 
-<select id="project" name="project"> 
-<option selected="selected" >- Choose -</option> 
-	<?php 
-	$project = $project->result_array();
-	foreach($project as $row) { ?>
-	<option value="<?php echo $row['id']; ?>" <?php
-		if($row['id'] == $this_project_id) echo 'selected';
-	?>><?php echo $row['name']; ?></option> 
-	<?php } ?>
-</select><br />	
-
-</li>
-<?php } else { ?>
-<input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
-<?php } ?>
 
 <li>
 	<label for="txtName">Joined On : </label>
@@ -175,6 +127,8 @@ if($this->user_auth->get_permission('change_city')) { ?>
 
 <ul>
 <li>
+<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
+<input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
 <input   class="button green"  type="submit"  value="Submit" />
 <a href="<?=site_url('user/view_users');?>" class="cancel-button">Cancel</a>
 

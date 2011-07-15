@@ -1,27 +1,21 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
 <h2>Edit User</h2>
 <?php 
-$user_details = $user->result_array();
-foreach($user_details as $row) {	
-	$root_id	= $row['id'];
-	$name		= $row['name'];
-	$title		= $row['title'];
-	$email		= $row['email'];
-	$phone		= $row['phone'];
-	$address	= $row['address'];
-	$center_id	= $row['center_id'];
-	$city_id	= $row['city_id'];
-	$project_id	= $row['project_id'];
-	$user_type	= $row['user_type'];
-	$joined_on	= $row['joined_on'];
-	$left_on	= $row['left_on'];
-	$photo=$row['photo'];
-}
 
-$group_name=$group_name->result_array();
-foreach($group_name as $row) {
-	$group_id=$row['id'];	
-}
+$root_id	= $user->id;
+$name		= $user->name;
+$title		= $user->title;
+$email		= $user->email;
+$phone		= $user->phone;
+$address	= $user->address;
+$center_id	= $user->center_id;
+$city_id	= $user->city_id;
+$user_type	= $user->user_type;
+$joined_on	= $user->joined_on;
+$left_on	= $user->left_on;
+$photo		= $user->photo;
+
+
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
@@ -38,86 +32,54 @@ jQuery(document).ready(function () {
 <fieldset class="clear">
 <ul class="form city-form">
 <li>
-<label for="txtName">Name : </label>
+<label for="names">Name : </label>
 <input id="names" name="names"  type="text" value="<?php echo stripslashes($name); ?>"/> 
 </li>
 
 <li>
 <label for="selBulkActions">Select Group:</label> 
 <select id="group" name="group[]" style="width:142px; height:50px;" multiple="multiple"> 
-	<?php 
-	$group_details = $group_details->result_array();
-	foreach($group_details as $row){ ?>
-	<?php if($group_id== $row['id']){ ?>
-	<option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
-	<?php }else{ ?>
-		<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
-	<?php } }?>
+	<?php
+	foreach($all_groups as $id => $name) {
+		if(($id == 1 or $id == 3) and !$this->user_auth->get_permission('permissions_index')) continue;
+	?>
+	<option value="<?php echo $id; ?>" <?php if(in_array($id, $user->groups)) echo 'selected="selected"'; ?>><?php echo $name; ?></option> 
+	<?php } ?>
 </select>
-</li>
-<li>
-	<label for="txtName">Position : </label>
-	<input id="user_position" name="position"  type="text" value="<?php echo stripslashes($title); ?>" /> 
 </li>
 
 <li>
-	<label for="txtName">Email : </label>
+	<label for="emails">Email : </label>
 	<input id="emails" name="emails"  type="text"  value="<?php echo $email; ?>"/> 
 </li>
 <li>
-	<label for="txtName">Password : </label>
+	<label for="spassword">Password : </label>
 	<input id="spassword" name="spassword"  type="password"   /> 
 			
 </li>
 <li>
-	<label for="txtName">Confirm Password : </label>
+	<label for="scpassword">Confirm Password : </label>
 	<input id="scpassword" name="scpassword"  type="password" /> 
 </li>
 <li>
-	<label for="txtName">Phone : </label>
+	<label for="phone">Phone : </label>
 	<input id="phone" name="phone"  type="text" value="<?php echo $phone; ?>"  /> 
 </li>
 
 <li>
-	<label for="txtName">Address : </label>
+	<label for="address">Address : </label>
 	<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea> 
 </li>
 <?php 
 $this_city_id = $this->session->userdata('city_id');
 if($this->user_auth->get_permission('change_city')) { ?>
 <li>
-<label for="selBulkActions">Select city:</label> 
-<select id="city" name="city"  onchange="javascript:get_center_Name(this.value);">
-<option selected="selected" value="-1" >- choose action -</option> 
-	<?php 
-	$details = $details->result_array();
-	foreach($details as $row) { ?>
-	<?php if($city_id == $row['id'] ){?>
-	<option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
-	<?php }else { ?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-	<?php }} ?>
-</select>
+<label for="selBulkActions">Select City:</label>
+<?php echo form_dropdown('city', $all_cities, $city_id); ?>
 </li>
 <?php } else { ?>
 	<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
 <?php } ?>
-
-<li>
-<label for="selBulkActions">Select Project:</label> 
-<select id="project" name="project">
-	<?php 
-	$project = $project->result_array();
-	foreach($project as $row)
-	{
-	?>
-	<?php if($project_id==$row['id']) { ?>
-	<option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
-	<?php } else { ?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-	<?php } }?>
-</select>
-</li>
 <li>
 	<label for="date">Photo</label>
 	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="100" style="float:left;" height="100" /><?php } ?>
@@ -149,8 +111,9 @@ if($this->user_auth->get_permission('change_city')) { ?>
 </ul>
 <div class="field clear" style="width:550px;"> 
 		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
+		<input type="hidden" value="<?php echo $this->session->userdata('project_id'); ?>"  name="project" />
 		<input  id="btnSubmit" class="button green" type="submit" value="Submit" />
-		<a href="<?=site_url('user/view_users');?>" class="cancel-button">Cancel</a>
+		<a href="<?php echo site_url('user/view_users');?>" class="cancel-button">Cancel</a>
 </div>
 </fieldset>
 </form>

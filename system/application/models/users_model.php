@@ -244,45 +244,29 @@ class Users_model extends Model {
 		$this->db->where('email',$email);
 		$result=$this->db->get();
 		if($result->num_rows() > 0){
-		return false;
-		
-		} else { 
-		
-		$user_array = array(
-			'name'		=>$data['name'],
-			'title'		=> $data['position'],
-			'email'		=> $data['email'],
-			'phone'		=> $this->_correct_phone_number($data['phone']),
-			'password'	=> $data['password'],
-			'address'	=> $data['address'],
-			'city_id'	=> $data['city'],
-			'project_id'=> $data['project'],
-			'user_type' => $data['type']
-		);
-		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
-		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
-		
-		$this->db->insert('User',$user_array);
-		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
+			return false;
+		} else {
+			$user_array = array(
+				'name'		=>$data['name'],
+				'email'		=> $data['email'],
+				'phone'		=> $this->_correct_phone_number($data['phone']),
+				'password'	=> $data['password'],
+				'address'	=> $data['address'],
+				'city_id'	=> $data['city'],
+				'project_id'=> $data['project'],
+				'user_type' => $data['type']
+			);
+			if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
+			else $user_array['joined_on'] = date('Y-m-d');
+			
+			if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
+			
+			$this->db->insert('User',$user_array);
+			return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 		}
 	}
-	function check_email_availability($insert)
-	{
-		$email=$insert['email'];
-		$this->db->select('email');
-		$this->db->from('User');
-		$this->db->where('email',$email);
-		$result=$this->db->get();
-		if($result->num_rows() > 0) return true;
-		return false;
-	}
-	/**
-    * Function to process_pic
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean,Array() ]
-    **/
-	function process_pic($data)
+	
+	function process_pic($data, $type='users')
     {   
       	$id=$data['id'];
         //Get File Data Info
@@ -293,49 +277,34 @@ class Users_model extends Model {
         //Move Files To User Folder
         foreach($uploads as $key[] => $value)
         {
-            //Gen Random code for new file name
-            $randomcode = $this->generate_code(12);
-            $newimagename = $randomcode.$value['file_ext'];
-			rename($value['full_path'], 'uploads/users/'.$newimagename);
+            $newimagename = $id.$value['file_ext'];
+			$image_path = "uploads/$type/$newimagename";
+			rename($value['full_path'], $image_path);
 			
             $nwidth='100';
 	        $nheight='90';
-			$fileSavePath= dirname(BASEPATH). '/uploads/users/thumbnais/'.$newimagename;
-			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
+			$fileSavePath= dirname(BASEPATH). "/uploads/$type/thumbnails/$newimagename";
+			imagejpeg(imageResize::Resize($image_path,$nwidth,$nheight),$fileSavePath);
             $imagename = $newimagename;
-            $thumbnail = $randomcode.'_tn'.$value['file_ext'];
             $this->db->set('photo', $imagename);
-            //$this->db->set('thumbnail', $thumbnail);
 			$this->db->where('id',$id);
-            $this->db->update('User');
+            if($type=='users') $this->db->update('User');
+			else $this->db->update('Student');
+			
 			return ($this->db->affected_rows() > 0) ? true: false ;
-
         }
- 	}       
-	/**
-    * Function to generate_code
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean,Array() ]
-    **/
-	function generate_code($length = 10)
-	{
-		$this->load->library('image_lib');
-		if ($length <= 0) {
-			return false;
-		}
-		
-		$code = "";
-		$chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-		srand((double)microtime() * 1000000);
-		
-		for ($i = 0; $i < $length; $i++) {
-			$code = $code . substr($chars, rand() % strlen($chars), 1);
-		}
-		return $code;
+ 	}
 	
+	function check_email_availability($insert)
+	{
+		$email=$insert['email'];
+		$this->db->select('email');
+		$this->db->from('User');
+		$this->db->where('email',$email);
+		$result=$this->db->get();
+		if($result->num_rows() > 0) return true;
+		return false;
 	}
- 
 	
 	/**
     * Function to adduser_to_group
@@ -377,14 +346,13 @@ class Users_model extends Model {
 	function updateuser($data) {
 		$rootId=$data['rootId'];
 		$user_array=array('name'=>$data['name'],
-				'title'=> $data['position'],
 				'email' => $data['email'],
 				'phone' => $this->_correct_phone_number($data['phone']),
 				'address'=>$data['address'],
-				'city_id'=> $data['city'],
-				'project_id'=>$data['project'],
-				'user_type' => $data['type']
 			);
+			if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
+			if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
+			if(!empty($data['type'])) $user_array['user_type'] = $data['type'];
 			if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
 			if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
 			if(isset($data['password'])) $user_array['password'] = $data['password'];

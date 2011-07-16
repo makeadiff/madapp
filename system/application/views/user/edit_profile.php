@@ -3,27 +3,27 @@
 <form id="formEditor" class="mainForm clear form-area" action="<?php echo site_url('user/update_profile')?>" method="post" onsubmit="return validate();" enctype="multipart/form-data" >
 <fieldset class="clear">
 <?php echo $msg; ?>
-<label for="txtName">Name : </label>
+<label for="user_name">Name : </label>
 <input id="user_name" name="name"  type="text" value="<?php echo $user->name; ?>"/> <br />
 
-<label for="txtName">Email : </label>
+<label for="email">Email : </label>
 <input id="email" name="email"  type="text"  value="<?php echo $user->email; ?>"/><br /> 
 
-<label for="txtName">Password : </label>
+<label for="password">Password : </label>
 <input id="password" name="password"  type="password"   /> <br />
 			
-<label for="txtName">Confirm Password : </label>
+<label for="cpassword">Confirm Password : </label>
 <input id="cpassword" name="cpassword"  type="password" /><br /> 
 
-<label for="txtName">Phone : </label>
+<label for="phone">Phone : </label>
 <input id="phone" name="phone"  type="text" value="<?php echo $user->phone; ?>"  /><br /> 
 
-<label for="txtName">Address : </label>
+<label for="address">Address : </label>
 <textarea id="address" name="address"  rows="5" cols="30"><?php echo $user->address; ?></textarea><br />
 
 <?php if($user->photo) { ?>
 <label for="date">Photo</label>
-<img src="<?php echo base_url().'pictures/'.$user->photo; ?>" width="100" style="float:left;" height="100" /><br />
+<img src="<?php echo base_url().'uploads/users/thumbnails/'.$user->photo; ?>" style="float:left;" /><br />
 <?php } ?>
 
 <label for="date">Change photo</label>

@@ -37,7 +37,7 @@ jQuery(document).ready(function () {
 </li>
 
 <li>
-<label for="selBulkActions">Select Group:</label> 
+<label for="group">Select Group:</label> 
 <select id="group" name="group[]" style="width:142px; height:50px;" multiple="multiple"> 
 	<?php
 	foreach($all_groups as $id => $name) {
@@ -82,7 +82,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 <?php } ?>
 <li>
 	<label for="date">Photo</label>
-	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="100" style="float:left;" height="100" /><?php } ?>
+	<?php if($photo) { ?><img src="<?php echo base_url().'uploads/users/thumbnails/'.$photo; ?>" style="float:left;" /><?php } ?>
 </li>
 <li>
 	<label for="date">Change photo</label>

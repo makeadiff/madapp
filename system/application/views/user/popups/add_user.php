@@ -56,7 +56,7 @@ jQuery(document).ready(function () {
 </script>
 
 <body>
-<form id="formEditor"  style="width:550px;" name="formEditor" class="mainForm form-area clear" action="<?=site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onSubmit="return validate();">
+<form id="formEditor"  style="width:550px;" name="formEditor" class="mainForm form-area clear" action="<?php echo site_url('user/adduser')?>" method="post" enctype="multipart/form-data" onSubmit="return validate();">
 <fieldset class="clear">
 <ul class="form city-form">
 <li>
@@ -64,8 +64,8 @@ jQuery(document).ready(function () {
 </li>
 
 <li>
-<label for="selBulkActions">Select Group:</label> 
-<select id="group" name="group" multiple="multiple"> 
+<label for="group">Select Group:</label> 
+<select id="group" name="group[]" multiple="multiple"> 
 	<?php 
 	$user_group = $user_group->result_array();
 	foreach($user_group as $row)
@@ -127,10 +127,8 @@ jQuery(document).ready(function () {
 
 <ul>
 <li>
-<input type="hidden" name="city" value="<?php echo $this_city_id; ?>" />
-<input type="hidden" name="project" value="<?php echo $this_project_id; ?>" />
-<input   class="button green"  type="submit"  value="Submit" />
-<a href="<?=site_url('user/view_users');?>" class="cancel-button">Cancel</a>
+<input class="button green"  type="submit"  value="Submit" />
+<a href="<?php echo site_url('user/view_users');?>" class="cancel-button">Cancel</a>
 
 </li>
 </ul>

@@ -89,3 +89,4 @@ function colFormat($data) {
 function short_name($name) {
 	return reset(explode(' ', $name));
 }
+

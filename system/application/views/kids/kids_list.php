@@ -78,7 +78,7 @@ foreach($content as $row) {
     <td class="colName left"><?php echo $row['name']; ?></td>
     <td class="colCount"><?php echo $row['birthday']; ?></td> 
     <td class="colStatus" style="text-align:left"><?php echo $row['center_name'];?></td>
-	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'pictures/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
+	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
     
     <td class="colActions right"> 
     <?php if($this->user_auth->get_permission('kids_edit')) { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>

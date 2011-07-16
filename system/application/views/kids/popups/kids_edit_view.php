@@ -59,7 +59,7 @@ foreach($kids_details as $row) {
 	<p class="error clear"></p>
 </li><br />
 <li><label for="date">Photo</label>
-	<?php if($photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="50" style="float:left;" height="50" /><?php } ?>
+	<?php if($photo) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$photo; ?>" style="float:left;" /><?php } ?>
 </li><br />
 <li><label for="date">Change photo</label>
 	<input name="image"  id="image" type="file">

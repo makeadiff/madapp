@@ -55,11 +55,6 @@ class Kids_model extends Model {
 		$this->db->insert('Student',$data);
 		$kid_id = $this->db->insert_id();
 		
-		//$this->db->insert('StudentLevel', array(
-				//'Student_id'	=> $kid_id,
-				//'level_id'		=> $data['level'],
-			//));
-		
 	 	return ($this->db->affected_rows() > 0) ? $this->db->insert_id()  : false ;
 	}
 	
@@ -164,66 +159,7 @@ class Kids_model extends Model {
 		return $result;
 	
 	}
-	/**
-    * Function to generate_code
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean,Array() ]
-    **/
-	function generate_code($length = 10) {
-		$this->load->library('image_lib');
-		if ($length <= 0) {
-			return false;
-		}
-	
-		$code = "";
-		$chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-		srand((double)microtime() * 1000000);
-		for ($i = 0; $i < $length; $i++) {
-			$code = $code . substr($chars, rand() % strlen($chars), 1);
-		}
-		return $code;
 
-	}
-	/**
-    * Function to process_pic
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean,Array() ]
-    **/
-	
-	function process_pic($data) {   
-       	$id=$data['id'];
-        //Get File Data Info
-        $uploads = array($this->upload->data());
-        $this->load->library('image_lib');
-        $this->load->library('imageResize');
-        
-        //Move Files To User Folder
-        foreach($uploads as $key[] => $value)
-        {
-            //Gen Random code for new file name
-            $randomcode = $this->generate_code(12);
-            $newimagename = $randomcode.$value['file_ext'];
-            $image_path = dirname(BASEPATH).'/pictures/'.$newimagename;
-			rename($value['full_path'], $image_path);
-			
-            $nwidth='100';
-	        $nheight='90';
-	        $imagename = $newimagename;
-            $thumbnail = $randomcode.'_tn'.$value['file_ext'];
-	        
-			$thumbnail_path = dirname(BASEPATH).'/pictures/'.$thumbnail;
-			imagejpeg(imageResize::Resize($image_path, $nwidth, $nheight), $thumbnail_path);
-            
-            $this->db->set('photo', $imagename);
-            $this->db->set('thumbnail', $thumbnail);
-			$this->db->where('id',$id);
-            $this->db->update('Student');
-			return ($this->db->affected_rows() > 0) ? true: false ;
-
-        }
- 	}       
 	function get_kidsby_center($center_id)
 	{
 		$this->db->select('*');

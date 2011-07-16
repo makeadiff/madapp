@@ -406,7 +406,6 @@ class User extends Controller  {
 		$data['group'] = array();
 		if(!empty($_REQUEST['group'])) $data['group'] = $_REQUEST['group'];
 		$data['email'] = $_REQUEST['email'];
-		$data['position'] = $_REQUEST['position'];
 		$password=$_REQUEST['password'];
 		if($password=='') {
 			$password=$this->users_model->get_password($data);
@@ -418,14 +417,10 @@ class User extends Controller  {
 		
 		
 		$data['phone'] = $_REQUEST['phone'];
-		$data['city'] = $_REQUEST['city'];
-		$data['center'] = $_REQUEST['center'];
-		$data['project'] = $_REQUEST['project'];
-		$data['type'] = $_REQUEST['type'];
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
 		$data['id']=$data['rootId'];
-		$config['upload_path'] = './uploads/';
+		$config['upload_path'] = dirname(BASEPATH) . '/uploads/users/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
 		foreach($_FILES as $key => $value)
@@ -447,12 +442,10 @@ class User extends Controller  {
 		
 		if($flag || $returnFlag )  {
 			$this->session->set_userdata('success', "Profile edited successfully.");
-			$this->load->view('layout/header');
-			$this->load->view('user/popups/profile_successview',$message);		  
+			redirect('user/edit_profile');
 		} else {
 			$this->session->set_userdata('error', 'Profile not edited.');
-			$this->load->view('layout/header');
-			$this->load->view('user/popups/profile_failview',$message);		  
+			redirect('user/edit_profile');
 		}
 	}
 	

@@ -121,8 +121,7 @@ foreach($all_users as $id => $user) {
 <?php if(!$count) echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>"; ?>
 
 </div>
-
-
 </div>
+
 <?php
 $this->load->view('layout/footer');

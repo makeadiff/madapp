@@ -296,11 +296,11 @@ class Users_model extends Model {
             //Gen Random code for new file name
             $randomcode = $this->generate_code(12);
             $newimagename = $randomcode.$value['file_ext'];
-			rename($value['full_path'],'pictures/'.$newimagename);
+			rename($value['full_path'], 'uploads/users/'.$newimagename);
 			
             $nwidth='100';
 	        $nheight='90';
-			$fileSavePath= dirname(BASEPATH). '/pictures/'.$newimagename;
+			$fileSavePath= dirname(BASEPATH). '/uploads/users/thumbnais/'.$newimagename;
 			imagejpeg(imageResize::Resize($fileSavePath,$nwidth,$nheight),$fileSavePath);
             $imagename = $newimagename;
             $thumbnail = $randomcode.'_tn'.$value['file_ext'];
@@ -445,7 +445,7 @@ class Users_model extends Model {
     	$this->db->insert("UserBatch", array('user_id'=>$user_id, 'batch_id'=>$batch_id, 'level_id'=>$level_id));
     }
     
-    function unset_user_batch_and_level($batch_id, $level_id) {
+	function unset_user_batch_and_level($batch_id, $level_id) {
     	$this->db->delete("UserBatch", array('batch_id'=>$batch_id, 'level_id'=>$level_id));
     }
     

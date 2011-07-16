@@ -128,33 +128,12 @@ function validate()
 			}
 	if(document.getElementById("emails").value == '')
 			{
-				alert("Select Email.");
+				alert("Please enter an email address");
 				return false;
 			}
-	if(document.getElementById("spassword").value == '')
-			{
-				alert("Enter Password.");
-				return false;
-			}
-		
-	if(document.getElementById("spassword").value != document.getElementById("scpassword").value)
+	if(document.getElementById("spassword").value && (document.getElementById("spassword").value != document.getElementById("scpassword").value))
 			{
 				alert("Password Missmatch.");
-				return false;
-			}
-	if(document.getElementById("city").value == '-1')
-			{
-				alert("Select City.");
-				return false;
-			}
-	if(document.getElementById("center").value == '-1')
-			{
-				alert("Select Center.");
-				return false;
-			}
-	if(document.getElementById("project").value == '-1')
-			{
-				alert("Select Project.");
 				return false;
 			}
 

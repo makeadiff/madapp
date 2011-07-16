@@ -205,7 +205,7 @@ class Kids extends Controller  {
 		$returnFlag= $this->kids_model->add_kids($data);
 		$data['id']=$returnFlag;
 		
-		$config['upload_path'] = dirname(BASEPATH) . '/uploads/';
+		$config['upload_path'] = dirname(BASEPATH) . '/uploads/kids/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
 		

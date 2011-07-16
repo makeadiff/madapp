@@ -1,9 +1,9 @@
 <?php $this->load->view('layout/header', array('title'=>'Volunteer details for ' . $user->name)); ?>
 
 
-<?php if($user->photo) { ?><img src="<?php echo base_url().'pictures/'.$photo; ?>" width="100" style="float:left;" height="100" /><?php } ?>
+<?php if($user->photo) { ?><img src="<?php echo base_url().'uploads/users/'.$user->photo; ?>" style="float:left;" height="100" /><?php } ?>
 
-<h2><a href="mailto:<?php echo $user->email ?>;"><?php echo $user->name ?></h2>
+<h2><a href="mailto:<?php echo $user->email ?>;"><?php echo $user->name ?></a> (<?php echo $user->credit ?>)</h2>
 
 <p>Phone: <strong><?php echo $user->phone ?></strong></p>
 

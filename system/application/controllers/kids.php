@@ -147,7 +147,7 @@ class Kids extends Controller  {
 		$data['description']=$_REQUEST['description'];
 		$returnFlag= $this->kids_model->update_student($data);
 		
-		$config['upload_path'] = './uploads/';
+		$config['upload_path'] = './uploads/kids/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
 		foreach($_FILES as $key => $value)
@@ -161,7 +161,7 @@ class Kids extends Controller  {
                 }    
                 else
                 {
-                    $flag=$this->kids_model->process_pic($data);
+                    $flag=$this->users_model->process_pic($data, 'kids');
                 }
              }
         }
@@ -217,7 +217,7 @@ class Kids extends Controller  {
                     $errors[] = $this->upload->display_errors();
                     
                 } else {
-                    $this->kids_model->process_pic($data);
+                    $this->users_model->process_pic($data, 'kids');
                 }
              }
         }

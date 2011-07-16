@@ -96,20 +96,21 @@ class User extends Controller  {
 	{
 		$this->user_auth->check_permission('user_add');
 		$data['name'] = $_POST['names'];
-		$data['group'] = $_POST['group'];
-		$data['position'] = $_POST['position'];
+		$data['group'] = $this->input->post('group');
 		$data['email'] = $_POST['emails'];
 		$data['password'] = $_POST['spassword'];
 		$data['phone'] = $_POST['phone'];
-		$data['city'] = $_POST['city'];
 		$data['address'] = $_POST['address'];
 		$data['joined_on'] = $_REQUEST['joined_on'];
 		$data['left_on'] = $_REQUEST['left_on'];
-		$data['project'] = $_POST['project'];
 		$data['type'] = $_POST['type'];
+		
+		$data['city'] = $this->session->userdata('city_id');
+		$data['project'] = $this->session->userdata('project_id');
+		
 		$data['id']= $this->users_model->adduser($data);
 		
-		$config['upload_path'] = dirname(BASEPATH) . '/uploads/';
+		$config['upload_path'] = dirname(BASEPATH) . '/uploads/users/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
 		foreach($_FILES as $key => $value)
@@ -134,7 +135,7 @@ class User extends Controller  {
 			if($returnFlag) {
 				$this->session->set_flashdata('success', 'User Inserted successfully');
 			} else {
-				$this->session->set_flashdata('error', 'User Insertion failed!!');
+				$this->session->set_flashdata('error', 'User Insertion failed!');
 			}
 		} else  {
 			$this->session->set_flashdata('error', "The User can't be added because email '".$data['email']."' is already taken");
@@ -155,8 +156,6 @@ class User extends Controller  {
 		$data['user'] = $this->users_model->user_details($user_id);
 	
 		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
-		$data['this_city_id'] = $this->session->userdata('city_id');
-		$data['this_project_id'] = $this->session->userdata('project_id');
 		
 		$this->load->view('user/popups/user_edit_view',$data);
 	}
@@ -180,16 +179,16 @@ class User extends Controller  {
 		}
 		
 		$data['phone'] = $_REQUEST['phone'];
-		$data['city'] = $_REQUEST['city'];
+		if(isset($_REQUEST['city'])) $data['city'] = $_REQUEST['city'];
 		$data['address'] = $_REQUEST['address'];
-		$data['project'] = $_REQUEST['project'];
-		$data['type'] = $_REQUEST['type'];
+		if(isset($_REQUEST['project'])) $data['project'] = $_REQUEST['project'];
+		if(isset($_REQUEST['type'])) $data['type'] = $_REQUEST['type'];
 		$data['joined_on'] = $_REQUEST['joined_on'];
 		$data['left_on'] = $_REQUEST['left_on'];
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
 		$data['id']=$data['rootId'];
-		$config['upload_path'] = './uploads/';
+		$config['upload_path'] = './uploads/users/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
         
@@ -404,7 +403,6 @@ class User extends Controller  {
 		$data['name'] = $_REQUEST['name'];
 		
 		$data['group'] = array();
-		if(!empty($_REQUEST['group'])) $data['group'] = $_REQUEST['group'];
 		$data['email'] = $_REQUEST['email'];
 		$password=$_REQUEST['password'];
 		if($password=='') {
@@ -417,6 +415,7 @@ class User extends Controller  {
 		
 		
 		$data['phone'] = $_REQUEST['phone'];
+		$data['address'] = $_REQUEST['address'];
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
 		$data['id']=$data['rootId'];

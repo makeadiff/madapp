@@ -49,7 +49,7 @@ class Classes extends Controller {
 			$this->session->set_flashdata('error', "You don't have a default batch.");
 			redirect('centers/');
 		}
-		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->class_model->get_last_class_in_batch($batch_id)->class_on));
+		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->get_last_class_in_batch($batch_id)->class_on));
 		
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => false));
 		$batch = $this->batch_model->get_batch($batch_id);

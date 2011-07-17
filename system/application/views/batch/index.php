@@ -6,7 +6,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 <h1><?php echo $title ?></h1>
 
 <div id="actions">
-<a  id="example" class="thickbox button primary popup" href="<?php echo site_url('batch/create/center/'.$center_id); ?>" class="add">Create New Batch in <?php echo $center_name ?></a>
+<a  id="example" class="thickbox button green primary popup" href="<?php echo site_url('batch/create/center/'.$center_id); ?>" class="add">Create New Batch in <?php echo $center_name ?></a>
 </div><br class="clear" />
 
 <div id="train-nav">

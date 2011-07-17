@@ -84,12 +84,19 @@ class Batch_model extends Model {
     function create($data) {
     	$data['project_id'] = $this->project_id;
     	$this->db->insert("Batch", $data);
+    	
+    	if($data['batch_head_id'] > 0) {
+			$this->load->model('users_model');
+			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
+		}
     }
     
     function edit($batch_id, $data) {
+		$old_batch_head = $this->get_batch_head($batch_id);
 		$this->db->where('id', $batch_id)->update('Batch',$data);
 		if($data['batch_head_id'] > 0) {
 			$this->load->model('users_model');
+			$this->users_model->remove_user_from_group($old_batch_head->id,8);// Remove old batch head from Batch Head Group.
 			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
 		}
     }

@@ -72,27 +72,14 @@ class Center_model extends Model
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	function getcity()
-	{
-	$this->db->select('*');
-	$this->db->from('City');
-	$result=$this->db->get();
-	return $result;
-	
-	}
-	 /**
-    * Function to getheadname
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Array()]
-    **/
-	function getheadname() {
-		$this->db->select('*')->where('city_id', $this->city_id)->where('project_id',$this->project_id);
-		$result=$this->db->get('User');
+	function getcity() {
+		$this->db->select('*');
+		$this->db->from('City');
+		$result=$this->db->get();
 		return $result;
 	
 	}
-	 /**
+	/**
     * Function to add_center
     * @author:Rabeesh 
     * @param :[$data]
@@ -100,10 +87,11 @@ class Center_model extends Model
     **/
 	function add_center($data)
 	{
-	$data = array(	'city_id' => $data['city'] ,
-			 		'name' => $data['center'] ,
-					'center_head_id' => $data ['user_id'],
-			 	);
+		$data = array(
+			'city_id' => $data['city'],
+			'name' => $data['center'],
+			'center_head_id' => $data['user_id'],
+		);
 						  
 	    $this->db->insert('Center',$data);  
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
@@ -115,13 +103,12 @@ class Center_model extends Model
     * @param :[$data]
     * @return: type: [Array()]
     **/
-	function edit_center($uid)
-	{
-	$this->db->select('*');
-	$this->db->from('Center');
-	$this->db->where('id',$uid);
-	$result=$this->db->get();
-	return $result;
+	function edit_center($uid) {
+		$this->db->select('*');
+		$this->db->from('Center');
+		$this->db->where('id',$uid);
+		$result=$this->db->get();
+		return $result;
 	}
 	 /**
     * Function to update_center
@@ -130,17 +117,21 @@ class Center_model extends Model
     * @return: type: [Boolean]
     **/
 	function update_center($data) {
-		$rootId=$data['rootId'];
+		$center_id = $data['rootId'];
+		$center_details = $this->edit_center($center_id)->row();
+		if(!$center_details) return false;
+		
 		$data = array(
 				'name' => $data['center'] ,
 				'center_head_id' => $data['user_id'],
 				);
-		$this->db->where('id', $rootId);
+		$this->db->where('id', $center_id);
 		$this->db->update('Center', $data);
 		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
 		
 		if($data['center_head_id'] > 0) {
 			$this->load->model('users_model');
+			$this->users_model->remove_user_from_group($center_details->center_head_id, 7); // Remove the old center head from the group 'Center Head'
 			$this->users_model->adduser_to_group($data['center_head_id'], array(7));// Add the center head to Center Head group.
 		}
 		
@@ -270,6 +261,4 @@ class Center_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
-	
-	
 }

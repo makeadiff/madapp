@@ -37,7 +37,7 @@ class Users_model extends Model {
    			$memberCredentials['id'] = $user->id;
 			$memberCredentials['email'] = $user->email;
 			$memberCredentials['name'] = $user->name;
-			$memberCredentials['project_id'] = $user->project_id;
+			$memberCredentials['project_id'] = 1;//$user->project_id; // :TODO:
 			$memberCredentials['city_id'] = $user->city_id;
 			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
@@ -306,12 +306,7 @@ class Users_model extends Model {
 		return false;
 	}
 	
-	/**
-    * Function to adduser_to_group
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, ]
-    **/
+	/// Add the user given as the first argument to all the groups specified in the second argument.
 	function adduser_to_group($user_id, $group_ids)
 	{
 		foreach($group_ids as $group_id) {
@@ -320,6 +315,13 @@ class Users_model extends Model {
 		}
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;		
 	}
+	
+	/// Removes the given user from the given group.
+	function remove_user_from_group($user_id, $group_id) {
+		$this->db->delete('UserGroup', array('user_id'=>$user_id, 'group_id'=>$group_id));
+		return ($this->db->affected_rows() > 0) ? true : false;		
+	}
+	
 	/**
     * Function to user_details
     * @author:Rabeesh 
@@ -346,20 +348,20 @@ class Users_model extends Model {
 	function updateuser($data) {
 		$rootId=$data['rootId'];
 		$user_array=array('name'=>$data['name'],
-				'email' => $data['email'],
-				'phone' => $this->_correct_phone_number($data['phone']),
-				'address'=>$data['address'],
-			);
-			if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
-			if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
-			if(!empty($data['type'])) $user_array['user_type'] = $data['type'];
-			if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
-			if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
-			if(isset($data['password'])) $user_array['password'] = $data['password'];
-				
-			$this->db->where('id', $rootId);
-			$this->db->update('User', $user_array);
-			return ($this->db->affected_rows() > 0) ? true: false ;
+			'email' => $data['email'],
+			'phone' => $this->_correct_phone_number($data['phone']),
+			'address'=>$data['address'],
+		);
+		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
+		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
+		if(!empty($data['type'])) $user_array['user_type'] = $data['type'];
+		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
+		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
+		if(isset($data['password'])) $user_array['password'] = $data['password'];
+			
+		$this->db->where('id', $rootId);
+		$this->db->update('User', $user_array);
+		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
 	
@@ -453,7 +455,6 @@ class Users_model extends Model {
 			$this->db->where_in('UserGroup.group_id', $data['user_group']);
 		}
 		$this->db->orderby('User.name');
-		
 		
 		$all_users = $this->db->get()->result();
 		//echo $this->db->last_query();

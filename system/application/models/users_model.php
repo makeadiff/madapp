@@ -424,7 +424,9 @@ class Users_model extends Model {
     }
     
     function get_users_batch($user_id) {
-    	return $this->db->query("SELECT batch_id FROM UserBatch WHERE user_id=$user_id")->row()->batch_id;
+		$users_batch = $this->db->query("SELECT batch_id FROM UserBatch WHERE user_id=$user_id")->row();
+		if($users_batch) return $users_batch->batch_id;
+		else return 0;
     }
 	
 

@@ -55,14 +55,11 @@ class Center extends Controller  {
 		
 		$page_no = !empty($_REQUEST['pageno']) ? $_REQUEST['pageno'] : 0;
 		$data['title'] = 'Manage Centers';
-		$linkCount = $this->center_model->getcenter_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
 		$data['details']= $this->center_model->getcenter_details($page_no);
 		
-		$this->load->view('dashboard/includes/header',$data);
+		$this->load->view('layout/header',$data);
 		$this->load->view('center/center_list',$data);
-		$this->load->view('dashboard/includes/footer');
+		$this->load->view('layout/footer');
 	
 	}
 	/**

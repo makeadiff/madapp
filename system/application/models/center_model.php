@@ -30,9 +30,9 @@ class Center_model extends Model
     **/
 	function getcenter_count()
 	{
-			$this->db->select('*')->where('Center.city_id',$this->city_id)->from('Center');
-			$count = $this->db->get();	
-			return count($count->result());
+		$this->db->select('*')->where('Center.city_id',$this->city_id)->from('Center');
+		$count = $this->db->get();	
+		return count($count->result());
 	}
     
 	
@@ -44,20 +44,22 @@ class Center_model extends Model
     **/
     function getcenter_details()
     {
-	
-		$this->db->select('Center.*,City.name as city_name,User.name as user_name');
+		$this->ci->load->model('city_model');
+		
+		$this->db->select("Center.*, User.name as user_name");
 		$this->db->from('Center');
 		$this->db->where('Center.city_id',$this->city_id);
-		$this->db->join('City', 'City.id = Center.city_id' ,'join');
 		$this->db->join('User', 'Center.center_head_id = User.id' ,'left');
 		
 		$result = $this->db->get()->result();
 		
+		$city_name = $this->ci->city_model->getCity($this->city_id);
 		// Highlight the errors in the center - if any.
 		for($i=0; $i<count($result); $i++) {
 			$center_id = $result[$i]->id;
 			
 			$details = $this->find_issues($center_id);
+			$result[$i]->city_name = $city_name['name'];
 			$result[$i]->problem_count = $details['problem_count'];
 			$result[$i]->information = $details['information'];
 		}
@@ -134,15 +136,15 @@ class Center_model extends Model
 				'center_head_id' => $data['user_id'],
 				);
 		$this->db->where('id', $rootId);
+		$this->db->update('Center', $data);
+		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
 		
 		if($data['center_head_id'] > 0) {
 			$this->load->model('users_model');
 			$this->users_model->adduser_to_group($data['center_head_id'], array(7));// Add the center head to Center Head group.
 		}
 		
-		$this->db->update('Center', $data);
-		
-		return ($this->db->affected_rows() > 0) ? true: false ;
+		return $affected_rows;
 	}
 	
 	/**

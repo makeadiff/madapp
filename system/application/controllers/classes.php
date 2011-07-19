@@ -51,7 +51,7 @@ class Classes extends Controller {
 		}
 		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->class_model->get_last_class_in_batch($batch_id)->class_on));
 		
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => false));
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1'));
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
 		$center_name = $this->center_model->get_center_name($center_id);

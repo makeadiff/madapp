@@ -167,24 +167,22 @@ class User extends Controller  {
     **/
 	function update_user() {
 		$this->user_auth->check_permission('user_edit');
-		$data['rootId'] = $_POST['rootId'];
-		$data['name'] = $_POST['names'];
+		$data['rootId'] = $this->input->post('rootId');
+		$data['name'] = $this->input->post('names');
 		
 		$data['group'] = array();
-		if(!empty($_REQUEST['group'])) $data['group'] = $_POST['group'];
-		$data['email'] = $_POST['emails'];
+		if(!empty($_POST['group'])) $data['group'] = $_POST['group'];
+		$data['email'] = $this->input->post('emails');
 		
-		if($_POST['spassword']) {
-			$data['password'] = $_POST['spassword'];
-		}
+		if($this->input->post('spassword')) $data['password'] = $this->input->post('spassword');
 		
-		$data['phone'] = $_REQUEST['phone'];
-		if(isset($_REQUEST['city'])) $data['city'] = $_REQUEST['city'];
-		$data['address'] = $_REQUEST['address'];
-		if(isset($_REQUEST['project'])) $data['project'] = $_REQUEST['project'];
-		if(isset($_REQUEST['type'])) $data['type'] = $_REQUEST['type'];
-		$data['joined_on'] = $_REQUEST['joined_on'];
-		$data['left_on'] = $_REQUEST['left_on'];
+		$data['phone'] = $this->input->post('phone');
+		if($this->input->post('city')) $data['city'] = $this->input->post('city');
+		$data['address'] = $this->input->post('address');
+		if($this->input->post('project')) $data['project'] = $this->input->post('project');
+		if($this->input->post('type')) $data['type'] = $this->input->post('type');
+		$data['joined_on'] = $this->input->post('joined_on');
+		$data['left_on'] = $this->input->post('left_on');
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
 		$data['id']=$data['rootId'];
@@ -339,30 +337,26 @@ class User extends Controller  {
 		//search by city and group.
 		else if($data['city'] !='' && $data['name'] =='' && $group !='')
 		{
-				$explode_agent = explode("-",trim($group));
-				//$j=0;
-			for($i=0;$i<sizeof($explode_agent);$i++)
-			{
-		 	$data['group']=$explode_agent[$i];
-			$query= $this->users_model->searchuser_details_by_grp_city($data);
-			$result=$query->result_array();
-			$j=0;
-			foreach($result as $row)
-			{
-			
-				$id=$row['id'];
-				$name=$row['name'];
-				$title=$row['title'];
-				$email=$row['email'];
-				$phone=$row['phone'];
-				$center_name=$row['center_name'];
-				$city_name=$row['city_name'];
-				$user_type=$row['user_type'];
-				
-				$details_array=array( $id, $name, $title,$email,$phone,$center_name,$city_name,$user_type);
-				$array[$j]=$details_array;
-				$j++;
-			}
+			$explode_agent = explode("-",trim($group));
+			for($i=0;$i<sizeof($explode_agent);$i++) {
+				$data['group']=$explode_agent[$i];
+				$query= $this->users_model->searchuser_details_by_grp_city($data);
+				$result=$query->result_array();
+				$j=0;
+				foreach($result as $row) {
+					$id=$row['id'];
+					$name=$row['name'];
+					$title=$row['title'];
+					$email=$row['email'];
+					$phone=$row['phone'];
+					$center_name=$row['center_name'];
+					$city_name=$row['city_name'];
+					$user_type=$row['user_type'];
+					
+					$details_array=array( $id, $name, $title,$email,$phone,$center_name,$city_name,$user_type);
+					$array[$j]=$details_array;
+					$j++;
+				}
 			//$header_array=array('id','Name','Position Held','Email','Mobile No','Center','City');
 			}
 			array_to_csv($array,'user_details.csv');
@@ -383,11 +377,8 @@ class User extends Controller  {
     **/
 	function edit_profile()
 	{	
-		$data['msg']='';
 		$uid = $this->session->userdata('id');
-		
 		$data['user']= $this->users_model->user_details($uid);
-
 		$this->load->view('user/edit_profile',$data);
 	}
 	
@@ -400,18 +391,16 @@ class User extends Controller  {
 	function update_profile()
 	{
 		$data['rootId'] = $this->session->userdata('id');
-		$data['name'] = $_REQUEST['name'];
-		$data['email'] = $_REQUEST['email'];
-		$data['phone'] = $_REQUEST['phone'];
-		$data['address'] = $_REQUEST['address'];
+		$data['name'] = $this->input->post('name');
+		$data['email'] = $this->input->post('email');
+		$data['phone'] = $this->input->post('phone');
+		$data['address'] = $this->input->post('address');
 		
-		if($_REQUEST['password']) {
-			$data['password'] = $_REQUEST['password'];
-		}
+		if($this->input->post('password')) $data['password'] = $this->input->post('password');
 		
-		$flag= $this->users_model->updateuser($data);
+		$flag = $this->users_model->updateuser($data);
 		
-		$data['id']=$data['rootId'];
+		$data['id'] = $data['rootId'];
 		$config['upload_path'] = dirname(BASEPATH) . '/uploads/users/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
@@ -423,12 +412,11 @@ class User extends Controller  {
              }
         }
 		
-		
-		if($flag || $returnFlag )  {
-			$this->session->set_userdata('success', "Profile edited successfully.");
+		if($flag) {
+			$this->session->set_flashdata('success', "Profile edited successfully.");
 			redirect('user/edit_profile');
 		} else {
-			$this->session->set_userdata('error', 'Profile not edited.');
+			$this->session->set_flashdata('error', 'Profile not edited.');
 			redirect('user/edit_profile');
 		}
 	}

@@ -363,7 +363,6 @@ class Users_model extends Model {
 		$this->db->where('id', $rootId);
 		$this->db->update('User', $user_array);
 		return ($this->db->affected_rows() > 0) ? true: false ;
-	
 	}
 	
 	/**

@@ -2,7 +2,6 @@
 
 <form id="formEditor" class="mainForm clear form-area" action="<?php echo site_url('user/update_profile')?>" method="post" onsubmit="return validate();" enctype="multipart/form-data" >
 <fieldset class="clear">
-<?php echo $msg; ?>
 <label for="user_name">Name : </label>
 <input id="user_name" name="name"  type="text" value="<?php echo $user->name; ?>"/> <br />
 
@@ -10,7 +9,7 @@
 <input id="email" name="email"  type="text"  value="<?php echo $user->email; ?>"/><br /> 
 
 <label for="password">Password : </label>
-<input id="password" name="password"  type="password"   /> <br />
+<input id="password" name="password"  type="password" /> <br />
 			
 <label for="cpassword">Confirm Password : </label>
 <input id="cpassword" name="cpassword"  type="password" /><br /> 
@@ -29,6 +28,7 @@
 <label for="date">Change photo</label>
 <input name="image"  id="image" type="file"><br />
 <p class="error clear"></p>
+<br />
 
 <div class="field clear" style="width:550px;"> 
 		<input type="hidden" value="<?php echo $user->id; ?>"  id="rootId" name="rootId" />
@@ -51,7 +51,7 @@ function validate()
               return false;
           }
 		
-		if(document.getElementById("password").value != document.getElementById("cpassword").value)
+	if(document.getElementById("password").value != document.getElementById("cpassword").value)
           {
               alert("Password Missmatch.");
               return false;

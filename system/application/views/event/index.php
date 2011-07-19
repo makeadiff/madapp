@@ -1,11 +1,6 @@
-
-<div align="center"><?php if($this->session->userdata('success') ){ echo $this->session->userdata('success'); $this->session->unset_userdata('success');}?></div>
-
 <div id="content" class="clear">
 <!-- Main Begins -->
 <div id="main" class="clear"> 
-
-
 
 <div id="head" class="clear">
 <h1><?php echo $title; ?></h1>
@@ -28,10 +23,9 @@
     <th class="colStatus sortable">Starts On</th>
     <th class="colStatus">Ends On</th>
 	<th class="colStatus">Place</th>
-   <th class="colActions">Type</th>
-   <th class="colActions">City</th>
-   <th class="colActions">Manage</th>
-   <th class="colActions">Action</th>
+	<th class="colActions">Type</th>
+	<th class="colActions">Manage</th>
+	<th class="colActions">Action</th>
 </tr>
 </thead>
 <tbody>
@@ -53,16 +47,14 @@ foreach($details as $row) {
     <td class="colStatus"><?php echo $row->ends_on;?></td>
 	<td class="colPosition"><?php echo $row->place; ?></td>
     <td class="colPosition"><?php echo $row->type; ?></td>
-    <td class="colPosition"><?php echo $row->city_name; ?></td>
-    <td class="colPosition"><a href="<?=site_url('event/user_event/'.$row->id)?>" class="thickbox  popup">manage</a> | <a href="<?=site_url('event/mark_attendence/'.$row->id)?>" class="thickbox  popup">attended</a></td>
+    <td class="colPosition"><a href="<?php echo site_url('event/user_event/'.$row->id)?>" class="thickbox  popup">manage</a> | <a href="<?=site_url('event/mark_attendence/'.$row->id)?>" class="thickbox  popup">attended</a></td>
     <td class="colActions right"> 
-    <?php //if($this->user_auth->get_permission('event_edit')) { ?>
-    <a href="<?php echo site_url('event/event_edit/'.$row->id)?>" class="thickbox with-icon edit popup" name="Edit Event: <?php echo  $row->name;?>">Edit</a>
-	<?php //} ?>
-    <?php //if($this->user_auth->get_permission('event_delete')) { ?>
-    
+    <?php if($this->user_auth->get_permission('event_edit')) { ?>
+    <a href="<?php echo site_url('event/event_edit/'.$row->id)?>" class="thickbox icon edit popup" name="Edit Event: <?php echo  $row->name;?>">Edit</a>
+	<?php } ?>
+    <?php if($this->user_auth->get_permission('event_delete')) { ?>
     <a class="actionDelete icon delete confirm" href="<?php echo site_url('event/event_delete/'.$row->id); ?>">Delete</a>
-	<?php //} ?>
+	<?php } ?>
     </td>
 </tr>
 

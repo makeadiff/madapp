@@ -401,40 +401,25 @@ class User extends Controller  {
 	{
 		$data['rootId'] = $this->session->userdata('id');
 		$data['name'] = $_REQUEST['name'];
-		
-		$data['group'] = array();
 		$data['email'] = $_REQUEST['email'];
-		$password=$_REQUEST['password'];
-		if($password=='') {
-			$password=$this->users_model->get_password($data);
-			$password=$password->password;
-			$data['password']=$password;
-		} else {
-			$data['password'] = $password;
-		}
-		
-		
 		$data['phone'] = $_REQUEST['phone'];
 		$data['address'] = $_REQUEST['address'];
+		
+		if($_REQUEST['password']) {
+			$data['password'] = $_REQUEST['password'];
+		}
+		
 		$flag= $this->users_model->updateuser($data);
-		$returnFlag= $this->users_model->updateuser_to_group($data);
+		
 		$data['id']=$data['rootId'];
 		$config['upload_path'] = dirname(BASEPATH) . '/uploads/users/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
-		foreach($_FILES as $key => $value)
-        {
-            if( ! empty($key['name']))
-            {
+		foreach($_FILES as $key => $value) {
+            if( ! empty($key['name'])) {
                 $this->upload->initialize($config);
-                if ( ! $this->upload->do_upload($key))
-                {
-                    $errors[] = $this->upload->display_errors();
-                }    
-                else
-                {
-                    $flag1=$this->users_model->process_pic($data);
-                }
+                if (!$this->upload->do_upload($key)) $errors[] = $this->upload->display_errors();
+                else $this->users_model->process_pic($data);
              }
         }
 		

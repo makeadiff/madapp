@@ -347,7 +347,8 @@ class Users_model extends Model {
     **/
 	function updateuser($data) {
 		$rootId=$data['rootId'];
-		$user_array=array('name'=>$data['name'],
+		$user_array=array(
+			'name'  => $data['name'],
 			'email' => $data['email'],
 			'phone' => $this->_correct_phone_number($data['phone']),
 			'address'=>$data['address'],

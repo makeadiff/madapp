@@ -149,6 +149,9 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 .data-table .left,
 .data-table .right { float:none; }
 
+#content { overflow-x:auto; }
+
+
 
 /******************** [Page Specific]*******************************/
 
@@ -158,13 +161,11 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 .login-box .login-form .button { float:right; }
 .login-box .login-form  a { float:left; margin-top:12px; }
 
-#pg-classes-madsheet .main {
+#pg-batch-add_volunteers .main, #pg-classes-madsheet .main {
 	width:auto !important;
 }
 
-#pg-user-view_users #content {
-	overflow-x:auto;
-}
+
 
 #pg-classes-batch_view .cancelled a, #pg-classes-batch_view .cancelled select {
 	color:#666;

@@ -69,10 +69,10 @@ function getById($query, $db) {
 	return $return;
 }
 
-function idNameFormat($data) {
+function idNameFormat($data, $fields=array('id','name')) {
 	$return = array();
 	foreach($data as $row) {
-		$return[$row->id] = stripslashes($row->name);
+		$return[$row->$fields[0]] = stripslashes($row->$fields[1]);
 	}
 	
 	return $return;

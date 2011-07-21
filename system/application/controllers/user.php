@@ -26,7 +26,6 @@ class User extends Controller  {
 		}
 		$this->load->helper('url');
         $this->load->helper('form');
-		$this->load->helper('csv');
 		$this->load->helper('misc');
 		$this->load->model('center_model');
 		$this->load->model('project_model');
@@ -431,6 +430,7 @@ class User extends Controller  {
 	function import_field_select() {
 		// Read the CSV file and analyis it. Give the user a chance to make sure the connections are correct.
 		if(!empty($_FILES['csv_file']['tmp_name'])) {
+			ini_set('auto_detect_line_endings', true);
 			$handle = fopen($_FILES['csv_file']['tmp_name'],'r');
 			if(!$handle) die('Cannot open uploaded file.');
 		

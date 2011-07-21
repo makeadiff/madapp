@@ -4,7 +4,7 @@
 
 <?php if($this->user_auth->get_permission('city_create')) { ?>
 <div id="actions"> 
-<a href="<?= site_url('city/create')?>" class="popup button primary" style="margin-bottom:10px;" id="example" name="Add City">Add City</a>
+<a href="<?= site_url('city/create')?>" class="popup button green primary" style="margin-bottom:10px;" id="example" name="Add City">Add City</a>
 </div>
 <?php } ?>
 </div>

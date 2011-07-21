@@ -7,7 +7,7 @@
 
 	<?php if($this->user_auth->get_permission('center_add')) { ?>
 	<div id="actions"> 
-	<a href="<?=site_url('center/popupaddCenter')?>" class="thickbox button primary popup" style="margin-bottom:10px;" id="example" name="Add New Center">Add New Center</a>
+	<a href="<?=site_url('center/popupaddCenter')?>" class="thickbox button green primary popup" style="margin-bottom:10px;" id="example" name="Add New Center">Add New Center</a>
 	</div>
 	<?php } ?>
 </div><br />

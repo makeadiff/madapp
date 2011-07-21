@@ -175,7 +175,9 @@ class Classes extends Controller {
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();
 		
-		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer','status'=>false)));
+		$users = $this->user_model->search_users(array('user_type'=>'volunteer','status'=>false));
+		$all_users = idNameFormat($users);
+		$all_user_credits = idNameFormat($users, array('id','credit'));
 		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
 		
 		$data = array();
@@ -190,11 +192,11 @@ class Classes extends Controller {
 			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {
 				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
+				$days_with_classes = array();
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
-					$days_with_classes = array();
 					$class_info = array();
 					
 					// Get the list of teachers first.
@@ -206,6 +208,7 @@ class Classes extends Controller {
 						$teachers_info[$class->user_id] = array(
 							'id'		=> $class->user_id,
 							'name'		=> !empty($all_users[$class->user_id]) ? $all_users[$class->user_id] : "",
+							'credit'	=> $all_user_credits[$class->user_id],
 							'classes'	=> array()
 						);
 						$last_class_id = $class->id;

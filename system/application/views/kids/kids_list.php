@@ -10,7 +10,6 @@ function get_kids_Name(center_id,pageno){
 	});
 }
 </script>
-<div align="center"><?php if($this->session->userdata('success') ){ echo $this->session->userdata('success'); $this->session->unset_userdata('success');}?></div>
 
 <div id="content" class="clear">
 <!-- Main Begins -->
@@ -28,7 +27,7 @@ function get_kids_Name(center_id,pageno){
 
 <div id="actions">
 <?php if($this->user_auth->get_permission('kids_add')) { ?>
-<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button primary popup" name="Add Kids">Add Kids</a>
+<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button green primary popup" name="Add Kids">Add Kids</a>
 <?php } ?>
 </div><br class="clear" />
 
@@ -63,7 +62,7 @@ function get_kids_Name(center_id,pageno){
 </thead>
 <tbody>
 
-<?php 
+<?php
 $statusIco = '';
 $statusText = '';
 $content = $details->result_array();

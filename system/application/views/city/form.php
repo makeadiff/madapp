@@ -20,8 +20,7 @@ if(!isset($city)) $city = array('name'=>'','president_id'=>'', 'id'=>'');
 
 <?php 
 echo form_hidden('id', $city['id']);
-//$actionss = Array ("name" => "New","action"=>$action,"value" => "send", "class" => "button green");
-echo '<label for="action">&nbsp;</label>';echo form_submit('action',$action);
+echo '<label for="action">&nbsp;</label>';echo form_submit('action', $action, 'class="button green"');
 
 ?>
 </form><br />

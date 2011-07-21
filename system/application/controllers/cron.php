@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends Controller  {
     function Cron() {
@@ -14,8 +15,7 @@ class Cron extends Controller  {
 		$all_batches = $this->batch_model->get_all_batches();
 		
 		if($debug) {
-			print "Debug Mode<hr /><br />";
-			$this->load->helper('misc_helper');
+			print "Debug Mode\n---------------------------\n";
 			print "Batches: " . count($all_batches);
 		}
 		
@@ -41,7 +41,7 @@ class Cron extends Controller  {
 				foreach($teachers as $teacher) {
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
-						print "Class by {$teacher->id} at $date<br />";
+						print "Class by {$teacher->id} at $date\n";
 						$this->class_model->save_class(array(
 							'batch_id'	=> $batch->id,
 							'level_id'	=> $teacher->level_id,
@@ -53,7 +53,7 @@ class Cron extends Controller  {
 					}
 				}
 				
-				if($debug) print "++++++++++++++++++++++++++++++++++++++++++++++<br />";
+				if($debug) print "++++++++++++++++++++++++++++++++++++++++++++++\n";
 			}
 		}
 	}

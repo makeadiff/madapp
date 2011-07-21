@@ -1,7 +1,5 @@
 <?php
 $this->load->view('layout/header', array('title'=>'MAD Sheet'));
-
-// See the madsheet_class_mode.php - that's the one in active use
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/madsheet.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/madsheet.js"></script>
@@ -31,7 +29,7 @@ foreach($data as $center_id => $center_info) {
 ?>
 <table class="madsheet data-table info-box-table">
 <tr>
-<th colspan="2"><?php echo $batch_info['name']; ?></th>
+<th colspan="3"><?php echo $batch_info['name']; ?></th>
 <?php
 foreach($batch_info['days_with_classes'] as $day) print "<th>$day</th>";
 ?>
@@ -48,7 +46,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 		if(!$level_user_count) { 
 			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap'><?php echo $level_info['name'] ?></td><?php 
 		}
-		echo "<td nowrap='nowrap'>{$teacher['name']}</td>";
+		echo "<td nowrap='nowrap'>{$teacher['name']}</td><td>{$teacher['credit']}</td>";
 	
 		foreach($teacher['classes'] as $classes) {
 			print "<td class='class-{$classes->status}'>&nbsp;";

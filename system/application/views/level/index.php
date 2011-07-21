@@ -4,7 +4,7 @@
 <h1>Levels in <?php echo $center_name ?></h1>
 
 <div id="actions">
-<a  id="example" class="thickbox button primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Level</a>
+<a  id="example" class="thickbox button green primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Level</a>
 </div><br class="clear" />
 
 <div id="train-nav">

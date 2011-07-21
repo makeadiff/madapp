@@ -227,7 +227,7 @@ class Kids extends Controller  {
 			$this->session->set_flashdata('success', 'Student Inserted successfully');
 			redirect('kids/manageaddkids');
 		} else {
-			$this->session->set_flashdata('success', 'Insertion Failed');
+			$this->session->set_flashdata('error', 'Insertion Failed');
 			redirect('kids/manageaddkids');
 		}
 	}
@@ -246,13 +246,11 @@ class Kids extends Controller  {
 	{	
 		$this->user_auth->check_permission('kids_delete');
 		
-		//$data['entry_id'] = $_REQUEST['entry_id'];
 		$flag= $this->kids_model->delete_kids($kid_id);
 		if($flag){
 			$this->session->set_flashdata('success', 'The Kids has been deleted successfully.');
 			redirect('kids/manageaddkids');
 		}
-		//return true;
 	}
 	
 	
@@ -266,6 +264,7 @@ class Kids extends Controller  {
 	function import_field_select() {
 		// Read the CSV file and analyis it. Give the user a chance to make sure the connections are correct.
 		if(!empty($_FILES['csv_file']['tmp_name'])) {
+			ini_set('auto_detect_line_endings', true);
 			$handle = fopen($_FILES['csv_file']['tmp_name'],'r');
 			if(!$handle) die('Cannot open uploaded file.');
 		

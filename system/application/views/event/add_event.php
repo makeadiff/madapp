@@ -1,18 +1,7 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
 <h2>Add Event</h2>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
-<script src="<?php echo base_url()?>js/cal.js"></script>
+<script type="text/javascript" src="<?php echo base_url()?>css/datetimepicker_css.js"></script>
 
-<?php
-$edt=date('Y')-2;
-$sdt=date('Y')-20;
-?>
-<script>
-jQuery(document).ready(function () {
-	$('input#date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2000-01-01')});
-	$('input#date-pick-ends').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2000-01-01')});
-});
-</script>
 <div id="message"></div>
 <form  class="mainForm clear" id="formEditor"  action="<?php echo site_url('event/insert_event')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
 <ul class="form city-form">
@@ -21,11 +10,14 @@ jQuery(document).ready(function () {
 	</li>		
 
 <li><label for="date">Starts On: </label>
-	<input name="date-pick" class="date-pick" id="date-pick" type="text">
+	<input name="date-pick" class="date-pick" id="date-pick" type="text"> 
+    <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick','yyyyMMdd','dropdown',true,'12',true)"  style="cursor:pointer"/>
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Ends On: </label>
 	<input name="date-pick-ends" class="date-pick" id="date-pick-ends" type="text">
+        <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick-ends','yyyyMMdd','dropdown',true,'12',true)"  style="cursor:pointer"/>
+
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Place: </label>

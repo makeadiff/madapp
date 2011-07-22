@@ -77,7 +77,7 @@ class Event extends controller{
 	function insert_event()
 	{
 		$this->user_auth->check_permission('event_add');
-		$data['city']=$_REQUEST['city'];
+		//$data['city']=$_REQUEST['city'];
 		$data['name']=$_REQUEST['name'];
 		$data['startdate']=$_REQUEST['date-pick'];
 		$data['enddate']=$_REQUEST['date-pick-ends'];
@@ -157,7 +157,7 @@ class Event extends controller{
 	{
 		$this->user_auth->check_permission('event_edit');
 		$data['root_id']=$_REQUEST['root_id'];
-		$data['city']=$_REQUEST['city'];
+		//$data['city']=$_REQUEST['city'];
 		$data['name']=$_REQUEST['name'];
 		$data['startdate']=$_REQUEST['date-pick'];
 		$data['enddate']=$_REQUEST['date-pick-ends'];

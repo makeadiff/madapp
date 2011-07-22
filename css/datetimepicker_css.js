@@ -1,15 +1,3 @@
-//Javasript name: My Date Time Picker
-//Date created: 16-Nov-2003 23:19
-//Creator: TengYong Ng
-//Website: http://www.rainforestnet.com
-//Copyright (c) 2003 TengYong Ng
-//FileName: DateTimePicker_css.js
-//Version: 2.2.0
-// Note: Permission given to use and modify this script in ANY kind of applications if
-//       header lines are left unchanged.
-//Permission is granted to redistribute and modify this javascript under the terms of the GNU General Public License 3.0.
-//New Css style version added by Yvan Lavoie (Québec, Canada) 29-Jan-2009
-//Formatted for JSLint compatibility by Labsmedia.com (30-Dec-2010)
 
 
 //Global variables

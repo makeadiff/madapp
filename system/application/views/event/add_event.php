@@ -7,16 +7,16 @@
 <ul class="form city-form">
 	<li><label for="txtName">Name: </label>
 	<input id="name" name="name"  type="text" /> 
-	</li>		
+</li>		
 
 <li><label for="date">Starts On: </label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text"> 
-    <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick','yyyyMMdd','dropdown',true,'12',true)"  style="cursor:pointer"/>
+    <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick','yyyyMMdd','arrow',true,'24',true)"   style="cursor:pointer"/>
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Ends On: </label>
 	<input name="date-pick-ends" class="date-pick" id="date-pick-ends" type="text">
-        <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick-ends','yyyyMMdd','dropdown',true,'12',true)"  style="cursor:pointer"/>
+        <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick-ends','yyyyMMdd','arrow',true,'24',true)"   style="cursor:pointer"/>
 
 	<p class="error clear"></p>
 </li>

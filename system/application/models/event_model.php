@@ -45,7 +45,7 @@ class Event_model extends Model{
 				'ends_on'=>$data['enddate'],
 				'place'=>$data['place'],
 				'type'=>$data['type'],
-				'city_id'=>$this->city_id
+				//'city_id'=>$this->city_id
 			));
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}

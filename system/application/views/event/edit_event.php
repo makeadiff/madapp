@@ -14,12 +14,12 @@ foreach($event as $event_row):
 
 <li><label for="date">Starts On: </label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?=$event_row->starts_on;?>" >
-    <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick','yyyyMMdd','dropdown',true,'12',true)"  style="cursor:pointer"/>
+    <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick','yyyyMMdd','arrow',true,'24',true)"   style="cursor:pointer"/>
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Ends On: </label>
 	<input name="date-pick-ends" class="date-pick" id="date-pick-ends" type="text" value="<?=$event_row->ends_on;?>" >
-    <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick-ends','yyyyMMdd','dropdown',true,'12',true)"  style="cursor:pointer"/>
+    <img src="<?=base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick-ends','yyyyMMdd','arrow',true,'24',true)"   style="cursor:pointer"/>
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Place: </label>

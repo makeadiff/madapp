@@ -111,7 +111,7 @@ class Kids_model extends Model {
 		$students = $this->db->query("SELECT Student.id,Student.name
 			FROM StudentLevel INNER JOIN Level ON Level.id = StudentLevel.level_id AND Level.project_id={$this->project_id}
 			RIGHT JOIN Student ON student_id = Student.id
-			WHERE student_id IS NULL AND Student.center_id=$center_id");
+			WHERE student_id IS NULL AND Student.center_id=$center_id ORDER BY Student.name");
 		return $students;
 	}
 	

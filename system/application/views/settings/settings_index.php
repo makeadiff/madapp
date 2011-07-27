@@ -2,7 +2,7 @@
 <div id="head" class="clear"><h1>Settings</h1>
 <?php if($this->user_auth->get_permission('setting_create')) { ?>
 <div id="actions"> 
-<a href="<?= site_url('settings/add_settings')?>" class="popup button primary" id="example" style="margin-bottom:10px;" name="Add City">Add Settings</a>
+<a href="<?php echo site_url('settings/add_settings')?>" class="popup button green primary">Add Settings</a>
 </div>
 <?php } ?>
 </div>
@@ -13,7 +13,7 @@
 <?php foreach($all_settings as $result) { ?>
 <tr><td><?php echo $result->name;
 	?></td>
-<td><a href="<?=site_url('settings/edit_settings/'.$result->id)?>" class="popup icon edit">Edit</a>&nbsp; <a href="<?=site_url('settings/delete/'.$result->id)?>" class="actionDelete icon delete confirm"></a></td>
+<td><a href="<?php echo site_url('settings/edit_settings/'.$result->id)?>" class="popup icon edit">Edit</a>&nbsp; <a href="<?php echo site_url('settings/delete/'.$result->id)?>" class="actionDelete icon delete confirm"></a></td>
 </tr>
 <?php } ?>
 

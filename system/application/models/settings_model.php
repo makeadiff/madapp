@@ -9,7 +9,6 @@ class Settings_model extends Model {
     function Settings_model() {
         // Call the Model constructor
         parent::Model();
-        
         $this->ci = &get_instance();
     }
     /**
@@ -48,13 +47,8 @@ class Settings_model extends Model {
     	$this->db->where('id', $settings_id)->update('Setting', $data);
 		return ($this->db->affected_rows() > 0 )? true :false;
     }
-    /**
-    * Function to get_settings
-    * @author : Rabeesh
-    * @param  : [$data]
-    * @return : type: [Array]
-    **/
-    function get_settings($setting_id) {
+
+	function get_settings($setting_id) {
     	return $this->db->where('id',$setting_id)->get('Setting')->row_array();
     }
      /**
@@ -65,7 +59,12 @@ class Settings_model extends Model {
     **/
 	function deletesetting($id)
 	{
-	$this->db->where('id', $id)->delete('Setting');
+		$this->db->where('id', $id)->delete('Setting');
+	}
 	
+	function get_setting_value($name) {
+		$setting = $this->db->where('name', $name)->get('Setting')->row();
+		
+		return ($setting->value) ? $setting->value : $setting->data;
 	}
 }

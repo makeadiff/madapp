@@ -34,35 +34,30 @@ class Common extends Controller {
     function register()
     {
 		if(Navigation::isPost()){
-
 			$error['city']='0';
 			$data['firstname'] = $_POST['firstname'];
 			$data['email'] = $_POST['email'];
 			$data['mobileno'] = $_POST['mobileno'];
 			$city = $_POST['city'];
-			if($city== '-1')
-			{
+			if($city == '-1') {
 				$error['city']='1';
-			}
-			else
-			{
-				$data['city']=$city;
-			}
 			
+			} else {
+				$data['city'] = $city;
+			}
 			
 			//set Rules..........
-			$rules['firstname']	= "required|alpha_numeric";
+			$rules['firstname']	= "required";
 			$rules['email']	= "required|valid_email";
 			$rules['mobileno'] = "trim|required|min_length[8]|max_length[12]|callback__validate_phone_number";
 			$this->validation->set_rules($rules);
-			$fields['firstname'] = "Firstname";
+			$fields['firstname'] = "Name";
 			$fields['email']	= "Email";
-			$fields['mobileno']	= "mobileno";
+			$fields['mobileno']	= "Phone";
 			$fields['city']	= "City";
 
 			$this->validation->set_fields($fields);
 			if ($this->validation->run() == FALSE) {	
-				$data['message']= "";
 				$error['details']= $this->center_model->getcity();
 				$this->load->view('user/register_view',$error);
 				
@@ -72,17 +67,19 @@ class Common extends Controller {
 					redirect('common/thank_you');
 				
 				} else{
-					$data['message']= "Registration Failed";
 					$data['details']= $this->center_model->getcity();
 					$this->load->view('user/register_view',$data);
 				}
 			}
           }
         else {
-			$data['message']= "";
 			$data['details']= $this->center_model->getcity();
 			$this->load->view('user/register_view',$data);
 		}
+    }
+    
+    function thank_you() {
+		$this->load->view('common/thank_you');
     }
 
 	/// Handle the responses sent as the reply to the confirmation text here.

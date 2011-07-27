@@ -11,21 +11,9 @@ if(document.getElementById("name").value == '')
 			  document.getElementById('name').focus();
               return false;
           }
-if(document.getElementById("value").value == '')
-          {		
-              alert("Settings Value Missing.");
-			  document.getElementById('value').focus();
-              return false;
-          }
-if(document.getElementById("data").value == '')
-          {		
-              alert("Settings Data Missing.");
-			  document.getElementById('data').focus();
-              return false;
-          }
 }
 </script>
-<form action="<?php echo site_url('settings/edit/'.$setting['id'])?>" method="post" class="form-area" id="main" onsubmit=" return validate();" >
+<form action="<?php echo site_url('settings/edit/'.$setting['id'])?>" method="post" class="form-area" id="main" onsubmit="return validate();" >
 <ul class="form city-form">
 	<li>
 	<label for='name'> Name :</label>
@@ -37,14 +25,15 @@ if(document.getElementById("data").value == '')
     </li>
     <li>
     <label for='data'>Data :</label>
-    <input type="text" style="line-height:15px;" name="data" id="data" value="<?php echo $setting['data']; ?>" /><br />
+    <textarea name="data" id="data" rows="15" cols="30"><?php echo $setting['data']; ?></textarea><br />
     </li>
     </ul>
     <ul>
     <li> 
-    <input id="btnSubmit" class="button green" type="submit" value="Submit" />
-    <a href="<?=site_url('settings/index')?>" class="cancel-button">Cancel</a>
+    <input class="button green" type="submit" value="Submit" />
+    <a href="<?php echo site_url('settings/index')?>" class="cancel-button">Cancel</a>
     </li>
     </ul>
 </form>
 </div>
+<?php $this->load->view('layout/thickbox_footer'); ?>

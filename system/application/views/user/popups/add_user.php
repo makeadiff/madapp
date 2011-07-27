@@ -66,12 +66,11 @@ jQuery(document).ready(function () {
 <li>
 <label for="group">Select Group:</label> 
 <select id="group" name="group[]" multiple="multiple"> 
-	<?php 
-	$user_group = $user_group->result_array();
-	foreach($user_group as $row)
-	{ 
+	<?php
+	foreach($all_groups as $id => $name) {
+		if(($id == 1 or $id == 3) and !$this->user_auth->get_permission('permissions_index')) continue; // :HARD-CODE:. To make sure that city people can't create user with very big premissions.
 	?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
+	<option value="<?php echo $id; ?>"><?php echo $name; ?></option> 
 	<?php } ?>
 </select>
 </li>

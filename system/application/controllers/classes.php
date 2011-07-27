@@ -47,7 +47,7 @@ class Classes extends Controller {
 		if(!$batch_id) $batch_id = $this->user_model->get_users_batch($this->user_details->id);
 		if(!$batch_id) {
 			$this->session->set_flashdata('error', "You don't have a default batch.");
-			redirect('centers/manageaddcenters');
+			redirect('center/manageaddcenters');
 		}
 		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->class_model->get_last_class_in_batch($batch_id)->class_on));
 		

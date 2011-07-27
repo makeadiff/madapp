@@ -1,7 +1,6 @@
 <?php
 
 Class User_auth {
-
 	protected $error_start_delimiter;
 	protected $error_end_delimiter;
 	private $ci;
@@ -124,65 +123,40 @@ Class User_auth {
     * @return : type : []
     *
     **/
-	function register($data)
-	{
+	function register($data) {
 		$status = $this->ci->users_model->user_registration($data);
 		
 		if($status) {
-			$email=$status['email'];
-			$city_id=$status['city_id'];
+			$this->ci->load->model('settings_model');
 			
-			$new_recruit_mail= $this->ci->users_model->get_new_recruit_mail();
-			$new_recruit_mail=$new_recruit_mail->data;
+			// Returns the email id of the HR person of the given city.
+			$hr_email = $this->ci->settings_model->get_setting_value('hr_email_city_common'); // For diff city, use 'hr_email_city_'.$status['city_id']
 			
-			$hr_email= $this->ci->users_model->get_hr_email($city_id);
-			$hr_email= $hr_email->value;
+			$new_registration_welcome_message = $this->ci->settings_model->get_setting_value('new_registration_welcome_message'); /// Returns the template of the email that should be sent to new recruites when they register on the site.
+			$new_registration_notification = $this->ci->settings_model->get_setting_value('new_registration_notification'); /// Returns the template of the email that should be sent to the HR when someone registers
 			
-			$new_registration_notification= $this->ci->users_model->get_new_registration_notification();
-			$new_registration_notification=$new_registration_notification->data;
+			$replace_these = array('%NAME%', '%CITY_HR_EMAIL%');
+			$with_these = array($status['name'], $hr_email);
+			$new_registration_notification = str_replace($replace_these, $with_these, $new_registration_notification);
+			$new_registration_welcome_message = str_replace($replace_these, $with_these, $new_registration_welcome_message);
 			
-			$data = array(
-				'email' => $status['email'],
-				'name' => $status['name'],
-				'phone' => $status['phone'],
-				'new_recruit_mail' => $new_recruit_mail,
-				'new_registration_notification' => $new_registration_notification,
-			);
-										
-			$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').
-			$this->ci->config->item('email_activate', 'ion_auth'), $data, true);
-			$this->ci->email->clear();
-			$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
-			$this->ci->email->initialize($config);
-			$this->ci->email->set_newline("\r\n");
-			$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), $this->ci->config->item('site_title', 'ion_auth'));
-			$this->ci->email->to($email);
-			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - Registration Details');
-			$this->ci->email->message($message);
+			// Send Email to the newbie
+			$this->ci->email->from($hr_email, "Make A Difference");
+			$this->ci->email->to($status['email']);
+			$this->ci->email->subject('Make A Difference - Registration Details');
+			$this->ci->email->message($new_registration_welcome_message);
+			$this->ci->email->send();
+			//echo $this->ci->email->print_debugger();
 		
-			if ($this->ci->email->send()) {
-				$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').
-				$this->ci->config->item('hr_email', 'ion_auth'), $data, true);
-				$this->ci->email->clear();
-				$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
-				$this->ci->email->initialize($config);
-				$this->ci->email->set_newline("\r\n");
-				$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), 
-				$this->ci->config->item('site_title', 'ion_auth'));
-				$this->ci->email->to($hr_email);
-				$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - New Registration');
-				$this->ci->email->message($message);
-				if ($this->ci->email->send()) {
-					$this->set_message('Mail send');
-					return TRUE;
-				}
-			}
-			else
-			{
-				$this->set_error('Error In Mailing');
-				return FALSE;
-			}
-						
+			// Send email to HR
+			$this->ci->email->clear();
+			$this->ci->email->from($status['email'], $status['name']);
+			$this->ci->email->to($hr_email);
+			$this->ci->email->subject('Make A Difference - New Registration');
+			$this->ci->email->message($new_registration_notification);
+			$this->ci->email->send();
+			//echo $this->ci->email->print_debugger();
+			
 			return $status;
 		}
 		return false;

@@ -34,7 +34,7 @@ $this->load->view('layout/header',array('title'=>$title));
 <tr>
 <td style="vertical-align:top;"><div class="field clear">
 		<label for="city_id">Select City </label>
-		<select name="city_id" id="city_ih">
+		<select name="city_id" id="city_id">
 		<option value="0">Any City</option>
 		<?php
 		foreach($all_cities as $row) { ?>
@@ -45,6 +45,23 @@ $this->load->view('layout/header',array('title'=>$title));
 		</select>
 		<p class="error clear"></p> 
 		</div>
+
+	<?php if($this->user_auth->get_permission('see_applicants')) { ?><br />
+	<div class="field clear">
+	<label for="user_type">User Type</label>
+	<select name="user_type" id="user_type">
+	<option value="0">All Type</option>
+	<?php
+	$types = array('applicant', 'volunteer', 'well_wisher', 'alumni', 'other');
+	foreach($types as $row) { ?>
+	<option value="<?php echo $row; ?>" <?php 
+		if(!empty($user_type) and $user_type == $row) echo 'selected="selected"';
+	?>><?php echo ucfirst($row); ?></option>
+	<?php } ?>
+	</select>
+	<p class="error clear"></p> 
+	</div>
+	<?php } ?>
 </td>
 		
 <td style="vertical-align:top;"><div  class="field clear" style="margin-left:20px; margin-bottom:10px;">

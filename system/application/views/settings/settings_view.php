@@ -5,29 +5,17 @@
 <script>
 function validate()
 {
-if(document.getElementById("name").value == '')
+	if(document.getElementById("name").value == '')
           {		
               alert("Settings Name Missing.");
 			  document.getElementById('name').focus();
-              return false;
-          }
-if(document.getElementById("value").value == '')
-          {		
-              alert("Settings Value Missing.");
-			  document.getElementById('value').focus();
-              return false;
-          }
-if(document.getElementById("data").value == '')
-          {		
-              alert("Settings Data Missing.");
-			  document.getElementById('data').focus();
               return false;
           }
 }
 </script>
 
 <div id="head" class="clear"></div>
-<form action="<?=site_url('settings/create')?>" method="post" class="form-area" id="main" onsubmit="return validate();">
+<form action="<?php echo site_url('settings/create')?>" method="post" class="form-area" id="main" onsubmit="return validate();">
 <ul class="form city-form">
 	<li>
 	<label for='name'> Name :</label>
@@ -39,13 +27,13 @@ if(document.getElementById("data").value == '')
 	</li>
 	<li>
 	<label for='data'>Data :</label>
-	<input type="text" style="line-height:15px;" name="data" id="data"  /><br />
+	<textarea name="data" id="data" rows="15" cols="30"></textarea><br />
 	</li>
 	</ul>
     <ul>
     <li>
 		<input  id="btnSubmit" class="button green" type="submit" value="Submit" />
-        <a href="<?=site_url('settings/index')?>" class="cancel-button">Cancel</a>
+        <a href="<?php echo site_url('settings/index')?>" class="cancel-button">Cancel</a>
 	</li>
 	</ul>
 </form>

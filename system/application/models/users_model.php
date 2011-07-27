@@ -512,38 +512,31 @@ class Users_model extends Model {
 	function user_registration($data)
 	{
 		$email = $data['email'];
-        $this->db->select('email');
-        $this->db->from('User');
-        $this->db->where('email',$email);
-        
-        $result=$this->db->get();
-        if($result->num_rows() == 0) {
+
+		// Make sure there is no duplication of emails - or phone...
+        $result = $this->db->query("SELECT id,email,phone FROM User WHERE email='$email' OR phone='{$data['mobileno']}'")->result();
+        if(!$result) {
 			$userdetailsArray = array(	'name'		=> $data['firstname'],
 										'email'		=> $data['email'],
 										'phone'		=> $this->_correct_phone_number($data['mobileno']),
-										'city_id'	=>$data['city'],
-										'user_type'	=>'applicant',
-										'status'	=> '1'
+										'city_id'	=> $data['city'],
+										'user_type'	=> 'applicant',
+										'status'	=> '1',
+										'password'  => 'pass',
+										'joined_on' => date('Y-m-d'),
+										'project_id'=> 1
 										);
-			$this->db->set($userdetailsArray);
-			$this->db->insert('User');
-			$user_id=$this->db->insert_id();
-				
-			$this->db->select('User.*,City.name as city_name,city.id as city_id');
-			$this->db->from('User');
-			$this->db->join('City', 'City.id = User.city_id' ,'join');
-			$this->db->where('User.id',$user_id);
-			$result=$this->db->get();
-			$user=$result->first_row();
-			$memberCredentials['id'] = $user->id;
-			$memberCredentials['email'] = $user->email;
-			$memberCredentials['name'] = $user->name;
-			$memberCredentials['phone'] = $user->phone;
-			$memberCredentials['city_id'] = $user->city_id;
+			$this->db->insert('User', $userdetailsArray);
+			$userdetailsArray['id'] = $this->db->insert_id();
 			
-			return $memberCredentials;
-			
+			return $userdetailsArray;
 		} else {
+			foreach($result as $r) {
+				if($r->email == $data['email']) $this->session->set_flashdata('error', 'Email already in database. Use another email address.');
+				else if($r->phone == $data['mobileno']) $this->session->set_flashdata('error', 'Phone number already in database. You have registered already.');
+				break;
+			}
+			
 			return false;
 		}
     }
@@ -558,50 +551,7 @@ class Users_model extends Model {
 		$email=$data['email'];
 		return $this->db->where('email', $email)->get("User")->row();
 	}
-	/**
-    * Function to get_new_recruit_mail
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function get_new_recruit_mail()
-	{
-		$this->db->select('data');
-		$this->db->from('Setting');
-		$this->db->where('name','new_recruit_mail');
-		$result=$this->db->get();
-		return $result->row();
-	}
-	/**
-    * Function to get_hr_email
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function get_hr_email($city_id)
-	{
-		$this->db->select('value');
-		$this->db->from('Setting');
-		$this->db->where('name','hr_email_city_'.$city_id);
-		$result=$this->db->get();
-		return $result->row();
-	
-	}
-	/**
-    * Function to get get_new_registration_notification
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function get_new_registration_notification()
-	{
-		$this->db->select('data');
-		$this->db->from('Setting');
-		$this->db->where('name','new_registration_notification');
-		$result=$this->db->get();
-		return $result->row();
-	
-	}
+
 	/**
     * Function to  get_usercredits
     * @author:Rabeesh 

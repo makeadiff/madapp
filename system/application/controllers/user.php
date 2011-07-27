@@ -79,7 +79,7 @@ class User extends Controller  {
 		$this->user_auth->check_permission('user_add');
 		$data['all_cities']= idNameFormat($this->city_model->get_all());
 		$data['all_cities'][0] = 'None';
-		$data['user_group']= $this->users_model->getgroup_details();
+		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
 		$data['this_city_id'] = $this->session->userdata('city_id');
 		$data['this_project_id'] = $this->session->userdata('project_id');
 		
@@ -232,6 +232,9 @@ class User extends Controller  {
 		$data['name'] = '';
 		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
 		$data['get_user_groups'] = true;
+		
+		$data['user_type'] = 0;
+		if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
 		
 		$data['all_users'] = $this->users_model->search_users($data);
 		

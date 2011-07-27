@@ -37,8 +37,8 @@ jQuery(document).ready(function () {
 </li>
 
 <li>
-<label for="group">Select Group:</label> 
-<select id="group" name="group[]" style="width:142px; height:50px;" multiple="multiple"> 
+<label for="group">Select Group: </label>
+<select id="group" name="group[]" multiple="multiple"> 
 	<?php
 	foreach($all_groups as $id => $name) {
 		if(($id == 1 or $id == 3) and !$this->user_auth->get_permission('permissions_index')) continue;

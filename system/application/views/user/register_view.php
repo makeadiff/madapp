@@ -10,9 +10,17 @@
 <div id="container">
   <div id="wraper">
     <div id="main-content">
-      <div id="title">User Register</div>
-	  <div id="content"><div style="color:#FF0000; text-align:center;"><?php echo $message; ?></div>
-        <form method="post" action="<?=site_url('common/register')?>"  name="regform" id="regForm" onsubmit="return validate();" >
+      <div id="title"><h1>User Register</h1></div><br /><br /><br /><br />
+	  <div id="content">
+	   <?php
+		$message['success'] = $this->session->flashdata('success');
+		$message['error'] = $this->session->flashdata('error');
+		if(!empty($message['success']) or !empty($message['error'])) { ?>
+		<div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
+		<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
+		<?php } ?>
+	  
+        <form method="post" action="<?php echo site_url('common/register')?>"  name="regform" id="regForm" onsubmit="return validate();" >
             <div class="content-row-large">
                    <span>Name:</span>
                    <input type="text" class="textfield" id="firstname" name="firstname" value="<?php if(isset($this->validation->firstname)){ echo $this->validation->firstname; } ?>" />
@@ -36,23 +44,22 @@
             </div>
 				 
             <div class="content-row-large"><span>City:</span>
-                    <select class="dropdown" id="city" name="city" onchange="javascript:getcenter_Name(this.value);">
-                    <option value="-1">- Select -</option>
+                    <select class="dropdown" id="city" name="city">
                     <?php $details = $details->result_array(); ?>
                     <?php foreach($details as $row) {
 						$cityName=$row['name'];
 						$city_id=$row['id'];
 					?>
-                    <option value="<?php echo $city_id; ?> "><?php echo $cityName; ?></option>
-                  	<?php } ?>  
+                    <option value="<?php echo $city_id; ?>"><?php echo $cityName; ?></option>
+                  	<?php } ?>
+                  	<option value="0">Other</option>
                   	</select>
-<!--                    server side validation -->
 					<?php if(isset($city) && $city == '1') { ?>
                 	<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" style="margin-left: -15px;" />
                 	<?php } ?>
             </div>
             
-            <input type="hidden" name="password" value="network" />
+            <input type="hidden" name="password" value="pass" />
             <input type="hidden" name="center" value="0" />
             <input type="hidden" name="position" value="" />
             

@@ -161,8 +161,12 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 .login-box .login-form .button { float:right; }
 .login-box .login-form  a { float:left; margin-top:12px; }
 
-#pg-batch-add_volunteers .main, #pg-classes-madsheet .main,
-#pg-batch-add_volunteers .line, #pg-classes-madsheet .line {
+#pg-batch-add_volunteers .main, #pg-batch-add_volunteers .line {
+	width:auto !important;
+	overflow:visible;
+}
+
+#pg-classes-madsheet .main {
 	width:auto !important;
 	overflow:visible;
 }

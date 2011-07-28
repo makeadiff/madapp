@@ -11,8 +11,8 @@
 <div id="container">
   <div id="wraper">
     <div id="main-content">
-      <div id="title">Thank you for your interst</div>
-      <p>Some one from our side will contact you within a few days.</p>
+      <div id="title">Thank you for your interest</div>
+      <p>We shall get in touch with you shortly.</p>
     </div>
   </div>
 </div>

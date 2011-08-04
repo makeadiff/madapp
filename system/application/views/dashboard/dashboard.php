@@ -119,7 +119,11 @@ foreach($upcomming_classes as $class) { ?>
         	
 	<?php if($this->user_auth->get_permission('setting_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('task/index') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/event.png" alt="" /> <span>Task</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/task.png" alt="" /> <span>Task</span></a></div>
+	<?php } ?>
+    <?php if($this->user_auth->get_permission('setting_index')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('admincredit/index') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/credit.png" alt="" /> <span>Admin Credits</span></a></div>
 	<?php } ?>
 </div>
 </div>

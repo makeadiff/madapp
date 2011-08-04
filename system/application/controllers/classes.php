@@ -350,7 +350,8 @@ class Classes extends Controller {
 			'all_lessons'=>$all_lessons));
 	}
 	
-	function edit_class_save() {
+	function edit_class_save()	 {
+		$class_id=$_REQUEST['class_id'];
 		if(!$this->class_model->is_class_teacher($class_id, $this->session->userdata('id'))) {
 			$this->user_auth->check_permission('class_edit_class');
 		}

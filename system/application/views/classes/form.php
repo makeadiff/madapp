@@ -12,6 +12,7 @@
 ?>
 <li  style="width:400px;">
 <label for='user_id[<?php echo $i ?>]'>Teacher</label>
+
 <strong><?php echo $teachers[$class['user_id']] ?></strong>
 </li>
 <li>

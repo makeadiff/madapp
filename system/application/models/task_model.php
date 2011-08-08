@@ -21,15 +21,17 @@ class Task_model extends Model{
 			$this->ci = &get_instance();
 			$this->city_id = $this->ci->session->userdata('city_id');
 		}
+		
 		function get_task()
 		{
 		
-			return $event = $this->db->query("SELECT * FROM task order by id desc")->result();
+			return $event = $this->db->query("SELECT * FROM Task order by id desc")->result();
 		
 		}
+		
 		function add_task($data)
 		{
-		$this->db->insert("Task", array(
+			$this->db->insert("Task", array(
 				'name'	=> $data['name'],
 				'credit'=>$data['credit'],
 				'vertical'=>$data['type'],
@@ -37,15 +39,18 @@ class Task_model extends Model{
 			return ($this->db->affected_rows() > 0) ? true : false;
 		
 		}
+		
 		function delete_task($data)
 		{
 			$this->db->delete('Task', array('id'=>$data['id']));
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}
+		
 		function gettask($id)
 		{
 		return $this->db->where('id', $id)->get('Task')->result();
 		}
+		
 		function update_task($data)
 		{
 			$this->db->where('id',$data['root_id'] );

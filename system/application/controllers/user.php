@@ -233,7 +233,7 @@ class User extends Controller  {
 		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
 		$data['get_user_groups'] = true;
 		
-		$data['user_type'] = 0;
+		$data['user_type'] = 'volunteer';
 		if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
 		
 		$data['all_users'] = $this->users_model->search_users($data);

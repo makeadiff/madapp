@@ -198,7 +198,7 @@ class Classes extends Controller {
 				foreach($all_levels[$center->id] as $level) {
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 					$class_info = array();
-					
+									
 					// Get the list of teachers first.
 					$teachers_info = array();
 					$last_class_id = 0;

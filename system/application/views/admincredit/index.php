@@ -6,7 +6,7 @@
 <h1><?php echo $title; ?></h1>
 
 <div id="actions">
-<?php //if($this->user_auth->get_permission('event_add')) { ?>
+<?php //if($this->user_auth->get_permission('admincredit_add')) { ?>
 <a href="<?php echo site_url('admincredit/addcredit')?>" class="thickbox button green primary popup" name="Add Event">Add Admin Credit</a>
 <?php //} ?>
 </div><br class="clear" />
@@ -27,11 +27,9 @@
 </tr>
 </thead>
 <tbody>
-
-<?php 
+<?php
 $statusIco = '';
 $statusText = '';
-//$content = $details->result_array();
 $count = 0;
 $i=0;
 foreach($details as $row) {	

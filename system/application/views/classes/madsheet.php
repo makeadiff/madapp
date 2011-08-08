@@ -26,6 +26,7 @@ foreach($data as $center_id => $center_info) {
 
 <?php foreach($all_batches as $batch_id => $batch_info) {
 	if(empty($batch_info['days_with_classes'])) continue;
+	
 ?>
 <table class="madsheet data-table info-box-table">
 <tr>
@@ -47,8 +48,17 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap'><?php echo $level_info['name'] ?></td><?php 
 		}
 		echo "<td nowrap='nowrap'>{$teacher['name']}</td><td>{$teacher['credit']}</td>";
-	
+		
+		$class_count= 0;
 		foreach($teacher['classes'] as $classes) {
+			// This to make sure that the new classes that was started after missing a lot of class works correctly. For eg. if level 1 starts in Sunday back on 12 Aug, but level 2 started only on 17 Aug(sun), this part will handle it correctly.
+			while(date('d M',strtotime($classes->class_on)) != $batch_info['days_with_classes'][$class_count]) { 
+				print "<td class='class-cancelled'>&nbsp;</td>";
+				$class_count++;
+				if($class_count > 10) exit; // In case something goes terribly, terribly bad.
+			}
+			
+			
 			print "<td class='class-{$classes->status}'>&nbsp;";
 			if($classes->substitute_id != 0) print 'S';
 			
@@ -65,6 +75,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			</div><?php
 			print "</td>";
 			$level_user_count++; 
+			$class_count++;
 		}
 		
 		print '</tr>';

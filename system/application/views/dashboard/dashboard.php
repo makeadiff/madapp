@@ -71,7 +71,7 @@ foreach($upcomming_classes as $class) { ?>
 	
 	<?php if($this->user_auth->get_permission('user_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('user/view_users') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/user_groups.jpeg" alt="" /> <span>View Users</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/user_groups.jpeg" alt="" /> <span>Volunteers</span></a></div>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('user_group_index')) { ?>

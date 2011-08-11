@@ -31,13 +31,26 @@ class Admincredit extends controller
 		$this->load->model('task_model');
 		
 	}
+	/**
+    * Function to index
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 	function index()
 	{
 		$this->load->view('layout/header',array('title'=>'Admin Credit'));
 		$data['details']= $this->admincredit_model->get_credit();
+		echo count($data['details']);
 		$this->load->view('admincredit/index',$data);
 		$this->load->view('layout/footer');
 	}
+	/**
+    * Function to addcredit
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 	function addcredit()
 	{
 		$this->user_auth->check_permission('event_add');
@@ -45,6 +58,12 @@ class Admincredit extends controller
 		$data['task']= $this->admincredit_model->get_task();
 		$this->load->view('admincredit/add_credit',$data);
 	}
+	/**
+    * Function to insert_credit
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 	function insert_credit()
 	{
 		
@@ -57,5 +76,17 @@ class Admincredit extends controller
 			redirect('admincredit/index');  
 		}
 	}
-	
+	/**
+    * Function to alladmincredit
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
+	function alladmincredit()
+	{
+		$this->load->view('layout/header',array('title'=>'Admin Credit'));
+		$data['details']= $this->admincredit_model->get_alladmincredit();
+		$this->load->view('admincredit/alladmin_credit_index',$data);
+		$this->load->view('layout/footer');
+	}
 }

@@ -21,20 +21,36 @@ class Admincredit_model extends Model{
 			$this->ci = &get_instance();
 			$this->city_id = $this->ci->session->userdata('city_id');
 		}
+		/**
+    * Function to get_credit
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 		function get_credit()
 		{
 			$current_user_id=$this->ci->session->userdata('id');
 			return $this->db->query("SELECT AdminCredit.*,Task.name FROM AdminCredit INNER JOIN Task ON AdminCredit.task_id=Task.id 
 				WHERE user_id='$current_user_id' ORDER BY id DESC")->result();
 		}
-		
+		/**
+    * Function to get_task
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 		function get_task()
 		{
 		
 			return $this->db->query("SELECT * FROM Task ORDER BY id DESC")->result();
 		
 		}
-		
+		/**
+    * Function to get_users
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 		function get_users()
 		{
 			$city_id=$this->ci->session->userdata('city_id');
@@ -42,6 +58,12 @@ class Admincredit_model extends Model{
 			return $this->db->query("SELECT User.* FROM User INNER JOIN UserGroup ON UserGroup.user_id=User.id  WHERE UserGroup.group_id=$admin_user_group AND User.city_id='$city_id'")->result();
 		
 		}
+		/**
+    * Function to update_admincredits
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 		function update_admincredits($data)
 		{
 			$current_user_id=$this->ci->session->userdata('id');
@@ -83,6 +105,18 @@ class Admincredit_model extends Model{
 				));
 			}
 			return ($this->db->affected_rows() > 0) ? true : false;
+		}
+		/**
+    * Function to get_alladmincredit
+    * @author:Rabeesh
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
+		function get_alladmincredit()
+		{
+			$current_user_id=$this->ci->session->userdata('id');
+			return $this->db->query("SELECT `AdminCredit`.*, `user`.`name` as username,`user`.`id` as userid, `Task`.* FROM (`AdminCredit`) JOIN `user` ON `user`.`id` 
+				= `AdminCredit`.`user_id` JOIN `Task` ON `Task`.`id` = `AdminCredit`.`task_id` WHERE `user`.`city_id` = '$this->city_id' ORDER BY AdminCredit.id DESC")->result();
 		}
 		
 }		

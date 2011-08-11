@@ -7,7 +7,7 @@
 
 <div id="actions">
 <?php //if($this->user_auth->get_permission('admincredit_add')) { ?>
-<a href="<?php echo site_url('admincredit/alladmincredit')?>" class="thickbox button green primary " name="Add Event">View all Admin Credit</a>
+<a href="<?php echo site_url('admincredit/index')?>" class="thickbox button green primary " name="Add Event">My Admin Credit</a>
 <a href="<?php echo site_url('admincredit/addcredit')?>" class="thickbox button green primary popup" name="Add Event">Add Admin Credit</a>
 <?php //} ?>
 </div><br class="clear" />
@@ -20,6 +20,7 @@
 <thead>
 <tr>
 	<th class="colCheck1">Id</th>
+    <th class="colName left sortable">Name</th>
 	<th class="colName left sortable">Task</th>
     <th class="colStatus sortable">Credit</th>
     <th class="colName left sortable">Added On</th>
@@ -41,14 +42,12 @@ foreach($details as $row) {
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></td>
+    <td class="colName left"><?php if($this->session->userdata('id')== $row->userid){echo "<div style='color:#800000'>Me</div>";} else { echo $row->username;} ?></td>
     <td class="colName left"><?php echo $row->name; ?></td>
 	<td class="colPosition"><?php echo $row->credit; ?></td>
     <td class="colName left"><?php echo $row->added_on; ?></td>
     <td class="colPosition"><?php echo $row->vertical; ?></td>
-    
-    
 </tr>
-
 <?php  }?>
 </tbody>
 </table>

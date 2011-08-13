@@ -164,8 +164,11 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 
 #pg-batch-add_volunteers .main, #pg-batch-add_volunteers .line {
 	width:auto !important;
-	overflow:visible;
 }
+#pg-batch-add_volunteers #sidebar {
+	display:none;
+}
+
 
 #pg-classes-madsheet .main {
 	width:auto !important;

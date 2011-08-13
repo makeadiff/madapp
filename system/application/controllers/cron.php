@@ -23,7 +23,9 @@ class Cron extends Controller  {
 		// Wee have to add all the classes for the next two weeks.
 		for($week = 0; $week < 2; $week++) {
 			foreach($all_batches as $batch) {
+				//if($batch->id != 24) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
+				
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
 				
 				// This is how we find the next sunday, monday(whatever is in the $batch->day).
@@ -39,6 +41,8 @@ class Cron extends Controller  {
 				if($debug) dump($teachers, $date, $batch);
 				
 				foreach($teachers as $teacher) {
+					//if($teacher->id != 496) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+					
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
 						print "Class by {$teacher->id} at $date\n";
@@ -94,6 +98,45 @@ class Cron extends Controller  {
 			$batch_head = $this->batch_model->get_batch_head($batch_id);
 			$this->sms->send('91'.$batch_head->phone, short_name($batch_head->name) . ", the following people have not yet confirmed their class: " . implode(', ', $name_list)
 					. ". Please take the necessary steps to make sure that the classes happen.");
+		}
+	}
+	
+	/// Sometimes, the classes linger in the database even after the user has been removed from the batch. This function clears that.
+	function delete_orphan_classes() {
+		$this->load->model('Batch_model','batch_model');
+		$this->load->model('Center_model','center_model');
+		$this->load->model('Level_model','level_model');
+		$this->load->model('City_model','city_model');
+		
+		
+		$all_cities = $this->city_model->get_all();
+		foreach($all_cities as $city) {
+			$all_centers = $this->center_model->get_all($city->id);
+			
+			foreach($all_centers as $center) {
+				$batches = $this->batch_model->get_class_days($center->id);
+				$all_levels = $this->level_model->get_all_levels_in_center($center->id);
+				
+				foreach($batches as $batch_id => $batch_name) {
+					foreach($all_levels as $level) {
+						// Get people in this level.
+						$actual_teachers = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level->id);
+						
+						// Get people shown in madsheet in this level - from the class and userclass table.
+						$shown_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
+						foreach($shown_classes as $class) {
+							// If the class is in the future and the teacher is not in the batch...
+							if($class->class_on > date('Y-m-d H:i:s') and 
+									!in_array($class->user_id, $actual_teachers)) {
+								$this->class_model->delete_future_classes($class->user_id, $batch_id, $level->id);// delete the people missing from the level.
+								$actual_teachers[] = $class->user_id; // So that we won't have to delete this user all over again. The parent if condition will prevent that.
+								print $class->user_id . " is missing - deleted his/her future classes.\n";
+							}
+							
+						}
+					}
+				}
+			}
 		}
 	}
 }

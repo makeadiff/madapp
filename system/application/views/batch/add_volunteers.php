@@ -17,7 +17,11 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 
 <table>
 <tr>
-<?php foreach($levels_in_center as $level) { ?>
+<?php
+$level_count = 0;
+foreach($levels_in_center as $level) { 
+	$level_count++;
+?>
 <td width="200"><h3><?php echo $level->name ?></h3>
 
 <select name="teachers_in_level[<?php echo $level->id ?>][]" multiple="multiple">
@@ -42,7 +46,9 @@ foreach($all_teachers as $id=>$name) {
 <input type="text" size="2" name="volunteer_requirement[<?php echo $level->id ?>]" value="<?php 
 	echo empty($volunteer_requirement[$level->id]) ? 0 : $volunteer_requirement[$level->id] ?>" />
 </td>
-<?php } ?>
+<?php 
+if($level_count % 4 == 0) print "</tr><tr>";
+} ?>
 </tr></table><br />
 <p class="with-icon info">To select multiple volunteers, use Ctrl+Click</p>
 <br />

@@ -25,7 +25,7 @@ class Batch_model extends Model {
     }
     
     function get_teachers_in_batch_and_level($batch_id, $level_id) {
-    	return $this->db->query("SELECT user_id AS id FROM UserBatch WHERE batch_id={$batch_id} AND level_id={$level_id}")->result();
+    	return colFormat($this->db->query("SELECT user_id FROM UserBatch WHERE batch_id={$batch_id} AND level_id={$level_id}")->result());
     }
     function get_teachers_in_batch($batch_id) {
     	return $this->db->query("SELECT user_id AS id FROM UserBatch WHERE batch_id={$batch_id}")->result();

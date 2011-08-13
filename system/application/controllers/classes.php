@@ -55,8 +55,7 @@ class Classes extends Controller {
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
 		$center_name = $this->center_model->get_center_name($center_id);
-		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
-		$all_lessons[0] = 'None';
+		$all_lessons = array();
 		
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date, 'to_date'=>$to_date));
 		
@@ -67,14 +66,24 @@ class Classes extends Controller {
 		$classes = array();
 		foreach($data as $row) {
 			$attendence = $this->class_model->get_attendence($row->id);
+			$level_id = $row->level_id;
+			
+			// Each level must have only the units in the book given to that level.
+			if(empty($all_lessons[$level_id])) {
+				$level_info = $this->level_model->get_level($level_id);
+				$all_lessons[$level_id] = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_info->book_id));
+				$all_lessons[$level_id][0] = 'None';
+			}
+			
 			$present_count = 0;
-			$total_kids_in_level = count($this->level_model->get_kids_in_level($row->level_id));
+			$total_kids_in_level = count($this->level_model->get_kids_in_level($level_id));
 			foreach($attendence as $id=>$status) if($status == 1) $present_count++;
 			$attendence_count = $present_count . '/' . $total_kids_in_level;
 			
 			if(!isset($classes[$row->id])) { // First time we are encounting such a class.
 				$classes[$row->id] = array(
 					'id'			=> $row->id,
+					'level_id'		=> $row->level_id,
 					'level_name'	=> $row->name,
 					'lesson_id'		=> $row->lesson_id,
 					'student_attendence'	=> $attendence_count,
@@ -182,6 +191,8 @@ class Classes extends Controller {
 		
 		$data = array();
 		foreach($all_centers as $center) {
+			//if($center->id != 18) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+		
 			$data[$center->id] = array(
 				'center_id'	=> $center->id,
 				'center_name'=>$center->name,
@@ -191,19 +202,23 @@ class Classes extends Controller {
 			
 			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {
+				//if($batch_id != 24) continue; // :DEBUG: Use this to localize the issue
+				
 				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
 				$days_with_classes = array();
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
+					//if($level->id != 65) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+					
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 					$class_info = array();
-									
+												
 					// Get the list of teachers first.
 					$teachers_info = array();
 					$last_class_id = 0;
-					foreach(array_reverse($all_classes) as $class) { // Reverse because we need the most recent teacher. Even if the first one has left.
-						if($last_class_id != 0 and $last_class_id != $class->id) break; // Get got the list of teachers for the first - don't have to move to the next class.
+					foreach($all_classes as $class) {
+						if(isset($teachers_info[$class->user_id])) continue;
 						
 						$teachers_info[$class->user_id] = array(
 							'id'		=> $class->user_id,
@@ -211,7 +226,6 @@ class Classes extends Controller {
 							'credit'	=> $all_user_credits[$class->user_id],
 							'classes'	=> array()
 						);
-						$last_class_id = $class->id;
 					}
 					
 					$teacher_classes = array();

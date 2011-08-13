@@ -42,7 +42,7 @@ foreach($classes as $class) {
 		if($teacher_index == 0) {
 ?>
 <td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/edit_class/'.$class['id']) ?>"><?php echo $class['level_name'] ?></a></td>
-<td <?php echo $rowspan ?>><?php echo form_dropdown('lesson_id['.$class['id'].']', $all_lessons, $class['lesson_id'], 'style="width:100px;"'); ?></td>
+<td <?php echo $rowspan ?>><?php echo form_dropdown('lesson_id['.$class['id'].']', $all_lessons[$class['level_id']], $class['lesson_id'], 'style="width:100px;"'); ?></td>
 <td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/mark_attendence/'.$class['id']); ?>"><?php echo $class['student_attendence'] ?></a></td>
 
 <?php } ?>

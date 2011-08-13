@@ -44,10 +44,10 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 <?php
 	$level_user_count = 0;
 	foreach($level_info['users'] as $teacher) {
-		if(!$level_user_count) { 
+		if(!$level_user_count) {
 			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap'><?php echo $level_info['name'] ?></td><?php 
 		}
-		echo "<td nowrap='nowrap'>{$teacher['name']}</td><td>{$teacher['credit']}</td>";
+		echo "<td nowrap='nowrap'><a href='".site_url('/user/view/'.$teacher['id'])."'>{$teacher['name']}</a></td><td>{$teacher['credit']}</td>";
 		
 		$class_count= 0;
 		foreach($teacher['classes'] as $classes) {
@@ -71,7 +71,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			<li><a href="<?php echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li>
 			<?php } ?>
 			<li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li>
-			</dl>
+			</ul>
 			</div><?php
 			print "</td>";
 			$level_user_count++; 

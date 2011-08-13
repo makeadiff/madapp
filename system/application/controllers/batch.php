@@ -67,7 +67,7 @@ class Batch extends Controller {
 		foreach($levels_in_center as $level) {
 			$teachers_in_level = $this->model->get_teachers_in_batch_and_level($batch_id, $level->id);
 			foreach($teachers_in_level as $user) {
-				$level_teacher[$level->id][$user->id] = true;
+				$level_teacher[$level->id][$user] = true;
 			}
 		}
 		
@@ -77,26 +77,35 @@ class Batch extends Controller {
 	
 	function add_volunteers_action() {
 		$this->user_auth->check_permission('batch_add_volunteers');
+		$this->load->model('Class_model','class_model');
 		
 		$batch_id = $this->input->post('batch_id');
 		$teacher_levels = $this->input->post('teachers_in_level');
 		$volunteer_requirement = $this->input->post('volunteer_requirement');
 		
+		$old_volunteers = array();
+		
 		foreach($volunteer_requirement as $level_id => $requirement) {
-			// First delete all the users in this batch/level before insert the new data(even the old ones).
+			// Save the details of the old volunteers in the batch/level
+			$old_volunteers[$level_id] = $this->model->get_teachers_in_batch_and_level($batch_id, $level_id);
+		
+			// Then delete all the users in this batch/level before insert the new data(even the old ones).
 			$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
 			
 			$this->model->set_volunteer_requirement($batch_id, $level_id, $requirement);
 		}
 		
 		foreach($teacher_levels as $level_id => $teacher_ids) {
+			// If someone removes a volunteer from a batch, make sure his future classes are deleted
+			$delete_future_class_of = array_diff($old_volunteers[$level_id], $teacher_ids);
+			foreach($delete_future_class_of as $user_id) $this->class_model->delete_future_classes($user_id, $batch_id, $level_id);
+			
 			foreach($teacher_ids as $user_id) {
 				$this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
 			}
 		}
 		
 		// :TODO: Call the class scheduler manually.
-		// :TODO: If a volunter was changed, delete the future classes for the old volunter - and put in the new volunter instead.
 		
 		$this->session->set_flashdata('success','Saved the new teachers');
 		redirect('batch/add_volunteers/'.$batch_id);

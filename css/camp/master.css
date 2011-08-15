@@ -202,3 +202,10 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 #train-nav {
 	clear:both;
 }
+.no-records {
+	background-color: #FFFF66;
+	height:30px;
+	text-align:center;
+	padding-top:10px;
+	font-weight:bold;
+}

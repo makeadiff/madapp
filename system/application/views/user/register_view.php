@@ -44,6 +44,27 @@
             </div>
 				 
             <div class="content-row-large"><span>City:</span>
+            <select class="dropdown" id="city" name="city" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/functional-guidelines/expansion';">
+				<option value="1">Bangalore</option>
+				<option value="2">Mangalore</option>
+				<option value="3">Trivandrum</option>
+				<option value="4">Mumbai</option>
+				<option value="5">Pune</option>
+				<option value="6">Chennai</option>
+				<option value="8">Vellore</option>
+				<option value="9">Cochin</option>
+				<option value="11">Hyderabad</option>
+				<option value="12">Delhi</option>
+				<option value="13">Chandigarh</option>
+				<option value="14">Kolkata</option>
+				<option value="15">Nagpur</option>
+				<option value="16">Coimbatore</option>
+				<option value="17">Vizag</option>
+				<option value="18">Vijayawada</option>
+				<option value="19">Gwalior</option>
+				<option value="0">Other</option>
+			</select>
+            <?php /*
                     <select class="dropdown" id="city" name="city">
                     <?php $details = $details->result_array(); ?>
                     <?php foreach($details as $row) {
@@ -54,6 +75,7 @@
                   	<?php } ?>
                   	<option value="0">Other</option>
                   	</select>
+             */ ?>
 					<?php if(isset($city) && $city == '1') { ?>
                 	<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" style="margin-left: -15px;" />
                 	<?php } ?>

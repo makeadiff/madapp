@@ -5,7 +5,7 @@
         	<h1><?php echo $title; ?></h1>
             <!-- start page actions-->
         	<div id="actions"> 
-<a href="<?=site_url('exam/add_exam')?>" class="popup button primary" style="margin-bottom:10px;" id="example" name="Add New Exam">Add New Exam</a>
+<a href="<?php echo site_url('exam/add_exam')?>" class="popup button green primary" name="Add New Exam">Add New Exam</a>
 </div>
 	<!-- end page actions-->
 
@@ -14,7 +14,7 @@
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<th class="colCheck1">Id</th>
+	<th class="colCheck1">#</th>
 	<th class="colName left sortable">Exam Name</th>
     <th class="colName left sortable">Details</th>
     <th class="colActions">Actions</th>
@@ -55,18 +55,11 @@ foreach($content as $row)
 
 <?php }?>
 </tbody>
-</table>
+</table><br />
 
-<?php if($norecord_flag == 1) 
-{ 
-	  if($currentPage != '0'): ?>
-       <script>
-      	 get_examlist('<?php echo $currentPage-1; ?>');
-	   </script>
-<?php else: 
-	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
-	  endif;
-}    ?>
+<?php if($norecord_flag == 1) {
+	   echo "<div class='no-records'>No records found</div>";
+} ?>
 </div>
 
 </div>

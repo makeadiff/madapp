@@ -115,8 +115,10 @@ class Admincredit_model extends Model{
 		function get_alladmincredit()
 		{
 			$current_user_id=$this->ci->session->userdata('id');
-			return $this->db->query("SELECT `AdminCredit`.*, `user`.`name` as username,`user`.`id` as userid, `Task`.* FROM (`AdminCredit`) JOIN `user` ON `user`.`id` 
-				= `AdminCredit`.`user_id` JOIN `Task` ON `Task`.`id` = `AdminCredit`.`task_id` WHERE `user`.`city_id` = '$this->city_id' ORDER BY AdminCredit.id DESC")->result();
+			return $this->db->query("SELECT `AdminCredit`.*, `User`.`name` as username,`User`.`id` as userid, `Task`.* 
+				FROM (`AdminCredit`) JOIN `User` ON `User`.`id` = `AdminCredit`.`user_id` 
+				JOIN `Task` ON `Task`.`id` = `AdminCredit`.`task_id` 
+				WHERE `User`.`city_id` = '{$this->city_id}' ORDER BY AdminCredit.id DESC")->result();
 		}
 		
 }		

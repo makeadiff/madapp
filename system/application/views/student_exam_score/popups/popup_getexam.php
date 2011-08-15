@@ -8,7 +8,7 @@ function mark_view_divs(exam_id)
 			$('#score_div').show();
             $.ajax({
             type: "POST",
-            url: "<?= site_url('exam/getexam_subjects_name')?>",
+            url: "<?php echo site_url('exam/getexam_subjects_name')?>",
             data: "exam_id="+exam_id,
             success: function(msg){
            		$('#loading').hide();

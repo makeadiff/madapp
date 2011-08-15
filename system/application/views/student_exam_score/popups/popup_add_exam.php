@@ -12,7 +12,7 @@ if($details) {
 <table cellpadding="0"  cellspacing="5" class="clear" id="tableItems">
 <thead>
 <tr id="generated_rows">
-	<th  class="colCheck1" width="40">sino</th>
+	<th  class="colCheck1" width="40">#</th>
 	<th  class="colCheck1">Name</th>
 	<?php 
 	$i=0;

@@ -97,11 +97,9 @@ $this->load->view('layout/header',array('title'=>$title));
 <table cellpadding="0"  cellspacing="0" class="clear data-table">
 <thead>
 <tr>
-	<th class="colCheck1">Id</th>
 	<th class="colName left sortable">Name</th>
     <th class="colStatus sortable">Email</th>
     <th class="colStatus">Phone</th>
-    <th class="colStatus">Joined On</th>
     <?php if($this->input->post('city_id') === '0') { ?><th class="colPosition">City</th><?php } ?>
     <th class="colPosition">User Groups</th>
     <th class="colActions">Actions</th>
@@ -117,11 +115,9 @@ foreach($all_users as $id => $user) {
 	if($count % 2) $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><?php echo $user->id; ?></td>
-    <td class="colName left"><?php echo $user->name; ?></td>
+    <td class="colName left"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>
     <td class="colCount"><?php echo $user->email; ?></td>
     <td class="colStatus" style="text-align:left"><?php echo $user->phone; ?></td>
-    <td class="colCount"><?php echo date('d M, Y', strtotime($user->joined_on)); ?></td>
     <?php if($this->input->post('city_id') === '0') { ?><td class="colPosition"><?php echo $user->city_name; ?></td><?php } ?>
     <td class="colPosition"><?php echo implode(',', $user->groups); ?></td>
     

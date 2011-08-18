@@ -101,6 +101,7 @@ $this->load->view('layout/header',array('title'=>$title));
     <th class="colStatus sortable">Email</th>
     <th class="colStatus">Phone</th>
     <?php if($this->input->post('city_id') === '0') { ?><th class="colPosition">City</th><?php } ?>
+    <th class="colStatus">Joined On</th>
     <th class="colPosition">User Groups</th>
     <th class="colActions">Actions</th>
 </tr>
@@ -119,6 +120,7 @@ foreach($all_users as $id => $user) {
     <td class="colCount"><?php echo $user->email; ?></td>
     <td class="colStatus" style="text-align:left"><?php echo $user->phone; ?></td>
     <?php if($this->input->post('city_id') === '0') { ?><td class="colPosition"><?php echo $user->city_name; ?></td><?php } ?>
+	<td class="colStatus"><?php echo date('dS M, Y', strtotime($user->joined_on)); ?></td>
     <td class="colPosition"><?php echo implode(',', $user->groups); ?></td>
     
     <td class="colActions right"> 

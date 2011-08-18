@@ -80,7 +80,8 @@ class Cron extends Controller  {
 			// The class is 2 days away(at least, more than 1 day away).
 			if(($class_timestamp - time()) > 60 * 60 * 24) {
 				$this->sms->send('91'.$person->phone, "$name, you have a class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
-					. ". Reply 'confirm' to confirm this class. Visit http://makedaff.in/madapp/ to assign a substitute if you are unable to take the class.");
+					. ". Visit http://makedaff.in/madapp/ to confirm your class or assign a substitute if you are unable to take the class.");
+					//  ^ Reply 'confirm' to confirm this class. 
 			
 			// The class is happening tomorrow.
 			} else {
@@ -89,7 +90,7 @@ class Cron extends Controller  {
 				$unconfirmed_people[$person->batch_id][] = $name;
 				
 				$this->sms->send('91'.$person->phone, "$name, this is the final call to confirm your attendance for the class at {$all_centers[$person->center_id]} on " . date('dS M, h:i A', $class_timestamp) 
-					. ". Reply 'confirm' to confirm this class. Visit http://makedaff.in/madapp/ to assign a substitute if you are unable to take the class.");
+					. ". Visit http://makedaff.in/madapp/ to confirm your class or assign a substitute if you are unable to take the class.");
 			}
 		}
 		

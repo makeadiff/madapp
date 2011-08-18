@@ -24,7 +24,7 @@ class sms {
 		print "Sending Text to $number: $message\n";
 		
 		// Comment the line below to disable Messageing
-		//$data = $this->load($url);
+		$data = $this->load($url);
 	} 
 
 	

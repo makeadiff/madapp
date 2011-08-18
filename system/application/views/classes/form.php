@@ -26,7 +26,7 @@ else echo $substitutes[$class['substitute_id']];
 <label for='status[<?php echo $i ?>]'>Status</label>
 <?php 
 if($this->user_auth->get_permission('class_edit_class')) $possible_statuses = $statuses;
-else $possible_statuses = $statuses = array('projected'	=> 'Projected', 'confirmed'	=> 'Confirmed');
+else $possible_statuses = array('projected'	=> 'Projected', 'confirmed'	=> 'Confirmed');
 
 if($edit) echo form_dropdown('status['.$i.']', $possible_statuses, $class['status']); 
 else echo $statuses[$class['status']];
@@ -39,7 +39,8 @@ else echo $statuses[$class['status']];
 <?php if(date('Y-m-d H:i:s') > $class_details['class_on']) { ?>
 <li>
 <label for="lesson_id">Feedback</label>
-<?php echo form_dropdown('lesson_id', $all_lessons, $class_details['lesson_id']); ?>
+<?php if($edit) echo form_dropdown('lesson_id', $all_lessons, $class_details['lesson_id']);
+	  else echo $all_lessons[$class_details['lesson_id']]; ?>
 <?php } ?>
 </li>
 </ul>
@@ -48,7 +49,7 @@ else echo $statuses[$class['status']];
 <?php 
 echo form_hidden('class_id', $class_details['id']);
 echo form_hidden('project_id', 1);
-echo '<label for="action">&nbsp;</label>' . form_submit('action', 'Edit', 'class="green button"');
+if($edit) echo '<label for="action">&nbsp;</label>' . form_submit('action', 'Edit', 'class="green button"');
 ?>
 </li>
 </ul>

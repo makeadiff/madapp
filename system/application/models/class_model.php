@@ -245,7 +245,9 @@ class Class_model extends Model {
 					INNER JOIN `Level` ON Class.level_id=Level.id
 					INNER JOIN User ON UserClass.user_id=User.id
 				WHERE UserClass.status='projected' AND UserClass.substitute_id='0'
-					AND DATE(Class.class_on) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $days DAY)")->result();
+					AND DATE(Class.class_on) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL $days DAY)
+					AND User.city_id=1")->result();
+					// ^ Only banglore users will be sent the text - for now. Remove the last WHERE clause to fix it :TODO:
 	}
     
     /// Return all the upcoming classes of the given user. Projected or confirmed.

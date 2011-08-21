@@ -42,7 +42,7 @@ foreach($details as $row) {
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></td>
-    <td class="colName left"><?php if($this->session->userdata('id')== $row->userid){echo "<div style='color:#800000'>Me</div>";} else { echo $row->username;} ?></td>
+    <td class="colName left"><?php if($this->session->userdata('id') == $row->userid){echo "<div style='color:#800000'>Me</div>";} else { echo $row->username;} ?></td>
     <td class="colName left"><?php echo $row->name; ?></td>
 	<td class="colPosition"><?php echo $row->credit; ?></td>
     <td class="colName left"><?php echo $row->added_on; ?></td>

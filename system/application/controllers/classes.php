@@ -8,6 +8,7 @@ class Classes extends Controller {
 		$this->load->model('Class_model','class_model');
 		$this->load->model('Level_model','level_model');
 		$this->load->model('Center_model','center_model');
+		$this->load->model('city_model');
 		$this->load->model('Batch_model','batch_model');
 		$this->load->model('Book_Lesson_model','book_lesson_model');
 		
@@ -348,6 +349,7 @@ class Classes extends Controller {
 		$teachers = idNameFormat($this->user_model->get_users_in_city());
 		$substitutes = $teachers;
 		$substitutes[0] = 'No Substitute';
+		$substitutes[-1] = 'Other City';
 		$all_lessons = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_details->book_id));
 		
 		$statuses = array(
@@ -372,7 +374,8 @@ class Classes extends Controller {
 		
 		$teacher_ids = $this->input->post('user_id');
 		$user_class_id = $this->input->post('user_class_id');
-		$substitute_ids = $this->input->post('substitute_id');
+		 $substitute_ids = $this->input->post('substitute_id');
+		// print_r($substitute_ids );
 		$statuses = $this->input->post('status');
 		
 		$teacher_count = count($user_class_id);
@@ -397,5 +400,25 @@ class Classes extends Controller {
 	function confirm_class($class_id) {
 		$this->class_model->confirm_class($class_id, $this->session->userdata('id'));
 		echo '{"success": "Confirmed"}';
+	}
+	function other_city_teachers()
+	{
+		$data['flag']=$this->uri->segment(3);
+		$data['cities']=$this->city_model->getCities();
+		$this->load->view('classes/other_city_teachers',$data);
+	}
+	function city_teachers()
+	{
+		$cityId=$this->uri->segment(3);
+		$data['flag']=$this->uri->segment(4);
+		$data['users']=$this->user_model->getcity_users($cityId);
+		$this->load->view('classes/city_teachers',$data);
+	}
+	function update_city_teachers()
+	{
+		$userId=$this->uri->segment(3);
+		$data['substitute_id']=$userId;
+		$data['userName']=$this->user_model->get_user_name($userId);
+		$this->load->view('classes/show_Username',$data);
 	}
 }

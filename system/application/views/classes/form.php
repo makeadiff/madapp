@@ -1,3 +1,45 @@
+<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
+<script type="text/javascript">
+		 $(document).ready(function(){
+    	 $('#other_city0').change(function(){
+		 if($(this).val() == -1){
+		 var flag=0
+         	$.ajax({
+            type: "POST",
+           	url: "<?= site_url('classes/other_city_teachers')?>"+'/'+flag,
+           	 success: function(msg){
+           		 $('#sidebar').html(msg);
+           		 }
+            	});
+		 }
+    });
+	$('#other_city1').change(function(){
+		 if($(this).val() == -1){
+		  var flag=1
+         	$.ajax({
+            type: "POST",
+           	url: "<?= site_url('classes/other_city_teachers')?>"+'/'+flag,
+           	 success: function(msg){
+           		 $('#sidebar').html(msg);
+           		 }
+            	});
+		 }
+    });
+	$('#other_city2').change(function(){
+		 if($(this).val() == -1){
+		  var flag=2
+         	$.ajax({
+            type: "POST",
+           	url: "<?= site_url('classes/other_city_teachers')?>"+'/'+flag,
+           	 success: function(msg){
+           		 $('#sidebar').html(msg);
+           		 }
+            	});
+		 }
+    });
+});  
+</script>
+
 <?php $this->load->view('layout/header', array('title'=>'Edit Class on '. date('jS M Y, H:i A', strtotime($class_details['class_on'])))); ?>
 <form action="<?php echo site_url('classes/edit_class_save') ?>" class="form-area" method="post">
 <ul class="form city-form">
@@ -15,13 +57,17 @@
 
 <strong><?php echo $teachers[$class['user_id']] ?></strong>
 </li>
+
 <li>
 <label for='substitute_id[<?php echo $i ?>]'>Substitue</label>
+<div id="sustitue<?php echo $i ?>">
 <?php 
-if($edit) echo form_dropdown('substitute_id['.$i.']', $substitutes, $class['substitute_id']); 
+if($edit) echo form_dropdown('substitute_id['.$i.']', $substitutes, $class['substitute_id'],'id="other_city'.$i.'"'); 
 else echo $substitutes[$class['substitute_id']];
 ?>
+</div>
 </li>
+
 <li>
 <label for='status[<?php echo $i ?>]'>Status</label>
 <?php 

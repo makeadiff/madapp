@@ -592,6 +592,13 @@ class Users_model extends Model {
 		}
 		return $phone;
 	}
-
+	function getcity_users($cityId)
+	{
+		return $this->db->where('city_id', $cityId)->get('User')->result();
+	}
+	function get_user_name($userId)
+	{
+		return $this->db->where('id', $userId)->get('User')->result();
+	}
 	
 }

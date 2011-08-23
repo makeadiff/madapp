@@ -20,26 +20,23 @@ jQuery(document).ready(function () {
 <input type="text" style="background:#CCCCCC; width:260px;" disabled="disabled" value="<?=$row->name;?>" />
 <?php } ?>
 </li>
- <label for="txtName">Users :</label>
-<div  style="height:100px; overflow:scroll; border:1px solid #999; padding:5px; width: 250px; overflow-x:hidden; float:left;">
 <li>
-       
-		<?php $users=$users->result_array();
-		foreach($users as $row){?>
-         </li>
-         <li>
-         <label for="txtName"><?php echo $row['name']; ?></label>
-         <input type="hidden" value="<?=$id?>" name="event" id="event" />
-         <input type="checkbox" value="<?php echo $row['id']; ?>" id="users" name="users[]" /> 
-		<?php } ?>
-			</li></div>	
-            <li>
-  
- </ul>
- <ul>
+<label for="txtName"><strong>Users :</strong></label>
+<?php 
+$users=$users->result_array();
+foreach($users as $row){?>
+<li><label for="users-<?php echo $row['id']; ?>"><?php echo $row['name']; ?></label>
+<input type="hidden" value="<?php $id?>" name="event" id="event" />
+<input type="checkbox" value="<?php echo $row['id']; ?>" id="users-<?php echo $row['id']; ?>" name="users[]" />
+</li>
+<?php } ?>
+</li>
+</ul>
+
+<ul>
 <li>
-<input  id="btnSubmit" class="button green" type="submit" value="+ Add Users Event" />
-<a href="<?=site_url('event/index')?>" class="sec-action">Cancel</a>
+<input class="button green" type="submit" value="+ Add Users Event" />
+<a href="<?php echo site_url('event/index')?>" class="sec-action">Cancel</a>
 </li>
 </ul>
 </form>

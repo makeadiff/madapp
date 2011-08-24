@@ -24,7 +24,9 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 
 
 <table class="data-table" id="main">
-<tr><th>Batch</th><th>Volunteers</th><?php if($this->user_auth->get_permission('classes_batch_view')) { ?><th>Batch View</th><?php } ?><th colspan="2">Action</th></tr>
+<tr><th>Batch</th><th>Volunteers</th><?php if($this->user_auth->get_permission('classes_batch_view')) { ?><th>Batch View</th><?php } ?>
+<?php if($this->user_auth->get_permission('debug')) { ?><th>Add Class Manually</th><?php } ?><th>Batch Head</th>
+<th colspan="2">Action</th></tr>
 <?php 
 $day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 $row_class = 'odd';
@@ -37,10 +39,13 @@ foreach($all_batches as $batch) {
 
 <td><a href="<?php echo site_url('batch/add_volunteers/'.$batch->id) ?>">Add Volunteers to this Batch</a></td>
 <?php if($this->user_auth->get_permission('classes_batch_view')) { ?><td><a href="<?php echo site_url('classes/batch_view/'.$batch->id) ?>">Batch View</a></td><?php } ?>
+<?php if($this->user_auth->get_permission('debug')) { ?><td><a href="<?php echo site_url('classes/add_maunally/'.$batch->id.'/') ?>">Add Class Manually</a></td><?php } ?>
+<td><?php echo $all_users[$batch->batch_head_id] ?></td>
 <td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="thickbox edit with-icon primary popup"  class="edit with-icon">Edit</a></td>
 <td><a href="<?php echo site_url('batch/delete/'.$batch->id); ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($batch_name) ?>">Delete</a></td>
 </tr>
 <?php } ?>
 </table>
 
-<?php $this->load->view('layout/footer'); ?>
+<?php
+$this->load->view('layout/footer'); ?>

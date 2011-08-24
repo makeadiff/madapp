@@ -203,10 +203,11 @@ class Users_model extends Model {
 		$this->db->select('User.*,City.name as city_name');
 		$this->db->from('User');
 		$this->db->where('User.project_id',$this->project_id)->where('User.status','1');
-		if($where) {
-			if($where['city_id']) $this->db->where('User.city_id', $where['city_id']);
-		}
+		if(!empty($where['city_id'])) $this->db->where('User.city_id', $where['city_id']);
+		else $this->db->where('User.city_id', $this->city_id);
+		
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
+		$this->db->orderby('User.name');
 		
 		$result = $this->db->get();
 		
@@ -592,13 +593,6 @@ class Users_model extends Model {
 		}
 		return $phone;
 	}
-	function getcity_users($cityId)
-	{
-		return $this->db->where('city_id', $cityId)->get('User')->result();
-	}
-	function get_user_name($userId)
-	{
-		return $this->db->where('id', $userId)->get('User')->result();
-	}
+
 	
 }

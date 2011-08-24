@@ -52,7 +52,8 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 		$class_count= 0;
 		foreach($teacher['classes'] as $classes) {
 			// This to make sure that the new classes that was started after missing a lot of class works correctly. For eg. if level 1 starts in Sunday back on 12 Aug, but level 2 started only on 17 Aug(sun), this part will handle it correctly.
-			while(date('d M',strtotime($classes->class_on)) != $batch_info['days_with_classes'][$class_count]) { 
+			while(isset($batch_info['days_with_classes'][$class_count]) and date('d M',strtotime($classes->class_on)) != $batch_info['days_with_classes'][$class_count]) { 
+				//if($class_count > 5) dump($classes); :DEBUG:
 				print "<td class='class-cancelled'>&nbsp;</td>";
 				$class_count++;
 				if($class_count > 10) exit; // In case something goes terribly, terribly bad.

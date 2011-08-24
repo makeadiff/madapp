@@ -1,46 +1,25 @@
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
+<?php $this->load->view('layout/header', array('title'=>'Edit Class on '. date('jS M Y, H:i A', strtotime($class_details['class_on'])))); ?>
 <script type="text/javascript">
-		 $(document).ready(function(){
-    	 $('#other_city0').change(function(){
-		 if($(this).val() == -1){
-		 var flag=0
-         	$.ajax({
-            type: "POST",
-           	url: "<?= site_url('classes/other_city_teachers')?>"+'/'+flag,
-           	 success: function(msg){
-           		 $('#sidebar').html(msg);
-           		 }
-            	});
-		 }
+$(document).ready(function(){
+	$('.substite_select').change(function(){
+		if($(this).val() == -1){
+			var flag = $(this).attr('id').replace(/\D/g,"");
+			showCities(flag);
+		}
     });
-	$('#other_city1').change(function(){
-		 if($(this).val() == -1){
-		  var flag=1
-         	$.ajax({
-            type: "POST",
-           	url: "<?= site_url('classes/other_city_teachers')?>"+'/'+flag,
-           	 success: function(msg){
-           		 $('#sidebar').html(msg);
-           		 }
-            	});
-		 }
-    });
-	$('#other_city2').change(function(){
-		 if($(this).val() == -1){
-		  var flag=2
-         	$.ajax({
-            type: "POST",
-           	url: "<?= site_url('classes/other_city_teachers')?>"+'/'+flag,
-           	 success: function(msg){
-           		 $('#sidebar').html(msg);
-           		 }
-            	});
-		 }
-    });
-});  
+});
+
+function showCities(flag) {
+	$.ajax({
+		type: "POST",
+		url: "<?php echo site_url('classes/other_city_teachers')?>"+'/'+flag,
+		success: function(msg){
+			$('#sidebar').html(msg);
+		}
+	});
+}
 </script>
 
-<?php $this->load->view('layout/header', array('title'=>'Edit Class on '. date('jS M Y, H:i A', strtotime($class_details['class_on'])))); ?>
 <form action="<?php echo site_url('classes/edit_class_save') ?>" class="form-area" method="post">
 <ul class="form city-form">
 <?php for($i=0; $i<count($class_details['teachers']); $i++) {
@@ -59,11 +38,18 @@
 </li>
 
 <li>
-<label for='substitute_id[<?php echo $i ?>]'>Substitue</label>
-<div id="sustitue<?php echo $i ?>">
-<?php 
-if($edit) echo form_dropdown('substitute_id['.$i.']', $substitutes, $class['substitute_id'],'id="other_city'.$i.'"'); 
-else echo $substitutes[$class['substitute_id']];
+<label for='substitute_id[<?php echo $i ?>]'>Substitute</label>
+<div id="sustitue_<?php echo $i ?>">
+<?php
+if($class['substitute_id'] and !isset($substitutes[$class['substitute_id']])) { // Inter city substitution...
+	if($edit) echo "<a href='javascript:showCities(".$i.");'>";
+	echo $this->user_model->get_user($class['substitute_id'])->name;
+	if($edit) echo "</a>";
+	
+} else {
+	if($edit) echo form_dropdown('substitute_id['.$i.']', $substitutes, $class['substitute_id'],'id="other_city_'.$i.'" class="substite_select"'); 
+	else echo $substitutes[$class['substitute_id']];
+}
 ?>
 </div>
 </li>

@@ -2,19 +2,16 @@
 <script type="text/javascript">
 function get_teachers(city_id)
 {
-		if(city_id == -1)
-		 $('#shown').hide();
-		 else
-		  $('#shown').show();
+	if(city_id == -1) $('#shown').hide();
+	else {
+		$('#shown').show();
+	
 		$.ajax({
-            type: "POST",
-           	url: "<?= site_url('classes/city_teachers')?>"+'/'+city_id+'/'+<?=$flag?>,
-			
-           	 success: function(msg){
-			  	
-           		 $('#shown').html(msg);
-           		 }
-            	});
+			type: "POST",
+			url: "<?php echo site_url('classes/city_teachers')?>"+'/'+city_id+'/<?php echo $flag ?>',
+			success: function(msg){$('#shown').html(msg);}
+		});
+	}
 }
 </script>
 <ul class="form city-form">
@@ -22,11 +19,13 @@ function get_teachers(city_id)
 <select id="user" name="user" onchange="javascript:get_teachers(this.value)"> 
 <option selected="selected" value="-1" >- Choose -</option> 
 <?php foreach($cities as $row){ ?>
-	<option value="<?=$row->id?>"><?=$row->name?></option> 
-	 <?php } ?>
+	<option value="<?php echo $row->id?>"><?php echo $row->name?></option> 
+<?php } ?>
 </select>
 </li>
+<li>
 <div id="shown">
 
 </div>
+</li>
  </ul>

@@ -52,7 +52,6 @@ function get_kids_Name(center_id,pageno){
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<th class="colCheck1">Id</th>
 	<th class="colName left sortable">Name</th>
     <th class="colStatus sortable">Birth Day</th>
     <th class="colStatus">Center</th>
@@ -73,7 +72,6 @@ foreach($content as $row) {
 	if($count % 2) $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><?php echo $row['id']; ?></td>
     <td class="colName left"><?php echo $row['name']; ?></td>
     <td class="colCount"><?php echo $row['birthday']; ?></td> 
     <td class="colStatus" style="text-align:left"><?php echo $row['center_name'];?></td>

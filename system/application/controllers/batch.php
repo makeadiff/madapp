@@ -43,8 +43,9 @@ class Batch extends Controller {
 			
 			$item_name = $level->name .  ' at ' . $this->center_model->get_center_name($center_id);
 		}
+		$all_users = idNameFormat($this->users_model->getuser_details()->result());
 		
-		$this->load->view('batch/index', array('all_batches' => $all_batches,'center_name'=>$item_name, 'center_id'=>$center_id, 'message'=>$this->message));
+		$this->load->view('batch/index', array('all_batches' => $all_batches,'center_name'=>$item_name, 'center_id'=>$center_id, 'all_users'=>$all_users));
 	}
 	
 	function add_volunteers($batch_id) {

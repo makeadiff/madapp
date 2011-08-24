@@ -401,24 +401,26 @@ class Classes extends Controller {
 		$this->class_model->confirm_class($class_id, $this->session->userdata('id'));
 		echo '{"success": "Confirmed"}';
 	}
-	function other_city_teachers()
+	
+	
+	function other_city_teachers($flag)
 	{
-		$data['flag']=$this->uri->segment(3);
+		$data['flag'] = $flag;
 		$data['cities']=$this->city_model->getCities();
 		$this->load->view('classes/other_city_teachers',$data);
 	}
-	function city_teachers()
+	function city_teachers($city_id, $flag)
 	{
-		$cityId=$this->uri->segment(3);
-		$data['flag']=$this->uri->segment(4);
-		$data['users']=$this->user_model->getcity_users($cityId);
+		$data['flag']=$flag;
+		$data['users']=$this->user_model->getuser_details(array('city_id'=>$city_id))->result();
+		
 		$this->load->view('classes/city_teachers',$data);
 	}
-	function update_city_teachers()
+	function update_city_teachers($user_id, $flag)
 	{
-		$userId=$this->uri->segment(3);
-		$data['substitute_id']=$userId;
-		$data['userName']=$this->user_model->get_user_name($userId);
-		$this->load->view('classes/show_Username',$data);
+		$data['substitute_id']=$user_id;
+		$data['userName']=$this->user_model->get_user($user_id)->name;
+		$data['flag'] = $flag;
+		$this->load->view('classes/show_username',$data);
 	}
 }

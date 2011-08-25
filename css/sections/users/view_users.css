@@ -1,0 +1,7 @@
+.col-select, #email-area, #sms-area {
+	display:none;
+}
+
+label {
+	font-weight:bold;
+}

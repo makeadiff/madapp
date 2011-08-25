@@ -8,6 +8,7 @@
 .deactivate {background-image:url(silk_icons/cross.png);}
 .activate {background-image:url(silk_icons/tick.png);}
 /* Activate/Deactivate - oppostite of active/deactive */
+.active {background-image:url(silk_icons/tick.png);}
 .deactive {background-image:url(silk_icons/cross.png);}
 
 /*Paging*/
@@ -34,6 +35,8 @@
 .idea {background-image:url(silk_icons/lightbulb.png);}
 .print {background-image:url(silk_icons/printer.png);}
 .folder {background-image:url(silk_icons/folder.png);}
+.email,.mail,.write {background-image:url(silk_icons/email.png);}
+.phone,.sms {background-image:url(silk_icons/phone.png);}
 
 
 #warning-message,.warning {background-image:url(silk_icons/error.png);}
@@ -42,6 +45,4 @@
 
 /*Project Specific Stuff*/
 
-.menu-with-icon li {
-background-position:4px 5px;
-}
+.menu-with-icon li {background-position:4px 5px;}

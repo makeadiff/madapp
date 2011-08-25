@@ -56,7 +56,7 @@ jQuery(document).ready(function () {
  <ul>
 <li>
 <?php if(count($attended_users) > 0){ ?>
-<input  id="btnSubmit" class="button green" type="submit" value="+ Add Users Event" />
+<input  id="btnSubmit" class="button green" type="submit" value="+ Update Users Event" />
 <a href="<?=site_url('event/index')?>" class="sec-action">Cancel</a>
 <?php } ?>
 </li>

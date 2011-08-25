@@ -225,6 +225,7 @@ class User extends Controller  {
 			$user = $this->users_model->get_user($this->session->userdata('id'));
 
 			$this->email->from($user->email, $user->name);
+			$this->email->to('binnyva+Temp@gmail.com');
 			foreach($users as $user_id) $this->email->bcc($all_emails[$user_id]);
 			$this->email->subject($this->input->post('email-subject'));
 			$this->email->message($this->input->post('email-content'));

@@ -233,7 +233,7 @@ class User extends Controller  {
 			$this->email->send();
 			
 			$this->session->set_flashdata('success', "Emails sent to ".count($users)." people.");
-			
+			$message['success'] = "Emails sent to ".count($users)." people.";
 		} elseif($this->input->post('action') == 'Send SMSs') {
 			$this->load->library('sms');
 			
@@ -245,7 +245,7 @@ class User extends Controller  {
 			$this->sms->send($phone, $this->input->post('sms-content'));
 			
 			$this->session->set_flashdata('success', "Texts sent to ".count($users)." people.");
-			
+			$message['success'] = "Texts sent to ".count($users)." people.";
 		} else {
 			$data['city_id'] = $this->session->userdata('city_id');
 			

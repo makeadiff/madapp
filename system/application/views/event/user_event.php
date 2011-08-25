@@ -26,7 +26,7 @@ jQuery(document).ready(function () {
 $users=$users->result_array();
 foreach($users as $row){?>
 <li><label for="users-<?php echo $row['id']; ?>"><?php echo $row['name']; ?></label>
-<input type="hidden" value="<?php $id?>" name="event" id="event" />
+<input type="hidden" value="<?php echo $id ;?>" name="event" id="event" />
 <input type="checkbox" value="<?php echo $row['id']; ?>" id="users-<?php echo $row['id']; ?>" name="users[]" />
 </li>
 <?php } ?>

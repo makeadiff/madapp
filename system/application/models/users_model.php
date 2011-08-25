@@ -450,6 +450,7 @@ class Users_model extends Model {
 		
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
+		if(!empty($data['phone'])) $this->db->where('User.phone', $data['phone']);
 		
 		if(!empty($data['user_group'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');

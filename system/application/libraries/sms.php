@@ -10,7 +10,7 @@ class sms {
 			'v'			=>	'1.1',
 			'msg_type'	=>	'TEXT',
 			'auth_scheme'=>	'PLAIN',
-			'mask'		=>	'Basecamp',
+			'mask'		=>	'MAD',
 			'userid'	=>	$this->gupshup_account['username'],
 			'password'	=>	$this->gupshup_account['password']
 		);
@@ -18,6 +18,8 @@ class sms {
 	
 	function send($number, $message) {
 		if(!$number) return;
+		if(is_array($number)) $number = implode('|', $number);
+		
 		$url = str_replace('&amp;', '&', $this->getLink('http://enterprise.smsgupshup.com/GatewayAPI/rest?', 
 			$this->gupshup_param + array('msg'=>$message, 'send_to'=>$number)));
 		

@@ -97,24 +97,23 @@ class Common extends Controller {
 		$log .= "From $phone at $time:";
 
 		// Find the user with who sent the SMS - using the phone number.
-		$users = $this->user_model->search_user(array('phone'=>$phone));
-		if(!$users) {
+		$user = reset($this->users_model->search_users(array('phone'=>$phone,'city_id'=>0)));
+		if(!$user) {
 			$log .= "User Not Found!";
 			$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
 			log_message('error', $log);
 			return;
 		}
-		$user_id = reset($users)->id;
 		
 		// Find the unconfirmed class closest to today by the person who sent the text.
-		$closest_unconfirmed_class = $this->class_model->get_closest_unconfirmed_class($user_id);
+		$closest_unconfirmed_class = $this->class_model->get_closest_unconfirmed_class($user->id);
 		
-		$this->class_model->confirm_class($user_id, $closest_unconfirmed_class); // ... and confirm it.
+		$this->class_model->confirm_class($user->id, $closest_unconfirmed_class); // ... and confirm it.
 		
-		$log .= " User $user_id, Class $closest_unconfirmed_class. ";
+		$log .= " User {$user->id}, Class $closest_unconfirmed_class. ";
 		
 		// Then sent a thank you sms to that user.
-		$name = short_name($this->user_model->get_user($user_id)->name);
+		$name = short_name($user->name);
 		$this->sms->send($phone, "Thank you for confirming your class. All the best, $name :-)");
 		
 		$log .= " Sent a thank you SMS to $name.";

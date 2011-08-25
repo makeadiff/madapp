@@ -158,12 +158,8 @@ class User extends Controller  {
 		
 		$this->load->view('user/popups/user_edit_view',$data);
 	}
-	/**
-    * Function to update_user
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
+	
+	/// Edits a user.
 	function update_user() {
 		$this->user_auth->check_permission('user_edit');
 		$data['rootId'] = $this->input->post('rootId');
@@ -217,160 +213,92 @@ class User extends Controller  {
 	}
 	
 	/// The User index is handled by this action
-	function view_users()
-	{
+	function view_users() {
 		$this->user_auth->check_permission('user_index');
-		$data['title'] = 'Manage Volunteers';
+		$data = array('title'=>'Manage Volunteers');
+		
+		if($this->input->post('action') == 'Send Emails') {
+			$this->load->library('email');
+			
+			$users = $this->input->post('users');
+			$all_emails = $this->input->post('email');
+			$user = $this->users_model->get_user($this->session->userdata('id'));
+
+			$this->email->from($user->email, $user->name);
+			foreach($users as $user_id) $this->email->bcc($all_emails[$user_id]);
+			$this->email->subject($this->input->post('email-subject'));
+			$this->email->message($this->input->post('email-content'));
+			$this->email->send();
+			
+			$this->session->set_flashdata('success', "Emails sent to ".count($users)." people.");
+			
+		} elseif($this->input->post('action') == 'Send SMSs') {
+			$this->load->library('sms');
+			
+			$users = $this->input->post('users');
+			$all_phones = $this->input->post('phone');
+			$phone = array();
+			
+			foreach($users as $user_id) $phone[] = $all_phones[$user_id];
+			$this->sms->send($phone, $this->input->post('sms-content'));
+			
+			$this->session->set_flashdata('success', "Texts sent to ".count($users)." people.");
+			
+		} else {
+			$data['city_id'] = $this->session->userdata('city_id');
+			
+			if($this->input->post('city_id') !== false) $data['city_id'] = $this->input->post('city_id');
+			if($this->input->post('user_group') !== false) $data['user_group'] = $this->input->post('user_group');
+			else $data['user_group'] = array();
+			
+			$data['name'] = '';
+			if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
+			
+			$data['user_type'] = 'volunteer';
+			if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
+			
+			$group = implode(',', $data['user_group']);
+			if(!$group) $group = 0;
+			$name = $data['name'];
+			if(!$name) $name = 0;
+			$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type']; // This will be passed to the export page...
+		}
+		
+		// If we don't have a query_string yet, get the necessary data from the hidden field.
+		if(empty($data['query_string'])) {
+			list($data['city_id'], $data['user_group'], $data['name'], $data['user_type']) = explode('/', $this->input->post('query_string'));
+			if($data['name'] == '0') $data['name'] = '';
+			if($data['user_group'] == '0') $data['user_group'] = array();
+			else $data['user_group'] = explode(',', $data['user_group']);
+			
+			$data['query_string'] = $this->input->post('query_string');
+		}
+		
 		$data['all_cities'] = $this->city_model->get_all();
-		$data['city_id'] = $this->session->userdata('city_id');
-		if($this->input->post('city_id') !== false) $data['city_id'] = $this->input->post('city_id');
-		
 		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
-		if($this->input->post('user_group') !== false) $data['user_group'] = $this->input->post('user_group');
-		else $data['user_group'] = array();
-		
-		$data['name'] = '';
-		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
 		$data['get_user_groups'] = true;
-		
-		$data['user_type'] = 'volunteer';
-		if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
-		
 		$data['all_users'] = $this->users_model->search_users($data);
 		
 		$this->load->view('user/view_users', $data);
 	}
 
-	
-	/**
-    * Function to csv_export
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function csv_export()
-	{
+	/// Export to CSV
+	function export($city_id='0', $user_group='0', $name='', $user_type="volunteer") {
 		$this->user_auth->check_permission('user_export');
-		$query= $this->users_model->getuser_details_csv();
-		query_to_csv($query, TRUE, 'user_details.csv');
-	}
-	/**
-    * Function to update_footer
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function update_footer()
-	{
-		$data['city']=$_REQUEST['city'];
-		$data['name']=$_REQUEST['name'];
-		$group=$_REQUEST['group'];
-		$group_sub = substr($group,0,strlen($group)-1);
-		$group_ex= explode(",",trim($group_sub));
-		$data['group'] =implode("-",$group_ex);
-		$this->load->view('user/update_csvbutton_footer',$data);
+		$data['city_id']	= $city_id;
+		$data['user_group']	= ($user_group == 0) ? array() : explode(',',$user_group);
+		$data['name']		= ($name == 0) ? '' : $name;
+		$data['user_type']	= $user_type;
+		$data['get_user_groups'] = true;
+		
+		$data['all_users'] = $this->users_model->search_users($data);
+		header("Content-type: application/octet-stream");  
+		header("Content-Disposition: attachment; filename=Volunteers.csv");  
+		header("Pragma: no-cache");  
+		header("Expires: 0");  
+		$this->load->view('user/export_csv', $data);
 	}
 	
-	/**
-    * Function to updated_csv_export
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function updated_csv_export()
-	{
-		$this->user_auth->check_permission('user_export');
-		$data['city']=$this->uri->segment(3);
-		$data['group']=$this->uri->segment(4);
-		$data['name']=$this->uri->segment(5);
-		$group=$data['group'];
-		//search by any city with group only
-		if($data['city'] == 0 && $data['group'] !='' && $data['name']=='' )
-		{
-			$query= $this->users_model->searchuser_by_anycity($data);
-			//print_r($query->result());
-			query_to_csv($query,TRUE,'user_details.csv');
-		}
-		//search by any city with group only
-		else if($data['city'] == 0 && $group !='' && $data['name'] !='' )
-		{
-			$query= $this->users_model->searchuser_by_anycity_grp_name($data);
-			query_to_csv($query,TRUE,'user_details.csv');
-		
-		}
-		//search by city only.
-		else if($data['city'] !='' && $data['name']=='' && $group=='')
-		{
-			$query= $this->users_model->search_by_city($data);
-			query_to_csv($query,TRUE,'user_details.csv');
-		
-		}
-		
-		//search by city with group and name.
-		else if($data['city'] !='' && $data['name'] !='' && $group !='')
-		{
-			$explode_agent = explode("-",trim($group));
-			for($i=0;$i<sizeof($explode_agent);$i++)
-			{
-		 	$data['group']=$explode_agent[$i];
-			//$query= $this->users_model->searchuser_details_csv($data);
-			$query= $this->users_model->searchuser_details($data);
-			$result=$query->result_array();
-			foreach($result as $row)
-			{
-				$id=$row['id'];
-				$name=$row['name'];
-				$title=$row['title'];
-				$email=$row['email'];
-				$phone=$row['phone'];
-				$center_name=$row['center_name'];
-				$city_name=$row['city_name'];
-				$user_type=$row['user_type'];
-				
-				$details_array=array( $id, $name, $title,$email,$phone,$center_name,$city_name,$user_type);
-				
-			}
-			//$header_array=array('id','Name','Position Held','Email','Mobile No','Center','City');
-			$array[$i]=$details_array;
-		
-			}
-			array_to_csv($array,'user_details.csv');
-		}
-		//search by city and group.
-		else if($data['city'] !='' && $data['name'] =='' && $group !='')
-		{
-			$explode_agent = explode("-",trim($group));
-			for($i=0;$i<sizeof($explode_agent);$i++) {
-				$data['group']=$explode_agent[$i];
-				$query= $this->users_model->searchuser_details_by_grp_city($data);
-				$result=$query->result_array();
-				$j=0;
-				foreach($result as $row) {
-					$id=$row['id'];
-					$name=$row['name'];
-					$title=$row['title'];
-					$email=$row['email'];
-					$phone=$row['phone'];
-					$center_name=$row['center_name'];
-					$city_name=$row['city_name'];
-					$user_type=$row['user_type'];
-					
-					$details_array=array( $id, $name, $title,$email,$phone,$center_name,$city_name,$user_type);
-					$array[$j]=$details_array;
-					$j++;
-				}
-			//$header_array=array('id','Name','Position Held','Email','Mobile No','Center','City');
-			}
-			array_to_csv($array,'user_details.csv');
-		
-		}
-		//search by city and name.
-		 else if($data['city'] !='' && $data['name'] !='' && $group =='')
-		 {
-			 $query= $this->users_model->search_by_city_name($data);
-			 query_to_csv($query,TRUE,'user_details.csv');
-		 }
-	}
 	/**
     * Function to edit_profile
     * @author:Rabeesh 

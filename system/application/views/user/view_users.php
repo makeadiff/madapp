@@ -96,6 +96,7 @@ $this->load->view('layout/header',array('title'=>$title));
 
 <form action="" method="post" id="communications">
 <input type="hidden" name="query_string" value="<?php echo $query_string ?>" />
+<?php if($this->user_auth->get_permission('user_bulk_email')) { ?>
 <div id="email-area">
 <label for="email-subject">Subject</label>
 <input type="text" id="email-subject" name="email-subject" value="" /><br />
@@ -103,20 +104,21 @@ $this->load->view('layout/header',array('title'=>$title));
 <label for="email-content">Content</label><br />
 <textarea id="email-content" name="email-content" rows="15" cols="80" style="width: 95%" class="tinymce"></textarea>
 <input type="submit" name="action" value="Send Emails" />
-</div>
+</div><?php } ?>
 
+<?php if($this->user_auth->get_permission('user_bulk_sms')) { ?>
 <div id="sms-area">
 <label for="sms-content">Content</label><br />
 <textarea name="sms-content" rows="5" cols="70" style="width: 95%"></textarea><br />
 <input type="submit" name="action" value="Send SMSs" />
-</div>
+</div><?php } ?>
 <br /><br />
 
 <a class="with-icon settings" href="#" onclick="showFilters()">Filters</a> &nbsp; &nbsp;
 <a class="with-icon add" href="<?php echo site_url('user/import'); ?>">Import Users...</a> &nbsp; &nbsp;
-<a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;
-<a class="with-icon email" href="#" onclick="showEmail();">EMail...</a> &nbsp; &nbsp;
-<a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;
+<?php if($this->user_auth->get_permission('user_export')) { ?><a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;<?php } ?>
+<?php if($this->user_auth->get_permission('user_bulk_email')) { ?><a class="with-icon email" href="#" onclick="showEmail();">EMail...</a> &nbsp; &nbsp;<?php } ?>
+<?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?>
 <br /><br />
 
 <table cellpadding="0"  cellspacing="0" class="clear data-table">

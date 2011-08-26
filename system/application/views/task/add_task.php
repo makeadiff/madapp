@@ -13,12 +13,12 @@
 <li><label for="date">Type: </label>
 <select id="type" name="type" > 
 <option selected="selected" value="-1" >- Choose -</option> 
-	<option value="1">hr</option> 
-	<option value="2">pr</option> 
-    <option value="3">eph</option> 
-    <option value="4">cr</option> 
-    <option value="5">finance</option> 
-    <option value="6">ops</option> 
+	<option value="1">HR</option> 
+	<option value="2">PR</option> 
+    <option value="3">EPH</option> 
+    <option value="4">CR</option> 
+    <option value="5">Finance</option> 
+    <option value="6">Operations</option> 
 </select>
 </li>
 

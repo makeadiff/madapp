@@ -34,7 +34,7 @@ class Task extends controller
 	}
 	function index()
 	{
-		$this->user_auth->check_permission('event_index');
+		$this->user_auth->check_permission('task_index');
 		$this->load->view('layout/header',array('title'=>'Manage Task'));
 		$data['details']= $this->task_model->get_task();
 		$this->load->view('task/index',$data);
@@ -42,55 +42,53 @@ class Task extends controller
 	}
 	function addtask()
 	{
-		$this->user_auth->check_permission('event_add');
+		$this->user_auth->check_permission('task_add');
 		$this->load->view('task/add_task');
 	}
 	function insert_task()
 	{
+		$this->user_auth->check_permission('task_add');
 		$data['name']=$_REQUEST['name'];
 		$data['credit']=$_REQUEST['credit'];
 		$data['type']=$_REQUEST['type'];
 		$flag= $this->task_model->add_task($data);
-		if($flag)
-		{
+		if($flag) {
 			$this->session->set_flashdata('success', 'Task Added Successfully.');
 			redirect('task/index');  
 		}
-		
-	
 	}
+	
 	function task_delete()
 	{
+		$this->user_auth->check_permission('task_delete');
 		$data['id']=$this->uri->segment(3);
 		$flag= $this->task_model->delete_task($data);
-		if($flag)
-		{
+		
+		if($flag) {
 			$this->session->set_flashdata('success', 'Task Deleted Successfully.');
 			redirect('task/index');  
 		}
 	}
-	function task_edit()
-	{
-		
-		$id=$this->uri->segment(3);
-		$data['event']= $this->task_model->gettask($id);
+	function task_edit($task_id) {
+		$this->user_auth->check_permission('task_edit');
+		$data['event']= $this->task_model->gettask($task_id);
 		$this->load->view('task/edit_task',$data);
 	}
-	function update_task()
-	{
+	
+	function update_task() {
+		$this->user_auth->check_permission('task_edit');
 		$data['root_id']=$_REQUEST['root_id'];
 		$data['name']=$_REQUEST['name'];
 		$data['credit']=$_REQUEST['credit'];
 		$data['vertical']=$_REQUEST['type'];
 		$flag= $this->task_model->update_task($data);
-		if($flag)
-		{
+		
+		if($flag) {
 			$this->session->set_flashdata('success', 'Task Updated Successfully.');
 			redirect('task/index');  
-		}else{
+		} else {
 			$this->session->set_flashdata('success', 'No Updation Performed.');
 			redirect('task/index');
 		}
-		
 	}
 }

@@ -39,6 +39,7 @@ class Admincredit extends controller
     **/
 	function index()
 	{
+		$this->user_auth->check_permission('admincredit_index');
 		$this->load->view('layout/header',array('title'=>'Admin Credit'));
 		$data['details']= $this->admincredit_model->get_credit();
 		echo count($data['details']);
@@ -53,20 +54,20 @@ class Admincredit extends controller
     **/
 	function addcredit()
 	{
-		$this->user_auth->check_permission('event_add');
+		$this->user_auth->check_permission('admincredit_add_credit');
 		$data['users']= $this->admincredit_model->get_users();
 		$data['task']= $this->admincredit_model->get_task();
 		$this->load->view('admincredit/add_credit',$data);
 	}
+	
 	/**
     * Function to insert_credit
     * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean]
     **/
-	function insert_credit()
-	{
-		
+	function insert_credit() {
+		$this->user_auth->check_permission('admincredit_add_task');
 		$data['user']=$_REQUEST['user'];
 		$data['task_id']=$_REQUEST['task'];
 		$flag= $this->admincredit_model->update_admincredits($data);
@@ -82,8 +83,9 @@ class Admincredit extends controller
     * @param :[$data]
     * @return: type: [Boolean]
     **/
-	function alladmincredit()
-	{
+	function alladmincredit() {
+		$this->user_auth->check_permission('admincredit_index_all');
+		
 		$this->load->view('layout/header',array('title'=>'Admin Credit'));
 		$data['details']= $this->admincredit_model->get_alladmincredit();
 		$this->load->view('admincredit/alladmin_credit_index',$data);

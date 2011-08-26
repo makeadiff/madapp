@@ -77,15 +77,15 @@ class Event extends controller{
 	function insert_event()
 	{
 		$this->user_auth->check_permission('event_add');
-		//$data['city']=$_REQUEST['city'];
-		$data['name']=$_REQUEST['name'];
-		$data['startdate']=$_REQUEST['date-pick'];
-		$data['enddate']=$_REQUEST['date-pick-ends'];
-		$data['place']=$_REQUEST['place'];
-		$data['type']=$_REQUEST['type'];
+		$data['name']		= $_REQUEST['name'];
+		$data['startdate']	= $_REQUEST['date-pick'];
+		$data['enddate']	= $_REQUEST['date-pick-ends'];
+		$data['place']		= $_REQUEST['place'];
+		$data['type']		= $_REQUEST['type'];
+		$data['city_id']	= $this->session->userdata('city_id');
+		
 		$flag= $this->event_model->add_event($data);
-		if($flag)
-		{
+		if($flag) {
 			$this->session->set_flashdata('success', 'Event Added Successfully.');
 			redirect('event/index');  
 		}

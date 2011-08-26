@@ -6,9 +6,9 @@
 <h1><?php echo $title; ?></h1>
 
 <div id="actions">
-<?php //if($this->user_auth->get_permission('event_add')) { ?>
+<?php if($this->user_auth->get_permission('event_add')) { ?>
 <a href="<?php echo site_url('event/addevent')?>" class="thickbox button green primary popup" name="Add Event">Add Events</a>
-<?php //} ?>
+<?php } ?>
 </div><br class="clear" />
 
 
@@ -47,10 +47,10 @@ foreach($details as $row) {
     <td class="colStatus"><?php echo $row->ends_on;?></td>
 	<td class="colPosition"><?php echo $row->place; ?></td>
     <td class="colPosition"><?php echo $row->type; ?></td>
-    <td class="colPosition"><a href="<?php echo site_url('event/user_event/'.$row->id)?>" class="thickbox  popup">manage</a> | <a href="<?=site_url('event/mark_attendence/'.$row->id)?>" class="thickbox  popup">attended</a></td>
+    <td class="colPosition"><a href="<?php echo site_url('event/user_event/'.$row->id)?>" class="thickbox  popup">manage</a> | <a href="<?php echo site_url('event/mark_attendence/'.$row->id)?>" class="thickbox  popup">attended</a></td>
     <td class="colActions right"> 
     <?php if($this->user_auth->get_permission('event_edit')) { ?>
-    <a href="<?php echo site_url('event/event_edit/'.$row->id)?>" class="thickbox icon edit popup" name="Edit Event: <?php echo  $row->name;?>">Edit</a>
+    <a href="<?php echo site_url('event/event_edit/'.$row->id)?>" class="thickbox icon edit popup" name="Edit Event: <?php echo $row->name;?>">Edit</a>
 	<?php } ?>
     <?php if($this->user_auth->get_permission('event_delete')) { ?>
     <a class="actionDelete icon delete confirm" href="<?php echo site_url('event/event_delete/'.$row->id); ?>">Delete</a>
@@ -63,7 +63,7 @@ foreach($details as $row) {
 </table>
 </div>
 <?php if(!$count) {
-	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
+	   echo "<div class='no-records'>- no records found -</div>";
 } ?>
 
 </div>

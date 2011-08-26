@@ -5,7 +5,7 @@
         	<h1><?php echo $title; ?></h1>
             <!-- start page actions-->
         	<div id="actions"> 
-			<a href="<?=site_url('user_group/popupaddgroup')?>" class="thickbox button primary popup" style="margin-bottom:10px;" name="Add New Group">Add New Group</a>
+			<a href="<?php echo site_url('user_group/popupaddgroup')?>" class="thickbox button primary green popup" name="Add New Group">Add New Group</a>
 			</div>
 			<!-- end page actions-->
 	    </div>
@@ -48,7 +48,7 @@ foreach($content as $row)
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></a></td>
     <td class="colName left"><?php echo $row['name']; ?></a></td>
-    <td class="colName left"><img src="<?php echo base_url(); ?>/images/ico/ico_key.gif" style="border:none;"/> <a href="<?php echo site_url('user_group/view_permission/'.$row['id']) ?> " class="thickbox popup"> View Permissions</a></td>
+    <td class="colName left"><a href="<?php echo site_url('user_group/view_permission/'.$row['id']) ?> " class="with-icon key thickbox popup"> View Permissions</a></td>
     <td class="colActions right"> 
     <a href="<?php echo site_url('user_group/popupEdit_group/'.$row['id'])?>" class="thickbox icon popup edit">Edit</a> 
     <a class="actionDelete icon delete confirm" href="<?php echo site_url('user_group/ajax_deletegroup/'.$row['id']); ?>">Delete</a>

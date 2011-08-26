@@ -7,7 +7,7 @@
 
 <!-- start page actions-->
 <div id="actions"> 
-<a href="<?php echo site_url('permission/popupAddPermission')?>" class="thickbox button primary popup" style="margin-bottom:10px;" name="Add Permission">Add Permission</a>
+<a href="<?php echo site_url('permission/popupAddPermission')?>" class="thickbox button green primary popup" style="margin-bottom:10px;" name="Add Permission">Add Permission</a>
 </div><br />
 <!-- end page actions-->
 </div>
@@ -63,7 +63,7 @@ foreach($content as $row)
 
 <?php if($norecord_flag == 1) 
 { 
-	   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
+	   echo "<div class='no-records'>- no records found -</div>";
 } ?>
 
 </div>

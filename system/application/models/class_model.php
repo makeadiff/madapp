@@ -22,7 +22,7 @@ class Class_model extends Model {
     		WHERE Class.project_id={$this->project_id} AND Class.batch_id=$batch_id")->result();
     }
     
-    function confirm_class($class_id, $user_id) {
+    function confirm_class($user_id, $class_id) {
     	return $this->db->query("UPDATE UserClass SET status='confirmed' WHERE user_id=$user_id AND class_id=$class_id");
     }
     

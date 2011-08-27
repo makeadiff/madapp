@@ -27,17 +27,17 @@ class Users_model extends Model {
     * @return: type: [Boolean, Array()]
     **/
 	
-	function login($data) {	
+	function login($data) {
       	$username= $data['username'];
         $password = $data['password'];
 		
-		$query = $this->db->where('email', $username)->where('password',$password)->where('status','1')->get("User");
+		$query = $this->db->where('email', $username)->where('password',$password)->where('status','1')->where('user_type', 'volunteer')->get("User");
         if($query->num_rows() > 0) {
 			$user = $query->first_row();
    			$memberCredentials['id'] = $user->id;
 			$memberCredentials['email'] = $user->email;
 			$memberCredentials['name'] = $user->name;
-			$memberCredentials['project_id'] = 1;//$user->project_id; // :TODO:
+			$memberCredentials['project_id'] = $user->project_id;
 			$memberCredentials['city_id'] = $user->city_id;
 			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);

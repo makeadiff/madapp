@@ -402,6 +402,32 @@ class Classes extends Controller {
 		echo '{"success": "Confirmed"}';
 	}
 	
+	function add_manually($batch_id) {
+		$this->load->view('classes/add_manually', array('batch_id'=>$batch_id));
+	}
+	
+	function add_manually_save() {
+		$batch_id = $this->input->post('batch_id');
+		$batch = $this->batch_model->get_batch($batch_id);
+		$class_date = $this->input->post('class_date') . ' ' . $batch->class_time;
+		
+		$teachers = $this->batch_model->get_batch_teachers($batch->id);
+		foreach($teachers as $teacher) {
+			// Make sure its not already inserted.
+			if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date)) {
+				print "Class by {$teacher->id} at $class_date<br />\n";
+				$this->class_model->save_class(array(
+					'batch_id'	=> $batch->id,
+					'level_id'	=> $teacher->level_id,
+					'teacher_id'=> $teacher->id,
+					'substitute_id'=>0,
+					'class_on'	=> $class_date,
+					'status'	=> 'projected'
+				));
+			}
+		}
+	}
+	
 	
 	function other_city_teachers($flag)
 	{

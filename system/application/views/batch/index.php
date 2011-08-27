@@ -37,9 +37,9 @@ foreach($all_batches as $batch) {
 <tr class="<?php echo $row_class ?>">
 <td><?php echo $batch_name ?></td>
 
-<td><a href="<?php echo site_url('batch/add_volunteers/'.$batch->id) ?>">Add Volunteers to this Batch</a></td>
-<?php if($this->user_auth->get_permission('classes_batch_view')) { ?><td><a href="<?php echo site_url('classes/batch_view/'.$batch->id) ?>">Batch View</a></td><?php } ?>
-<?php if($this->user_auth->get_permission('debug')) { ?><td><a href="<?php echo site_url('classes/add_maunally/'.$batch->id.'/') ?>">Add Class Manually</a></td><?php } ?>
+<td><a href="<?php echo site_url('batch/add_volunteers/'.$batch->id) ?>" class="with-icon add">Add Volunteers to this Batch</a></td>
+<?php if($this->user_auth->get_permission('classes_batch_view')) { ?><td><a href="<?php echo site_url('classes/batch_view/'.$batch->id) ?>" class="with-icon calendar">Batch View</a></td><?php } ?>
+<?php if($this->user_auth->get_permission('debug')) { ?><td><a href="<?php echo site_url('classes/add_manually/'.$batch->id.'/') ?>" class="popup with-icon add">Add Class Manually</a></td><?php } ?>
 <td><?php echo $all_users[$batch->batch_head_id] ?></td>
 <td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="thickbox edit with-icon primary popup"  class="edit with-icon">Edit</a></td>
 <td><a href="<?php echo site_url('batch/delete/'.$batch->id); ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($batch_name) ?>">Delete</a></td>

@@ -32,32 +32,26 @@ foreach($event as $event_row):
  </ul>
  <ul>
 <li>
-<input type="hidden" name="root_id" id="root_id" value="<?=$event_row->id;?>">
-<input  id="btnSubmit" class="button green" type="submit" value="Edit  Task"  />
-<a href="<?=site_url('task/index')?>" class="sec-action">Cancel</a>
+<input type="hidden" name="root_id" id="root_id" value="<?php echo $event_row->id; ?>">
+<input  id="btnSubmit" class="button green" type="submit" value="Edit Task" />
+<a href="<?php echo site_url('task/index') ?>" class="sec-action">Cancel</a>
 </li>
 </ul>
 </form>
-<script>
-function validate()
-{
-
-if(document.getElementById("name").value == '')
-	{
+<script type="text/javascript">
+function validate() {
+	if(document.getElementById("name").value == '') {
 		alert("Name missing");
 		return false;
 	}
 
-if(document.getElementById("credit").value == '')
-	{
+	if(document.getElementById("credit").value == '') {
 		alert("Credit missing");
 		return false;
 	}
-if(document.getElementById("type").value == '-1')
-	{
+	if(document.getElementById("type").value == '-1') {
 		alert("Select  Type");
 		return false;
 	}
 }
 </script>
-

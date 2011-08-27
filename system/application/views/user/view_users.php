@@ -31,7 +31,7 @@ $this->load->view('layout/header',array('title'=>$title));
 </div><br />
 <?php } ?>
 
-<form action="" method="post" id="filters">
+<form action="<?php echo site_url('user/view_users'); ?>" method="post" id="filters">
 <table style="margin-bottom:25px;">
 <tr>
 <td style="vertical-align:top;"><div class="field clear">
@@ -94,7 +94,7 @@ $this->load->view('layout/header',array('title'=>$title));
 </table>
 </form>
 
-<form action="" method="post" id="communications">
+<form action="<?php echo site_url('user/bulk_communication'); ?>" method="post" id="communications">
 <input type="hidden" name="query_string" value="<?php echo $query_string ?>" />
 <?php if($this->user_auth->get_permission('user_bulk_email')) { ?>
 <div id="email-area">

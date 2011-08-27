@@ -38,36 +38,28 @@ class Auth extends Controller {
 	}
 
 	//log the user in
-	function login()
-	{
+	function login() {
 		//validate form input
 		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required');
 
-		if ($this->form_validation->run() == true)
-		{ 
+		if ($this->form_validation->run() == true) {
 			//check to see if the user is logging in
-			//check for "remember me"
-			$remember = (bool) $this->input->post('remember');
+			$remember = (bool) $this->input->post('remember'); //check for "remember me"
 
-			if ($this->user_auth->login($this->input->post('email'), $this->input->post('password'), $remember))
-			{
+			if ($this->user_auth->login($this->input->post('email'), $this->input->post('password'), $remember)) {
 				//if the login is successful
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', "Welcome, ".$this->session->userdata('name'));
 				redirect('dashboard/dashboard_view', 'refresh');
-			}
-			else
-			{ 
+			} else { 
 				//if the login was un-successful
 				//redirect them back to the login page
 				$this->session->set_flashdata('message', "Invalid login");
 				redirect('auth/login'); //use redirects instead of loading views for compatibility with MY_Controller libraries
 				
 			}
-		}
-		else
-		{  
+		} else {  
 			//the user is not logging in so display the login page
 			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');

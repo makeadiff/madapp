@@ -128,4 +128,9 @@ class Common extends Controller {
 		print $this->db->query("SELECT data FROM Setting WHERE name='temp'")->row()->data;
 		print "</pre>";
 	}
+	
+	function test() {
+		$this->load->library('sms');
+		$this->sms->send('9746068565', 'Test');
+	}
 }

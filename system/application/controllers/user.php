@@ -212,12 +212,10 @@ class User extends Controller  {
 		redirect('user/view_users');
 	}
 	
-	/// The User index is handled by this action
-	function view_users() {
-		$this->user_auth->check_permission('user_index');
-		$data = array('title'=>'Manage Volunteers');
-		
+	/// Bulk SMS and Email goes thru here.
+	function bulk_communication() {
 		if($this->input->post('action') == 'Send Emails') {
+			$this->user_auth->check_permission('user_bulk_email');
 			$this->load->library('email');
 			
 			$users = $this->input->post('users');
@@ -233,10 +231,12 @@ class User extends Controller  {
 			$this->email->send();
 			
 			$this->session->set_flashdata('success', "Emails sent to ".count($users)." people.");
-			$message['success'] = "Emails sent to ".count($users)." people.";
+			redirect('user/view_users/'.$this->input->post('query_string'));
+		
 		} elseif($this->input->post('action') == 'Send SMSs') {
+			$this->user_auth->check_permission('user_bulk_sms');
 			$this->load->library('sms');
-			
+				
 			$users = $this->input->post('users');
 			$all_phones = $this->input->post('phone');
 			$phone = array();
@@ -245,26 +245,41 @@ class User extends Controller  {
 			$this->sms->send($phone, $this->input->post('sms-content'));
 			
 			$this->session->set_flashdata('success', "Texts sent to ".count($users)." people.");
-			$message['success'] = "Texts sent to ".count($users)." people.";
-		} else {
-			$data['city_id'] = $this->session->userdata('city_id');
-			
-			if($this->input->post('city_id') !== false) $data['city_id'] = $this->input->post('city_id');
-			if($this->input->post('user_group') !== false) $data['user_group'] = $this->input->post('user_group');
-			else $data['user_group'] = array();
-			
-			$data['name'] = '';
-			if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
-			
-			$data['user_type'] = 'volunteer';
-			if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
-			
-			$group = implode(',', $data['user_group']);
-			if(!$group) $group = 0;
-			$name = $data['name'];
-			if(!$name) $name = 0;
-			$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type']; // This will be passed to the export page...
+			redirect('user/view_users/'.$this->input->post('query_string'));
 		}
+	}
+	
+	/// The User index is handled by this action
+	function view_users($city_id='', $user_groups='', $name='',$user_type='volunteer') {
+		$this->user_auth->check_permission('user_index');
+		$data = array('title'=>'Manage Volunteers');
+		
+		// City selection...
+		if($this->input->post('city_id') !== false) $data['city_id'] = $this->input->post('city_id');
+		elseif($city_id != '') $data['city_id'] = $city_id;
+		else $data['city_id'] = $this->session->userdata('city_id');
+		
+		// User group selection
+		if($this->input->post('user_group') !== false) $data['user_group'] = $this->input->post('user_group');
+		elseif($user_groups) $data['user_group'] = explode(',', $user_groups);
+		else $data['user_group'] = array();
+
+		// Name selection
+		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
+		elseif($name) $data['name'] = $name;
+		else $data['name'] = '';
+		
+		// User type
+		if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
+		elseif($user_type) $data['user_type'] = $user_type;
+		else $data['user_type'] = 'volunteer';
+		
+		// Create the query_string.
+		$group = implode(',', $data['user_group']);
+		if(!$group) $group = 0;
+		$name = $data['name'];
+		if(!$name) $name = 0;
+		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type']; // This will be passed to the export page...
 		
 		// If we don't have a query_string yet, get the necessary data from the hidden field.
 		if(empty($data['query_string'])) {
@@ -276,6 +291,7 @@ class User extends Controller  {
 			$data['query_string'] = $this->input->post('query_string');
 		}
 		
+		// Some data needed for rendering the page.
 		$data['all_cities'] = $this->city_model->get_all();
 		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
 		$data['get_user_groups'] = true;

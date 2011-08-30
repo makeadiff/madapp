@@ -95,8 +95,6 @@ Class User_auth {
     *
     **/
 	function logout () {
-		$this->ci->session->sess_destroy();
-		
 		delete_cookie('email');
 		delete_cookie('password_hash');
 		

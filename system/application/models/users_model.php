@@ -434,7 +434,7 @@ class Users_model extends Model {
 	
 
 	function search_users($data) {
-		$this->db->select('User.id,User.name,User.photo,User.email,User.phone,User.credit,User.joined_on,User.title,User.user_type, City.name as city_name');
+		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,User.joined_on,User.title,User.user_type, City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
 		
@@ -451,6 +451,7 @@ class Users_model extends Model {
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
 		if(!empty($data['phone'])) $this->db->where('User.phone', $data['phone']);
+		if(!empty($data['email'])) $this->db->where('User.email', $data['email']);
 		
 		if(!empty($data['user_group'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');

@@ -169,131 +169,29 @@ Class User_auth {
     **/
 	public function forgotten_password($identity)    
 	{
-		if ( $this->ci->ion_auth_model->forgotten_password($identity) )   //changed
-		{
-			// Get user information
-			$user = $this->get_user_by_identity($identity);  //changed to get_user_by_identity from email
-			$data = array(
-				'identity'		=> $user->{$this->ci->config->item('identity', 'ion_auth')},
-				'forgotten_password_code' => $user->forgotten_password_code
-			);
+		$this->ci->load->model('users_model');
+		$users = $this->ci->users_model->search_users(array('email'=>$identity));
+		if($users) {
+			$user = reset($users);
+			$password_message = <<<END
+Hey {$user->name},
 
-			$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').$this->ci->config->item('email_forgot_password', 'ion_auth'), $data, true);
-			$this->ci->email->clear();
-			$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
-			$this->ci->email->initialize($config);
-			$this->ci->email->set_newline("\r\n");
-			$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), $this->ci->config->item('site_title', 'ion_auth'));
+MADApp password reminder...
+Username: {$user->email}
+Password: {$user->password}
+Login At: http://makeadiff.in/madapp/
+
+Thanks.
+--
+MADApp
+END;
+
 			$this->ci->email->to($user->email);
-			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - Forgotten Password Verification');
-			$this->ci->email->message($message);
-
-			if ($this->ci->email->send())
-			{
-				$this->set_message('forgot_password_successful');
-				return TRUE;
-			}
-			else
-			{
-				$this->set_error('forgot_password_unsuccessful');
-				return FALSE;
-			}
-		}
-		else
-		{
-			$this->set_error('forgot_password_unsuccessful');
-			return FALSE;
+			$this->ci->email->subject('MADApp Password Reminder');
+			$this->ci->email->message($password_message);
+			$this->ci->email->send();
 		}
 	}
-	/**
-    * Function to get_user_by_identity
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	public function get_user_by_identity($identity)
-	{
-		return $this->ci->ion_auth_model->get_user_by_identity($identity)->row();
-	}
-	/**
-    * Function to set_error
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	public function set_error($error)
-	{
-		$this->errors[] = $error;
-
-		return $error;
-	}
-	/**
-    * Function to errors
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	public function errors()
-	{
-		$_output = '';
-		foreach ($this->errors as $error)
-		{
-			$_output .= $this->error_start_delimiter . $this->ci->lang->line($error) . $this->error_end_delimiter;
-		}
-
-		return $_output;
-	}
-	/**
-    * Function to forgotten_password_complete
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	public function forgotten_password_complete($code)
-	{
-		$identity = $this->ci->config->item('identity', 'ion_auth');
-		
-
-		$new_password = $this->ci->ion_auth_model->forgotten_password_complete($code);
-
-		if ($new_password)
-		{
-			$data = array(
-				'identity'     => $profile->{$identity},
-				'new_password' => $new_password
-			);
-
-			$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').$this->ci->config->item('email_forgot_password_complete', 'ion_auth'), $data, true);
-
-			$this->ci->email->clear();
-			$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
-			$this->ci->email->initialize($config);
-			$this->ci->email->set_newline("\r\n");
-			$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), $this->ci->config->item('site_title', 'ion_auth'));
-			$this->ci->email->to($profile->email);
-			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - New Password');
-			$this->ci->email->message($message);
-
-			if ($this->ci->email->send())
-			{
-				$this->set_message('password_change_successful');
-				return TRUE;
-			}
-			else
-			{
-				$this->set_error('password_change_unsuccessful');
-				return FALSE;
-			}
-		}
-
-		$this->set_error('password_change_unsuccessful');
-		return FALSE;
-	}
-	
 }
 
 

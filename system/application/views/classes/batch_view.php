@@ -5,7 +5,7 @@ $this->load->view('layout/header', array('title'=>'Batch View'));
 
 Center: <strong><?php echo $center_name; ?></strong><br />
 Batch: <?php echo $batch_name ?><br />
-Date: <?php echo $from_date; if($to_date) echo ' to ' . $to_date; ?><br />
+Date: <u><?php echo date('d<\s\u\p>S</\s\u\p> M, Y', strtotime($from_date)); if($to_date) echo ' to ' . date('dS M, Y', strtotime($to_date)); ?></u><br />
 
 <?php
 $prev_week = change_week($from_date, -1);
@@ -52,7 +52,7 @@ foreach($classes as $class) {
 
 <?php if($teacher_index == 0) { ?><td <?php echo $rowspan ?>>
 <?php if($class['teachers'][0]['status'] == 'cancelled') { ?><a class="uncancel" href="<?php echo site_url('classes/uncancel_class/'.$class['id'].'/'.$batch_id) ?>">Undo Class Cancellation<a/>
-<?php } else { ?><a href="<?php echo site_url('classes/cancel_class/'.$class['id'].'/'.$batch_id) ?>">Cancel Class<a/><?php } ?>
+<?php } else { ?><a href="<?php echo site_url('classes/cancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Cancel Class<a/><?php } ?>
 </td><?php } ?>
 </tr>
 <?php

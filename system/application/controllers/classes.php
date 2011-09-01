@@ -165,17 +165,17 @@ class Classes extends Controller {
 	}
 	
 	/// Cancel a class - the id must be given as the argument. If the batch_id argument is provided, goes batch to that batch's view.
-	function cancel_class($class_id, $batch_id=0) {
+	function cancel_class($class_id, $batch_id=0, $date='') {
 		$this->class_model->cancel_class($class_id);
 		$this->session->set_flashdata('success', 'Class has been cancelled');
-		redirect('classes/batch_view/'.$batch_view);
+		redirect('classes/batch_view/'.$batch_id.'/'.$date);
 	}
 	
 	/// Un-Cancel a class - If the user cancels a class by accident, do this.The id must be given as the argument.
-	function uncancel_class($class_id, $batch_id=0) {
+	function uncancel_class($class_id, $batch_id=0, $date='') {
 		$this->class_model->uncancel_class($class_id);
 		$this->session->set_flashdata('success', 'Class cancellation reverted.');
-		redirect('classes/batch_view/'.$batch_view);
+		redirect('classes/batch_view/'.$batch_view.'/'.$date);
 	}
 	
 	/// MADSheet in User mode.

@@ -22,8 +22,9 @@ class Class_model extends Model {
     		WHERE Class.project_id={$this->project_id} AND Class.batch_id=$batch_id")->result();
     }
     
-    function confirm_class($user_id, $class_id) {
-    	return $this->db->query("UPDATE UserClass SET status='confirmed' WHERE user_id=$user_id AND class_id=$class_id");
+    function confirm_class($class_id, $user_id) {
+    	$this->db->query("UPDATE UserClass SET status='confirmed' WHERE user_id=$user_id AND class_id=$class_id");
+		return $this->db->affected_rows();
     }
     
     /// Sets the status of all the teacher in the set class as cancelled. Used to cancel a class.

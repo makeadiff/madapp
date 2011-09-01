@@ -1,5 +1,5 @@
 <link href="<?php echo base_url(); ?>css/dashboard.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="<?php echo base_url(); ?>js/ajaxify.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>js/libraries/ajaxify.js"></script>
 
 <div id="content" class="clear">
 <div id="main" class="clear">

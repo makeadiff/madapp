@@ -108,7 +108,7 @@ class Common extends Controller {
 		// Find the unconfirmed class closest to today by the person who sent the text.
 		$closest_unconfirmed_class = $this->class_model->get_closest_unconfirmed_class($user->id);
 		
-		$this->class_model->confirm_class($user->id, $closest_unconfirmed_class); // ... and confirm it.
+		$this->class_model->confirm_class($closest_unconfirmed_class, $user->id); // ... and confirm it.
 		
 		$log .= " User {$user->id}, Class $closest_unconfirmed_class. ";
 		
@@ -129,8 +129,8 @@ class Common extends Controller {
 		print "</pre>";
 	}
 	
-	function test() {
+	function test($text) {
 		$this->load->library('sms');
-		$this->sms->send('9746068565', 'Test');
+		$this->sms->send('9746068565', $text);
 	}
 }

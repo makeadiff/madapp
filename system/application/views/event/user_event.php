@@ -22,37 +22,4 @@ jQuery(document).ready(function () {
 </li>
 <li>
 <label for="txtName"><strong>Users :</strong></label>
-<?php 
-$users=$users->result_array();
-foreach($users as $row){?>
-<li><label for="users-<?php echo $row['id']; ?>"><?php echo $row['name']; ?></label>
-<input type="hidden" value="<?php echo $id ;?>" name="event" id="event" />
-<input type="checkbox" value="<?php echo $row['id']; ?>" id="users-<?php echo $row['id']; ?>" name="users[]" />
-</li>
-<?php } ?>
-</li>
-</ul>
-
-<ul>
-<li>
-<input class="button green" type="submit" value="+ Add Users Event" />
-<a href="<?php echo site_url('event/index')?>" class="sec-action">Cancel</a>
-</li>
-</ul>
-</form>
-<script>
-function validate()
-{
-if(document.getElementById("event").value == '-1')
-	{		
-		alert("Select a Event");
-		return false;
-	}
-if(document.getElementById("users").checked == '')
-	{
-		alert("Select one User");
-		return false;
-	}
-}
-</script>
 

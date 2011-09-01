@@ -104,10 +104,29 @@ class Event extends controller{
 		$this->user_auth->check_permission('event_mark_attendance');
 		$id=$this->uri->segment(3);
 		$data['events']= $this->event_model->get_event_type($id);
-		$data['users']= $this->users_model->getuser_details();
 		$this->load->view('event/user_event',$data);
+		$users= $this->users_model->getuser_details();
+		$userss=$users->result_array();
+		$data['users']=$userss;
+		foreach($userss as $row)
+		{
+		$user_id=$row['id'];
+		$event_users=$this->event_model->getEventUser($id,$user_id);
+			if(count($event_users) > 0)
+			{
+			$data['name']=$row['name'];
+			$data['user_id']=$row['id'];
+			$this->load->view('event/user_event_user_view',$data);
+			}
+			else {
+			$data['name']=$row['name'];
+			$data['user_id']=$row['id'];
+			$this->load->view('event/user_event_user_view2',$data);
+			}
+		}
+		$this->load->view('event/user_event_footer',$data);
+		
 	}
-	
 	/**
     *
     * Function to insert_userevent
@@ -120,14 +139,47 @@ class Event extends controller{
 	{
 		$this->user_auth->check_permission('event_mark_attendance');
 		$data['event_id']=$_REQUEST['event'];
+		$user_id_list=array();
+		if($this->input->post('users')){
 		$users=$_REQUEST['users'];
-		for($i=0;$i< count($users);$i++)
-		{
-			$data['user_id']=$users[$i];
-			$flag= $this->event_model->insert_user_event($data);
-		}
+		$evnt=$this->event_model->get_user_event($data);
+		$ds=$evnt->result_array();
+			
+				foreach($ds as $row)
+					{
+					$user_id_list[]=$row['user_id'];
+					}
+			if(count($users) < count($user_id_list))
+			{
+				$difference=array_diff($user_id_list,$users);
+				$difference_key=array_keys($difference);
+				for($i=0;$i< count($difference_key);$i++)
+				{
+					$key=$difference_key[$i];
+					$data['user_id']=$difference[$key];
+					$flag= $this->event_model->delete_user_event($data);
+				}
+			}
+			for($i=0;$i< count($users);$i++)
+			{
+				$data['user_id']=$users[$i];
+				$flag= $this->event_model->insert_user_event($data);
+			}
+		
 		$this->session->set_flashdata('success', 'Users attendance marked.');
-		redirect('event/index');  
+		redirect('event/index'); 
+		} else{ 
+		 $flags=$this->event_model->deletefull_user_event($data);
+		 if($flags)
+		 {
+		 	$this->session->set_flashdata('success', 'Users attendance marked.');
+			redirect('event/index'); 
+		 } 
+		 else{
+			$this->session->set_flashdata('success', 'Please Select One user.');
+			redirect('event/index'); 
+		}
+		}
 	}
 	/**
     *

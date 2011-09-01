@@ -20,6 +20,7 @@ class Event_model extends Model{
 			parent::model();
 			$this->ci = &get_instance();
 			$this->city_id = $this->ci->session->userdata('city_id');
+        	$this->project_id = $this->ci->session->userdata('project_id');
 		}
 		/**
    		* Function to getevent_list
@@ -119,6 +120,43 @@ class Event_model extends Model{
 			'present'	=> '1'
 			));
 			}
+			
+		}
+		/**
+   		* Function to get_user_event
+    	* @author:Rabeesh 
+   		* @param :[$data]
+    	* @return: type: [ result Array()]
+    	**/
+		function get_user_event($data)
+		{
+			$event_id= $data['event_id'];
+			$this->db->where('event_id',$event_id);
+        	$this->db->from('UserEvent');
+			$result = $this->db->get();
+			return $result;
+		}
+		/**
+   		* Function to delete_user_event
+    	* @author:Rabeesh 
+   		* @param :[$data]
+    	* @return: type: [ result Array()]
+    	**/
+		function delete_user_event($data)
+		{
+			$this->db->delete('UserEvent', array('user_id'=>$data['user_id']));
+		}
+		/**
+   		* Function to deletefull_user_event
+    	* @author:Rabeesh 
+   		* @param :[$data]
+    	* @return: type: [ result Array()]
+    	**/
+		function deletefull_user_event($data)
+		{
+			$this->db->delete('UserEvent', array('event_id'=>$data['event_id']));
+			return ($this->db->affected_rows() > 0) ? true : false;
+			
 		}
 		/**
    		* Function to get_event_users
@@ -154,5 +192,16 @@ class Event_model extends Model{
 			$this->db->where('event_id',$event_id );
 			$this->db->update("UserEvent",$status);
 		}
+		function getEventUser($id,$user_id)
+		{
+		
+		//return $event = $this->db->query("SELECT user.*,userevent.* FROM user LEFT JOIN userevent ON user.id=userevent.user_id order by User.name");
+		return  $event = $this->db->query("SELECT * FROM userevent  WHERE event_id=$id AND user_id=$user_id")->row();
+		/// print_r($event->result());
+		echo "SELECT * FROM userevent  WHERE event_id=$id AND user_id=$user_id";
+	 
+		}
+		
+	
 
 }

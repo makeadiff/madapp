@@ -8,14 +8,6 @@ function siteInit() {
 			return false;
 		}
 	});
-	
-//	tb_init("a.thickbox, input.thickbox");
-// 	$(".popup").each(function() {
-// 		var url = $(this).attr('href') + '?TB_iframe=true&height=400&width=700';
-// 	
-// 		$(this).attr('href', url);
-// 	});
-//	$(".cancel-button").click(function() {top.window.tb_remove();});
 
 	$(".popup").click(function(event) {
 		var url = $(this).attr("href");
@@ -25,8 +17,6 @@ function siteInit() {
 	});
 	
 	$(".info-box-table td").click(showInfoBox);
-	
-	if($(".data-table").tablesorter) $(".data-table").tablesorter();
 	
 	if(window.init && typeof window.init == "function") init(); //If there is a function called init(), call it on load
 }

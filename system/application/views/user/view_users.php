@@ -121,7 +121,7 @@ $this->load->view('layout/header',array('title'=>$title));
 <?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?>
 <br /><br />
 
-<table cellpadding="0"  cellspacing="0" class="clear data-table">
+<table cellpadding="0"  cellspacing="0" class="clear data-table dont-sort">
 <thead>
 <tr>
 	<th class="col-select"><input type="checkbox" name="select-all" id="select-all" value="0" /></th>
@@ -144,7 +144,7 @@ foreach($all_users as $id => $user) {
 	if($count % 2) $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-	<td class="col-select"><input type="checkbox" name="users[]" value="<?php echo $user->id ?>" />
+	<td class="col-select"><input type="checkbox" name="users[]" class="user-select" value="<?php echo $user->id ?>" />
 <input type="hidden" name="email[<?php echo $user->id ?>]" value="<?php echo $user->email ?>" />
 <input type="hidden" name="phone[<?php echo $user->id ?>]" value="<?php echo $user->phone ?>" /></td>
     <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>

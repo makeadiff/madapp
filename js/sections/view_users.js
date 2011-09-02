@@ -20,6 +20,11 @@ function showSms() {
 }
 
 $().ready(function() {
+	$('#select-all').click(function () {
+		if(this.checked) $(".user-select").attr('checked', "checked");
+		else $(".user-select").removeAttr('checked');
+	});
+
 	$('textarea.tinymce').tinymce({
 		// Location of TinyMCE script
 		script_url : base_url + 'js/libraries/tiny_mce/tiny_mce.js',

@@ -38,8 +38,8 @@ body {
 	}
 	
 #main-content {
-	width:960px;
-	height:auto;
+	width:1000px;
+	height:600px;
 	float:left;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px
@@ -48,8 +48,6 @@ body {
 #title {
 	width:960px;
 	height:40px;
-	float:left;
-	background:url(../images/bgSidebox.gif) repeat-x;
 	line-height:40px;
 	font-size:16px;
 	font-weight:bold;
@@ -59,14 +57,16 @@ body {
     -moz-border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;
     -khtml-border-radius: 5px 5px 0 0;
-	text-shadow:0px 0px 3px #000;
+	text-shadow:0px 0px 3px #aaa;
+	margin-bottom:20px;
 	}
 	
 #content {
-	width:958px;
-	height:auto;
-	float:left;
+	width:500px;
+	height:200px;
 	background-color:#f0f0f0;
+	filter:alpha(opacity=60);
+	opacity:0.8;
 	border:1px solid #D6D6D6;
 	-moz-border-radius-bottomright:5px;
 	-webkit-border-bottom-right-radius:5px;
@@ -76,7 +76,7 @@ body {
 	z-index:-1;
 	text-shadow:1px 1px #fff;
 	padding-top:10px;
-	margin-bottom:20px;
+	margin:0 auto;
 	}
 	
 .clear {
@@ -120,7 +120,7 @@ body {
 	font-weight:bold;
 	width:120px;
 	height:30px;
-	background:url(../images/login-button.png) no-repeat;
+	background:url(../../images/login-button.png) no-repeat;
 	cursor:pointer;
 	}
 
@@ -137,7 +137,7 @@ body {
 	text-align:center;
 	padding:7px 10px;
 	background-color:#999;
-	background-image: url(../images/li-main.gif);
+	background-image: url(../../images/li-main.gif);
     color: #FFF;
     border: 1px solid #7c7c7c;
 	cursor:pointer;
@@ -235,3 +235,7 @@ body {
 	line-height:25px;
 	font-size:14px;
 	}
+
+#main-content {
+	background:url(../../images/wallpapers/udhya_bw.jpg) no-repeat;
+}

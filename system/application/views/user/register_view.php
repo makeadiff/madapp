@@ -44,7 +44,7 @@
             </div>
 				 
             <div class="content-row-large"><span>City:</span>
-            <select class="dropdown" id="city" name="city" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/functional-guidelines/expansion';">
+            <select class="dropdown" id="city" name="city" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/7-expansions';">
 				<?php foreach($cities as $id=>$name) { ?>
 				<option value="<?php echo $id ?>"><?php echo $name ?></option>
 				<?php } ?>

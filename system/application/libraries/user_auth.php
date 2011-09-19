@@ -191,6 +191,7 @@ END;
 			$this->ci->email->message($password_message);
 			$this->ci->email->send();
 		}
+		return true;
 	}
 }
 

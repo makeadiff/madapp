@@ -117,12 +117,12 @@ class Auth extends Controller {
 			$forgotten = $this->user_auth->forgotten_password($this->input->post('email'));
 			if ($forgotten)
 			{ //if there were no errors
-				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				$this->session->set_flashdata('success', "Your password was sent to " .$this->input->post('email') );
 				redirect("auth/login", 'refresh'); //we should display a confirmation page here instead of the login page
 			}
 			else
 			{
-				$this->session->set_flashdata('message', $this->user_auth->errors());
+				$this->session->set_flashdata('error', "There was an error in sending the password");
 				redirect("auth/forgotpassword", 'refresh');
 			}
 		}

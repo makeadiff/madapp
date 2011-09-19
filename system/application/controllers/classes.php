@@ -402,21 +402,21 @@ class Classes extends Controller {
 		echo '{"success": "Confirmed"}';
 	}
 	
-	function add_manually($batch_id) {
-		$this->load->view('classes/add_manually', array('batch_id'=>$batch_id));
+	function add_manually($batch_id, $center_id) {
+		$this->user_auth->check_permission('debug');
+		$this->load->view('classes/add_manually', array('batch_id'=>$batch_id, 'center_id'=>$center_id));
 	}
 	
 	function add_manually_save() {
 		$batch_id = $this->input->post('batch_id');
 		$batch = $this->batch_model->get_batch($batch_id);
 		$class_date = $this->input->post('class_date') . ' ' . $batch->class_time;
-		
+		$user_class_id = array();
 		$teachers = $this->batch_model->get_batch_teachers($batch->id);
 		foreach($teachers as $teacher) {
 			// Make sure its not already inserted.
 			if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date)) {
-				print "Class by {$teacher->id} at $class_date<br />\n";
-				$this->class_model->save_class(array(
+				$user_class_id[] = $this->class_model->save_class(array(
 					'batch_id'	=> $batch->id,
 					'level_id'	=> $teacher->level_id,
 					'teacher_id'=> $teacher->id,
@@ -426,6 +426,9 @@ class Classes extends Controller {
 				));
 			}
 		}
+		
+		$this->session->set_flashdata('success', 'Added ' . count($user_class_id) . ' classes. If anything goes wrong in the MADSheet, send these numbers to Binny: ' . implode(',', $user_class_id));
+		redirect('batch/index/center/'.$this->input->post('center_id'));
 	}
 	
 	

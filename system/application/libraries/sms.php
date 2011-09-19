@@ -19,8 +19,31 @@ class sms {
 	
 	function send($number, $message) {
 		if(!$number) return;
-		if(is_array($number)) $number = implode('|', $number);
 		
+		if(is_array($number)) {
+			$number_array = $number;
+			$number = implode('|', $number);
+		}
+		$data = array();
+		
+		// If there are more than 20 people, send it in slices of 20 - thats the SMS Gupshup limit.
+		if(count($number_array) > 20) {
+			$numbers = $number_array;
+			while($numbers) {
+				$first_twenty = array_slice($numbers, 0, 20);
+				$number = implode('|', $first_twenty);
+				$data[] = $this->_sendCall($number, $message);
+				$numbers = array_slice($numbers, 20);
+			}
+		} else {
+			$data = $this->_sendCall($number, $message);
+		}
+		
+		return $data;
+	}
+	
+	
+	function _sendCall($number, $message) {
 		$url = str_replace('&amp;', '&', $this->getLink('http://enterprise.smsgupshup.com/GatewayAPI/rest?', 
 			$this->gupshup_param + array('msg'=>$message, 'send_to'=>$number)));
 		
@@ -29,8 +52,9 @@ class sms {
 		// Comment the line below to disable Messageing
 		$data = $this->load($url);
 		if($this->debug) dump($data);
-	} 
-
+		
+		return $data;
+	}
 	
 	function getLink($url,$params=array(),$use_existing_arguments=false) {
 		if(!$params and !$use_existing_arguments) return $url;

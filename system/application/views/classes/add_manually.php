@@ -11,6 +11,7 @@
 <a href="<?php echo site_url('task/index') ?>" class="sec-action">Cancel</a></li>
 </ul>
 
+<input type="hidden" name="center_id" value="<?php echo $center_id ?>" />
 <input type="hidden" name="batch_id" value="<?php echo $batch_id ?>" />
 </form>
 

@@ -242,7 +242,7 @@ class User extends Controller  {
 			$phone = array();
 			
 			foreach($users as $user_id) $phone[] = $all_phones[$user_id];
-			$this->sms->send($phone, $this->input->post('sms-content'));
+			$data = $this->sms->send($phone, $this->input->post('sms-content'));
 			
 			$this->session->set_flashdata('success', "Texts sent to ".count($users)." people.");
 			redirect('user/view_users/'.$this->input->post('query_string'));

@@ -37,7 +37,7 @@ function populat_textbox() {
 function get_kidslist(center_id) {
 	$.ajax({
 		type: "POST",
-		url: "<?php site_url('exam/get_kidslist')?>",
+		url: "<?php echo site_url('exam/get_kidslist')?>",
 		data: "center_id="+center_id,
 		success: function(msg){
 			$('#loading').hide();

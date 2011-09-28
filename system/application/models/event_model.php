@@ -46,7 +46,7 @@ class Event_model extends Model{
 				'ends_on'=>$data['enddate'],
 				'place'=>$data['place'],
 				'type'=>$data['type'],
-				//'city_id'=>$this->city_id
+				'city_id'=>$this->city_id
 			));
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}
@@ -192,14 +192,10 @@ class Event_model extends Model{
 			$this->db->where('event_id',$event_id );
 			$this->db->update("UserEvent",$status);
 		}
-		function getEventUser($id,$user_id)
-		{
 		
-		//return $event = $this->db->query("SELECT user.*,userevent.* FROM user LEFT JOIN userevent ON user.id=userevent.user_id order by User.name");
-		return  $event = $this->db->query("SELECT * FROM userevent  WHERE event_id=$id AND user_id=$user_id")->row();
-		/// print_r($event->result());
-		echo "SELECT * FROM userevent  WHERE event_id=$id AND user_id=$user_id";
-	 
+		function getEventUser($id,$user_id) {
+			return $this->db->query("SELECT * FROM UserEvent  WHERE event_id=$id AND user_id=$user_id")->row();
+			
 		}
 		
 	

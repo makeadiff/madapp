@@ -146,7 +146,6 @@ class Exam extends Controller  {
 		$agents = $_REQUEST['agents'];
 		$name = $_REQUEST['name'];
 		$choice_text = $_REQUEST['choice_text'];
-		//print_r($choice_text);
 		$exam_id=$this->exam_model->insert_exam_name($name);
 		$choiceText = substr($choice_text,0,strlen($choice_text)-1);
 		$subjects_id=$this->exam_model->insert_subject_name($choiceText,$exam_id);

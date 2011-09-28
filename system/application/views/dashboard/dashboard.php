@@ -112,7 +112,8 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('user/credithistory') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/credit.jpg" alt="" /> <span>Credit History</span></a></div>
 	<?php } ?>
-     <?php if($this->user_auth->get_permission('setting_index')) { ?>
+    
+	<?php if($this->user_auth->get_permission('event_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('event/event') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/event.png" alt="" /> <span>Event</span></a></div>
 	<?php } ?>

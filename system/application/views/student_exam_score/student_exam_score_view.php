@@ -122,7 +122,7 @@ function suceessfunction()
             
          <div class="field clear" style="width:600px; height:100px;">
          <label for="selBulkActions">Kids:</label>
-			<select id="kids" name="kids"  style="width:142px; height:80px;"multiple >
+			<select id="kids" name="kids"  style="width:142px; height:80px;" multiple >
             <option selected="selected"; >- choose action -</option>  
             </select>
             </div>

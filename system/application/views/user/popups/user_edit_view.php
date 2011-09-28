@@ -106,6 +106,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 		<option value="well_wisher" <?php if($user_type == 'well_wisher') echo ' selected="selected"'; ?>>Well Wisher</option>
 		<option value="alumni"> <?php if($user_type == 'alumni') echo ' selected="selected"'; ?>Alumni</option>
 		<option value="other" <?php if($user_type == 'other') echo ' selected="selected"'; ?>>Other</option>
+		<option value="let_go" <?php if($user_type == 'let_go') echo ' selected="selected"'; ?>>Let Go</option>
 	</select>
 </li>
 </ul>

@@ -8,7 +8,7 @@ function get_examlist(page_no,search_query)
 	$('#loading').show();
 	$.ajax({
 		type: "POST",
-		url: "<?= site_url('exam/get_examdetails')?>",
+		url: "<?php echo site_url('exam/get_examdetails')?>",
 		data: "pageno="+page_no+"&q="+search_query,
 		success: function(msg){
 		$('#loading').hide();
@@ -24,7 +24,7 @@ function deleteEntry(entryId,page_no)
 	{
 		$.ajax({
 		type : "POST",
-		url  : "<?= site_url('exam/ajax_deleteexam') ?>",
+		url  : "<?php echo site_url('exam/ajax_deleteexam') ?>",
 		data : 'entry_id='+entryId,
 		
 		success : function(data)

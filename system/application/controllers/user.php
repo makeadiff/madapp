@@ -295,6 +295,7 @@ class User extends Controller  {
 		$data['all_cities'] = $this->city_model->get_all();
 		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
 		$data['get_user_groups'] = true;
+		$data['get_user_class'] = true;
 		$data['all_users'] = $this->users_model->search_users($data);
 		
 		$this->load->view('user/view_users', $data);

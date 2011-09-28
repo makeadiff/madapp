@@ -72,6 +72,7 @@ class Exam extends Controller  {
 		$data['sub_name']= $this->exam_model->get_subject_names($exam_id);
 		$this->load->view('student_exam_score/exam_details_view',$data);
 	}
+	
 	/**
     * Function to delete
     * @author : Rabeesh
@@ -94,7 +95,7 @@ class Exam extends Controller  {
     {	
 		$this->user_auth->check_permission('exam_add');
 		$data['centers']= $this->center_model->get_all();
-		$this->load->view('student_exam_score/student_exam', $data);
+		$this->load->view('student_exam_score/add_exam', $data);
     }
 	
 	/**
@@ -171,7 +172,7 @@ class Exam extends Controller  {
 		$data['title'] = 'Exam Marks';
 		$this->load->view('layout/header',$data);
 		$data['exam_details']=$this->exam_model->get_exam();
-		$this->load->view('student_exam_score/exam_div',$data);	
+		$this->load->view('student_exam_score/exam_score',$data);	
 		$this->load->view('layout/footer');
 	}
 	

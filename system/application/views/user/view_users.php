@@ -54,7 +54,7 @@ $this->load->view('layout/header',array('title'=>$title));
 	<select name="user_type" id="user_type">
 	<option value="0">All Type</option>
 	<?php
-	$types = array('applicant', 'volunteer', 'well_wisher', 'alumni', 'other');
+	$types = array('applicant', 'volunteer', 'well_wisher', 'alumni', 'other', 'let_go');
 	foreach($types as $row) { ?>
 	<option value="<?php echo $row; ?>" <?php 
 		if(!empty($user_type) and $user_type == $row) echo 'selected="selected"';
@@ -125,19 +125,21 @@ $this->load->view('layout/header',array('title'=>$title));
 <thead>
 <tr>
 	<th class="col-select"><input type="checkbox" name="select-all" id="select-all" value="0" /></th>
+	<th>Actions</th>
 	<th class="sortable">Name</th>
     <th>Email</th>
     <th>Phone</th>
     <?php if($this->input->post('city_id') === '0') { ?><th class="colPosition">City</th><?php } ?>
     <th class="sortable">Joined On</th>
     <th>User Groups</th>
-    <th>Actions</th>
+    <th>Batch</th>
 </tr>
 </thead>
 <tbody>
 
 <?php 
 $count = 0;
+$days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 foreach($all_users as $id => $user) {
 	$count++;
 	$shadeClass = 'even';
@@ -147,17 +149,17 @@ foreach($all_users as $id => $user) {
 	<td class="col-select"><input type="checkbox" name="users[]" class="user-select" value="<?php echo $user->id ?>" />
 <input type="hidden" name="email[<?php echo $user->id ?>]" value="<?php echo $user->email ?>" />
 <input type="hidden" name="phone[<?php echo $user->id ?>]" value="<?php echo $user->phone ?>" /></td>
+	<td class="col-actions"> 
+	<?php if($this->user_auth->get_permission('user_edit')) { ?><a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="thickbox icon edit popup" name="Edit User : <?php echo $user->name ?>">Edit</a><?php } ?>
+    <?php if($this->user_auth->get_permission('user_delete')) { ?><a class="delete confirm icon" href="<?php echo site_url('user/delete/'.$user->id) ?>" title="Delete <?php echo $user->name ?>">Delete</a><?php } ?>
+    </td>
     <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>
     <td class="col-email"><?php echo $user->email; ?></td>
     <td class="col-phone" style="text-align:left"><?php echo $user->phone; ?></td>
     <?php if($this->input->post('city_id') === '0') { ?><td class="col-city"><?php echo $user->city_name; ?></td><?php } ?>
 	<td class="col-join"><?php echo date('dS M, Y', strtotime($user->joined_on)); ?></td>
     <td class="col-groups"><?php echo implode(',', $user->groups); ?></td>
-    
-    <td class="col-actions"> 
-	<?php if($this->user_auth->get_permission('user_edit')) { ?><a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="thickbox icon edit popup" name="Edit User : <?php echo $user->name ?>">Edit</a><?php } ?>
-    <?php if($this->user_auth->get_permission('user_delete')) { ?><a class="delete confirm icon" href="<?php echo site_url('user/delete/'.$user->id) ?>" title="Delete <?php echo $user->name ?>">Delete</a><?php } ?>
-    </td>
+    <td class="col-batch"><?php if($user->batch) echo $user->batch->name . ', ' . $days[$user->batch->day] . ' ' . date('h:i A', strtotime(date('Y-m-d ').$user->batch->class_time)); ?></td>
 </tr>
 
 <?php }?>

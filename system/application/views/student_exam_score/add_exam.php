@@ -19,34 +19,31 @@ $(function() {
 
 function populat_textbox() {
 	var sub_no = $('#sub_no').val();
-	if(isNaN(sub_no))
-		{
+	if(isNaN(sub_no)) {
 		alert("This is not a number");
 		document.getElementById('sub_no').focus(); 
 		return false;
-		}
+	}
 	$.ajax({
-            type: "POST",
-            url: "<?= site_url('exam/ajax_sbjectbox')?>",
-            data: "sub_no="+sub_no,
-            success: function(msg){
-           		$('#loading').hide();
-            	$('#subject').html(msg);
-            }
+		type: "POST",
+		url: "<?php echo site_url('exam/ajax_sbjectbox')?>",
+		data: "sub_no="+sub_no,
+		success: function(msg){
+			$('#loading').hide();
+			$('#subject').html(msg);
+		}
      });
 }
-function get_kidslist(center_id)
-{
-	
+function get_kidslist(center_id) {
 	$.ajax({
-            type: "POST",
-            url: "<?= site_url('exam/get_kidslist')?>",
-            data: "center_id="+center_id,
-            success: function(msg){
-           		$('#loading').hide();
-            	$('#kids').html(msg);
-            }
-            });
+		type: "POST",
+		url: "<?php site_url('exam/get_kidslist')?>",
+		data: "center_id="+center_id,
+		success: function(msg){
+			$('#loading').hide();
+			$('#kids').html(msg);
+		}
+	});
 }
 function dataGrabber()
 {
@@ -93,23 +90,23 @@ function dataGrabber()
 			cText = cText+choiceText[i]+',';
 			
 		}
-	$.ajax({
-		type: "POST",
-		url: "<?php echo site_url('exam/input_exam_mark_details')?>",
-		data: "agents="+agents+'&name='+name+'&choice_text='+cText+'&center='+center,
-		success: function(msg){
-		$('#message').html(msg);
-		$('#refresh').fadeOut('slow');
-		window.parent.get_examlist();
-		}
+		$.ajax({
+			type: "POST",
+			url: "<?php echo site_url('exam/input_exam_mark_details')?>",
+			data: "agents="+agents+'&name='+name+'&choice_text='+cText+'&center='+center,
+			success: function(msg){
+				$('#message').html(msg);
+				$('#refresh').fadeOut('slow');
+				window.parent.get_examlist();
+			}
 		});
-		}
+	}
 }
 </script>
 <div id="message"></div>
 <h2>Add New Exam</h2>
         
-<form name="form" id="formEditor" class="form-area clear"  onclick="return false"   action="" method="post"  >
+<form name="form" id="formEditor" class="form-area clear"  onclick="return false" action="" method="post"  >
 <ul class="form city-form">
 <li>
 <label for="txtName">Exam Name : </label>

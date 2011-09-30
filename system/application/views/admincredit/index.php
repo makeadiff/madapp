@@ -19,8 +19,9 @@
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<th class="colCheck1">Id</th>
+	<th class="colCheck1">Count</th>
 	<th class="colName left sortable">Task</th>
+	<th class="colName left sortable">Person Responsible</th>
     <th class="colStatus sortable">Credit</th>
     <th class="colName left sortable">Added On</th>
 	<th class="colActions">Type</th>
@@ -33,6 +34,15 @@ $statusIco = '';
 $statusText = '';
 $count = 0;
 $i=0;
+$all_verticals = array(
+	'hr'	=> 'Human Resources',
+	'pr'	=> 'Public Relations',
+	'cr'	=> 'Corporate Relations',
+	'finance'=>'Finance',
+	'ops'	=> 'Operations',
+	'eph'	=> 'English Project Head'
+);
+
 foreach($details as $row) {	
 	$count++;
 	$i++;
@@ -42,9 +52,10 @@ foreach($details as $row) {
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></td>
     <td class="colName left"><?php echo $row->name; ?></td>
+	<td class="colName left"><?php echo $all_users[$row->person_id]; ?></td>
 	<td class="colPosition"><?php echo $row->credit; ?></td>
-    <td class="colName left"><?php echo $row->added_on; ?></td>
-    <td class="colPosition"><?php echo $row->vertical; ?></td>
+    <td class="colName left"><?php echo date('d M, Y', strtotime($row->added_on)); ?></td>
+    <td class="colPosition"><?php echo $all_verticals[$row->vertical]; ?></td>
     
     
 </tr>

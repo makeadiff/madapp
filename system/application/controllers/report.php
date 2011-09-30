@@ -39,6 +39,12 @@ class Report extends Controller {
 			'Volunteer Required for all Centers');
 	}
 	
+	function get_volunteer_admin_credits() {
+		$report_data = $this->report_model->get_volunteer_admin_credits();
+		$this->show_report($report_data, array('name'=>'Intern', 'credit'=>'Credits'), 
+			'Volunteer Required for all Centers');
+	}
+	
 	function show_report($data, $fields, $title) {
 		$this->user_auth->check_permission('report_view');
 		$this->load->view('report/report', array('data'=>$data, 'fields'=>$fields, 'title'=>$title));

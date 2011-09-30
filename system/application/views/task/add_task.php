@@ -11,8 +11,7 @@
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Type: </label>
-<select id="type" name="type" > 
-<option selected="selected" value="-1" >- Choose -</option> 
+<select id="type" name="type" >
 	<option value="1">HR</option> 
 	<option value="2">PR</option> 
     <option value="3">EPH</option> 
@@ -26,7 +25,7 @@
  <ul>
 <li>
 <input  id="btnSubmit" class="button green" type="submit" value="+ Add New Task" />
-<a href="<?=site_url('task/index')?>" class="sec-action">Cancel</a>
+<a href="<?php echo site_url('task/index')?>" class="sec-action">Cancel</a>
 </li>
 </ul>
 </form>

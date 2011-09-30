@@ -24,7 +24,6 @@
 
 <li><label for="date">Users: </label>
 <select id="user" name="user" > 
-<option selected="selected" value="-1" >- Choose -</option> 
 <?php foreach($users as $row){ ?>
 	<option value="<?=$row->id?>"><?=$row->name?></option> 
 	 <?php } ?>
@@ -32,7 +31,6 @@
 </li>
 <li><label for="date">Task: </label>
 <select id="task" name="task"  onChange="javascript:addnew_fields(this.value);" >
-<option selected="selected" value="-1" >- Choose -</option>  
 <?php foreach($task as $row){ ?>
 	<option value="<?=$row->id?>"><?=$row->name?></option> 
     <?php } ?>
@@ -56,7 +54,7 @@
 </select>
 </li>
 <li><label for="date">Credit: </label>
-	<input name="credit"  id="credit" type="text">
+	<input name="credit"  id="credit" type="text" value="1">
 	<p class="error clear"></p>
 </li>
 </div>

@@ -30,5 +30,15 @@ class Report_model extends Model {
     		INNER JOIN Center ON Center.id=Level.center_id 
     		WHERE requirement > 0 AND Center.city_id={$this->city_id} GROUP BY Level.center_id")->result();
     }
+	
+	function get_volunteer_admin_credits() {
+		// 14 is the intern group
+		return $this->db->query("SELECT SUM(Task.credit) AS credit, User.name
+    		FROM User INNER JOIN AdminCredit ON AdminCredit.user_id=User.id 
+					INNER JOIN Task ON AdminCredit.task_id=Task.id
+					INNER JOIN UserGroup ON UserGroup.user_id=User.id
+			WHERE UserGroup.group_id=14
+			AND User.city_id={$this->city_id} GROUP BY AdminCredit.user_id")->result();
+	}
 
 }

@@ -40,9 +40,25 @@ class Admincredit extends controller
 	function index()
 	{
 		$this->user_auth->check_permission('admincredit_index');
-		$this->load->view('layout/header',array('title'=>'Admin Credit'));
-		$data['details']= $this->admincredit_model->get_credit();
-		echo count($data['details']);
+		$this->load->model('users_model');
+		
+		$groups = $this->session->userdata('groups');
+		$data['all_users'] = idNameFormat($this->users_model->get_users_in_city());
+		
+		if(in_array('Operations Fellow', $groups)
+				or in_array('HR + EPH Fellow', $groups)
+				or in_array('CR Fellow', $groups)
+				or in_array('Placements Fellow', $groups)
+				or in_array('PR Fellow', $groups)
+				or in_array('National Team', $groups)) {
+			$data['details']= $this->admincredit_model->get_credits_awarded_by();
+			$title = 'Credits awarded by you';
+		} else {
+			$data['details']= $this->admincredit_model->get_credit();
+			$title = 'Your Credits';
+		}
+		
+		$this->load->view('layout/header',array('title'=>$title));
 		$this->load->view('admincredit/index',$data);
 		$this->load->view('layout/footer');
 	}
@@ -86,7 +102,7 @@ class Admincredit extends controller
 	function alladmincredit() {
 		$this->user_auth->check_permission('admincredit_index_all');
 		
-		$this->load->view('layout/header',array('title'=>'Admin Credit'));
+		$this->load->view('layout/header',array('title'=>'All Admin Credit'));
 		$data['details']= $this->admincredit_model->get_alladmincredit();
 		$this->load->view('admincredit/alladmin_credit_index',$data);
 		$this->load->view('layout/footer');

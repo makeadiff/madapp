@@ -192,7 +192,7 @@ class Classes extends Controller {
 		
 		$data = array();
 		foreach($all_centers as $center) {
-			//if($center->id != 18) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+			//if($center->id != 1) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 		
 			$data[$center->id] = array(
 				'center_id'	=> $center->id,
@@ -203,18 +203,18 @@ class Classes extends Controller {
 			
 			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {
-				//if($batch_id != 24) continue; // :DEBUG: Use this to localize the issue
+				//if($batch_id != 1) continue; // :DEBUG: Use this to localize the issue
 				
 				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
 				$days_with_classes = array();
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
-					//if($level->id != 65) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+					//if($level->id != 71) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 					
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 					$class_info = array();
-												
+																	
 					// Get the list of teachers first.
 					$teachers_info = array();
 					$last_class_id = 0;
@@ -233,7 +233,9 @@ class Classes extends Controller {
 					foreach($teachers_info as $teacher_id=>$teacher_name) {
 						foreach($all_classes as $class) {
 							$date = date('d M',strtotime($class->class_on));
-							if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+							if(!in_array($date, $days_with_classes)) {
+								$days_with_classes[date('m-d',strtotime($class->class_on))] = $date;
+							}
 							
 							if($class->user_id == $teacher_id) {
 								// Get the Teacher data.
@@ -248,10 +250,15 @@ class Classes extends Controller {
 						}
 					}
 					
+					
 					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['name'] = $level->name;
 					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['users'] = $teachers_info;
 				}
 				
+				// Make sure that the class dates are ordered correctly. 
+				ksort($days_with_classes);
+				$days_with_classes = array_values($days_with_classes);
+
 				$data[$center->id]['batches'][$batch_id]['days_with_classes'] = $days_with_classes;
 				$days_with_classes = array();
 			}
@@ -310,7 +317,7 @@ class Classes extends Controller {
 							$class_data[$class->id] = $class;
 							// To get all the dates the classes happened on. We need this to make the header.
 							$date = date('d M',strtotime($class->class_on));
-							if(!in_array($date, $days_with_classes)) $days_with_classes[] = $date;
+							if(!in_array($date, $days_with_classes)) $days_with_classes[date('m-d',strtotime($class->class_on))] = $date;
 							
 							$class_data[$class->id]->teachers = array($teacher_data);
 						

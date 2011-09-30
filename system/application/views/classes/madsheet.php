@@ -56,7 +56,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 				//if($class_count > 5) dump($classes); :DEBUG:
 				print "<td class='class-cancelled'>&nbsp;</td>";
 				$class_count++;
-				if($class_count > 10) exit; // In case something goes terribly, terribly bad.
+				if($class_count > 100) exit; // In case something goes terribly, terribly bad.
 			}
 			
 			
@@ -72,8 +72,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			<li><a href="<?php echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li>
 			<?php } ?>
 			<li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li>
-			</ul>
-			</div><?php
+			</ul></div><?php
 			print "</td>";
 			$level_user_count++; 
 			$class_count++;
@@ -92,4 +91,4 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 <?php } // Center ?>
 
 
-<?php $this->load->view('layout/footer'); ?>
+<?php $this->load->view('layout/footer');

@@ -133,4 +133,8 @@ class Admincredit_model extends Model{
 				WHERE `User`.`city_id` = '{$this->city_id}' ORDER BY AdminCredit.id DESC")->result();
 		}
 		
+	function delete_admincredit($admincredit_id) {
+		$this->db->query("DELETE FROM AdminCredit WHERE id=$admincredit_id");
+	}
+		
 }		

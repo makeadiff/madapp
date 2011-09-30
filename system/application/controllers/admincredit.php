@@ -107,4 +107,12 @@ class Admincredit extends controller
 		$this->load->view('admincredit/alladmin_credit_index',$data);
 		$this->load->view('layout/footer');
 	}
+	
+	function delete($admincredit_id) {
+		//$this->user_auth->check_permission('admincredit_delete');
+		$this->admincredit_model->delete_admincredit($admincredit_id);
+	
+		$this->session->set_flashdata('success', 'Task Deleted Successfully.');
+		redirect('admincredit/index');
+	}
 }

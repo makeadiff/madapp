@@ -28,7 +28,7 @@
 <select id="type" name="type"> 
 	<option value="others">Other</option> 
 	<option value="process">Process Training</option> 
-	<option value="curriculam">Curriculum Training</option> 
+	<option value="curriculum">Curriculum Training</option> 
     <option value="teacher">Teacher Training</option> 
 	<option value="avm">AVM</option>
 </select>

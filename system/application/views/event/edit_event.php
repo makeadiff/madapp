@@ -28,10 +28,12 @@ foreach($event as $event_row):
 </li>
 <li><label for="date">Type: </label>
 <select id="type" name="type" > 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<option value="process" <?php if($event_row->type == 'process'){?> selected="selected "<?php } ?>>process</option> 
-	<option value="curriculam" <?php if($event_row->type == 'curriculam'){?> selected="selected "<?php } ?>>curriculam</option> 
-    <option value="teacher" <?php if($event_row->type == 'teacher'){?> selected="selected "<?php } ?>>teacher</option> 
+<select id="type" name="type"> 
+	<option value="others"<?php if($event_row->type == 'others') { ?> selected="selected"<?php } ?>>Other</option> 
+	<option value="process"<?php if($event_row->type == 'process') { ?> selected="selected"<?php } ?>>Process Training</option> 
+	<option value="curriculum"<?php if($event_row->type == 'curriculum') { ?> selected="selected"<?php } ?>>Curriculum Training</option> 
+    <option value="teacher"<?php if($event_row->type == 'teacher') { ?> selected="selected"<?php } ?>>Teacher Training</option> 
+	<option value="avm"<?php if($event_row->type == 'avm') { ?> selected="selected"<?php } ?>>AVM</option>
 </select>
 </li>
 <?php endforeach;?>

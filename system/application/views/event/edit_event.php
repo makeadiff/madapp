@@ -27,7 +27,6 @@ foreach($event as $event_row):
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Type: </label>
-<select id="type" name="type" > 
 <select id="type" name="type"> 
 	<option value="others"<?php if($event_row->type == 'others') { ?> selected="selected"<?php } ?>>Other</option> 
 	<option value="process"<?php if($event_row->type == 'process') { ?> selected="selected"<?php } ?>>Process Training</option> 

@@ -25,11 +25,12 @@
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Type: </label>
-<select id="type" name="type" > 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<option value="1">process</option> 
-	<option value="2">curriculam</option> 
-    <option value="3">teacher</option> 
+<select id="type" name="type"> 
+	<option value="others">Other</option> 
+	<option value="process">Process Training</option> 
+	<option value="curriculam">Curriculum Training</option> 
+    <option value="teacher">Teacher Training</option> 
+	<option value="avm">AVM</option>
 </select>
 </li>
 

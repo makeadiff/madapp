@@ -42,12 +42,12 @@ jQuery(document).ready(function () {
          </li>
          <li>
          <label for="txtName"><?php echo $row->user_name; ?></label>
-         <input type="hidden" value="<?=$id?>" name="event" id="event" />
-         <input type="hidden" value="<?=$row->user_id?>" name="user_id" id="user_id" />
+         <input type="hidden" value="<?php echo $id ?>" name="event" id="event" />
+         <input type="hidden" value="<?php echo $row->user_id ?>" name="user_id" id="user_id" />
          <input type="checkbox" <?php if($row->present == 1){ ?> checked="checked" <?php } ?>  id="users" name="user" 
-         onClick="javascript:update_userstatus('<?=$id?>','<?=$row->user_id?>');"  /> 
+         onClick="javascript:update_userstatus('<?php echo $id?>','<?php echo $row->user_id?>');"  /> 
 		<?php } }else{ ?>
-        No Members In This event 
+        No Members in this event 
         <?php } ?>
 			</li></div>	
             <li>
@@ -56,8 +56,8 @@ jQuery(document).ready(function () {
  <ul>
 <li>
 <?php if(count($attended_users) > 0){ ?>
-<input  id="btnSubmit" class="button green" type="submit" value="+ Update Users Event" />
-<a href="<?=site_url('event/index')?>" class="sec-action">Cancel</a>
+<input  id="btnSubmit" class="button green" type="submit" value="+ Update Event" />
+<a href="<?php echo site_url('event/index')?>" class="sec-action">Cancel</a>
 <?php } ?>
 </li>
 </ul>

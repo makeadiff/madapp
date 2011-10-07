@@ -1,6 +1,37 @@
 <?php
 $this->load->view('layout/header',array('title'=>$title));
 ?>
+<script type="text/javascript">
+function init() {
+	$(".data-table").tablesorter({
+		headers: { 
+			0: {sorter: false}, 
+			1: {sorter: false},
+			4: {sorter: false},
+			5: {sorter:'dateField'},
+		}
+	});
+}
+
+$.tablesorter.addParser({
+	id: 'dateField', 
+	is: function(s) {
+		// return false so this parser is not auto detected 
+		return false; 
+	}, 
+	format: function(date) {
+		date = date.replace(/(\d+).. (.+), (\d+)/, function(all, day, month, year) {
+			var month_names = {	"Jan":"01","Feb":"02","Mar":"03","Apr":"04","May":"05","Jun":"06",
+								"Jul":"07","Aug":"08","Sep":"09","Oct":"10","Nov":"11","Dec":"12"};
+			var date = year + "-" + month_names[month] + "-" + day;
+			return date;
+		});
+		return date;
+	}, 
+	// set type, either numeric or text 
+	type: 'text'
+});
+</script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/sections/users/view_users.css">
 
 <div id="content" class="clear">
@@ -121,16 +152,16 @@ $this->load->view('layout/header',array('title'=>$title));
 <?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?>
 <br /><br />
 
-<table cellpadding="0"  cellspacing="0" class="clear data-table dont-sort">
+<table cellpadding="0"  cellspacing="0" class="clear data-table">
 <thead>
 <tr>
 	<th class="col-select"><input type="checkbox" name="select-all" id="select-all" value="0" /></th>
 	<th>Actions</th>
-	<th class="sortable">Name</th>
+	<th>Name</th>
     <th>Email</th>
     <th>Phone</th>
-    <?php if($this->input->post('city_id') === '0') { ?><th class="colPosition">City</th><?php } ?>
-    <th class="sortable">Joined On</th>
+	<th>Joined On</th>
+    <?php if($this->input->post('city_id') === '0') { ?><th>City</th><?php } ?>
     <th>User Groups</th>
     <th>Batch</th>
 </tr>
@@ -156,8 +187,8 @@ foreach($all_users as $id => $user) {
     <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>
     <td class="col-email"><?php echo $user->email; ?></td>
     <td class="col-phone" style="text-align:left"><?php echo $user->phone; ?></td>
-    <?php if($this->input->post('city_id') === '0') { ?><td class="col-city"><?php echo $user->city_name; ?></td><?php } ?>
 	<td class="col-join"><?php echo date('dS M, Y', strtotime($user->joined_on)); ?></td>
+	<?php if($this->input->post('city_id') === '0') { ?><td class="col-city"><?php echo $user->city_name; ?></td><?php } ?>
     <td class="col-groups"><?php echo implode(',', $user->groups); ?></td>
     <td class="col-batch"><?php if($user->batch) echo $user->batch->name . ', ' . $days[$user->batch->day] . ' ' . date('h:i A', strtotime(date('Y-m-d ').$user->batch->class_time)); ?></td>
 </tr>

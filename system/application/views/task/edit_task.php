@@ -8,24 +8,24 @@ foreach($event as $event_row):
 <div id="message"></div>
 <form  class="mainForm clear" id="formEditor"  action="<?php echo site_url('task/update_task')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
 <ul class="form city-form">
-	<li><label for="txtName">Name: </label>
+	<li><label for="name">Name: </label>
 	<input id="name" name="name"  type="text" value="<?php echo $event_row->name;?>" /> 
 	</li>		
 
 
-<li><label for="date">Credit: </label>
+<li><label for="credit">Credit: </label>
 	<input name="credit"  id="credit" type="text" value="<?php echo $event_row->credit;?>" >
 	<p class="error clear"></p>
 </li>
-<li><label for="date">Type: </label>
+<li><label for="type">Type: </label>
 <select id="type" name="type" > 
-<option selected="selected" value="-1" >- Choose -</option> 
-	<option value="1" <?php if($event_row->vertical == 'hr'){?> selected="selected "<?php } ?>>HR</option> 
-	<option value="2" <?php if($event_row->vertical == 'pr'){?> selected="selected "<?php } ?>>PR</option> 
-    <option value="3" <?php if($event_row->vertical == 'eph'){?> selected="selected "<?php } ?>>EPH</option> 
-    <option value="4" <?php if($event_row->vertical == 'cr'){?> selected="selected "<?php } ?>>CR</option> 
-	<option value="5" <?php if($event_row->vertical == 'finance'){?> selected="selected "<?php } ?>>Finance</option> 
-    <option value="6" <?php if($event_row->vertical == 'ops'){?> selected="selected "<?php } ?>>Operations</option> 
+	<option value="hr" <?php if($event_row->vertical == 'hr'){?> selected="selected "<?php } ?>>HR</option> 
+	<option value="pr" <?php if($event_row->vertical == 'pr'){?> selected="selected "<?php } ?>>PR</option> 
+    <option value="eph" <?php if($event_row->vertical == 'eph'){?> selected="selected "<?php } ?>>EPH</option> 
+    <option value="cr" <?php if($event_row->vertical == 'cr'){?> selected="selected "<?php } ?>>CR</option> 
+	<option value="placements" <?php if($event_row->vertical == 'placements'){?> selected="selected "<?php } ?>>Placements</option>
+	<option value="finance" <?php if($event_row->vertical == 'finance'){?> selected="selected "<?php } ?>>Finance</option>
+    <option value="ops" <?php if($event_row->vertical == 'ops'){?> selected="selected "<?php } ?>>Operations</option> 
 </select>
 </li>
 <?php endforeach;?>

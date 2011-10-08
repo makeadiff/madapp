@@ -18,7 +18,8 @@ $all_verticals = array(
 	'cr'	=> 'Corporate Relations',
 	'finance'=>'Finance',
 	'ops'	=> 'Operations',
-	'eph'	=> 'English Project Head'
+	'eph'	=> 'English Project Head',
+	'placements'=>'Placements'
 );
 ?>
 

@@ -39,7 +39,7 @@ class Admincredit_model extends Model{
 		function get_credits_awarded_by($user_id=0) {
 			if(!$user_id) $user_id=$this->ci->session->userdata('id');
 			return $this->db->query("SELECT AdminCredit.id, AdminCredit.user_id, AdminCredit.added_on,  
-				AdminCredit.awarded_by AS person_id,Task.name,Task.credit, Task.vertical FROM AdminCredit 
+				AdminCredit.user_id AS person_id,Task.name,Task.credit, Task.vertical FROM AdminCredit 
 				INNER JOIN Task ON AdminCredit.task_id=Task.id 
 				WHERE awarded_by='$user_id' ORDER BY id DESC")->result();
 		}

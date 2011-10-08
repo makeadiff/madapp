@@ -449,6 +449,7 @@ class Users_model extends Model {
 		else if(!isset($data['city_id'])) $this->db->where('User.city_id', $this->city_id);
 		
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
+		if(!empty($data['not_user_type'])) $this->db->where_not_in('user_type', $data['not_user_type']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
 		if(!empty($data['phone'])) $this->db->where('User.phone', $data['phone']);
 		if(!empty($data['email'])) $this->db->where('User.email', $data['email']);

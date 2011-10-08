@@ -185,7 +185,7 @@ class Classes extends Controller {
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();
 		
-		$users = $this->user_model->search_users(array('status'=>false));
+		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false));
 		$all_users = idNameFormat($users);
 		$all_user_credits = idNameFormat($users, array('id','credit'));
 		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());

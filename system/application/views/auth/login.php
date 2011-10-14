@@ -8,7 +8,13 @@
 
 <div class="login-box">
 <h1>MADApp Login</h1>
-<div class="field" style="color:#CC0000; text-align:center; margin-top:50px;"><?php echo $message;?></div>
+<?php
+$message['success'] = $this->session->flashdata('success');
+$message['error'] = $this->session->flashdata('error');
+if(!empty($message['success']) or !empty($message['error'])) { ?>
+<div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
+<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
+<?php } ?>
 
 <?php echo form_open("auth/login");?>
 

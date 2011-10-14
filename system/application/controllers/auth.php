@@ -104,26 +104,19 @@ class Auth extends Controller {
 	{
 		$this->form_validation->set_rules('email','Email Address', 'required|valid_email');
 		
-		if ($this->form_validation->run() == FALSE)
-		{ 
-			$this->data['email'] = array('name' => 'email',
-				'id' => 'email',);
-				$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+		if ($this->form_validation->run() == FALSE) { 
+			$this->data['email'] = array('name' => 'email', 'id' => 'email');
+			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 			$this->load->view('auth/forgotpassword_view', $this->data);
-		}
 		
-		else
-		{
+		} else {
 			$forgotten = $this->user_auth->forgotten_password($this->input->post('email'));
-			if ($forgotten)
-			{ //if there were no errors
+			if ($forgotten) { //if there were no errors
 				$this->session->set_flashdata('success', "Your password was sent to " .$this->input->post('email') );
-				redirect("auth/login", 'refresh'); //we should display a confirmation page here instead of the login page
-			}
-			else
-			{
+				redirect("auth/login"); //we should display a confirmation page here instead of the login page
+			} else {
 				$this->session->set_flashdata('error', "There was an error in sending the password");
-				redirect("auth/forgotpassword", 'refresh');
+				redirect("auth/forgotpassword");
 			}
 		}
 	}

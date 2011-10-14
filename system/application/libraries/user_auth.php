@@ -170,7 +170,7 @@ Class User_auth {
 	public function forgotten_password($identity)    
 	{
 		$this->ci->load->model('users_model');
-		$users = $this->ci->users_model->search_users(array('email'=>$identity));
+		$users = $this->ci->users_model->search_users(array('email'=>$identity, 'city_id'=>0));
 		
 		if($users) {
 			$user = reset($users);

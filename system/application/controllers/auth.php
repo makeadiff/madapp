@@ -106,7 +106,9 @@ class Auth extends Controller {
 		
 		if ($this->form_validation->run() == FALSE) { 
 			$this->data['email'] = array('name' => 'email', 'id' => 'email');
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			if(validation_errors()) 
+				$this->session->set_flashdata('error',validation_errors());
+				
 			$this->load->view('auth/forgotpassword_view', $this->data);
 		
 		} else {
@@ -115,7 +117,7 @@ class Auth extends Controller {
 				$this->session->set_flashdata('success', "Your password was sent to " .$this->input->post('email') );
 				redirect("auth/login"); //we should display a confirmation page here instead of the login page
 			} else {
-				$this->session->set_flashdata('error', "There was an error in sending the password");
+				$this->session->set_flashdata('error', "Couldn't find a user with that email address. Are you sure the spelling is correct(" .$this->input->post('email').")?");
 				redirect("auth/forgotpassword");
 			}
 		}

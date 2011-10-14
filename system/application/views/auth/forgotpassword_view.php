@@ -1,42 +1,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
 <head>
-<title>madapp Admin Login</title>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/g.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/l.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bk.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/r.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/custom.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/validation.css" />
-
+<title>Forgot Password</title>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/camp/master.css" />
 </head>
-<body id="pageLogin">
-<div class="field" style="color:#CC0000; text-align:center; margin-top:50px;">
-	</div>
-   
-<div id="login" class="centerbox">
- <div style="color:#FF0000; margin-bottom:5px;"><?php echo $message;?></div>
-<h2 align="center">Forgot Password</h2>
-<div class="boxInside">
+<body id="pg-login">
 
-	
-    <?php echo form_open("auth/forgotpassword");?>
-    <fieldset>
-	<legend>Login</legend>
-    
-    <div class="field"> 
-      	<label for="email" >Enter your Email:</label>
-         <?php echo form_input($email);?>
-      </div>
-      <div class="field" style="margin-top:21px; margin-left:150px;">
-      <?php echo form_submit('submit', 'Submit');?>
-	</div>
-      </fieldset>
-    <?php echo form_close();?>
+<div class="login-box">
+<h1>Forgot Password</h1>
+<?php
+$message['success'] = $this->session->flashdata('success');
+$message['error'] = $this->session->flashdata('error');
+if(!empty($message['success']) or !empty($message['error'])) { ?>
+<div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
+<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
+<?php } ?>
 
+<?php echo form_open("auth/forgotpassword");?>
+
+<ul class="form login-form">
+<li><label for="email">Email</label><?php echo form_input($email); ?></li>
+<li><?php echo form_submit('submit', 'Submit', 'class="button green"');?></li>
+</ul>
+
+<?php echo form_close();?>
 </div>
 
 </body>
-
-
 </html>

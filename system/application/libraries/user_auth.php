@@ -171,6 +171,7 @@ Class User_auth {
 	{
 		$this->ci->load->model('users_model');
 		$users = $this->ci->users_model->search_users(array('email'=>$identity));
+		
 		if($users) {
 			$user = reset($users);
 			$password_message = <<<END
@@ -186,12 +187,15 @@ Thanks.
 MADApp
 END;
 
+			$this->ci->email->from('madapp@makeadiff.in', "MADApp");
 			$this->ci->email->to($user->email);
 			$this->ci->email->subject('MADApp Password Reminder');
 			$this->ci->email->message($password_message);
 			$this->ci->email->send();
+			
+			return true;
 		}
-		return true;
+		return false;
 	}
 }
 

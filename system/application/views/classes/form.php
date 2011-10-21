@@ -22,12 +22,16 @@ function showCities(flag) {
 
 <form action="<?php echo site_url('classes/edit_class_save') ?>" class="form-area" method="post">
 <ul class="form city-form">
-<?php for($i=0; $i<count($class_details['teachers']); $i++) {
+<?php 
+$show_edit_button = false;
+for($i=0; $i<count($class_details['teachers']); $i++) {
 	$class = $class_details['teachers'][$i];
 	// You don't get to edit others stuff if you don't have super privilages.
 	$edit = false;
-	if($class['user_id'] == $this->session->userdata('id') or $this->user_auth->get_permission('class_edit_class'))
+	if($class['user_id'] == $this->session->userdata('id') or $this->user_auth->get_permission('class_edit_class')) {
 		$edit = true;
+		$show_edit_button = true;
+	}
 	
 	if($edit) echo form_hidden('user_id['.$i.']', $class['user_id']);
 ?>
@@ -81,7 +85,7 @@ else echo $statuses[$class['status']];
 <?php 
 echo form_hidden('class_id', $class_details['id']);
 echo form_hidden('project_id', 1);
-if($edit) echo '<label for="action">&nbsp;</label>' . form_submit('action', 'Edit', 'class="green button"');
+if($show_edit_button) echo '<label for="action">&nbsp;</label>' . form_submit('action', 'Edit', 'class="green button"');
 ?>
 </li>
 </ul>

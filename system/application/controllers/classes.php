@@ -185,7 +185,7 @@ class Classes extends Controller {
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();
 		
-		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false));
+		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0));
 		$all_users = idNameFormat($users);
 		$all_user_credits = idNameFormat($users, array('id','credit'));
 		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
@@ -415,6 +415,8 @@ class Classes extends Controller {
 	}
 	
 	function add_manually_save() {
+		$this->user_auth->check_permission('debug');
+		
 		$batch_id = $this->input->post('batch_id');
 		$batch = $this->batch_model->get_batch($batch_id);
 		$class_date = $this->input->post('class_date') . ' ' . $batch->class_time;
@@ -436,6 +438,15 @@ class Classes extends Controller {
 		
 		$this->session->set_flashdata('success', 'Added ' . count($user_class_id) . ' classes. If anything goes wrong in the MADSheet, send these numbers to Binny: ' . implode(',', $user_class_id));
 		redirect('batch/index/center/'.$this->input->post('center_id'));
+	}
+	
+	function add_class_manually($level_id, $batch_id, $class_on, $user_id) {
+		$this->user_auth->check_permission('debug');
+		
+		list($class_id, $user_class_id) = $this->class_model->add_class_manually($level_id, $batch_id, $class_on, $user_id);
+	
+		$this->session->set_flashdata('success', "Created the class. Class.id: $class_id, UserClass.id: $user_class_id. Send these two numbers to Binny if anything goes wrong.");
+		redirect('classes/madsheet');
 	}
 	
 	

@@ -287,4 +287,33 @@ class Class_model extends Model {
 		$data = $this->db->query($query)->result();
 		return $data;
     }
+    
+    function add_class_manually($level_id, $batch_id, $class_on, $user_id) {
+		$existing_class = $this->db->query("SELECT id FROM Class WHERE batch_id=$batch_id AND level_id=$level_id AND class_on='$class_on'")->row();
+		if(!$existing_class) {
+			$this->db->insert('Class', array(
+				'level_id'	=> $level_id,
+				'batch_id'	=> $batch_id,
+				'class_on'	=> $class_on,
+				'project_id'=> $this->project_id
+			));
+			$class_id = $this->db->insert_id();
+		} else {
+			$class_id = $existing_class->id;
+		}
+		
+		$existing_user_class = $this->db->query("SELECT id FROM UserClass WHERE class_id=$class_id AND user_id=$user_id")->row();
+		if(!$existing_user_class) {
+			$this->db->insert('UserClass', array(
+				'user_id'	=> $user_id,
+				'class_id'	=> $class_id,
+				'status'	=> 'projected'
+			));
+			$user_class_id = $this->db->insert_id();
+		} else {
+			$user_class_id = $existing_user_class->id;
+		}
+		
+		return array($class_id, $user_class_id);
+    }
 }

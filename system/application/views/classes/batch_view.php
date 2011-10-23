@@ -22,7 +22,7 @@ if($to_date) {
 
 <form action="<?php echo site_url('classes/batch_view_save'); ?>" method="post">
 <table class="data-table info-box-table">
-<tr><th>Level</th><th>Feedback</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendence</th><th>Cancelation</th></tr>
+<tr><th>Level</th><th>Feedback</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendance</th><th>Cancellation</th></tr>
 
 <?php
 $row_count = 0;

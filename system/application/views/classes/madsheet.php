@@ -47,14 +47,23 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 		if(!$level_user_count) {
 			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap'><?php echo $level_info['name'] ?></td><?php 
 		}
-		echo "<td nowrap='nowrap'><a href='".site_url('/user/view/'.$teacher['id'])."'>{$teacher['name']}</a></td><td>{$teacher['credit']}</td>";
+		echo "<td nowrap='nowrap'><a href='".site_url('/user/view/'.$teacher['id'])."'>{$teacher['name']}</a></td><td nowrap='nowrap'>{$teacher['credit']}</td>";
 		
 		$class_count= 0;
 		foreach($teacher['classes'] as $classes) {
 			// This to make sure that the new classes that was started after missing a lot of class works correctly. For eg. if level 1 starts in Sunday back on 12 Aug, but level 2 started only on 17 Aug(sun), this part will handle it correctly.
 			while(isset($batch_info['days_with_classes'][$class_count]) and date('d M',strtotime($classes->class_on)) != $batch_info['days_with_classes'][$class_count]) { 
 				//if($class_count > 5) dump($classes); :DEBUG:
-				print "<td class='class-cancelled'>&nbsp;</td>";
+				print "<td class='class-cancelled'>";
+				if($this->user_auth->get_permission('debug')) {
+					$timestamp = strtotime($classes->class_on);
+					$class_on = date('Y-m-d H:i:s', strtotime($batch_info['days_with_classes'][$class_count]." ".date('Y H:i:s', $timestamp)));
+				?>
+				<div class="class-info info-box"><a href="<?php echo site_url("classes/add_class_manually/$level_id/$batch_id/".urlencode($class_on)."/$teacher[id]"); ?>">Create Class</a></div>
+				<?php 
+				}
+				else print "&nbsp;";
+				print "</td>";
 				$class_count++;
 				if($class_count > 100) exit; // In case something goes terribly, terribly bad.
 			}

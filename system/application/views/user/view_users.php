@@ -176,7 +176,7 @@ foreach($all_users as $id => $user) {
 	$shadeClass = 'even';
 	if($count % 2) $shadeClass = 'odd';
 ?> 
-<tr class="<?php echo $shadeClass; ?>" id="group">
+<tr class="<?php echo $shadeClass; ?>" id="group"><!-- <?php print $count ?> -->
 	<td class="col-select"><input type="checkbox" name="users[]" class="user-select" value="<?php echo $user->id ?>" />
 <input type="hidden" name="email[<?php echo $user->id ?>]" value="<?php echo $user->email ?>" />
 <input type="hidden" name="phone[<?php echo $user->id ?>]" value="<?php echo $user->phone ?>" /></td>

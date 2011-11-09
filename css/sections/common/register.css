@@ -63,7 +63,7 @@ body {
 	
 #content {
 	width:500px;
-	height:200px;
+	height:550px;
 	background-color:#f0f0f0;
 	filter:alpha(opacity=60);
 	opacity:0.8;
@@ -237,5 +237,6 @@ body {
 	}
 
 #main-content {
-	background:url(../../images/wallpapers/udhya_bw.jpg) no-repeat;
+	height:800px;
+	background:#000 url(../../../images/wallpapers/udhya_bw.jpg) 0 80px no-repeat;
 }

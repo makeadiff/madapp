@@ -42,3 +42,6 @@
 	border:0 !important;
 	border-left:1px solid #aaa !important;
 }
+.let_go {
+	text-decoration:line-through;
+}

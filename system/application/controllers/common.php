@@ -34,30 +34,20 @@ class Common extends Controller {
     function register()
     {
 		if(Navigation::isPost()){
-			$error['city']='0';
-			$data['firstname'] = $_POST['firstname'];
-			$data['email'] = $_POST['email'];
-			$data['mobileno'] = $_POST['mobileno'];
-			$city = $_POST['city'];
-			if($city == '-1') {
-				$error['city']='1';
-			
-			} else {
-				$data['city'] = $city;
-			}
-			
-			//set Rules..........
-			$rules['firstname']	= "required";
+			$data = $_POST;
+
+			//Set Rules..........
+			$rules['name']	= "required";
 			$rules['email']	= "required|valid_email";
-			$rules['mobileno'] = "trim|required|min_length[8]|max_length[12]|callback__validate_phone_number";
+			$rules['phone'] = "trim|required|min_length[8]|max_length[12]|callback__validate_phone_number";
 			$this->validation->set_rules($rules);
-			$fields['firstname'] = "Name";
+			$fields['name'] 	= "Name";
 			$fields['email']	= "Email";
-			$fields['mobileno']	= "Phone";
-			$fields['city']	= "City";
+			$fields['phone']	= "Phone";
+			$fields['city_id']	= "City";
 
 			$this->validation->set_fields($fields);
-			if ($this->validation->run() == FALSE) {	
+			if ($this->validation->run() == FALSE) {
 				$data['cities'] = $this->city_model->get_unique_cities();
 				$this->load->view('user/register_view',$error);
 				
@@ -66,7 +56,7 @@ class Common extends Controller {
 				if($status)	{
 					redirect('common/thank_you');
 				
-				} else{
+				} else {
 					$data['cities'] = $this->city_model->get_unique_cities();
 					$this->load->view('user/register_view',$data);
 				}

@@ -316,4 +316,10 @@ class Class_model extends Model {
 		
 		return array($class_id, $user_class_id);
     }
+    
+    function delete($class_id) {
+		$this->db->delete('Class',array('id'=>$class_id));
+		$this->db->delete('UserClass',array('class_id'=>$class_id));
+		$this->db->delete('StudentClass',array('class_id'=>$class_id));
+    }
 }

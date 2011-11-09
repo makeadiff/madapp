@@ -62,13 +62,21 @@ class Kids extends Controller  {
 	function manageaddkids()
 	{
 		$this->user_auth->check_permission('kids_index');
+		
+		// This page can get a change city request.
+		if($this->input->post('city_id') and $this->user_auth->check_permission('change_city')) {
+			$city_id = $this->input->post('city_id');
+			$this->session->set_userdata('city_id', $city_id);
+			$this->center_model->city_id = $city_id;
+			$this->kids_model->city_id = $city_id;
+		}
 	
 		$this->load->view('layout/header',array('title'=>'Manage Kids'));
 		
 		$data['details']= $this->kids_model->getkids_details();
 		$data['center_list']=$this->center_model->get_all();
 		$this->load->view('kids/kids_list',$data);
-		$this->load->view('layout/settings_footer');
+		$this->load->view('layout/footer');
 	
 	}
 		

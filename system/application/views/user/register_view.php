@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Register</title>
-<link href="<?php echo base_url(); ?>css/freeport/register.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo base_url(); ?>css/sections/common/register.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 </head>
 <body>
@@ -22,36 +22,75 @@
 	  
         <form method="post" action="<?php echo site_url('common/register')?>"  name="regform" id="regForm" onsubmit="return validate();" >
             <div class="content-row-large">
-                   <span>Name:</span>
-                   <input type="text" class="textfield" id="firstname" name="firstname" value="<?php if(isset($this->validation->firstname)){ echo $this->validation->firstname; } ?>" />
-                   <?php if(!empty($this->validation->firstname_error)) { ?>
-                   <img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-                   <?php } ?>
+				<span>Name:</span>
+				<input type="text" class="textfield" id="name" name="name" value="<?php if(isset($this->validation->name)){ echo $this->validation->name; } ?>" />
+				<?php if(!empty($this->validation->name_error)) { ?>
+				<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
+				<?php } ?>
             </div>
 
             <div class="content-row-large"><span>Email:</span>
                 <input type="text" class="textfield" id="email" name="email" value="<?php if(!empty($this->validation->email)){ echo $this->validation->email; } ?>" />
-                  <?php if(!empty($this->validation->email_error)) { ?>
-                  <img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-                  <?php } ?>
+                <?php if(!empty($this->validation->email_error)) { ?>
+                <img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
+                <?php } ?>
             </div>
 
             <div class="content-row-large"><span>Phone:</span>
-                  	<input type="text" class="textfield" id="mobileno" name="mobileno" value="<?php if(isset($this->validation->mobileno)){ echo $this->validation->mobileno; } ?>" />
-                  	<?php if(!empty($this->validation->mobileno_error)) { ?>
-                  	<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-                  	<?php } ?>
+				<input type="text" class="textfield" id="phone" name="phone" value="<?php if(isset($this->validation->phone)){ echo $this->validation->phone; } ?>" />
+				<?php if(!empty($this->validation->phone_error)) { ?>
+				<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
+				<?php } ?>
             </div>
+            
+            <div class="content-row-large"><span>Address:</span>
+            <textarea class="textarea" name="address" id="address" rows="5" cols="40"></textarea>
+            </div>
+
 				 
             <div class="content-row-large"><span>City:</span>
-            <select class="dropdown" id="city" name="city" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/7-expansions';">
+            <select class="dropdown" id="city_id" name="city_id" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/7-expansions';">
 				<?php foreach($cities as $id=>$name) { ?>
 				<option value="<?php echo $id ?>"><?php echo $name ?></option>
 				<?php } ?>
 				<option value="0">Other</option>
 			</select>
             </div>
-            
+
+            <div class="content-row-large"><span>Job Status:</span>
+            <select class="dropdown" id="job_status" name="job_status">
+				<option value="student">Student</option>
+				<option value="working">Working</option>
+				<option value="other">Other</option>
+			</select>
+            </div>
+
+            <div class="content-row-large"><span>Preferred Day of Class:</span>
+            <select class="dropdown" id="preferred_day" name="preferred_day">
+				<option value="flexible">Flexible</option>
+				<option value="weekday">Weekdays Only</option>
+				<option value="weekend">Weekends Only</option>
+			</select>
+            </div>
+
+            <div class="content-row-large"><span>Date of Birth:</span>
+            <input class="textfield" type="text" id="birthday" name="birthday" />
+            </div>
+
+            <div class="content-row-large"><span>Why MAD:</span>
+            <textarea class="textarea" name="why_mad" rows="5" cols="40"></textarea>
+            </div>
+
+			<div class="content-row-large"><span>Source:</span>
+            <select class="dropdown" id="source" name="source">
+				<option value="friends">Friends</option>
+				<option value="college">College Presentation</option>
+				<option value="media">Media</option>
+				<option value="internet">Blogs/Facebook</option>
+				<option value="other">Other</option>
+			</select>
+            </div>
+
             <input type="hidden" name="password" value="pass" />
             <input type="hidden" name="center" value="0" />
             <input type="hidden" name="position" value="" />

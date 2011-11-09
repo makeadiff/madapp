@@ -89,11 +89,12 @@ class Classes extends Controller {
 					'lesson_id'		=> $row->lesson_id,
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
-						'id'	=> $row->user_id,
-						'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
-						'status'=> $row->status,
+						'id'		=> $row->user_id,
+						'name'		=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
+						'status'	=> $row->status,
+						'user_type'	=>isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
 						'substitute_id'=>$row->substitute_id,
-						'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
+						'substitute'=> ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
 											$all_users[$row->substitute_id]->name : 'None'
 					)),
 				);
@@ -102,6 +103,7 @@ class Classes extends Controller {
 					'id'	=> $row->user_id,
 					'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
 					'status'=> $row->status,
+					'user_type'	=>isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
 					'substitute_id'=>$row->substitute_id,
 					'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
 											$all_users[$row->substitute_id]->name : 'None'
@@ -182,11 +184,19 @@ class Classes extends Controller {
 	function madsheet() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
+		if($this->input->post('city_id') and $this->user_auth->check_permission('change_city')) {
+			$city_id = $this->input->post('city_id');
+			$this->session->set_userdata('city_id', $city_id);
+			$this->center_model->city_id = $city_id;
+			$this->user_model->city_id = $city_id;
+		}
+		
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();
 		
 		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0));
-		$all_users = idNameFormat($users);
+ 		$all_users = idNameFormat($users);
+// 		dump($all_users); exit;
 		$all_user_credits = idNameFormat($users, array('id','credit'));
 		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
 		
@@ -223,8 +233,9 @@ class Classes extends Controller {
 						
 						$teachers_info[$class->user_id] = array(
 							'id'		=> $class->user_id,
-							'name'		=> !empty($all_users[$class->user_id]) ? $all_users[$class->user_id] : "",
+							'name'		=> !empty($all_users[$class->user_id])? $all_users[$class->user_id] : "",
 							'credit'	=> $all_user_credits[$class->user_id],
+							'user_type'	=> isset($users[$class->user_id]) ? $users[$class->user_id]->user_type : 'None',
 							'classes'	=> array()
 						);
 					}
@@ -242,6 +253,7 @@ class Classes extends Controller {
 								$teacher_data = array(
 									'user_id'		=> $class->user_id,
 									'substitute_id'	=> $class->substitute_id,
+									'user_type'		=> isset($users[$class->user_id]) ? $users[$class->user_id]->user_type : 'None',
 									'status'		=> $class->status,
 								);
 								$class->teacher = $teacher_data;
@@ -450,24 +462,32 @@ class Classes extends Controller {
 	}
 	
 	
-	function other_city_teachers($flag)
-	{
+	function other_city_teachers($flag) {
 		$data['flag'] = $flag;
 		$data['cities']=$this->city_model->getCities();
 		$this->load->view('classes/other_city_teachers',$data);
 	}
-	function city_teachers($city_id, $flag)
-	{
+	
+	function city_teachers($city_id, $flag) {
 		$data['flag']=$flag;
 		$data['users']=$this->user_model->getuser_details(array('city_id'=>$city_id))->result();
 		
 		$this->load->view('classes/city_teachers',$data);
 	}
-	function update_city_teachers($user_id, $flag)
-	{
+	
+	function update_city_teachers($user_id, $flag) {
 		$data['substitute_id']=$user_id;
 		$data['userName']=$this->user_model->get_user($user_id)->name;
 		$data['flag'] = $flag;
 		$this->load->view('classes/show_username',$data);
 	}
+	
+	function delete($class_id) {
+		$this->class_model->delete($class_id);
+		$this->session->set_flashdata('success', "Deleted the class with ID $class_id.");
+		redirect('classes/madsheet');
+	}
 }
+
+
+

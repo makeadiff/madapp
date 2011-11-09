@@ -17,13 +17,19 @@
        <?php 
 		if($this->user_auth->get_permission('change_city')) {
 			$all_cities = idNameFormat($this->db->query("SELECT id, name FROM City ORDER BY name")->result());
-			echo form_open(site_url('dashboard/dashboard_view'));
+			$url = site_url('dashboard/dashboard_view');
+			
+			if($this->uri->segment(1) == 'kids') $url = site_url('kids/manageaddkids');
+			if($this->uri->segment(1) == 'centers') $url = site_url('center/manageaddcenters');
+			if($this->uri->segment(1) == 'user') $url = site_url('user/view_users');
+			if($this->uri->segment(1) == 'classes') $url = site_url('classes/madsheet');
+			
+			echo form_open($url);
 			echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id')); 
-			echo form_submit('action', "Change City"); 
+			echo form_submit('action', "Change City");
 			echo form_close();
 		}
 		?>
-		
        
        <a href="<?php echo site_url('auth/logout') ?>" class="tool" style="margin-left: 10px; float:right;">Logout</a>
 	<?php echo $this->session->userdata('name');

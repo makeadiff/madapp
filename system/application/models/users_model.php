@@ -521,12 +521,18 @@ class Users_model extends Model {
 		$email = $data['email'];
 
 		// Make sure there is no duplication of emails - or phone...
-        $result = $this->db->query("SELECT id,email,phone FROM User WHERE email='$email' OR phone='{$data['mobileno']}'")->result();
+        $result = $this->db->query("SELECT id,email,phone FROM User WHERE email='$email' OR phone='{$data['phone']}'")->result();
         if(!$result) {
-			$userdetailsArray = array(	'name'		=> $data['firstname'],
+			$userdetailsArray = array(	'name'		=> $data['name'],
 										'email'		=> $data['email'],
-										'phone'		=> $this->_correct_phone_number($data['mobileno']),
-										'city_id'	=> $data['city'],
+										'phone'		=> $this->_correct_phone_number($data['phone']),
+										'address'=> $data['address'],
+										'city_id'	=> $data['city_id'],
+										'job_status'=> $data['job_status'],
+										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
+										'why_mad'	=> $data['why_mad'],
+										'preferred_day'=> $data['preferred_day'],
+										'source'	=> $data['source'],
 										'user_type'	=> 'applicant',
 										'status'	=> '1',
 										'password'  => 'pass',
@@ -535,7 +541,6 @@ class Users_model extends Model {
 										);
 			$this->db->insert('User', $userdetailsArray);
 			$userdetailsArray['id'] = $this->db->insert_id();
-			
 			return $userdetailsArray;
 		} else {
 			foreach($result as $r) {

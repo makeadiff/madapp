@@ -20,23 +20,26 @@ class Classes extends Controller {
         
         $logged_user_id = $this->user_auth->logged_in();
 		if(!$logged_user_id) {
-			exit;
 			redirect('auth/login');
 		}
         $this->user_details = $this->user_auth->getUser();
 	}
 	
 	/// Shows all the classes the current user is resposible for.
-	function index() {
+	function index($user_id=0) {
 		$this->user_auth->check_permission('classes_index');
-		$all_classes = $this->class_model->get_all($this->user_details->id);
+		
+		if(!$user_id) $user_id = $this->user_details->id;
+		$all_classes = $this->class_model->get_all($user_id);
+		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0));
+ 		$all_users = idNameFormat($users);
 		
 		$all_levels = array();
 		if($all_classes) {
 			$all_levels[$all_classes[0]->level_id] = $this->level_model->get_level_details($all_classes[0]->level_id);
 		}
 		
-		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model));
+		$this->load->view('classes/index', array('all_classes' => $all_classes, 'all_levels'=>$all_levels, 'level_model'=>$this->level_model, 'all_users'=>$all_users));
 	}
 	
 	
@@ -196,7 +199,6 @@ class Classes extends Controller {
 		
 		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0));
  		$all_users = idNameFormat($users);
-// 		dump($all_users); exit;
 		$all_user_credits = idNameFormat($users, array('id','credit'));
 		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
 		

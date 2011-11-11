@@ -10,9 +10,11 @@ class Class_model extends Model {
     }
     
     function get_all($user_id) {
-    	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
-    		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id 
-    		WHERE Class.project_id={$this->project_id} AND UserClass.user_id=$user_id
+    	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Level.name AS level_name, Class.class_on, Center.name AS center_name
+    		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id
+				INNER JOIN Level ON Class.level_id=Level.id
+				INNER JOIN Center ON Level.center_id=Center.id
+    		WHERE Class.project_id={$this->project_id} AND (UserClass.user_id=$user_id OR UserClass.substitute_id=$user_id)
     		ORDER BY Class.class_on DESC")->result();
     }
     

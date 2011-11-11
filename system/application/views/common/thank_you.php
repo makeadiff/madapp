@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Thank You</title>
-<link href="<?php echo base_url(); ?>css/freeport/register.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo base_url(); ?>css/sections/common/register.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 </head>
 

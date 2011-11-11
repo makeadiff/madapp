@@ -114,11 +114,11 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	function edit_group($uid)
+	function edit_group($user_id)
 	{
 		$this->db->select('*');
 		$this->db->from('Group');
-		$this->db->where('id',$uid);
+		$this->db->where('id',$user_id);
 		$result=$this->db->get();
 		return $result;
 	}
@@ -329,13 +329,17 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function user_details($uid)
+	function user_details($user_id)
 	{
 		$this->db->from('User');
-		$this->db->where('User.id',$uid)->where('User.status','1');
+		$this->db->where('User.id',$user_id)->where('User.status','1');
 		
 		$result = $this->db->get()->row();
-		$result->groups = $this->get_user_groups_of_user($uid, 'id');
+		$result->groups = $this->get_user_groups_of_user($user_id, 'id');
+		$result->groups_name = $this->get_user_groups_of_user($user_id, 'name');
+		$result->batch = $this->db->query("SELECT Batch.day, Batch.class_time, Center.name 
+					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
+					INNER JOIN Center ON Batch.center_id=Center.id WHERE UserBatch.user_id={$user_id}")->row();
 		
 		return $result;
 	}
@@ -434,7 +438,7 @@ class Users_model extends Model {
 	
 
 	function search_users($data) {
-		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,User.joined_on,User.title,User.user_type, City.name as city_name');
+		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,User.joined_on,User.title,User.user_type,User.address, City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
 		

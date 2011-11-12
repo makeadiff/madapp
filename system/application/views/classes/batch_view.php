@@ -22,7 +22,7 @@ if($to_date) {
 
 <form action="<?php echo site_url('classes/batch_view_save'); ?>" method="post">
 <table class="data-table info-box-table">
-<tr><th>Level</th><th>Feedback</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendance</th><th>Cancellation</th></tr>
+<tr><th>Level</th><th>Unit Taught</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendance</th><th>Cancellation</th></tr>
 
 <?php
 $row_count = 0;
@@ -71,5 +71,5 @@ foreach($classes as $class) {
 
 // Add or Subtract seven days.
 function change_week($date, $add_sub) {
-	return date('Y-m-d', strtotime($date) + ($add_sub * (60 * 60 * 24 * 7)));
+	return date('Y-m-d', strtotime($date) + ($add_sub * (60 * 60 * 24 * 7)) + 7200); // The '+ 7200' because daylight saving had created an issue on 11th November 2011. We may have to remove it some time.
 }

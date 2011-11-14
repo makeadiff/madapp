@@ -55,6 +55,10 @@ class Batch_model extends Model {
     	$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 		return $day_list[$day] . ' ' . date('h:i A', strtotime('2011-01-01 '.$time));
     }
+	
+	function get_center_of_batch($batch_id) {
+		return $this->db->where('id',$batch_id)->get('Batch')->row()->center_id;
+	}
     
     /// Get the details about the batch head of a given batch.
     function get_batch_head($batch_id) {

@@ -53,7 +53,14 @@ class Classes extends Controller {
 			$this->session->set_flashdata('error', "You don't have a default batch.");
 			redirect('center/manageaddcenters');
 		}
-		if(!$from_date) $from_date = date('Y-m-d', strtotime($this->class_model->get_last_class_in_batch($batch_id)->class_on));
+		
+		$last_class = $this->class_model->get_last_class_in_batch($batch_id);
+		if(!$last_class) {
+			$this->session->set_flashdata('error', "This batch does not have any past batches.");
+			$center_id = $this->batch_model->get_center_of_batch($batch_id);
+			redirect('/batch/index/center/'.$center_id);
+		}
+		if(!$from_date) $from_date = date('Y-m-d', strtotime($last_class->class_on));
 		
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1'));
 		$batch = $this->batch_model->get_batch($batch_id);

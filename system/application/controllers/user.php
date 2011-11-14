@@ -252,7 +252,7 @@ class User extends Controller  {
 	/// The User index is handled by this action
 	function view_users($city_id='', $user_groups='', $name='',$user_type='volunteer') {
 		$this->user_auth->check_permission('user_index');
-		if($this->input->post('action'=="Change City") and $this->input->post('city_id') 
+		if($this->input->post('action')=="Change City" and $this->input->post('city_id') 
 					and $this->user_auth->get_permission('change_city')) {
 			$this->session->set_userdata('city_id', $this->input->post('city_id'));
 			$this->users_model->city_id = $this->input->post('city_id');

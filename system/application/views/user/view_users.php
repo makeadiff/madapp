@@ -7,8 +7,8 @@ function init() {
 		headers: { 
 			0: {sorter: false}, 
 			1: {sorter: false},
-			4: {sorter: false},
-			5: {sorter:'dateField'},
+			3: {sorter: false},
+			4: {sorter:'dateField'},
 		}
 	});
 }
@@ -26,6 +26,7 @@ $.tablesorter.addParser({
 			var date = year + "-" + month_names[month] + "-" + day;
 			return date;
 		});
+		console.log(date);
 		return date;
 	}, 
 	// set type, either numeric or text 
@@ -160,9 +161,14 @@ $.tablesorter.addParser({
 	<th>Name</th>
     <th>Contact Details</th>
     <?php if($this->input->post('city_id') === '0') { ?><th>City</th><?php } ?>
+    <?php if($this->input->post('user_type') == 'applicant') { ?>
+    <th>Joined On</th>
+    <th>Address</th>
+    <?php } else { ?>
     <th>User Groups</th>
     <th>Center</th>
     <th>Batch</th>
+    <?php } ?>
 </tr>
 </thead>
 <tbody>
@@ -186,9 +192,14 @@ foreach($all_users as $id => $user) {
     <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>
     <td class="col-email"><?php echo $user->email; ?><br /><?php echo $user->phone; ?></td>
 	<?php if($this->input->post('city_id') === '0') { ?><td class="col-city"><?php echo $user->city_name; ?></td><?php } ?>
+	<?php if($this->input->post('user_type') == 'applicant') { ?>
+	<td class="col-joined_on"><?php echo date('d\<\s\u\p\>S\<\/\s\u\p\> M, Y', strtotime($user->joined_on)); ?></td>
+    <td class="col-address"><?php echo $user->address; ?></td>
+	<?php } else { ?>
     <td class="col-groups"><?php echo implode(',', $user->groups); ?></td>
     <td class="col-center"><?php if($user->batch) echo $user->batch->name; ?></td>
     <td class="col-batch"><?php if($user->batch) echo $days[$user->batch->day] . ' ' . date('h:i A', strtotime(date('Y-m-d ').$user->batch->class_time)); ?></td>
+    <?php } ?>
 </tr>
 
 <?php } ?>

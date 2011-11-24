@@ -124,6 +124,7 @@ class Classes extends Controller {
 		$this->load->view('classes/batch_view', 
 			array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name, 'from_date'=>$from_date, 'to_date'=>$to_date,
 				'all_lessons'=>$all_lessons, 'all_user_names'=>$all_user_names));
+				//$this->load->view('layout/footer');
 	}
 	
 	function batch_view_save() {
@@ -364,7 +365,7 @@ class Classes extends Controller {
 			'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
 	
-	function edit_class($class_id) {
+	function edit_class($class_id,$type=false) {
 		// First see if the user takes this class. Then he has premission to edit it.
 		if(!$this->class_model->is_class_teacher($class_id, $this->session->userdata('id'))) {
 			$this->user_auth->check_permission('class_edit_class');
@@ -391,10 +392,10 @@ class Classes extends Controller {
 		$this->load->view('classes/form', 
 			array('class_details'=>$class_details, 'teachers'=>$teachers,'substitutes'=>$substitutes,
 			'statuses'=>$statuses, 'message'=>$this->message,
-			'all_lessons'=>$all_lessons));
+			'all_lessons'=>$all_lessons,'from'=>$type));
 	}
 	
-	function edit_class_save()	 {
+	function edit_class_save($from=false)	 {
 		$class_id=$_REQUEST['class_id'];
 		if(!$this->class_model->is_class_teacher($class_id, $this->session->userdata('id'))) {
 			$this->user_auth->check_permission('class_edit_class');
@@ -405,7 +406,6 @@ class Classes extends Controller {
 		 $substitute_ids = $this->input->post('substitute_id');
 		// print_r($substitute_ids );
 		$statuses = $this->input->post('status');
-		
 		$teacher_count = count($user_class_id);
 		// There might be multiple teachers in a class.
 		for($i = 0; $i<$teacher_count; $i++) {
@@ -422,7 +422,7 @@ class Classes extends Controller {
 			$this->class_model->save_class_lesson($this->input->post('class_id'), $this->input->post('lesson_id'));
 		
 		$this->session->set_flashdata('success', 'Saved the class details');
-		redirect('classes/edit_class/'.$this->input->post('class_id'));
+		if($from =='batch'){ redirect('classes/batch_view/'.'11');} else { redirect('classes/index/');}
 	}
 	
 	function confirm_class($class_id) {

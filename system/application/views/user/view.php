@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/header', array('title'=>'Volunteer details for ' . $user->name)); ?>
+<?php $this->load->view('layout/thickbox_header', array('title'=>'Volunteer details for ' . $user->name)); ?>
 
 <?php
 
@@ -43,4 +43,4 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <?php if($user->why_mad) { ?><p>Why MAD: <strong><?php echo nl2br($user->why_mad); ?></strong></p><?php } ?>
 
 
-<?php $this->load->view('layout/footer'); ?>
+<?php //$this->load->view('layout/footer'); ?>

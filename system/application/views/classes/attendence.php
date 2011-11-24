@@ -1,5 +1,4 @@
-<?php $this->load->view('layout/header', array('title'=>'Class on ' . date('dS M, Y', strtotime($class_info['class_on'])))); ?>
-
+<?php $this->load->view('layout/thickbox_header',array('title'=>'Class on ' . date('dS M, Y', strtotime($class_info['class_on'])))); ?>
 <div id="head" class="clear"><h1>Class on <?php echo date('dS M, Y', strtotime($class_info['class_on'])); ?></h1></div>
 
 <form action="<?php echo site_url('classes/mark_attendence_save') ?>" method="post">
@@ -19,4 +18,4 @@ echo form_submit('action', 'Edit');
 ?>
 </form>
 
-<?php $this->load->view('layout/footer'); ?>
+<?php //$this->load->view('layout/footer'); ?>

@@ -189,7 +189,7 @@ foreach($all_users as $id => $user) {
 	<?php if($this->user_auth->get_permission('user_edit')) { ?><a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="thickbox icon edit popup" name="Edit User : <?php echo $user->name ?>">Edit</a><?php } ?>
     <?php if($this->user_auth->get_permission('user_delete')) { ?><a class="delete confirm icon" href="<?php echo site_url('user/delete/'.$user->id) ?>" title="Delete <?php echo $user->name ?>">Delete</a><?php } ?>
     </td>
-    <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>
+    <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>" class="thickbox popup"><?php echo $user->name; ?></a></td>
     <td class="col-email"><?php echo $user->email; ?><br /><?php echo $user->phone; ?></td>
 	<?php if($this->input->post('city_id') === '0') { ?><td class="col-city"><?php echo $user->city_name; ?></td><?php } ?>
 	<?php if($this->input->post('user_type') == 'applicant') { ?>

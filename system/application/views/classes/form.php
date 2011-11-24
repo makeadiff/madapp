@@ -1,4 +1,4 @@
-<?php $this->load->view('layout/header', array('title'=>'Edit Class on '. date('jS M Y, H:i A', strtotime($class_details['class_on'])))); ?>
+<?php $this->load->view('layout/thickbox_header',array('title'=>'Edit Class on '. date('jS M Y, H:i A', strtotime($class_details['class_on'])))); ?>
 <script type="text/javascript">
 $(document).ready(function(){
 	$('.substite_select').change(function(){
@@ -20,7 +20,7 @@ function showCities(flag) {
 }
 </script>
 
-<form action="<?php echo site_url('classes/edit_class_save') ?>" class="form-area" method="post">
+<form action="<?php echo site_url('classes/edit_class_save/'.$from) ?>" class="form-area" method="post">
 <ul class="form city-form">
 <?php 
 $show_edit_button = false;
@@ -91,4 +91,4 @@ if($show_edit_button) echo '<label for="action">&nbsp;</label>' . form_submit('a
 </ul>
 </form>
 
-<?php $this->load->view('layout/footer'); ?>
+<?php //$this->load->view('layout/footer'); ?>

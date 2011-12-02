@@ -13,6 +13,7 @@ function siteInit() {
 		var url = $(this).attr("href");
 		$("#sidebar").html("<iframe src='"+url+"' width='350' height='500'></iframe>");
 		event.stopPropagation();
+		window.scrollTo(0,0);
 		return false;
 	});
 	

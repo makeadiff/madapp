@@ -170,11 +170,10 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 }
 
 
-#pg-classes-madsheet .main {
-	width:auto !important;
-	overflow:visible;
+#pg-classes-madsheet .main, #pg-classes-class_progress_report .main {
+	width: 1000px;
+	overflow:auto;
 }
-
 
 
 #pg-classes-batch_view .cancelled a, #pg-classes-batch_view .cancelled select {

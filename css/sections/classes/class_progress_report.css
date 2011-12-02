@@ -1,0 +1,30 @@
+#main-content {
+	padding:10px;
+}
+
+.class-good,.class-repeated,.class-without-test {
+	text-align:center;
+}
+.madsheet {
+	border-collapse:collapse;
+}
+.madsheet td, .madsheet th {
+	border: 1px solid #000;
+}
+
+.madsheet .odd td {
+	border-top:2px solid #777;
+}
+
+.class-repeated {
+	background-color:#ff6f71;
+}
+.class-good {
+	background-color:#b7ffaa;
+}
+.class-without-test {
+	background-color:#FFC000;
+}
+.class-no-data {
+	background-color:#fff;
+}

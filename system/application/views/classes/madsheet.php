@@ -1,8 +1,8 @@
 <?php
 $this->load->view('layout/header', array('title'=>'MAD Sheet'));
 ?>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/madsheet.css">
-<script type="text/javascript" src="<?php echo base_url() ?>js/madsheet.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/sections/classes/madsheet.css">
+<script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
 
 <h3>Legend</h3>
 <table border="1">

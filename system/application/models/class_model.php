@@ -31,6 +31,10 @@ class Class_model extends Model {
     
     /// Sets the status of all the teacher in the set class as cancelled. Used to cancel a class.
     function cancel_class($class_id) {
+		$previous_class_data = $this->db->where(array('class_id'=>$class_id))->get('UserClass')->result_array();
+		foreach($previous_class_data as $class_data) {
+			$this->revert_user_class_credit($class_data['id'], $class_data);
+		}
 		$this->db->query("UPDATE UserClass SET status='cancelled' WHERE class_id=$class_id");
 		return $this->db->affected_rows();
     }
@@ -69,6 +73,17 @@ class Class_model extends Model {
     
     function get_last_class_in_batch($batch_id) {
     	return $this->db->query("SELECT * FROM Class WHERE batch_id=$batch_id AND class_on<NOW() ORDER BY class_on DESC LIMIT 0,1")->row();
+    }
+    
+    
+    /// Returns the last unit taught in that level/batch.
+    function get_last_unit_taught($level_id, $batch_id=0) {
+		$batch_condition = '';
+		if($batch_id) $batch_condition = "batch_id=$batch_id AND ";
+		$class = $this->db->query("SELECT lesson_id FROM Class WHERE $batch_condition level_id=$level_id AND class_on<NOW() AND lesson_id!=0 ORDER BY class_on DESC LIMIT 0,1")->row();
+		
+		if($class) return $class->lesson_id;
+		return 0;
     }
     
     function save_class($data) {
@@ -218,8 +233,6 @@ class Class_model extends Model {
     function revert_user_class_credit($user_class_id, $data = array()) {
     	if(!$data) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
     	$this->load->model('user_model','user_model');
-    	
-    	extract($data);
     	
     	// Note - S = Substitute Teacher, OT= Original Teacher.
     	if($status == 'attended') {

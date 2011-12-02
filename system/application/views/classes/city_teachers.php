@@ -3,7 +3,11 @@ function update_substitue(user_id) {
 	$.ajax({
 		type: "POST",
 		url: "<?php echo site_url('classes/update_city_teachers')?>"+"/"+user_id+"/<?php echo $flag ?>",
-		success: function(msg){ $('#sustitue_<?php echo $flag ?>').html(msg); }
+		success: function(msg) {
+			var name = $("#other_city_<?php echo $flag ?>").attr("name");
+			msg = msg.replace(/substitute_id\[.+\]/, name);
+			$('#substitute_<?php echo $flag ?>').html(msg);
+		}
 	});
 }
 </script>

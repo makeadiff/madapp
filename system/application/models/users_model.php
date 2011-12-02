@@ -332,7 +332,7 @@ class Users_model extends Model {
 	function user_details($user_id)
 	{
 		$this->db->from('User');
-		$this->db->where('User.id',$user_id)->where('User.status','1');
+		$this->db->where('User.id',$user_id);//->where('User.status','1');
 		
 		$result = $this->db->get()->row();
 		$result->groups = $this->get_user_groups_of_user($user_id, 'id');
@@ -574,9 +574,8 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function get_usercredits()
+	function get_usercredits($current_user_id)
 	{
-		$current_user_id=$this->session->userdata('id');
 		$this->db->select('UserClass.*,Class.class_on');
 		$this->db->from('UserClass');
 		$this->db->join('Class','Class.id=UserClass.class_id','join');

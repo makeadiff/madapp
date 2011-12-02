@@ -62,12 +62,10 @@ class User extends Controller  {
 		$page_no = $_REQUEST['pageno'];
 		$data['title'] = 'Manage Users';
 		$linkCount = $this->users_model->users_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
 		$data['details']= $this->users_model->getuser_details();
 		$this->load->view('user/user_list',$data);
-	
 	}
+	
 	/**
     * Function to popupAdduser
     * @author:Rabeesh 
@@ -85,6 +83,7 @@ class User extends Controller  {
 		
 		$this->load->view('user/popups/add_user',$data);
 	}
+	
 	/**
     * Function to adduser
     * @author:Rabeesh 
@@ -141,6 +140,7 @@ class User extends Controller  {
 		}
 		redirect('user/view_users');
 	}
+	
 	/**
     * Function to popupEditusers
     * @author:Rabeesh 
@@ -477,7 +477,7 @@ class User extends Controller  {
 		if(!$current_user_id) $current_user_id = $this->session->userdata('id');
 		$this->load->view('layout/header', array('title'=>'Credit History'));
 
-		$details = $this->users_model->get_usercredits();
+		$details = $this->users_model->get_usercredits($current_user_id);
 		$details = $details->result_array();
 		$credit = 3;
 		
@@ -493,7 +493,7 @@ class User extends Controller  {
 				$data['lost']="Lost 2 credits";
 				$data['credit']=$credit;
 				
-			} else if ($row['user_id'] == $current_user_id && $row['substitute_id'] != 0 ) {
+			} else if ($row['user_id'] == $current_user_id and $row['substitute_id'] != 0 and $row['status'] == 'attended') {
 				$substitute_id=$row['substitute_id'];
 				$Name_of_Substitute=$this->users_model->get_name_of_Substitute($substitute_id);
 				if(sizeof($Name_of_Substitute) >0) $Name_of_Substitute = $Name_of_Substitute->name;
@@ -507,14 +507,16 @@ class User extends Controller  {
 			} else if($row['substitute_id'] == $current_user_id && $row['status'] == 'absent') {
 				$credit = $credit - 2;
 				$data['class_on']= $row['class_on'];
-				$data['Substitutedby']='Substitute Class Absent';
-				$data['lost']="Lost 2 credit";
-				$data['credit']=$credit;
+				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);
+				$data['Substitutedby'] = "Absent for " . $teacher_name->name . "'s substitute class";
+				$data['lost'] = "Lost 2 credit";
+				$data['credit'] = $credit;
 				
 			} elseif ($row['substitute_id'] == $current_user_id && $row['status'] == 'attended') {
 				$credit = $credit + 1;
 				$data['class_on']= $row['class_on'];
-				$data['Substitutedby']="Substitute Class Attended";
+				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);
+				$data['Substitutedby']="Substituted for " . $teacher_name->name;
 				$data['lost']="Gained 1 credit";
 				$data['credit']=$credit;
 			}
@@ -527,9 +529,6 @@ class User extends Controller  {
 		}
 		$this->load->view('user/usercredit', array('credit_log'=>$credit_log));
 		$this->load->view('layout/footer');
-	}
-	
+	}	
 }	
 	
-
-

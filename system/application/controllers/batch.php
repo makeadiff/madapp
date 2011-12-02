@@ -112,7 +112,7 @@ class Batch extends Controller {
 		redirect('batch/add_volunteers/'.$batch_id);
 	}
 	
-function create($holder, $center_id = 0) {
+	function create($holder, $center_id = 0) {
 		$this->user_auth->check_permission('batch_create');
 		
 		if(!is_numeric($center_id)) {

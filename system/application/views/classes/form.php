@@ -1,7 +1,7 @@
-<?php $this->load->view('layout/thickbox_header',array('title'=>'Edit Class on '. date('jS M Y, H:i A', strtotime($class_details['class_on'])))); ?>
+<?php $this->load->view('layout/header',array('title'=>'Edit Class on '. date('jS M Y, H:i A', strtotime($class_details['class_on'])))); ?>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('.substite_select').change(function(){
+	$('.substitute_select').change(function(){
 		if($(this).val() == -1){
 			var flag = $(this).attr('id').replace(/\D/g,"");
 			showCities(flag);
@@ -43,7 +43,7 @@ for($i=0; $i<count($class_details['teachers']); $i++) {
 
 <li>
 <label for='substitute_id[<?php echo $i ?>]'>Substitute</label>
-<div id="sustitue_<?php echo $i ?>">
+<div id="substitute_<?php echo $i ?>">
 <?php
 if($class['substitute_id'] and !isset($substitutes[$class['substitute_id']])) { // Inter city substitution...
 	if($edit) echo "<a href='javascript:showCities(".$i.");'>";
@@ -51,7 +51,7 @@ if($class['substitute_id'] and !isset($substitutes[$class['substitute_id']])) { 
 	if($edit) echo "</a>";
 	
 } else {
-	if($edit) echo form_dropdown('substitute_id['.$i.']', $substitutes, $class['substitute_id'],'id="other_city_'.$i.'" class="substite_select"'); 
+	if($edit) echo form_dropdown('substitute_id['.$i.']', $substitutes, $class['substitute_id'],'id="other_city_'.$i.'" class="substitute_select"'); 
 	else echo $substitutes[$class['substitute_id']];
 }
 ?>
@@ -91,4 +91,4 @@ if($show_edit_button) echo '<label for="action">&nbsp;</label>' . form_submit('a
 </ul>
 </form>
 
-<?php //$this->load->view('layout/footer'); ?>
+<?php $this->load->view('layout/footer'); ?>

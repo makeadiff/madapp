@@ -23,10 +23,8 @@ class Dashboard extends Controller  {
 		
 		$this->load->helper('url');
         $this->load->helper('form');
-		$this->load->model('center_model');
 		$this->load->model('class_model');
-		$this->load->model('kids_model');
-		$this->load->model('level_model');
+		$this->load->model('users_model');
     }
 	
     /**
@@ -44,7 +42,8 @@ class Dashboard extends Controller  {
 		
 		$this->load->view('layout/header',$data);
 		$upcomming_classes = $this->class_model->get_upcomming_classes();
-		$this->load->view('dashboard/dashboard', array('upcomming_classes'=>$upcomming_classes));
+		$current_user = $this->users_model->get_user($this->session->userdata('id'));
+		$this->load->view('dashboard/dashboard', array('upcomming_classes'=>$upcomming_classes, 'current_user'=>$current_user));
 		$this->load->view('layout/footer');
     }
 }

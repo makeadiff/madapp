@@ -424,10 +424,43 @@ class Users_model extends Model {
     	$this->db->delete("UserBatch", array('batch_id'=>$batch_id, 'level_id'=>$level_id));
     }
     
-    function update_credit($user_id, $credit) {
-    	if($credit == 1) $credit = '+1';
-    	if($credit == 2) $credit = '+2';
-    	$this->db->query("UPDATE User SET credit=credit $credit WHERE id=$user_id");
+    function update_credit($user_id, $change) {
+    	if($change == 1) $change = '+1';
+    	if($change == 2) $change = '+2';
+    	$this->db->query("UPDATE User SET credit=credit $change WHERE id=$user_id");
+    }
+    function set_credit($user_id, $credit) {
+		$this->db->query("UPDATE User SET credit=$credit WHERE id=$user_id");
+    }
+    
+    function recalculate_user_credit($user_id, $update_if_wrong=false, $debug=false) {
+		$credit = 3;
+		$classes_so_far = $this->get_usercredits($user_id);
+		
+		foreach($classes_so_far as $row) {
+			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
+				$credit = $credit - 2;
+			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and  ($row['status'] == 'absent' or $row['status'] == 'attended')) {
+				$credit = $credit - 1;
+			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
+				$credit = $credit - 2;
+			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
+				$credit = $credit + 1;
+			}
+		}
+		
+		if($update_if_wrong) {
+			$user = $this->get_user($user_id);
+			
+			$existing_credits = $user->credit;
+			if($debug) print "\t\t\t\tActual Credit: $credit\t\tExisting: $existing_credits";
+			if($existing_credits != $credit) {
+				if($debug) print "\t\tWRONG!";
+				$this->set_credit($user_id, $credit);
+			}
+		}
+		
+		return $credit;
     }
     
     function get_users_batch($user_id) {
@@ -568,21 +601,16 @@ class Users_model extends Model {
 		return $this->db->where('email', $email)->get("User")->row();
 	}
 
-	/**
-    * Function to  get_usercredits
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function get_usercredits($current_user_id)
-	{
+	function get_usercredits($current_user_id) {
 		$this->db->select('UserClass.*,Class.class_on');
 		$this->db->from('UserClass');
 		$this->db->join('Class','Class.id=UserClass.class_id','join');
 		$this->db->where('UserClass.user_id',$current_user_id);
 		$this->db->or_where('UserClass.substitute_id',$current_user_id);
-		return $this->db->get();
-	
+		$result = $this->db->get();
+		
+		if($result) return $result->result_array();
+		return array();
 	}
 	/**
     * Function to  get_name_of_Substitute

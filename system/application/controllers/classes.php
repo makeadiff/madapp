@@ -62,7 +62,7 @@ class Classes extends Controller {
 		}
 		if(!$from_date) $from_date = date('Y-m-d', strtotime($last_class->class_on));
 		
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1'));
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9));
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
 		$center_name = $this->center_model->get_center_name($center_id);
@@ -451,7 +451,7 @@ class Classes extends Controller {
 			'all_lessons'=>$all_lessons,'from'=>$type));
 	}
 	
-	function edit_class_save($from=false)	 {
+	function edit_class_save()	 {
 		$class_id=$_REQUEST['class_id'];
 		if(!$this->class_model->is_class_teacher($class_id, $this->session->userdata('id'))) {
 			$this->user_auth->check_permission('class_edit_class');
@@ -459,10 +459,11 @@ class Classes extends Controller {
 		
 		$teacher_ids = $this->input->post('user_id');
 		$user_class_id = $this->input->post('user_class_id');
-		 $substitute_ids = $this->input->post('substitute_id');
-		// print_r($substitute_ids );
+		$substitute_ids = $this->input->post('substitute_id');
+		
 		$statuses = $this->input->post('status');
 		$teacher_count = count($user_class_id);
+		
 		// There might be multiple teachers in a class.
 		for($i = 0; $i<$teacher_count; $i++) {
 			if(!$teacher_ids[$i]) continue;
@@ -478,7 +479,7 @@ class Classes extends Controller {
 			$this->class_model->save_class_lesson($this->input->post('class_id'), $this->input->post('lesson_id'));
 		
 		$this->session->set_flashdata('success', 'Saved the class details');
-		if($from =='batch'){ redirect('classes/batch_view/'.'11');} else { redirect('classes/index/');}
+		redirect('classes/edit_class/'.$class_id);
 	}
 	
 	function confirm_class($class_id) {

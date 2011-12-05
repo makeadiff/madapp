@@ -306,6 +306,16 @@ class User extends Controller  {
 		
 		$this->load->view('user/view_users', $data);
 	}
+	
+	function search_email() {
+		$email = '';
+		$data = array();
+		if($this->input->post('email')) {
+			$email = $this->input->post('email');
+			$data = $this->users_model->search_users(array('email'=>$email, 'city_id'=>false, 'status'=>false));
+		}
+		$this->load->view('user/search_email', array('email'=>$email, 'data'=>$data));
+	}
 
 	/// Export to CSV
 	function export($city_id='0', $user_group='0', $name='', $user_type="volunteer") {
@@ -474,26 +484,25 @@ class User extends Controller  {
     * @return: type: [Boolean, Array()]
     **/
 	function credithistory($current_user_id = 0) {
+		$for_user = '';
 		if(!$current_user_id) $current_user_id = $this->session->userdata('id');
-		$this->load->view('layout/header', array('title'=>'Credit History'));
+		else $for_user = ' of ' . $this->users_model->get_user($current_user_id)->name;
+		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
 
 		$details = $this->users_model->get_usercredits($current_user_id);
-		$details = $details->result_array();
 		$credit = 3;
-		
 		$credit_log = array();
-		
 		$i = 0;
 		foreach($details as $row) {
 			$data = array();
-			if ($row['user_id'] == $current_user_id && $row['substitute_id'] == 0 && $row['status'] == 'absent') {	
+			if ($row['user_id'] == $current_user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
 				$credit = $credit - 2;
 				$data['class_on']=$row['class_on'];
 				$data['Substitutedby']='Absent';
 				$data['lost']="Lost 2 credits";
 				$data['credit']=$credit;
 				
-			} else if ($row['user_id'] == $current_user_id and $row['substitute_id'] != 0 and $row['status'] == 'attended') {
+			} else if ($row['user_id'] == $current_user_id and $row['substitute_id'] != 0 and ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$substitute_id=$row['substitute_id'];
 				$Name_of_Substitute=$this->users_model->get_name_of_Substitute($substitute_id);
 				if(sizeof($Name_of_Substitute) >0) $Name_of_Substitute = $Name_of_Substitute->name;
@@ -504,7 +513,7 @@ class User extends Controller  {
 				$data['lost'] = "Lost 1 credit";
 				$data['credit'] = $credit;
 			
-			} else if($row['substitute_id'] == $current_user_id && $row['status'] == 'absent') {
+			} else if($row['substitute_id'] == $current_user_id and $row['status'] == 'absent') {
 				$credit = $credit - 2;
 				$data['class_on']= $row['class_on'];
 				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);
@@ -512,7 +521,7 @@ class User extends Controller  {
 				$data['lost'] = "Lost 2 credit";
 				$data['credit'] = $credit;
 				
-			} elseif ($row['substitute_id'] == $current_user_id && $row['status'] == 'attended') {
+			} elseif ($row['substitute_id'] == $current_user_id and $row['status'] == 'attended') {
 				$credit = $credit + 1;
 				$data['class_on']= $row['class_on'];
 				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);

@@ -62,12 +62,12 @@ foreach($classes as $class) {
 <?php
 		if($teacher_index == 0) {
 ?>
-<td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/edit_class/'.$class['id'].'/batch') ?>" class="popup"><?php echo $class['level_name'] ?></a></td>
+<td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/edit_class/'.$class['id'].'/batch') ?>"><?php echo $class['level_name'] ?></a></td>
 <td <?php echo $rowspan ?>><?php echo form_dropdown('lesson_id['.$class['id'].']', $all_lessons[$class['level_id']], $class['lesson_id'], 'style="width:100px;"'); ?></td>
-<td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/mark_attendence/'.$class['id']); ?>" class="popup"><?php echo $class['student_attendence'] ?></a></td>
+<td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/mark_attendence/'.$class['id']); ?>"><?php echo $class['student_attendence'] ?></a></td>
 
 <?php } ?>
-<td><a href="<?php echo site_url('user/view/'.$class['teachers'][$teacher_index]['id']) ?>" class="popup"><?php echo $class['teachers'][$teacher_index]['name'] ?></a></td>
+<td><a href="<?php echo site_url('user/view/'.$class['teachers'][$teacher_index]['id']) ?>"><?php echo $class['teachers'][$teacher_index]['name'] ?></a></td>
 <td><div id="substitute_<?php echo $teacher_row_count ?>">
 <?php
 if($class['teachers'][$teacher_index]['substitute_id'] and !isset($all_user_names[$class['teachers'][$teacher_index]['substitute_id']])) { // Inter city substitution...

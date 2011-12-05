@@ -208,21 +208,27 @@ class Class_model extends Model {
     	if(!$data) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
     	$this->load->model('user_model','user_model');
     	
+    	$debug = false;
+    	if($debug) {print "Class Data: ";dump($data);}
+    	
     	extract($data);
     	if($status == 'attended') {
     		if($substitute_id) {
     			// A substitute has attended the class. Substitute gets one credit, Original teacher loses one credit.
     			$this->user_model->update_credit($substitute_id, 1);
     			$this->user_model->update_credit($user_id, -1);
+    			if($debug) print "<br />Substitute attended. Sub +1 and Teacher -1";
     		}
     	} elseif($status == 'absent') {
     		if($substitute_id) {
     			// A substitute was supposed to come - but didn't. Substitute loses two credit, Original teacher loses one credit.
     			$this->user_model->update_credit($substitute_id, -2);
     			$this->user_model->update_credit($user_id, -1);
+    			if($debug) print "<br />Substitute was absent. Sub -2 and Teacher -1";
     		} else {
     			// Absent without substitute. Teacher loses two credit.
     			$this->user_model->update_credit($user_id, -2);
+    			if($debug) print "<br />Teacher was absent. Teacher -2";
     		}
     	}
     }
@@ -234,21 +240,28 @@ class Class_model extends Model {
     	if(!$data) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
     	$this->load->model('user_model','user_model');
     	
+    	$debug = false;
+    	if($debug) {print "Last Class Data: ";dump($data);}
+    	
+    	extract($data);
     	// Note - S = Substitute Teacher, OT= Original Teacher.
     	if($status == 'attended') {
     		if($substitute_id) {
     			// A substitute had attended the class. That would have changed the credits like S = +1, OT = -1. So we make S = -1 and OT = +1 - to make the changed credits 0
     			$this->user_model->update_credit($substitute_id, -1);
     			$this->user_model->update_credit($user_id, 1);
+    			if($debug) print "<br />Substitute had attended. Reverting means Sub -1 and Teacher +1";
     		}
     	} elseif($status == 'absent') {
     		if($substitute_id) {
     			// A substitute was supposed to come - but didn't. S=-2, OT=-1. So in revert, S=+2,OT=+1
     			$this->user_model->update_credit($substitute_id, +2);
     			$this->user_model->update_credit($user_id, +1);
+    			if($debug) print "<br />Substitute was absent. Reverting means Sub +2 and Teacher +1";
     		} else {
     			// Absent without substitute. Teacher lost two credit. So, give them +2.
     			$this->user_model->update_credit($user_id, +2);
+    			if($debug) print "<br />Teacher was absent. Reverting Teacher +2";
     		}
     	}
     }

@@ -106,7 +106,7 @@ class Cron extends Controller  {
 	function recalculate_credits($city_id=0) {
 		$this->load->model('users_model');
 		
-		$conditions = array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'city_id'=>false);
+		$conditions = array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'project_id'=>1,'city_id'=>false);
 		if($city_id) $conditions['city_id'] = $city_id;
 		$all_users = $this->users_model->search_users($conditions);
 		

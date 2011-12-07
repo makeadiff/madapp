@@ -109,7 +109,8 @@ class Cron extends Controller  {
 		$conditions = array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'city_id'=>false);
 		if($city_id) $conditions['city_id'] = $city_id;
 		$all_users = $this->users_model->search_users($conditions);
-		print "Recalculating credits of " . count($user) . " users.\n";
+		
+		print "Recalculating credits of " . count($all_users) . " users.\n";
 		foreach($all_users as $user) {
 			print $user->id . ") " . $user->name;
 			$this->users_model->recalculate_user_credit($user->id, true, true);

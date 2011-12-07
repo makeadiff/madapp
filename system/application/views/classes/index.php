@@ -12,7 +12,7 @@ $this->load->view('layout/header', array('title'=>'Classes')); ?>
 <td><?php echo $all_users[$class->user_id] ?></td>
 <td><?php echo ($class->substitute_id) ? $all_users[$class->substitute_id] : ''; ?></td>
 <td><?php echo ucfirst($class->status) ?></td>
-<td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>" class="edit with-icon thickbox popup">Edit</a></td>
+<td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>" class="edit with-icon">Edit</a></td>
 </tr>
 <?php } ?>
 </table>

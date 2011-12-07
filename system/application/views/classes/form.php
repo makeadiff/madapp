@@ -38,7 +38,7 @@ for($i=0; $i<count($class_details['teachers']); $i++) {
 <li  style="width:400px;">
 <label for='user_id[<?php echo $i ?>]'>Teacher</label>
 
-<strong><?php echo $teachers[$class['user_id']] ?></strong>
+<strong><?php echo $teachers[$class['user_id']]; ?></strong>
 </li>
 
 <li>

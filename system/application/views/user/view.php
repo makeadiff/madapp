@@ -46,6 +46,9 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <?php if($user->why_mad) { ?><p>Why MAD: <strong><?php echo nl2br($user->why_mad); ?></strong></p><?php } ?>
 
 
-<?php if($user->status == 0) { ?><strong class="error">Deleted User</strong><?php } ?>
+<?php if($user->status == 0) { ?><strong class="error">Deleted User</strong>
+<?php if($this->user_auth->get_permission('debug')) { ?>
+ <a href="<?php echo site_url('user/undelete/'.$user->id); ?>">Undelete?</a>
+<?php } } ?>
 
 <?php $this->load->view('layout/footer'); ?>

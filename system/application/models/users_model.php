@@ -267,6 +267,10 @@ class Users_model extends Model {
 		}
 	}
 	
+	function undelete($user_id) {
+		return $this->db->where('id',$user_id)->update('User', array('status'=>1));
+	}
+	
 	function process_pic($data, $type='users')
     {   
       	$id=$data['id'];

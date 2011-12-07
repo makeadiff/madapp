@@ -212,6 +212,12 @@ class User extends Controller  {
 		redirect('user/view_users');
 	}
 	
+	function undelete($user_id) {
+		$this->users_model->undelete($user_id);
+		$this->session->set_flashdata('success', "User has been restored.");
+		redirect('user/view/'.$user_id);
+    }
+	
 	/// Bulk SMS and Email goes thru here.
 	function bulk_communication() {
 		if($this->input->post('action') == 'Send Emails') {
@@ -490,6 +496,7 @@ class User extends Controller  {
 		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
 
 		$details = $this->users_model->get_usercredits($current_user_id);
+
 		$credit = 3;
 		$credit_log = array();
 		$i = 0;

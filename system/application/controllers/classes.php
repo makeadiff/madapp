@@ -468,6 +468,7 @@ class Classes extends Controller {
 		for($i = 0; $i<$teacher_count; $i++) {
 			if(!$teacher_ids[$i]) continue;
 			
+			if($teacher_ids[$i] == $substitute_ids[$i]) $substitute_ids[$i] = 0; // To make sure a person can't substitute for himself.
 			$this->class_model->save_class_teachers($user_class_id[$i], array(
 				'user_id'	=>	$teacher_ids[$i],
 				'substitute_id'=>$substitute_ids[$i],

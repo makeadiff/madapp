@@ -4,19 +4,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Register</title>
 <link href="<?php echo base_url(); ?>css/sections/common/register.css" rel="stylesheet" type="text/css" />
-<link href="<?php echo base_url(); ?>css/camp/styles.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script src="<?php echo base_url();?>js/datepicker.js" type="text/javascript"></script>
-<script type="text/javascript" src="<?php echo base_url();?>js/datepicker_source.js" ></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
+<script src="<?php echo base_url()?>js/cal.js"></script>
+<?php
+$sdt=1980;
+$edt=date('Y');
+?>
 <script>
-$(document).ready(init);
-function init()
-{
-
-	$('input#date1').datePicker({startDate:'01-01-1900', endDate:'01-12-2100'});
-	// ...and the input with an id of "date2" will have a date picker that lets you pick any day between the 02/11/2006 and 13/11/2006
-	
-}
+jQuery(document).ready(function () {
+	$('input.textfield').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
+});
+</script>
 </script>
 </head>
 <body>
@@ -87,7 +87,7 @@ function init()
             </div>
 
             <div class="content-row-large"><span>Date of Birth:</span>
-            <input class="textfield" type="text" id="date1" name="date1" />
+            <input class="textfield" type="text" id="birthday" name="birthday" />
             </div>
 
             <div class="content-row-large"><span>Why MAD:</span>

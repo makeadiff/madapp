@@ -18,7 +18,7 @@ jQuery.datePicker = function()
 	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 	var navLinks = {p:'Prev', n:'Next', c:'Close', b:'Choose date'};
-	var dateFormat = 'dmy';
+	var dateFormat = 'ymd';
 	var dateSeparator = "-";
 	var _drawingMonth = false;
 	var _firstDayOfWeek;

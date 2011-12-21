@@ -49,7 +49,7 @@ class Common extends Controller {
 			$this->validation->set_fields($fields);
 			if ($this->validation->run() == FALSE) {
 				$data['cities'] = $this->city_model->get_unique_cities();
-				$this->load->view('user/register_view',$error);
+				$this->load->view('user/register_view');
 				
 			} else {
 				$status = $this->user_auth->register($data);

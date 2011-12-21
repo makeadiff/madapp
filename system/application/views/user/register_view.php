@@ -14,7 +14,7 @@ $edt=date('Y');
 ?>
 <script>
 jQuery(document).ready(function () {
-	$('input.textfield').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
+	$('#birthday').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('1990-01-01')});
 });
 </script>
 </script>

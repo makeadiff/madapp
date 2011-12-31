@@ -26,7 +26,6 @@ foreach($data as $center_id => $center_info) {
 
 <?php foreach($all_batches as $batch_id => $batch_info) {
 	if(empty($batch_info['days_with_classes'])) continue;
-	
 ?>
 <table class="madsheet data-table info-box-table">
 <tr>

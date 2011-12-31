@@ -192,61 +192,6 @@ class Classes extends Controller {
 		redirect('classes/batch_view/'.$batch_view.'/'.$date);
 	}
 	
-	function class_progress_report() {
-		$this->user_auth->check_permission('classes_progress_report');
-		
-		$all_centers = $this->center_model->get_all();
-		$all_levels = array();
-		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
-		$all_lessons[0] = 'None';
-		$data = array();
-		foreach($all_centers as $center) {
-			//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
-		
-			$data[$center->id] = array(
-				'center_id'	=> $center->id,
-				'center_name'=>$center->name,
-			);
-			$batches = $this->batch_model->get_class_days($center->id);
-			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
-			
-			$data[$center->id]['batches'] = array();
-			$days_with_classes = array();
-	
-			// NOTE: Each batch has all the levels in the center. Think. Its how that works.
-			foreach($all_levels[$center->id] as $level) {
-				$data[$center->id]['class_progress'][$level->id] = $this->class_model->get_last_unit_taught($level->id);
-				
-				foreach($batches as $batch_id => $batch_name) {
-					//if($batch_id != 1) continue; // :DEBUG: Use this to localize the issue
-					$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
-
-					//if($level->id != 71) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
-					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
-					$last_class_id = 0;
-					foreach($all_classes as $class) {
-						if($class->status != 'cancelled') {
-							$date = date('d M',strtotime($class->class_on));
-							$date_index = date('m-d',strtotime($class->class_on));
-							if(!in_array($date, $days_with_classes)) {
-								$days_with_classes[$date_index] = $date;
-							}
-							$data[$center->id]['class'][$level->id][$date_index] = $class;
-						}
-					}
-				}
-			}
-			ksort($days_with_classes);
-			$data[$center->id]['days_with_classes'] = $days_with_classes;
-		}
-		
-		
-		$this->load->view('classes/class_progress_report', array(
-			'data'=>$data, 'all_lessons'=>$all_lessons,
-			'all_centers'=>$all_centers, 'all_levels'=>$all_levels));
-		
-	}
-	
 	/// MADSheet in User mode.
 	function madsheet() {
 		$this->user_auth->check_permission('classes_madsheet');
@@ -311,7 +256,10 @@ class Classes extends Controller {
 						foreach($all_classes as $class) {
 							$date = date('d M',strtotime($class->class_on));
 							if(!in_array($date, $days_with_classes)) {
-								$days_with_classes[date('m-d',strtotime($class->class_on))] = $date;
+								$month = date('m',strtotime($class->class_on));
+								if($month < 3) $month = $month + 12; // So that january comes after december.
+								$key = $month . '-'.date('d',strtotime($class->class_on));
+								$days_with_classes[$key] = $date;
 							}
 							
 							if($class->user_id == $teacher_id) {

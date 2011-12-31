@@ -1,6 +1,10 @@
 #main-content {
 	padding:10px;
 }
+.main {
+	width:1100px;
+	overflow:auto;
+}
 
 .class-good,.class-repeated,.class-without-test {
 	text-align:center;

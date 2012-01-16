@@ -14,7 +14,6 @@ $this->load->view('layout/header', array('title'=>'Class Progress Report'));
 </table>
 
 <?php
-
 foreach($data as $center_id => $center_info) {
 	if(empty($center_info)) continue;
 ?>
@@ -22,10 +21,10 @@ foreach($data as $center_id => $center_info) {
 
 <table class="madsheet data-table info-box-table">
 <tr>
-<th>&nbsp;</th>
-<th>Class Progress</th>
+<th>Level</th>
+<th>Kids</th>
 <?php
-foreach($center_info['days_with_classes'] as $day) print "<th>$day</th>";
+//foreach($center_info['days_with_classes'] as $day) print "<th>$day</th>";
 ?>
 <th>&nbsp;</th>
 <th>Class Progress</th>
@@ -37,7 +36,7 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 ?>
 <tr class="<?php echo ($row_count % 2) ? 'odd' : 'even' ?>">
 <td nowrap='nowrap'><?php echo $level_info->name ?></td>
-<td><?php echo $all_lessons[$center_info['class_progress'][$level_info->id]] ?></td>
+<td><?php echo $all_kids[$level_info->id] ?></td>
 
 <?php
 	$last_lesson_id = 0;
@@ -55,7 +54,10 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		if($repeat_count > 2) $class_type = 'repeated';
 		if($lesson_id == 0) $class_type = 'no-data';
 	?>
-	
+	<td class="class-<?php echo $class_type ?>"><?php 
+		$lesson_name = $all_lessons[$lesson_id];
+		echo preg_replace('/UNIT ([\.\d]+).*/', "$1", $lesson_name); 
+	?></td>
 <?php } ?>
 <td nowrap='nowrap'><?php echo $level_info->name ?></td>
 <td><?php echo $all_lessons[$center_info['class_progress'][$level_info->id]] ?></td>
@@ -70,4 +72,4 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 <?php } // Center ?>
 
 
-<?php $this->load->view('layout/footer');
+load->view('layout/footer');

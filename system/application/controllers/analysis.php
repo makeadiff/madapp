@@ -42,7 +42,7 @@ class Analysis extends Controller {
 			);
 			$batches = $this->batch_model->get_class_days($center->id);
 			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
-			
+			//print_r($all_levels);
 			$data[$center->id]['batches'] = array();
 			$days_with_classes = array();
 	
@@ -80,6 +80,34 @@ class Analysis extends Controller {
 			'data'=>$data, 'all_lessons'=>$all_lessons,
 			'all_centers'=>$all_centers, 'all_levels'=>$all_levels));
 		
+	}
+	function kids_attendance()
+	{
+		$all_centers = $this->center_model->get_all();
+		$data = array();
+		$datas = array();
+			foreach($all_centers as $center) {
+				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+				$data[$center->id] = array(
+					'center_id'	=> $center->id,
+					'center_name'=>$center->name,
+				);
+				$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
+					//print_r($all_levels);
+				
+		
+		foreach($all_levels[$center->id] as $level) {
+				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+				$datas[$level->id] = array(
+					'level_id'	=> $level->id,
+					'level_name'=>$level->name,
+				);
+				$all_kids[$level->id] = $this->level_model->get_all_kids_in_level($level->id);
+				}
+				}
+
+		$this->load->view('analysis/kids_attendance', array(
+				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids));
 	}
 
 }

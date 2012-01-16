@@ -81,6 +81,14 @@ class Analysis extends Controller {
 			'all_centers'=>$all_centers, 'all_levels'=>$all_levels));
 		
 	}
+	 /**
+    *
+    * Function to
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function kids_attendance()
 	{
 		$all_centers = $this->center_model->get_all();
@@ -93,9 +101,7 @@ class Analysis extends Controller {
 					'center_name'=>$center->name,
 				);
 				$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
-					//print_r($all_levels);
-				
-		
+		$days_with_classes = array();
 		foreach($all_levels[$center->id] as $level) {
 				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 				$datas[$level->id] = array(
@@ -103,13 +109,28 @@ class Analysis extends Controller {
 					'level_name'=>$level->name,
 				);
 				$all_kids[$level->id] = $this->level_model->get_all_kids_in_level($level->id);
+				$all_classes = $this->class_model->get_classes_by_level_and_center($level->id);
+				foreach($all_classes as $class) {
+							$date = date('d M',strtotime($class->class_on));
+							$month = date('m',strtotime($class->class_on));
+							if($month < 3) $month = $month + 12; // So that january comes after december.
+							$key = $month . '-'.date('d',strtotime($class->class_on));
+							if(!in_array($date, $days_with_classes)) {
+								$days_with_classes[$key] = $date;
+							}
+							$data[$center->id]['class'][$level->id][$key] = $class;
+							$attendance[$class->id]  = $this->class_model->get__kids_attendance ($class->id);
+					}
+				
 				}
+				ksort($days_with_classes);
+			$data[$center->id]['days_with_classes'] = $days_with_classes;
 				}
-
+			
 		$this->load->view('analysis/kids_attendance', array(
-				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids));
+				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids,'attendance'=>$attendance));
 	}
-
+	
 }
 
 

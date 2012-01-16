@@ -350,4 +350,30 @@ class Class_model extends Model {
 		$this->db->delete('UserClass',array('class_id'=>$class_id));
 		$this->db->delete('StudentClass',array('class_id'=>$class_id));
     }
+	 /**
+    *
+    * Function to
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	 /// Get just the class information for the current level/batch
+    function get_classes_by_level_and_center($level_id) {
+    	$classes = $this->db->query("SELECT id,class_on FROM class WHERE level_id=$level_id ORDER BY class_on ASC")->result();
+    	return $classes;
+    }
+	 /**
+    *
+    * Function to
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function get__kids_attendance ($class_id)
+	{
+		$attendance = $this->db->query("SELECT COUNT(id) as count FROM studentclass WHERE class_id=$class_id AND present=1")->row()->count;
+    	return $attendance;
+	}
 }

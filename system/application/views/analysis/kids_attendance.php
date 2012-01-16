@@ -24,10 +24,10 @@ foreach($data as $center_id => $center_info) {
 <th>Level</th>
 <th>Kids</th>
 <?php
-//foreach($center_info['days_with_classes'] as $day) print "<th>$day</th>";
+foreach($center_info['days_with_classes'] as $day) print "<th>$day</th>";
 ?>
-<th>&nbsp;</th>
-<th>Class Progress</th>
+<th>Aggr</th>
+<th>Aggr</th>
 </tr>
 
 <?php
@@ -42,34 +42,36 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 	$last_lesson_id = 0;
 	$repeat_count = 0;
 	foreach($center_info['days_with_classes'] as $date_index => $day) {
+	
 		if(!isset($center_info['class'][$level_info->id][$date_index])) continue;
-		$lesson_id = $center_info['class'][$level_info->id][$date_index]->lesson_id;
-		if($lesson_id != $last_lesson_id and $lesson_id) {
-			$last_lesson_id = $lesson_id;
+		$classdateid = $center_info['class'][$level_info->id][$date_index]->id;
+		if($classdateid != $last_lesson_id and $classdateid) {
+			$last_lesson_id = $classdateid;
 			$repeat_count = 0;
 		} else {
 			$repeat_count++;
 		}
 		$class_type = 'good';
 		if($repeat_count > 2) $class_type = 'repeated';
-		if($lesson_id == 0) $class_type = 'no-data';
+		if($classdateid == 0) $class_type = 'no-data';
 	?>
 	<td class="class-<?php echo $class_type ?>"><?php 
-		$lesson_name = $all_lessons[$lesson_id];
-		echo preg_replace('/UNIT ([\.\d]+).*/', "$1", $lesson_name); 
+		echo $attendance[$center_info['class'][$level_info->id][$date_index]->id];
 	?></td>
 <?php } ?>
-<td nowrap='nowrap'><?php echo $level_info->name ?></td>
-<td><?php echo $all_lessons[$center_info['class_progress'][$level_info->id]] ?></td>
+<td nowrap='nowrap'><?php echo "test";?></td>
 
 </tr>
+
 <?php
 	$row_count++;
 } // Level end ?>
+<td nowrap='nowrap'>Total</td>
+<td nowrap='nowrap'>18</td>
 </table><br />
 
 <hr />
 <?php } // Center ?>
 
 
-load->view('layout/footer');
+<?php $this->load->view('layout/footer');

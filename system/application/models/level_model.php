@@ -83,7 +83,15 @@ class Level_model extends Model {
 				'student_id'=> $student_id
 			));
 		}
-    }
+    } 
+	/**
+    *
+    * Function to
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function get_all_kids_in_level($level_id)
 	{
 		return $this->db->query("SELECT COUNT(id) AS count FROM studentlevel WHERE level_id=$level_id")->row()->count;

@@ -376,4 +376,5 @@ class Class_model extends Model {
 		$attendance = $this->db->query("SELECT COUNT(id) as count FROM studentclass WHERE class_id=$class_id AND present=1")->row()->count;
     	return $attendance;
 	}
+	
 }

@@ -42,7 +42,6 @@ class Analysis extends Controller {
 			);
 			$batches = $this->batch_model->get_class_days($center->id);
 			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
-			//print_r($all_levels);
 			$data[$center->id]['batches'] = array();
 			$days_with_classes = array();
 	
@@ -74,8 +73,6 @@ class Analysis extends Controller {
 			ksort($days_with_classes);
 			$data[$center->id]['days_with_classes'] = $days_with_classes;
 		}
-		
-		
 		$this->load->view('analysis/class_progress_report', array(
 			'data'=>$data, 'all_lessons'=>$all_lessons,
 			'all_centers'=>$all_centers, 'all_levels'=>$all_levels));
@@ -95,6 +92,7 @@ class Analysis extends Controller {
 		$data = array();
 		$datas = array();
 		$attendance = array();
+		$totalAttendance=array();
 			foreach($all_centers as $center) {
 				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 				$data[$center->id] = array(
@@ -111,7 +109,9 @@ class Analysis extends Controller {
 				);
 				$all_kids[$level->id] = $this->level_model->get_all_kids_in_level($level->id);
 				$all_classes = $this->class_model->get_classes_by_level_and_center($level->id);
+				$totalAttendance=0;
 				foreach($all_classes as $class) {
+				
 							$date = date('d M',strtotime($class->class_on));
 							$month = date('m',strtotime($class->class_on));
 							if($month < 3) $month = $month + 12; // So that january comes after december.
@@ -122,7 +122,6 @@ class Analysis extends Controller {
 							$data[$center->id]['class'][$level->id][$key] = $class;
 							$attendance[$class->id]  = $this->class_model->get__kids_attendance ($class->id);
 					}
-				
 				}
 				ksort($days_with_classes);
 			$data[$center->id]['days_with_classes'] = $days_with_classes;

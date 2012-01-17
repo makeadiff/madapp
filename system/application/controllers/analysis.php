@@ -94,6 +94,7 @@ class Analysis extends Controller {
 		$all_centers = $this->center_model->get_all();
 		$data = array();
 		$datas = array();
+		$attendance = array();
 			foreach($all_centers as $center) {
 				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 				$data[$center->id] = array(

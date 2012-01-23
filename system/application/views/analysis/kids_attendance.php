@@ -3,14 +3,7 @@ $this->load->view('layout/header', array('title'=>'Class Progress Report'));
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/sections/analysis/class_progress_report.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
-<h3>Legend</h3>
-<table border="1">
-<tr>
-<td class='class-good'>Class Happening</td>
-<td class='class-repeated'>Unit Repeated</td>
-<td class='class-without-test'>Class Happening Without Tests</td>
-</tr>
-</table>
+
 <?php
 foreach($data as $center_id => $center_info) {
 	if(empty($center_info)) continue;
@@ -23,7 +16,6 @@ foreach($data as $center_id => $center_info) {
 <?php
 foreach($center_info['days_with_classes'] as $day) print "<th>$day</th>";
 ?>
-<th>Aggr</th>
 <th>Aggr</th>
 </tr>
 <?php
@@ -60,28 +52,28 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		if($classdateid == 0) $class_type = 'no-data';
 	?>
     <?php $percentage=($attendance[$center_info['class'][$level_info->id][$date_index]->id] * 100)/$all_kids[$level_info->id];?>
-    <?php if($percentage <$comppercentage ){ ?>
-	<td class="class-<?php echo $class_type ?>" style="background:#FF0000;"><?php 
+    <?php if($percentage < $comppercentage ){ ?>
+	<td class="class-<?php echo $class_type ?>" style="background:#FF0000;">
+    <?php } else { ?>
+    <td class="class-<?php echo $class_type ?>">
+    <?php } 
 		echo $attendance[$center_info['class'][$level_info->id][$date_index]->id];
 		$sum+=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
 	?></td>
-    <?php } else { ?><td class="class-<?php echo $class_type ?>"><?php 
-		echo $attendance[$center_info['class'][$level_info->id][$date_index]->id];
-		$sum+=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
-	?></td><?php } ?>
  	<?php $netvalue[$date_index]=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
 			ksort($netvalue);
 		  ?>
 <?php $test=0; }$temp[$i++]=$netvalue;?>
-<td nowrap='nowrap'><?php $netSum+=$sum/$totNumber; echo $sum/$totNumber;?></td>
+<td nowrap='nowrap'><?php $netSum+=$sum/$totNumber; echo round($sum/$totNumber, 2);?></td>
 </tr>
 <?php
 	$row_count++;
 } // Level end ?>
 <td nowrap='nowrap'>Total</td>
-<td nowrap='nowrap'><?php echo  $var;?></td><?php foreach($netvalue as $y=> $row){?>
+<td nowrap='nowrap'><?php echo $var;?></td>
+<?php foreach($netvalue as $y=> $row) { ?>
 <td>
-<?php $sum=0;foreach($temp as $kk=> $yy){$sum+=$temp[$kk][$y];}echo $sum;?>
+<?php $sum=0;foreach($temp as $kk=> $yy){ if(isset($temp[$kk][$y])) $sum+=$temp[$kk][$y];}echo $sum;?>
 </td>
 <?php } ?><?php $perc=($netSum*100)/$var; ?><?php if($perc < $comppercentage) {?>
 <td nowrap='nowrap' style="background:#FF0000;"><?php echo $netSum;?></td>

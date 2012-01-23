@@ -360,7 +360,7 @@ class Class_model extends Model {
     **/
 	 /// Get just the class information for the current level/batch
     function get_classes_by_level_and_center($level_id) {
-    	$classes = $this->db->query("SELECT id,class_on FROM class WHERE level_id=$level_id ORDER BY class_on ASC")->result();
+    	$classes = $this->db->query("SELECT id,class_on FROM Class WHERE level_id=$level_id ORDER BY class_on ASC")->result();
     	return $classes;
     }
 	 /**
@@ -373,7 +373,7 @@ class Class_model extends Model {
     **/
 	function get__kids_attendance ($class_id)
 	{
-		$attendance = $this->db->query("SELECT COUNT(id) as count FROM studentclass WHERE class_id=$class_id AND present=1")->row()->count;
+		$attendance = $this->db->query("SELECT COUNT(id) as count FROM StudentClass WHERE class_id=$class_id AND present=1")->row()->count;
     	return $attendance;
 	}
 	

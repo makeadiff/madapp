@@ -94,7 +94,7 @@ class Level_model extends Model {
     **/
 	function get_all_kids_in_level($level_id)
 	{
-		return $this->db->query("SELECT COUNT(id) AS count FROM studentlevel WHERE level_id=$level_id")->row()->count;
+		return $this->db->query("SELECT COUNT(id) AS count FROM StudentLevel WHERE level_id=$level_id")->row()->count;
 		
 	}
 	

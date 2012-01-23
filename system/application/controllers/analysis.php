@@ -93,15 +93,15 @@ class Analysis extends Controller {
 		$datas = array();
 		$attendance = array();
 		$totalAttendance=array();
-			foreach($all_centers as $center) {
-				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
-				$data[$center->id] = array(
-					'center_id'	=> $center->id,
-					'center_name'=>$center->name,
-				);
-				$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
-		$days_with_classes = array();
-		foreach($all_levels[$center->id] as $level) {
+		foreach($all_centers as $center) {
+			//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+			$data[$center->id] = array(
+				'center_id'	=> $center->id,
+				'center_name'=>$center->name,
+			);
+			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
+			$days_with_classes = array();
+			foreach($all_levels[$center->id] as $level) {
 				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 				$datas[$level->id] = array(
 					'level_id'	=> $level->id,
@@ -112,20 +112,20 @@ class Analysis extends Controller {
 				$totalAttendance=0;
 				foreach($all_classes as $class) {
 				
-							$date = date('d M',strtotime($class->class_on));
-							$month = date('m',strtotime($class->class_on));
-							if($month < 3) $month = $month + 12; // So that january comes after december.
-							$key = $month . '-'.date('d',strtotime($class->class_on));
-							if(!in_array($date, $days_with_classes)) {
-								$days_with_classes[$key] = $date;
-							}
-							$data[$center->id]['class'][$level->id][$key] = $class;
-							$attendance[$class->id]  = $this->class_model->get__kids_attendance ($class->id);
+					$date = date('d M',strtotime($class->class_on));
+					$month = date('m',strtotime($class->class_on));
+					if($month < 3) $month = $month + 12; // So that january comes after december.
+					$key = $month . '-'.date('d',strtotime($class->class_on));
+					if(!in_array($date, $days_with_classes)) {
+						$days_with_classes[$key] = $date;
 					}
+					$data[$center->id]['class'][$level->id][$key] = $class;
+					$attendance[$class->id]  = $this->class_model->get__kids_attendance ($class->id);
 				}
-				ksort($days_with_classes);
+			}
+			ksort($days_with_classes);
 			$data[$center->id]['days_with_classes'] = $days_with_classes;
-				}
+		}
 			
 		$this->load->view('analysis/kids_attendance', array(
 				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids,'attendance'=>$attendance));

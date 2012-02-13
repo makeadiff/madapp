@@ -55,7 +55,10 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		if($repeat_count > 2) $class_type = 'repeated';
 		if($lesson_id == 0) $class_type = 'no-data';
 	?>
-	
+	<td class="class-<?php echo $class_type ?>"><?php 
+		$lesson_name = $all_lessons[$lesson_id];
+		echo preg_replace('/UNIT ([\.\d]+).*/', "$1", $lesson_name); 
+	?></td>
 <?php } ?>
 <td nowrap='nowrap'><?php echo $level_info->name ?></td>
 <td><?php echo $all_lessons[$center_info['class_progress'][$level_info->id]] ?></td>

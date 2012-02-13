@@ -34,7 +34,7 @@ class Analysis extends Controller {
 		$all_lessons[0] = 'None';
 		$data = array();
 		foreach($all_centers as $center) {
-			//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+			if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 		
 			$data[$center->id] = array(
 				'center_id'	=> $center->id,
@@ -55,6 +55,7 @@ class Analysis extends Controller {
 
 					//if($level->id != 71) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
+					
 					$last_class_id = 0;
 					foreach($all_classes as $class) {
 						if($class->status != 'cancelled') {

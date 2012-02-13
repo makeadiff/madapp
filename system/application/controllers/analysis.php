@@ -34,7 +34,7 @@ class Analysis extends Controller {
 		$all_lessons[0] = 'None';
 		$data = array();
 		foreach($all_centers as $center) {
-			if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+			//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 		
 			$data[$center->id] = array(
 				'center_id'	=> $center->id,

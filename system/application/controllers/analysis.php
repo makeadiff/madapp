@@ -127,7 +127,7 @@ class Analysis extends Controller {
 			ksort($days_with_classes);
 			$data[$center->id]['days_with_classes'] = $days_with_classes;
 		}
-			
+		//print_r($data);	
 		$this->load->view('analysis/kids_attendance', array(
 				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids,'attendance'=>$attendance));
 	}

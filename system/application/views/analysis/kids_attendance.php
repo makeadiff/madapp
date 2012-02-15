@@ -52,14 +52,23 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		if($repeat_count > 2) $class_type = 'repeated';
 		if($classdateid == 0) $class_type = 'no-data';
 	?>
-   <?php  if(!isset($center_info['class'][$level_info->id][$date_index])){ $attendanses =0;}else {
-		$attendanses=$attendance[$center_info['class'][$level_info->id][$date_index]->id]; }?>
+    <?php //print_r($test); ?>
+   <?php  if(!isset($center_info['class'][$level_info->id][$date_index])){ $status="null"; $attendanses =0;}else {
+		$attendanses=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
+		$test=$center_info['class'][$level_info->id][$date_index]; 
+		$status=$test->status;
+		//echo $status=$attendance[$center_info['class'][$level_info->id][$date_index]->class_on]; 
+	}?>
     <?php $percentage=($attendanses * 100)/$all_kids[$level_info->id];?>
+    <?php if($status == "absent"){ ?>
+     <td class="class-<?php echo $class_type ?>" style="background:#000000">
+    <?php }else { ?>
     <?php if($percentage < $comppercentage ){ ?>
+   
 	<td class="class-<?php echo $class_type ?>" style="background:#FF0000;">
     <?php } else { ?>
     <td class="class-<?php echo $class_type ?>">
-    <?php } 
+    <?php } } 
 	//Attendance ...
 		echo $attendanses;
 		$sum+=$attendanses;

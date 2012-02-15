@@ -360,7 +360,8 @@ class Class_model extends Model {
     **/
 	 /// Get just the class information for the current level/batch
     function get_classes_by_level_and_center($level_id) {
-    	$classes = $this->db->query("SELECT id,class_on FROM Class WHERE level_id=$level_id ORDER BY class_on ASC")->result();
+    	$classes = $this->db->query("SELECT Class.id,Class.class_on,Userclass.status FROM Class JOIN Userclass ON Userclass.class_id=Class.id WHERE level_id=$level_id ORDER BY class_on ASC")->result();
+		//print_r($classes);
     	return $classes;
     }
 	 /**

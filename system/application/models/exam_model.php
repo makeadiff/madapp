@@ -128,7 +128,7 @@ class Exam_model extends Model
 		$this->db->from('Exam');
 		$this->db->where('id',$exam_id);
 		$result=$this->db->get();
-		return $result;
+		return $result->row();
 	}
 	
 	function get_all() {

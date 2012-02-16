@@ -91,7 +91,7 @@ class Exam extends Controller  {
 		
 		$data = array(
 			'centers'	=> idNameFormat($this->center_model->get_all()),
-			'exam_name'	=> $this->exam_model->get_exam_name($exam_id)->name,
+			'exam_name'	=> $this->exam_model->get_exam_name_by_id($exam_id)->name,
 			'exam_id'	=> $exam_id,
 		);
 			

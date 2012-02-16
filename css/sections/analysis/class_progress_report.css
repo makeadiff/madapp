@@ -6,7 +6,7 @@
 	overflow:auto;
 }
 
-.class-good,.class-repeated,.class-without-test {
+.class-good,.class-repeated,.class-without-test, .class-low-attendance {
 	text-align:center;
 }
 .madsheet {
@@ -31,4 +31,14 @@
 }
 .class-no-data {
 	background-color:#fff;
+}
+
+
+/* Kids Attendce */
+.class-low-attendance {
+	background-color:#ff6f71;
+}
+.class-cancelled {
+	background-color:#000;
+	color:#000;
 }

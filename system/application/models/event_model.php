@@ -41,12 +41,13 @@ class Event_model extends Model{
 		function add_event($data)
 		{
 			$this->db->insert("Event", array(
-				'name'	=> $data['name'],
+				'name'		=> $data['name'],
 				'starts_on'	=> $data['startdate'],
-				'ends_on'=>$data['enddate'],
-				'place'=>$data['place'],
-				'type'=>$data['type'],
-				'city_id'=>$this->city_id
+				'ends_on'	=> $data['enddate'],
+				'description'=>$data['description'],
+				'place'		=> $data['place'],
+				'type'		=> $data['type'],
+				'city_id'	=> $this->city_id
 			));
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}
@@ -81,11 +82,11 @@ class Event_model extends Model{
 		{
 			$this->db->where('id',$data['root_id'] );
 			$this->db->update("Event", array(
-				'name'	=> $data['name'],
+				'name'		=> $data['name'],
 				'starts_on'	=> $data['startdate'],
-				'ends_on'=>$data['enddate'],
-				'place'=>$data['place'],
-				'type'=>$data['type']
+				'description'=>$data['description'],
+				'place'		=> $data['place'],
+				'type'		=> $data['type']
 			));
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}

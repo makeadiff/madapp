@@ -66,7 +66,7 @@ foreach($upcomming_classes as $class) { ?>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('exam_marks_index')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('exam/exam_score') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('exam/view_exam_events') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/mark.png" alt="" /> <span>Exam Marks</span></a></div>
 	<?php } ?>
 		

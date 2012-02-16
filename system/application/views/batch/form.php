@@ -1,5 +1,5 @@
 <?php 
- $this->load->view('layout/thickbox_header'); 
+$this->load->view('layout/thickbox_header'); 
 $day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 
 if(!$batch['id']) $batch = array(
@@ -10,6 +10,7 @@ if(!$batch['id']) $batch = array(
 	'center_id'		=> $batch['center_id'],
 	);
 ?>
+
 
 <div id="head" class="clear"><h1><?php echo $action . ' Batch in ' . $center_name ?></h1></div>
 

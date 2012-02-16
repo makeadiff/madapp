@@ -18,10 +18,8 @@
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<th class="colCheck1">Id</th>
 	<th class="colName left sortable">Name</th>
     <th class="colStatus sortable">Starts On</th>
-    <th class="colStatus">Ends On</th>
 	<th class="colStatus">Place</th>
 	<th class="colActions">Type</th>
 	<th class="colActions">Manage</th>
@@ -41,10 +39,8 @@ foreach($details as $row) {
 	if($count % 2) $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><?php echo $row->id; ?></td>
     <td class="colName left"><?php echo $row->name ?></td>
-    <td class="colCount"><?php echo $row->starts_on; ?></td> 
-    <td class="colStatus"><?php echo $row->ends_on;?></td>
+    <td class="colCount"><?php echo date('dS M, Y h:i A', strtotime($row->starts_on)); ?></td> 
 	<td class="colPosition"><?php echo $row->place; ?></td>
     <td class="colPosition"><?php echo $row->type; ?></td>
     <td class="colPosition"><a href="<?php echo site_url('event/user_event/'.$row->id)?>" class="thickbox  popup">manage</a> | <a href="<?php echo site_url('event/mark_attendence/'.$row->id)?>" class="thickbox  popup">attended</a></td>

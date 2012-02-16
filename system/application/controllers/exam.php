@@ -31,16 +31,8 @@ class Exam extends Controller  {
 		$this->load->model('exam_model');
     }
 	
-    /**
-    * Function to 
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-
-    function index()
-    {
-        
+    function index() {
+        redirect('exam/manage_exam');
     }
 	/**
     * Function to manage_exam
@@ -53,7 +45,7 @@ class Exam extends Controller  {
 		$data['title'] = 'Manage Exam';
 		$this->user_auth->check_permission('exam_index');
 		$this->load->view('layout/header',$data);
-		$data['details']= $this->exam_model->get_exam();
+		$data['details'] = $this->exam_model->get_all();
 		$this->load->view('student_exam_score/exam_list',$data);
 		$this->load->view('layout/footer');
 	}
@@ -68,200 +60,140 @@ class Exam extends Controller  {
 		$this->user_auth->check_permission('exam_view');
 		$exam_id = $this->uri->segment(3);
 		$data['exam_name']= $this->exam_model->get_exam_name_by_id($exam_id);
-		$data['contents']= $this->exam_model->get_exam_details($exam_id);
 		$data['sub_name']= $this->exam_model->get_subject_names($exam_id);
 		$this->load->view('student_exam_score/exam_details_view',$data);
 	}
 	
-	/**
-    * Function to delete
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+
+	
+    function add_exam() {	
+		$this->user_auth->check_permission('exam_add');
+		$this->load->view('student_exam_score/add_exam');
+    }
+    
+    function insert() {
+		$subject_names = $this->input->post('subject');
+		$totals = $this->input->post('subject_total');
+		
+		// Get the names of the subject and the total mark into one array.
+		$subjects = array();
+		for($i=0; $i<count($subject_names); $i++) {
+			if($subject_names[$i]) $subjects[] = array('name'=>$subject_names[$i], 'total_mark'=>$totals[$i]);
+		}
+		$this->exam_model->insert($this->input->post('name'), $this->input->post('level'), $subjects);
+		
+		$this->session->set_flashdata("success", "Exam Added Successfully.");
+		redirect('exam/manage_exam');
+    }
+    
+    function add_event($exam_id) {
+		$this->user_auth->check_permission('exam_add_event');
+		
+		$data = array(
+			'centers'	=> idNameFormat($this->center_model->get_all()),
+			'exam_name'	=> $this->exam_model->get_exam_name($exam_id)->name,
+			'exam_id'	=> $exam_id,
+		);
+			
+		$this->load->view('student_exam_score/add_event', $data);
+    }
+    
+    function add_marks() {
+		$this->user_auth->check_permission('exam_add_marks');
+		$exam_id = $this->input->post('exam_id');
+		
+		$data = array(
+			'exam_on'		=> $this->input->post('exam_on'),
+			'exam_id'		=> $exam_id,
+			'center_id'		=> $this->input->post('center_id'),
+			'level_id'		=> $this->input->post('level_id'),
+			'student_ids'	=> $this->input->post('student_id'),
+			'student_names'	=> $this->input->post('student_names'),
+			'title'			=> 'Add Marks',
+			'subjects'		=> $this->exam_model->get_subject_names($exam_id)->result(),
+		);
+		
+		$this->load->view('student_exam_score/add_marks', $data);
+    }
+    
+    function save_marks() {
+		$this->user_auth->check_permission('exam_save_marks');
+		
+		$exam_id = $this->input->post('exam_id');
+		$mark = $this->input->post('mark');
+		
+		$exam_event_id = $this->exam_model->insert_exam($exam_id, $this->input->post('center_id'), $this->input->post('exam_on'));
+		foreach($mark as $student_id => $subject) {
+			foreach($subject as $subject_id => $mark_for_subject) {
+				$this->exam_model->insert_mark($exam_id, $exam_event_id, $student_id, $subject_id, $mark_for_subject);
+			}
+		}
+		
+		$this->session->set_flashdata("success", "Exam Marks Added Successfully.");
+		redirect('exam/manage_exam');
+    }
+    
+    
+    function view_exam_events($exam_id=0) {
+		$this->user_auth->check_permission('exam_view_exam_events');
+		$events = $this->exam_model->get_exam_events($exam_id);
+		$this->load->view('student_exam_score/view_exam_events', array('events'=>$events,'title'=>'Exam Events'));
+    }
+    
+    function view_scores($event_id) {
+		$this->user_auth->check_permission('exam_view_scores');
+		
+		$exam_details = $this->exam_model->get_exam_event_details($event_id);
+		$all_marks = $this->exam_model->get_marks($event_id);
+		
+		// Get the marks into a two dimentional array. Quite clever, actually.
+		$marks = array();
+		foreach($all_marks as $m) {
+			if(!isset($marks[$m->student_id])) $marks[$m->student_id] = array($m->subject_id => $m->mark);
+			else $marks[$m->student_id][$m->subject_id] = $m->mark;
+		}
+		
+		$students = idNameFormat($this->exam_model->get_student_attending_exam($event_id));
+		
+		$this->load->view('student_exam_score/view_scores', array(
+			'exam_details'	=> $exam_details,
+			'marks'			=> $marks,
+			'students'		=> $students,
+			'title'			=> 'Exam Events'));
+    }
+	
+	function delete_event($event_id) {
+		$this->user_auth->check_permission('exam_delete_event');
+		$this->exam_model->delete_event($event_id);
+
+		$this->session->set_flashdata("success", "Exam event deleted successfully.");
+		redirect("exam/manage_exam");
+	}
 	function delete($exam_id) {
+		$this->user_auth->check_permission('exam_delete');
+		
 		$this->exam_model->delete($exam_id);
 		$this->session->set_flashdata("success", "Exam deleted successfully.");
 		redirect("exam/manage_exam");
 	}
 	
-    /**
-    * Function to add_exam
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-    function add_exam()
-    {	
-		$this->user_auth->check_permission('exam_add');
-		$data['centers']= $this->center_model->get_all();
-		$this->load->view('student_exam_score/add_exam', $data);
+	
+	
+    // Ajax functions
+    function get_levels($center_id) {
+		$this->load->model('level_model');
+		$data= array(
+			'levels'	=>	$this->level_model->get_all_levels_in_center($center_id)
+		);
+		$this->load->view('student_exam_score/ajax/get_levels', $data);
     }
-	
-	/**
-    * Function to ajax_sbjectbox
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function ajax_sbjectbox()
-	{
-		$data['sub_no'] = $_REQUEST['sub_no'];
-		$this->load->view('student_exam_score/subjectbox_div',$data);
-	}
-	/**
-    * Function to get_center
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function get_center()
-	{
-		$data['center']= $this->center_model->getcenter();
-		$this->load->view('student_exam_score/getcenter_div',$data);
-	
-	}
-	/**
-    * Function to get_kidslist
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function get_kidslist()
-	{
-		$c_id = $_REQUEST['center_id'];
-		$data['kids']=$this->kids_model->getkids_name_incenter($c_id);
-		$this->load->view('student_exam_score/kids_list_div',$data);
-	}
-	/**
-    * Function to input_exam_mark_details
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function input_exam_mark_details()
-	{	
-		$this->user_auth->check_permission('exam_details_add');
-		
-		$agents = $_REQUEST['agents'];
-		$name = $_REQUEST['name'];
-		$choice_text = $_REQUEST['choice_text'];
-		$exam_id=$this->exam_model->insert_exam_name($name);
-		$choiceText = substr($choice_text,0,strlen($choice_text)-1);
-		$subjects_id=$this->exam_model->insert_subject_name($choiceText,$exam_id);
-		$flag=$this->exam_model->insert_exam_mark($choiceText,$exam_id,$agents);
-		if($flag)
-		{
-		echo "Successfully inserted!!";
-		}
-		else
-		{
-		echo "Insertion Failed!!";
-		}
-	}
-	/**
-    * Function to exam_score
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function exam_score()
-	{
-		$this->user_auth->check_permission('exam_marks_index');
-		$data['title'] = 'Exam Marks';
-		$this->load->view('layout/header',$data);
-		$data['exam_details']=$this->exam_model->get_exam();
-		$this->load->view('student_exam_score/exam_score',$data);	
-		$this->load->view('layout/footer');
-	}
-	
-	/**
-    * Function to ajax_getexam_details
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function ajax_getexam_details()
-	{
-		$data['title'] = 'Score';
-		$exam_id = $_REQUEST['exam_id'];
-		$data['subject']=$this->exam_model->get_subject_names($exam_id);
-		$this->load->view('student_exam_score/exam_score_header',$data);
-		$data['details']=$this->exam_model->get_student_names($exam_id);
-		$student_id=$data['details']->result_array();
-		foreach($student_id as $row)
-			{
-			$student_id=$row['student_id'];
-			$data['id']=$student_id;
-			$data['student_name']=$row['name'];
-			$data['details1']=$this->exam_model->get_mark_details($exam_id,$student_id);
-			$this->load->view('student_exam_score/examscore_div',$data);
-			}
-		$this->load->view('student_exam_score/exam_score_footer');
-	}
-	/**
-    * Function to popupAddMark
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function popupAddMark()
-		{
-		$this->user_auth->check_permission('exam_mark_add');
-		$data['exam_details']=$this->exam_model->get_exam();
-		$this->load->view('student_exam_score/popups/popup_getexam',$data);
-		}
-		/**
-    * Function to getexam_subjects_name
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function getexam_subjects_name() {
-		$exam_id = $_REQUEST['exam_id'];
-		$Exam_name=$this->exam_model->get_exam_name($exam_id);
-		$data['exam_name']=$Exam_name->name;
-		$data['exam_details']=$this->exam_model->get_exam();
-		$data['subject']=$this->exam_model->get_subject_names($exam_id);
-		$data['details']=$this->exam_model->get_student_names($exam_id);
-		$this->load->view('student_exam_score/popups/popup_add_exam',$data);
-	}
-	
-	/**
-    * Function to addMarks
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function addMarks()
-		{
-		$this->user_auth->check_permission('exam_mark_add');
-		
-		$data['exam_id']=$_REQUEST['exam_id'];
-		$sub_count=$_REQUEST['sub_count'];
-		$stnt_count=$_REQUEST['stnt_count'];
-		for($i=1;$i<=$stnt_count;$i++)
-		{
-			$data['student']=$_REQUEST['stnt_name'.$i];
-			for($j=1;$j<=$sub_count;$j++)
-			{
-				$data['subject']=$_REQUEST['sub_name'.$j];
-				$data['marks']=$_REQUEST[$i.'mark'.$j];
-				$returnFlag=$this->exam_model->store_marks($data);
-			}
-		}
-		$this->session->set_flashdata('success', 'Marks Inserted Successfully !');
-		redirect('exam/popupAddMark');
-		
-		}
-		/**
-    * Function to delete_exam
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
-	function delete_exam($exam_id) {
-		$this->user_auth->check_permission('exam_delete');
-		$this->exam_model->delete($exam_id);
-	}
+    
+    function get_kids_in_level($level_id) {
+		$this->load->model('level_model');
+		$data = array(
+			'kids'	=>	$this->level_model->get_kids_in_level($level_id),
+		);
+		$this->load->view('student_exam_score/ajax/get_kids_in_level', $data);
+    }
+
 }

@@ -77,19 +77,19 @@ class Event extends controller{
 	function insert_event()
 	{
 		$this->user_auth->check_permission('event_add');
-		$data['name']		= $_REQUEST['name'];
-		$data['startdate']	= $_REQUEST['date-pick'];
-		$data['enddate']	= $_REQUEST['date-pick-ends'];
-		$data['place']		= $_REQUEST['place'];
-		$data['type']		= $_REQUEST['type'];
+		$data['name']		= $this->input->post('name');
+		$data['startdate']	= $this->input->post('date-pick');
+		$data['enddate']	= $this->input->post('date-pick-ends');
+		$data['description']= $this->input->post('description');
+		$data['place']		= $this->input->post('place');
+		$data['type']		= $this->input->post('type');
 		$data['city_id']	= $this->session->userdata('city_id');
 		
 		$flag= $this->event_model->add_event($data);
 		if($flag) {
 			$this->session->set_flashdata('success', 'Event Added Successfully.');
-			redirect('event/index');  
+			redirect('event/index');
 		}
-		
 	}
 	/**
     *
@@ -99,30 +99,30 @@ class Event extends controller{
     * @return : type : []
     *
     **/
-	function user_event()
-	{
+	function user_event($event_id) {
 		$this->user_auth->check_permission('event_mark_attendance');
-		$id=$this->uri->segment(3);
-		$data['events']= $this->event_model->get_event_type($id);
+
+		$data['events']= $this->event_model->get_event_type($event_id);
 		$this->load->view('event/user_event',$data);
-		$users= $this->users_model->getuser_details();
-		$userss=$users->result_array();
-		$data['users']=$userss;
-		foreach($userss as $row)
-		{
-		$user_id=$row['id'];
-		$event_users=$this->event_model->getEventUser($id,$user_id);
-			if(count($event_users) > 0)
-			{
-			$data['name']=$row['name'];
-			$data['user_id']=$row['id'];
-			$this->load->view('event/user_event_user_view',$data);
-			}
-			else {
-			$data['name']=$row['name'];
-			$data['user_id']=$row['id'];
-			$this->load->view('event/user_event_user_view2',$data);
-			}
+		
+		$users = $this->users_model->getuser_details();
+		$all_users = $users->result_array();
+		
+		$data['users'] = $all_users;
+		
+		foreach($all_users as $row) {
+			$event_users = $this->event_model->getEventUser($event_id, $row['id']);
+			$user_data = array(
+				'name'		=> $row['name'],
+				'user_id'	=> $row['id'],
+				'selected'	=> false,
+			);
+			
+			if(count($event_users)) {
+				$user_data['selected'] = true;
+			}			
+			
+			$this->load->view('event/user_event_user_view', $user_data);
 		}
 		$this->load->view('event/user_event_footer',$data);
 		

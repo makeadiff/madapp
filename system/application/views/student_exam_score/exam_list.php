@@ -1,59 +1,49 @@
 <div id="content" class="clear">
-<!-- Main Begins -->
 	<div id="main" class="clear">
     	<div id="head" class="clear">
         	<h1><?php echo $title; ?></h1>
-            <!-- start page actions-->
-        	<div id="actions"> 
-<a href="<?php echo site_url('exam/add_exam')?>" class="popup button green primary" name="Add New Exam">Add New Exam</a>
-</div>
-	<!-- end page actions-->
-
+        	
+        	<?php if($this->user_auth->get_permission('exam_add')) { ?><div id="actions">
+			<a href="<?php echo site_url('exam/add_exam')?>" class="popup button green primary" name="Add New Exam">Add New Exam</a>
+			</div><?php } ?>
 </div>
 
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<th class="colCheck1">#</th>
-	<th class="colName left sortable">Exam Name</th>
-    <th class="colName left sortable">Details</th>
-    <th class="colActions">Actions</th>
+	<th>Exam Name</th>
+	<?php if($this->user_auth->get_permission('exam_add_event')) { ?><th>Add Results</th><?php } ?>
+	<th>Level</th>
+    <th>Details</th>
+    <?php if($this->user_auth->get_permission('exam_delete')) { ?><th class="colActions">Actions</th><?php } ?>
 </tr>
 </thead>
 <tbody>
 
-<?php 
-//
+<?php
 $norecord_flag = 1;
-$shadeFlag = 0;
-$shadeClass = ''; 
+$shadeClass = '';
 $statusIco = '';
 $statusText = '';
-$content = $details->result_array();
 $i=0;
-foreach($content as $row)
-{	$i++;
+$shadeClass = 'even';
+
+foreach($details as $row) {	
+	$i++;
 	$norecord_flag = 0;
 
-	if($shadeFlag == 0)
-	  {
-  		$shadeClass = 'even';
-		$shadeFlag = 1;
-  	  }
-	else if($shadeFlag == 1)
-	  {
-  		$shadeClass = 'odd';		
-		$shadeFlag = 0;
-  	  }
+	if($shadeClass == 'even') $shadeClass = 'odd';
+	else $shadeClass = 'even';
 ?>
-<tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><?php echo $i; ?></a></td>
-    <td class="colName left"><?php echo $row['name']; ?></a></td>
-	<td class="colName left"><a href="<?php echo site_url('exam/view_exam_details/'.$row['id']) ?> " class="popup primary" id="groupmanage-<?php echo $row['id']; ?>" name="Details of <?= strtolower($row['name']) ?>"> View Details</a></td>
-	<td class="colName left"><a href="<?php echo site_url('exam/delete/'.$row['id']) ?>" class="confirm" title="Delete '<?php echo $row['name']; ?>' Exam">Delete</a></td>
+<tr class="<?php echo $shadeClass; ?>">
+    <td><?php echo $row->name; ?></td>
+    <?php if($this->user_auth->get_permission('exam_add_event')) { ?><td><a href="<?php echo site_url('exam/add_event/'.$row->id) ?>" class="popup">Add Results</a></td><?php } ?>
+    <td><?php echo ucfirst($row->level); ?></td>
+	<td><a href="<?php echo site_url('exam/view_exam_details/'.$row->id) ?>" class="popup primary" id="groupmanage-<?php echo $row->id; ?>" name="Details of <?php echo strtolower($row->name) ?>">View Details</a></td>
+	<?php if($this->user_auth->get_permission('exam_delete')) { ?><td><a href="<?php echo site_url('exam/delete/'.$row->id) ?>" class="confirm" title="Delete '<?php echo $row->name; ?>' Exam">Delete</a></td><?php } ?>
 </tr>
 
-<?php }?>
+<?php } ?>
 </tbody>
 </table><br />
 

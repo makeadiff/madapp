@@ -1,6 +1,6 @@
 </li>
 </ul>
-
+<br style="clear:both;" />
 <ul>
 <li>
 <input class="button green" type="submit" value="+ Add Users" />
@@ -8,19 +8,3 @@
 </li>
 </ul>
 </form>
-<script>
-function validate()
-{
-if(document.getElementById("event").value == '-1')
-	{		
-		alert("Select a Event");
-		return false;
-	}
-if(document.getElementById("users").checked == '')
-	{
-		alert("Select one User");
-		return false;
-	}
-}
-</script>
-

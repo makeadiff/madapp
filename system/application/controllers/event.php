@@ -103,18 +103,32 @@ class Event extends controller{
 		$this->user_auth->check_permission('event_mark_attendance');
 
 		$data['events']= $this->event_model->get_event_type($event_id);
+		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
+		// Remove some national level groups.
+		unset($data['all_groups'][1]);
+		unset($data['all_groups'][2]);
+		unset($data['all_groups'][3]);
+		unset($data['all_groups'][16]);
+		$data['all_centers'] =idNameFormat($this->center_model->get_all());
+		
+		$data['selected_centers'] = $this->input->post('center');
+		if(!$data['selected_centers']) $data['selected_centers'] = array();
+		$data['selected_user_groups'] = $this->input->post('user_group');
+		if(!$data['selected_user_groups']) $data['selected_user_groups'] = array();
+		
+		$user_data['center'] = $data['selected_centers'];
+		$user_data['user_group'] = $data['selected_user_groups'];
+		$user_data['get_user_groups'] = true;
+		$all_users = $this->users_model->search_users($user_data);
+		
+		
 		$this->load->view('event/user_event',$data);
 		
-		$users = $this->users_model->getuser_details();
-		$all_users = $users->result_array();
-		
-		$data['users'] = $all_users;
-		
 		foreach($all_users as $row) {
-			$event_users = $this->event_model->getEventUser($event_id, $row['id']);
+			$event_users = $this->event_model->getEventUser($event_id, $row->id);
 			$user_data = array(
-				'name'		=> $row['name'],
-				'user_id'	=> $row['id'],
+				'name'		=> $row->name,
+				'user_id'	=> $row->id,
 				'selected'	=> false,
 			);
 			

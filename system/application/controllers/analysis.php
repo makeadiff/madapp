@@ -133,6 +133,45 @@ class Analysis extends Controller {
 				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids,'attendance'=>$attendance));
 	}
 	
+	
+	function event_attendance() {
+		$this->load->model('event_model');
+		$events = $this->event_model->get_all();
+		$users = idNameFormat($this->user_model->get_users_in_city());
+		$user_attendance = $this->event_model->get_all_event_user_attendance();
+		
+		// Get total attendance count...
+		$event_attendance_count = array();
+		$user_attendance_count = array();
+		
+		//Users have to be initiazied seperately as not all users will be there in events
+		foreach($users as $user_id=>$name) $user_attendance_count[$user_id] = array('total'=>0, 'present'=>0);
+		foreach($user_attendance as $event_id => $attendance) {
+			foreach($attendance as $user_id => $present) {
+				// for events...
+				if(!isset($event_attendance_count[$event_id])) {
+					$event_attendance_count[$event_id] = array('total'=>0, 'present'=>0);
+				}
+				$event_attendance_count[$event_id]['total']++;
+				if($present) $event_attendance_count[$event_id]['present']++;
+				
+				// and for users.
+				if(isset($user_attendance_count[$user_id])) {
+					$user_attendance_count[$user_id]['total']++;
+					if($present) $user_attendance_count[$user_id]['present']++;
+				}
+			}
+		}
+		
+		$this->load->view('analysis/event_attendance', array(
+			'events'	=> $events,
+			'users'		=> $users,
+			'user_attendance'		=> $user_attendance,
+			'user_attendance_count' => $user_attendance_count,
+			'event_attendance_count'=> $event_attendance_count,
+		));
+	}
+	
 }
 
 

@@ -30,7 +30,7 @@ class Event_model extends Model{
     	**/
 		function getevent_list()
 		{
-			return $event = $this->db->query("SELECT Event.*,City.name as city_name FROM Event INNER JOIN City ON Event.city_id = City.id order by Event.id desc")->result();
+			return $this->db->query("SELECT * FROM Event WHERE city_id=".$this->city_id)->result();
 		}
 		/**
    		* Function to add_event
@@ -187,7 +187,7 @@ class Event_model extends Model{
 			if($present == 1){
 				$status = array('present'=>'0');
 			} else {
-				$status=array('present'=>'1');
+				$status = array('present'=>'1');
 			}
 			$this->db->where('user_id',$user_id );
 			$this->db->where('event_id',$event_id );
@@ -199,6 +199,25 @@ class Event_model extends Model{
 			
 		}
 		
+		function get_all() {
+			$city_id = $this->city_id;
+			return $this->db->select('*')->from('Event')->where('city_id', $city_id)->get()->result();
+		}
+		
+		function get_all_event_user_attendance() {
+			$city_id = $this->city_id;
+			$user_events = $this->db->select('UserEvent.*')->from('UserEvent')->join('Event','Event.id=UserEvent.event_id')
+				->where('Event.city_id', $city_id)->orderby('Event.starts_on DESC')->get()->result();
+
+			$data = array();
+			foreach($user_events as $ue) {
+				if(!isset($data[$ue->event_id])) $data[$ue->event_id] = array($ue->user_id => $ue->present);
+				else $data[$ue->event_id][$ue->user_id] = $ue->present;
+			}
+			
+			return $data;
+		}
 	
+
 
 }

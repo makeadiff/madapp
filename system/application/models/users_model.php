@@ -499,6 +499,14 @@ class Users_model extends Model {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
 			$this->db->where_in('UserGroup.group_id', $data['user_group']);
 		}
+		if(!empty($data['center'])) {
+			$this->db->join('UserClass', 'User.id = UserClass.user_id' ,'join');
+			$this->db->join('Class', 'Class.id = UserClass.class_id' ,'join');
+			$this->db->join('Level', 'Class.level_id = Level.id' ,'join');
+			$this->db->where_in('Level.center_id', $data['center']);
+		}
+		
+		
 		$this->db->orderby('User.name');
 		
 		$all_users = $this->db->get()->result();

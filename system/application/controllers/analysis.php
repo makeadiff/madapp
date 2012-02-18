@@ -136,9 +136,11 @@ class Analysis extends Controller {
 	
 	function event_attendance() {
 		$this->load->model('event_model');
-		$events = $this->event_model->get_all();
+		$event_type = $this->input->post('event_type');
+		
+		$events = $this->event_model->get_all($event_type);
 		$users = idNameFormat($this->user_model->get_users_in_city());
-		$user_attendance = $this->event_model->get_all_event_user_attendance();
+		$user_attendance = $this->event_model->get_all_event_user_attendance($event_type);
 		
 		// Get total attendance count...
 		$event_attendance_count = array();
@@ -166,6 +168,7 @@ class Analysis extends Controller {
 		$this->load->view('analysis/event_attendance', array(
 			'events'	=> $events,
 			'users'		=> $users,
+			'event_type'=> $event_type,
 			'user_attendance'		=> $user_attendance,
 			'user_attendance_count' => $user_attendance_count,
 			'event_attendance_count'=> $event_attendance_count,

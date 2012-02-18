@@ -1,6 +1,6 @@
 function iframeInit() {
 	$("a,form").each(function() {
-		this.target="_top";
+		if(!$(this).hasClass("self")) this.target="_top";
 	});
 }
 $(iframeInit);

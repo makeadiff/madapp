@@ -199,15 +199,21 @@ class Event_model extends Model{
 			
 		}
 		
-		function get_all() {
+		function get_all($event_type='') {
 			$city_id = $this->city_id;
-			return $this->db->select('*')->from('Event')->where('city_id', $city_id)->get()->result();
+			$this->db->select('*')->from('Event')->where('city_id', $city_id);
+			if($event_type) $this->db->where('type',$event_type);
+			
+			return $this->db->get()->result();
 		}
 		
-		function get_all_event_user_attendance() {
+		function get_all_event_user_attendance($event_type='') {
 			$city_id = $this->city_id;
-			$user_events = $this->db->select('UserEvent.*')->from('UserEvent')->join('Event','Event.id=UserEvent.event_id')
-				->where('Event.city_id', $city_id)->orderby('Event.starts_on DESC')->get()->result();
+			$this->db->select('UserEvent.*')->from('UserEvent')->join('Event','Event.id=UserEvent.event_id')
+				->where('Event.city_id', $city_id)->orderby('Event.starts_on DESC');
+			
+			if($event_type) $this->db->where('Event.type',$event_type);
+			$user_events = 	$this->db->get()->result();
 
 			$data = array();
 			foreach($user_events as $ue) {

@@ -19,7 +19,7 @@ function validate() {
 
 <div id="message"></div>
 
-<form action="" method="post">
+<form action="" method="post" class="self" target="_self">
 <ul class="form city-form">
 <?php $row = reset($events); ?>
 <li>Current Event: <strong><?php echo $row->name;?></strong></label></li>

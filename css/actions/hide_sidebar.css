@@ -1,0 +1,7 @@
+.main {
+	width: 1000px;
+	overflow:auto;
+}
+#sidebar {
+	display:none;
+}

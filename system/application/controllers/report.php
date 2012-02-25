@@ -41,8 +41,23 @@ class Report extends Controller {
 	
 	function get_volunteer_admin_credits() {
 		$report_data = $this->report_model->get_volunteer_admin_credits();
-		$this->show_report($report_data, array('name'=>'Intern', 'credit'=>'Credits'), 
-			'Volunteer Required for all Centers');
+		$this->show_report($report_data, array(
+				'name'		=> 'Intern', 
+				'credit'	=> 'Credits',
+				'april'		=> 'April',
+				'may'		=> 'May',
+				'june'		=> 'June',
+				'july'		=> 'July',
+				'august'	=> 'August',
+				'september'	=> 'September',
+				'october'	=> 'October',
+				'november'	=> 'November',
+				'december'	=> 'December',
+				'january'	=> 'January',
+				'february'	=> 'February',
+				'march'		=> 'March',
+			), 
+			'Admin Credits of all Interns');
 	}
 	
 	function show_report($data, $fields, $title) {

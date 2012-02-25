@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/header', array('title'=>'Reports')); ?>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/hide_sidebar.css">
 
 <div id="head" class="clear"><h1>Reports</h1></div>
 

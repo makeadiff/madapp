@@ -245,7 +245,7 @@ class Classes extends Controller {
 						$teachers_info[$class->user_id] = array(
 							'id'		=> $class->user_id,
 							'name'		=> !empty($all_users[$class->user_id])? $all_users[$class->user_id] : "",
-							'credit'	=> $all_user_credits[$class->user_id],
+							'credit'	=> !empty($all_user_credits[$class->user_id])? $all_user_credits[$class->user_id] : "",
 							'user_type'	=> isset($users[$class->user_id]) ? $users[$class->user_id]->user_type : 'None',
 							'classes'	=> array()
 						);
@@ -257,7 +257,7 @@ class Classes extends Controller {
 							$date = date('d M',strtotime($class->class_on));
 							if(!in_array($date, $days_with_classes)) {
 								$month = date('m',strtotime($class->class_on));
-								if($month < 3) $month = $month + 12; // So that january comes after december.
+								if($month <= 3) $month = $month + 12; // So that january comes after december.
 								$key = $month . '-'.date('d',strtotime($class->class_on));
 								$days_with_classes[$key] = $date;
 							}
@@ -281,7 +281,7 @@ class Classes extends Controller {
 					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['users'] = $teachers_info;
 				}
 				
-				// Make sure that the class dates are ordered correctly. 
+				// Make sure that the class dates are ordered correctly.
 				ksort($days_with_classes);
 				$days_with_classes = array_values($days_with_classes);
 
@@ -379,7 +379,7 @@ class Classes extends Controller {
 	
 		$class_details = $this->class_model->get_class($class_id);
 		$level_details = $this->level_model->get_level($class_details['level_id']);
-		$teachers = idNameFormat($this->user_model->get_users_in_city());
+		$teachers = idNameFormat($this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0)));
 		$substitutes = $teachers;
 		$substitutes[0] = 'No Substitute';
 		$substitutes[-1] = 'Other City';

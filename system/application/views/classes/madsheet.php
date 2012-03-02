@@ -99,7 +99,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 	
 	$row_count++;
 } // Level end ?>
-</table>
+</table>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <br /><br />
 <?php } // Batch ?>
 

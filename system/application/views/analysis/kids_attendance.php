@@ -98,7 +98,7 @@ $class_status = 'good';
 if($perc < $comppercentage) $class_status = 'low-attendance';
 ?>
 <td nowrap='nowrap' class="class-<?php echo $class_status ?>"><?php echo round($netSum, 1);?></td>
-</table><br />
+</table>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
 <hr />
 <?php 
 }  // Center ?>

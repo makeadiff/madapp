@@ -10,7 +10,11 @@
 
 <?php foreach($data as $row) { ?>
 <tr><?php foreach($fields as $field_name=>$field_title) { ?>
-<td><?php echo $row->{$field_name} ?></td>
+<td><?php 
+if($fields[$field_name] == 'Name' and isset($row->user_id)) echo '<a href="'.site_url('user/view/'.$row->user_id).'">';
+echo $row->{$field_name};
+if($fields[$field_name] == 'Name' and isset($row->user_id)) echo '</a>';
+?></td>
 <?php } ?></tr>
 <?php } ?>
 </table>

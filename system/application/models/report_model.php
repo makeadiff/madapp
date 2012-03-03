@@ -10,8 +10,17 @@ class Report_model extends Model {
     }
     
     
-	function get_users_with_low_credits() {
-		return $this->db->query("SELECT id AS user_id,name,credit FROM User WHERE city_id={$this->city_id} AND project_id={$this->project_id} AND credit<1")->result();
+	function get_users_with_low_credits($credit=0, $sign='<', $city_id=-1) {
+		if($sign != '<' and $sign != '>') $sign = '<';
+		if($city_id == -1) $city_id = $this->city_id;
+		
+		$this->db->select("id AS user_id,name,credit");
+		if($city_id) $this->db->where('city_id', $city_id);
+		$this->db->where('project_id',$this->project_id);
+		$this->db->where("credit $sign $credit");
+		$this->db->where('user_type','volunteer');
+		$this->db->order_by('credit');
+		return $this->db->get('User')->result();
     }
     
     function get_users_absent_without_substitute() {

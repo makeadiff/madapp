@@ -63,9 +63,9 @@ a:hover  { border-bottom:none; }
 
 /*********************** [Layout] **********************/
 
-.line    { max-width: 1040px; min-width:665px; padding:0 10px; overflow:hidden; margin:0 auto; }
-.head    { height: 110px; background: #0F071B url(../../images/camp/bg-sprite.png) 0 30px repeat-x; border-bottom:1px solid #DDD;  }
-.main    { width:623px; padding:10px; margin-top:10px; min-height:500px; float:left; background: url(../../images/camp/bg-trans.png); overflow:hidden; }
+.line    { padding:0 10px; overflow:hidden; margin:0 auto; }
+.head    { height: 110px; background: #0F071B url(../../images/camp/bg-sprite.png) 0 30px repeat-x; border-bottom:1px solid #DDD; }
+.main    { padding:10px; margin-top:10px; min-height:500px; float:left; background: url(../../images/camp/bg-trans.png); overflow:hidden; width:70%; }
 .sidebar { width:355px; padding:10px; float:left;min-height:500px; margin-left:20px;overflow-x:hidden; }
 .footer  { height: 110px; background:#0E051F; }
 
@@ -163,16 +163,10 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 .login-box .login-form  a { float:left; margin-top:12px; }
 
 #pg-batch-add_volunteers .main, #pg-batch-add_volunteers .line {
-	width:auto !important;
+	width:98%;
 }
 #pg-batch-add_volunteers #sidebar {
 	display:none;
-}
-
-
-#pg-classes-madsheet .main, #pg-classes-class_progress_report .main {
-	width: 1000px;
-	overflow:auto;
 }
 
 

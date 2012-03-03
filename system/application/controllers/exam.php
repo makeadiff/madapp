@@ -55,12 +55,11 @@ class Exam extends Controller  {
     * @param  : []
     * @return : type : []
     **/
-	function view_exam_details()
+	function view_exam_details($exam_id)
 	{
 		$this->user_auth->check_permission('exam_view');
-		$exam_id = $this->uri->segment(3);
-		$data['exam_name']= $this->exam_model->get_exam_name_by_id($exam_id);
-		$data['sub_name']= $this->exam_model->get_subject_names($exam_id);
+		$data['exam_name'] = $this->exam_model->get_exam_name_by_id($exam_id);
+		$data['sub_name'] = $this->exam_model->get_subject_names($exam_id);
 		$this->load->view('student_exam_score/exam_details_view',$data);
 	}
 	

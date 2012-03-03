@@ -355,7 +355,7 @@ class Users_model extends Model {
     * @return: type: [Boolean, Array()]
     **/
 	function updateuser($data) {
-		$rootId=$data['rootId'];
+		$user_id = $data['rootId'];
 		$user_array=array(
 			'name'  => $data['name'],
 			'email' => $data['email'],
@@ -367,7 +367,9 @@ class Users_model extends Model {
 		if(!empty($data['type'])) {
 			$user_array['user_type'] = $data['type'];
 			if($user_array['user_type'] == 'let_go') { // Remove user from his classes when he is let go.
-				//$this->db->delete('UserBatch', 'user_id='.$user_array['user_type');
+				$this->db->delete('UserBatch', array('user_id'=>$user_id));
+				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'projected'));
+				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'confirmed'));
 			}
 			
 		}
@@ -375,7 +377,7 @@ class Users_model extends Model {
 		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
 		if(isset($data['password'])) $user_array['password'] = $data['password'];
 			
-		$this->db->where('id', $rootId);
+		$this->db->where('id', $user_id);
 		$this->db->update('User', $user_array);
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}

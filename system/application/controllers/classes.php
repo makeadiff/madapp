@@ -244,8 +244,8 @@ class Classes extends Controller {
 						
 						$teachers_info[$class->user_id] = array(
 							'id'		=> $class->user_id,
-							'name'		=> !empty($all_users[$class->user_id])? $all_users[$class->user_id] : "",
-							'credit'	=> !empty($all_user_credits[$class->user_id])? $all_user_credits[$class->user_id] : "",
+							'name'		=> isset($all_users[$class->user_id])? $all_users[$class->user_id] : "",
+							'credit'	=> isset($all_user_credits[$class->user_id])? $all_user_credits[$class->user_id] : "",
 							'user_type'	=> isset($users[$class->user_id]) ? $users[$class->user_id]->user_type : 'None',
 							'classes'	=> array()
 						);

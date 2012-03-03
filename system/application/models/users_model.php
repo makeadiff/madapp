@@ -364,7 +364,13 @@ class Users_model extends Model {
 		);
 		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
 		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
-		if(!empty($data['type'])) $user_array['user_type'] = $data['type'];
+		if(!empty($data['type'])) {
+			$user_array['user_type'] = $data['type'];
+			if($user_array['user_type'] == 'let_go') { // Remove user from his classes when he is let go.
+				//$this->db->delete('UserBatch', 'user_id='.$user_array['user_type');
+			}
+			
+		}
 		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
 		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
 		if(isset($data['password'])) $user_array['password'] = $data['password'];

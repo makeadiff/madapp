@@ -17,6 +17,7 @@
 echo form_submit('action', 'Save Marks', 'class="green button"');
 echo form_hidden('exam_id', $exam_id);
 echo form_hidden('center_id', $center_id);
+echo form_hidden('level_id', $level_id);
 echo form_hidden('exam_on', $exam_on);
 ?>
 </form>

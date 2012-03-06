@@ -119,6 +119,7 @@ class Event extends controller{
 		$user_data['center'] = $data['selected_centers'];
 		$user_data['user_group'] = $data['selected_user_groups'];
 		$user_data['get_user_groups'] = true;
+		$user_data['user_type'] = 'volunteer';
 		$all_users = $this->users_model->search_users($user_data);
 		
 		
@@ -155,44 +156,40 @@ class Event extends controller{
 		$data['event_id']=$_REQUEST['event'];
 		$user_id_list=array();
 		if($this->input->post('users')){
-		$users=$_REQUEST['users'];
-		$evnt=$this->event_model->get_user_event($data);
-		$ds=$evnt->result_array();
+			$users = $_REQUEST['users'];
+			$evnt = $this->event_model->get_user_event($data);
+			$ds = $evnt->result_array();
 			
-				foreach($ds as $row)
-					{
-					$user_id_list[]=$row['user_id'];
-					}
-			if(count($users) < count($user_id_list))
-			{
+			foreach($ds as $row) {
+				$user_id_list[] = $row['user_id'];
+			}
+			
+			if(count($users) < count($user_id_list)) {
 				$difference=array_diff($user_id_list,$users);
 				$difference_key=array_keys($difference);
-				for($i=0;$i< count($difference_key);$i++)
-				{
+				for($i=0;$i< count($difference_key);$i++) {
 					$key=$difference_key[$i];
 					$data['user_id']=$difference[$key];
 					$flag= $this->event_model->delete_user_event($data);
 				}
 			}
-			for($i=0;$i< count($users);$i++)
-			{
+			
+			for($i=0;$i< count($users);$i++) {
 				$data['user_id']=$users[$i];
 				$flag= $this->event_model->insert_user_event($data);
 			}
 		
-		$this->session->set_flashdata('success', 'Users attendance marked.');
-		redirect('event/index'); 
+			$this->session->set_flashdata('success', 'Users attendance marked.');
+			redirect('event/index'); 
 		} else{ 
-		 $flags=$this->event_model->deletefull_user_event($data);
-		 if($flags)
-		 {
-		 	$this->session->set_flashdata('success', 'Users attendance marked.');
-			redirect('event/index'); 
-		 } 
-		 else{
-			$this->session->set_flashdata('success', 'Please Select One user.');
-			redirect('event/index'); 
-		}
+			$flags=$this->event_model->deletefull_user_event($data);
+			if($flags) {
+				$this->session->set_flashdata('success', 'Users attendance marked.');
+				redirect('event/index'); 
+			} else {
+				$this->session->set_flashdata('success', 'Please Select One user.');
+				redirect('event/index'); 
+			}
 		}
 	}
 	/**

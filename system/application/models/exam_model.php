@@ -65,12 +65,13 @@ class Exam_model extends Model
 		return $result;
 	}
 	
-	function insert_exam($exam_id, $center_id, $exam_on) {
+	function insert_exam($exam_id, $center_id, $level_id, $exam_on) {
 		$this->db->insert("Exam_Event", array(
 			'exam_id'	=> $exam_id,
 			'exam_on'	=> $exam_on,
 			'city_id'	=> $this->city_id,
 			'center_id'	=> $center_id,
+			'level_id'	=> $level_id,
 		));
 		
 		return $this->db->insert_id();

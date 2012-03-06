@@ -122,7 +122,7 @@ class Exam extends Controller  {
 		$mark = $this->input->post('mark');
 		
 		
-		$exam_event_id = $this->exam_model->insert_exam($exam_id, $this->input->post('center_id'), $this->input->post('exam_on') . ' 00:00:00');
+		$exam_event_id = $this->exam_model->insert_exam($exam_id, $this->input->post('center_id'), $this->input->post('level_id'), $this->input->post('exam_on') . ' 00:00:00');
 		foreach($mark as $student_id => $subject) {
 			foreach($subject as $subject_id => $mark_for_subject) {
 				$this->exam_model->insert_mark($exam_id, $exam_event_id, $student_id, $subject_id, $mark_for_subject);

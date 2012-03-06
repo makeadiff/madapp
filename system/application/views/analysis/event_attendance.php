@@ -18,7 +18,7 @@ $this->load->view('layout/header', array('title'=>'Event Attendance'));
 </form>
 
 <table class="data-table">
-<tr><th>&nbsp;</th><th>&nbsp;</th><?php foreach($events as $e) { ?><th><?php echo $e->name ?><br />
+<tr><th>Name</th><th>Total Attendance</th><?php foreach($events as $e) { ?><th><?php echo $e->name ?><br />
 	<?php echo $event_attendance_count[$e->id]['present'] . '/'. $event_attendance_count[$e->id]['total'] ?>
 </th><?php } ?></tr>
 <?php foreach($users as $id => $name) { ?>

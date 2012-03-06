@@ -60,6 +60,8 @@ class Event_model extends Model{
 		function delete_event($data)
 		{
 			$this->db->delete('Event', array('id'=>$data['id']));
+			$this->db->delete('UserEvent', array('event_id'=>$data['id']));
+			
 			return ($this->db->affected_rows() > 0) ? true : false;
 		}
 		/**
@@ -106,8 +108,7 @@ class Event_model extends Model{
    		* @param :[$data]
     	* @return: type: [ result Array()]
     	**/
-		function insert_user_event($data)
-		{
+		function insert_user_event($data) {
 			$user_id=$data['user_id'];
 			$event_id= $data['event_id'];
 			$this->db->where('user_id',$user_id );
@@ -115,14 +116,14 @@ class Event_model extends Model{
         	$this->db->from('UserEvent');
 			$result = $this->db->get()->row();
 			if(count($result) == 0) {
-			$this->db->insert("UserEvent", array(
-			'user_id'	=> $data['user_id'],
-			'event_id'	=> $data['event_id'],
-			'present'	=> '1'
-			));
+				$this->db->insert("UserEvent", array(
+					'user_id'	=> $data['user_id'],
+					'event_id'	=> $data['event_id'],
+					'present'	=> '1'
+				));
 			}
-			
 		}
+		
 		/**
    		* Function to get_user_event
     	* @author:Rabeesh 

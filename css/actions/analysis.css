@@ -1,0 +1,13 @@
+ 
+.good {
+	background-color:green;
+}
+.bad {
+	background-color:red;
+}
+.cancelled {
+	background-color:black;
+}
+.info {
+	background-color:white;
+}

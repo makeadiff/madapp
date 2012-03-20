@@ -162,102 +162,112 @@ class Cron extends Controller  {
 		if(!$year_month) $year_month = date('Y-m', strtotime('last month'));
 		
 		$this->load->model('report_model');
+		$this->load->model('city_model');
 		$this->load->model('users_model');
 		$this->load->model('event_model');
 		$this->load->model('kids_model');
 		$this->load->model('review_model');
 		
-		$categories = array(
-			'class_count'							=> 0,
-			// Ops
-			'absent_without_substitute_count'		=> 0,
-			'absent_without_substitute_percentage'	=> 0,
-			'negative_credit_volunteer_count'		=> 0,
-			'negative_credit_volunteer_percentage'	=> 0,
-			'madapp_updation_status'				=> -1,
-			'attended_kids_percentage'				=> 0,
-			// EPH
-			'periodic_assessment_updation_status'	=> -1,
-			'class_progress'						=> 0,
-			// HR
-			'volunteer_requirement_count'			=> 0,
-			'volunteer_requirement_percentage'		=> 0,
-			'attirition_count'						=> 0,
-			'attirition_percentage'					=> 0,
-			'months_since_avm'						=> 0,
-			// PR
-			'months_since_ping'						=> -1,
-			'blog_post_count'						=> -1,
-			'months_since_pr_initiative'			=> -1,
-			// CR
-			'monthly_target'						=> -1,
-			'money_raised'							=> -1,
-			'donor_update_sent'						=> -1,
-			// Finance
-			'accounts_updated_status'				=> -1,
-			'pending_receipt_count'					=> -1,
-			// President
-			'core_team_meeting_stauts'				=> 0,
-			'red_flag_count'						=> 0,
-		);
+		$project_id = 1;
+		$cities = $this->city_model->get_all();
 		
-		$flags = array();
-		foreach($categories as $name => $value) $flags[$name] = 'green';
+		foreach($cities as $city) {
+			//if($city->id != 10) continue;
+			
+			$categories = array(
+				'class_count'							=> 0,
+				// Ops
+				'absent_without_substitute_count'		=> 0,
+				'absent_without_substitute_percentage'	=> 0,
+				'negative_credit_volunteer_count'		=> 0,
+				'negative_credit_volunteer_percentage'	=> 0,
+				'madapp_updation_status'				=> -1,
+				'attended_kids_percentage'				=> 0,
+				// EPH
+				'periodic_assessment_updation_status'	=> -1,
+				'class_progress'						=> 0,
+				// HR
+				'volunteer_requirement_count'			=> 0,
+				'volunteer_requirement_percentage'		=> 0,
+				'attirition_count'						=> 0,
+				'attirition_percentage'					=> 0,
+				'months_since_avm'						=> 0,
+				// PR
+				'months_since_ping'						=> -1,
+				'blog_post_count'						=> -1,
+				'months_since_pr_initiative'			=> -1,
+				// CR
+				'monthly_target'						=> -1,
+				'money_raised'							=> -1,
+				'donor_update_sent'						=> -1,
+				// Finance
+				'accounts_updated_status'				=> -1,
+				'pending_receipt_count'					=> -1,
+				// President
+				'core_team_meeting_stauts'				=> 0,
+				'red_flag_count'						=> 0,
+			);
+			
+			$flags = array();
+			foreach($categories as $name => $value) $flags[$name] = 'green';
 
-		$student_count= count($this->kids_model->getkids_details()->result());
-		$teacher_count = count($this->users_model->search_users(array('user_group'=>9))); // 9 = Teacher
-		
-		$info = $this->class_model->get_classes_in_month($year_month);
+			$student_count= count($this->kids_model->getkids_details($city->id)->result());
+			$teacher_count = count($this->users_model->search_users(array('user_group'=>9, 'city_id'=>$city->id, 'project_id'=>$project_id))); // 9 = Teacher
 			
-		foreach($info as $c) {
-			if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;;
-			if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
-		}
-		$categories['absent_without_substitute_percentage'] = ceil($categories['absent_without_substitute_count'] / $categories['class_count'] * 100);
-		if($categories['absent_without_substitute_percentage'] > 10) $flags['absent_without_substitute_percentage'] = 'red'; // If more than 10% is absent without substitute, its a red flag.
-		
-		
-		$attendance = $this->class_model->get_attendance_in_month($year_month);
-		if($attendance) {
-			$total_kids = count($attendance);
-			$attended = 0;
-			foreach($attendance as $a) {
-				if($a->present) $attended++;
+			$info = $this->class_model->get_classes_in_month($year_month, $city->id, $project_id);
+				
+			foreach($info as $c) {
+				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
+				if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
 			}
-			$categories['attended_kids_percentage'] = ceil($attended / $total_kids * 100);
-			if($categories['attended_kids_percentage'] < 90) $flags['attended_kids_percentage'] = 'red'; // If less than 90% of the kids attended the class, red flag.
-		}
-		
-		$categories['negative_credit_volunteer_count'] = count($this->report_model->get_users_with_low_credits());
-		$categories['negative_credit_volunteer_percentage'] = ceil($categories['negative_credit_volunteer_count'] / $teacher_count * 100);
-		if($categories['negative_credit_volunteer_percentage'] > 10) $flags['negative_credit_volunteer_percentage'] = 'red';
-		
-		$requirements = $this->report_model->get_volunteer_requirements();
-		foreach($requirements as $r) {
-			$categories['volunteer_requirement_count'] += $r->requirement;
-		}
-		$categories['volunteer_requirement_percentage'] = ceil($categories['volunteer_requirement_count'] / $teacher_count * 100);
-		if($categories['volunteer_requirement_percentage'] > 10) $flags['volunteer_requirement_percentage'] = 'red';
-		
-		$categories['attirition_count'] = count($this->users_model->search_users(array('left_on'=>$year_month)));
-		$categories['attirition_percentage'] = ceil($categories['attirition_count'] / $teacher_count * 100);
-		if($categories['attirition_percentage'] > 10) $flags['attirition_percentage'] = 'red';
-		
-		
-		$categories['months_since_avm'] = $this->event_model->months_since_event('avm', $year_month);
-		$categories['core_team_meeting_stauts'] = ($this->event_model->months_since_event('coreteam_meeting', $year_month)) ? 0 : 1;
-		if(!$categories['core_team_meeting_stauts']) $flags['core_team_meeting_stauts'] = 'red';
-		
-		// Count number of red flags.
-		foreach($flags as $name=>$color) if($color == 'red') $categories['red_flag_count']++;
-		if($categories['red_flag_count'] > 4) $flag['red_flag_count'] = 'red';
 			
-		// Save status to DB...
-		foreach($categories as $name => $value) {
-			$this->review_model->save($name, $value, $year_month.'-01', $flags[$name]);
+			if($categories['class_count']) {
+				$categories['absent_without_substitute_percentage'] = ceil($categories['absent_without_substitute_count'] / $categories['class_count'] * 100);
+				if($categories['absent_without_substitute_percentage'] > 10) $flags['absent_without_substitute_percentage'] = 'red'; // If more than 10% is absent without substitute, its a red flag.
+			}
 			
+			
+			$attendance = $this->class_model->get_attendance_in_month($year_month, $city->id, $project_id);
+			if($attendance) {
+				$total_kids = count($attendance);
+				$attended = 0;
+				foreach($attendance as $a) {
+					if($a->present) $attended++;
+				}
+				$categories['attended_kids_percentage'] = ceil($attended / $total_kids * 100);
+				if($categories['attended_kids_percentage'] < 90) $flags['attended_kids_percentage'] = 'red'; // If less than 90% of the kids attended the class, red flag.
+			}
+			
+			$categories['negative_credit_volunteer_count'] = count($this->report_model->get_users_with_low_credits(0, '<', $city->id, $project_id));
+			$categories['negative_credit_volunteer_percentage'] = ceil($categories['negative_credit_volunteer_count'] / $teacher_count * 100);
+			if($categories['negative_credit_volunteer_percentage'] > 10) $flags['negative_credit_volunteer_percentage'] = 'red';
+			
+			$requirements = $this->report_model->get_volunteer_requirements($city->id);
+			foreach($requirements as $r) {
+				$categories['volunteer_requirement_count'] += $r->requirement;
+			}
+			$categories['volunteer_requirement_percentage'] = ceil($categories['volunteer_requirement_count'] / $teacher_count * 100);
+			if($categories['volunteer_requirement_percentage'] > 10) $flags['volunteer_requirement_percentage'] = 'red';
+			
+			$categories['attirition_count'] = count($this->users_model->search_users(array('left_on'=>$year_month, 'city_id'=>$city->id, 'project_id'=>$project_id)));
+			$categories['attirition_percentage'] = ceil($categories['attirition_count'] / $teacher_count * 100);
+			if($categories['attirition_percentage'] > 10) $flags['attirition_percentage'] = 'red';
+			
+			
+			$categories['months_since_avm'] = $this->event_model->months_since_event('avm', $year_month, $city->id);
+			$categories['core_team_meeting_stauts'] = ($this->event_model->months_since_event('coreteam_meeting', $year_month, $city->id)) ? 0 : 1;
+			if(!$categories['core_team_meeting_stauts']) $flags['core_team_meeting_stauts'] = 'red';
+			
+			// Count number of red flags.
+			foreach($flags as $name=>$color) if($color == 'red') $categories['red_flag_count']++;
+			if($categories['red_flag_count'] >= 4) $flag['red_flag_count'] = 'red';
+				
+			// Save status to DB...
+			foreach($categories as $name => $value) {
+				$this->review_model->save($name, $value, $year_month.'-01', $flags[$name], $city->id);
+				
+			}
 		}
 	}
-	
 }
 

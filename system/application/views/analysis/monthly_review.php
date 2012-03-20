@@ -139,6 +139,7 @@ function showCells($name, $review, $months) {
 			elseif($r->flag == 'green') echo "<td class='good'>";
 
 			echo $r->value;
+			if(strpos($name, 'percentage')) echo '%';
 			echo "</td>";
 			
 		} else {

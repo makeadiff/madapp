@@ -10,13 +10,14 @@ class Report_model extends Model {
     }
     
     
-	function get_users_with_low_credits($credit=0, $sign='<', $city_id=-1) {
+	function get_users_with_low_credits($credit=0, $sign='<', $city_id=-1, $project_id=-1) {
 		if($sign != '<' and $sign != '>') $sign = '<';
 		if($city_id == -1) $city_id = $this->city_id;
+		if(!$project_id) $project_id = $this->project_id;
 		
 		$this->db->select("id AS user_id,name,credit");
 		if($city_id) $this->db->where('city_id', $city_id);
-		$this->db->where('project_id',$this->project_id);
+		$this->db->where('project_id',$project_id);
 		$this->db->where("credit $sign $credit");
 		$this->db->where('user_type','volunteer');
 		$this->db->order_by('credit');
@@ -32,12 +33,13 @@ class Report_model extends Model {
     			AND UserClass.substitute_id=0 AND UserClass.status='absent'")->result();
     }
     
-    function get_volunteer_requirements() {
+    function get_volunteer_requirements($city_id) {
+		if(!$city_id) $city_id = $this->city_id;
     	return $this->db->query("SELECT Center.name, SUM(requirement) AS requirement
     		FROM UserBatch 
     		INNER JOIN `Level` ON UserBatch.level_id = Level.id 
     		INNER JOIN Center ON Center.id=Level.center_id 
-    		WHERE requirement > 0 AND Center.city_id={$this->city_id} GROUP BY Level.center_id")->result();
+    		WHERE requirement > 0 AND Center.city_id=$city_id GROUP BY Level.center_id")->result();
     }
 	
 	function get_volunteer_admin_credits() {

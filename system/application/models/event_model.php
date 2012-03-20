@@ -226,16 +226,17 @@ class Event_model extends Model{
 		}
 		
 		/// Returns the last event of the given event type.
-		function get_last_event($event_type='') {
-			$this->db->from('Event')->where('city_id', $this->city_id);
+		function get_last_event($event_type='', $city_id=0) {
+			if(!$city_id) $city_id = $this->city_id;
+			$this->db->from('Event')->where('city_id', $city_id);
 			if($event_type) $this->db->where('type',$event_type);
 			$this->db->orderby('starts_on DESC');
 			return $this->db->get()->row();
 		}
 		
 		/// Returns the number of months since the last event of the given type.
-		function months_since_event($event_type, $year_month) {
-			$last_event = $this->event_model->get_last_event($event_type);
+		function months_since_event($event_type, $year_month, $city_id) {
+			$last_event = $this->event_model->get_last_event($event_type, $city_id);
 			if(!$last_event) $starts_on = get_mad_year_starting_date();
 			else $starts_on = $last_event->starts_on;
 			$difference = date_diff(date_create($year_month.'-01'), date_create($starts_on));

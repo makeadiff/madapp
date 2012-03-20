@@ -25,11 +25,13 @@ class Kids_model extends Model {
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	function getkids_details() {
+	function getkids_details($city_id = 0) {
+		if(!$city_id) $city_id = $this->city_id;
+		
 		$this->db->select('Student.*,Center.name as center_name');
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
-		$this->db->where('Center.city_id', $this->city_id);
+		$this->db->where('Center.city_id', $city_id);
 		$this->db->orderby('Student.id');
 		$result=$this->db->get();
 		return $result;

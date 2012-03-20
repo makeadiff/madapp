@@ -50,15 +50,7 @@ class Report_model extends Model {
 			WHERE UserGroup.group_id=14
 			AND User.city_id={$this->city_id} GROUP BY AdminCredit.user_id")->result();
 		
-		// Our Year starts on April - so get the list of months.
-		$this_month = date('m');
-		$months = array();
-		$start_month = 4; // April
-		$start_year = date('Y');
-		if($this_month <= 3) $start_year = date('Y')-1;
-		for($i = 0; $i < 12; $i++) {
-			$months[] = date('Y-m', mktime(0,0,0, $start_month + $i, 1, $start_year));
-		}
+		$months = get_month_list();
 		$month_names = array('april','may','june','july','august','september','october','november','december','january','february','march');
 
 		$index = 0;

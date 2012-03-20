@@ -72,7 +72,8 @@ function getById($query, $db) {
 function idNameFormat($data, $fields=array('id','name')) {
 	$return = array();
 	foreach($data as $row) {
-		$return[$row->$fields[0]] = stripslashes($row->$fields[1]);
+		if(isset($fields[1])) $return[$row->$fields[0]] = stripslashes($row->$fields[1]);
+		else $return[$row->$fields[0]] = $row;
 	}
 	
 	return $return;
@@ -94,3 +95,21 @@ function short_name($name) {
 	return reset(explode(' ', $name));
 }
 
+/// Get the starting date of the current MAD year...
+function get_mad_year_starting_date() {
+	$this_month = intval(date('m'));
+	$months = array();
+	$start_month = 4; // April
+	$start_year = date('Y');
+	if($this_month < $start_month) $start_year = date('Y')-1;
+	return date('Y-m-d', mktime(0,0,0, $start_month, 1, $start_year));
+}
+
+/// Our Year starts on April - so get the list of months.
+function get_month_list() {
+	$starting_day = strtotime(get_mad_year_starting_date());
+	for($i = 0; $i < 12; $i++) {
+		$months[] = date('Y-m', mktime(0,0,0, date('m', $starting_day) + $i, 1, date('Y', $starting_day)));
+	}
+	return $months;
+}

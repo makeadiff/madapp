@@ -350,20 +350,41 @@ class Class_model extends Model {
 		$this->db->delete('UserClass',array('class_id'=>$class_id));
 		$this->db->delete('StudentClass',array('class_id'=>$class_id));
     }
-	 /**
-    *
-    * Function to
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	 /// Get just the class information for the current level/batch
+
+	/// Get just the class information for the current level/batch
     function get_classes_by_level_and_center($level_id) {
     	$classes = $this->db->query("SELECT Class.id,Class.class_on,UserClass.status FROM Class JOIN UserClass ON UserClass.class_id=Class.id WHERE level_id=$level_id ORDER BY class_on ASC")->result();
 		//print_r($classes);
     	return $classes;
     }
+    
+    //////////////////////////////////////// Monthly Review functions.
+    
+    /// Returns the classes that happened in the given month.
+    function get_classes_in_month($year_month) {
+		$data = $this->db->query("SELECT Class.*, UserClass.* FROM Class 
+				INNER JOIN UserClass ON Class.id=UserClass.class_id 
+				INNER JOIN Level ON Class.level_id=Level.id
+				INNER JOIN Center ON Level.center_id=Center.id
+			WHERE DATE_FORMAT(Class.class_on, '%Y-%m')='$year_month'
+				AND Class.project_id={$this->project_id}
+				AND Center.city_id={$this->city_id}")->result();
+		return $data;
+    }
+    
+    /// Returns the attendance of classes that happened in the given month.
+    function get_attendance_in_month($year_month) {
+		$data = $this->db->query("SELECT StudentClass.* FROM Class 
+				INNER JOIN StudentClass ON Class.id=StudentClass.class_id 
+				INNER JOIN Level ON Class.level_id=Level.id
+				INNER JOIN Center ON Level.center_id=Center.id
+			WHERE DATE_FORMAT(Class.class_on, '%Y-%m')='$year_month'
+				AND Class.project_id={$this->project_id}
+				AND Center.city_id={$this->city_id}")->result();
+		return $data;
+    }
+    
+        
 	 /**
     *
     * Function to

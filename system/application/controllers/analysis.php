@@ -213,12 +213,12 @@ class Analysis extends Controller {
 						}
 						$data[$center->id]['class'][$level->id][$key] = $exam; 
 						$marks[$exam->id][$students->id]  = $this->class_model->get__student_marks ($exam->id,$students->id);
-						//print_r($marks);
+						
 					} 
-					//print_r($attendance[$exam->id]);
+					
 				}
 			}
-			//print_r($days_with_classes);
+			
 			ksort($days_with_classes);
 			$data[$center->id]['days_with_classes'] = $days_with_classes;
 		}

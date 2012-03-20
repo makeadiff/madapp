@@ -116,6 +116,6 @@ class Level_model extends Model {
 		
 		return $this->db->query("SELECT level.name,level.id FROM level JOIN 
 		exam_event ON level.id = exam_event.level_id WHERE exam_event.center_id=$center_id")->result();
-		//return $this->db->where('center_id',$center_id)->get('exam_event')->result();
+		
 	}
 }

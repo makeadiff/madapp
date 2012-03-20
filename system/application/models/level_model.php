@@ -97,5 +97,25 @@ class Level_model extends Model {
 		return $this->db->query("SELECT COUNT(id) AS count FROM StudentLevel WHERE level_id=$level_id")->row()->count;
 		
 	}
-	
+	/**
+    *
+    * Function to
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function get_all_kidsname_in_level($level_id)
+	{
+		
+		return $this->db->query("SELECT student.name,student.id FROM student JOIN 
+		studentlevel ON studentlevel.student_id = student.id WHERE studentlevel.level_id=$level_id")->result();
+		
+	}
+	function get_only_levels_in_center($center_id) {
+		
+		return $this->db->query("SELECT level.name,level.id FROM level JOIN 
+		exam_event ON level.id = exam_event.level_id WHERE exam_event.center_id=$center_id")->result();
+		//return $this->db->where('center_id',$center_id)->get('exam_event')->result();
+	}
 }

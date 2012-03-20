@@ -12,8 +12,8 @@
 |
 */
 //$config['base_url']	= "http://localhost/Projects/Madapp/CI/";
-$config['base_url']="http://localhost/maddaplycation/madapp/trunk/";
-//$config['base_url']="http://madapp.mp";
+//$config['base_url']="http://localhost/maddaplycation/madapp/trunk/";
+$config['base_url']="http://maddapp.oi";
 /*
 |--------------------------------------------------------------------------
 | Index File

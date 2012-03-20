@@ -354,7 +354,6 @@ class Class_model extends Model {
 	/// Get just the class information for the current level/batch
     function get_classes_by_level_and_center($level_id) {
     	$classes = $this->db->query("SELECT Class.id,Class.class_on,UserClass.status FROM Class JOIN UserClass ON UserClass.class_id=Class.id WHERE level_id=$level_id ORDER BY class_on ASC")->result();
-		//print_r($classes);
     	return $classes;
     }
     
@@ -399,6 +398,25 @@ class Class_model extends Model {
 	{
 		$attendance = $this->db->query("SELECT COUNT(id) as count FROM StudentClass WHERE class_id=$class_id AND present=1")->row()->count;
     	return $attendance;
+	}
+	 /**
+    *
+    * Function to
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	 /// Get just the class information for the current level/batch
+    function get_examname_by_level_and_center($level_id) {
+    	$classes = $this->db->query("SELECT exam.id  ,exam.name,exam_event.exam_on,exam_event.level_id,exam_event.center_id FROM exam JOIN exam_event ON exam.id=exam_event.exam_id WHERE exam_event.center_id=$level_id ORDER BY exam.id ASC")->result();
+    	return $classes;
+    }
+	function get__student_marks ($exam,$students)
+	{
+		
+		return $this->db->query("SELECT exam_subject.name,exam_mark.mark FROM exam_mark JOIN exam_subject ON exam_subject.exam_id = 
+			exam_mark.exam_id WHERE exam_mark.exam_id=$exam AND exam_mark.student_id=$students")->result();	
 	}
 	
 }

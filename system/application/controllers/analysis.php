@@ -120,7 +120,7 @@ class Analysis extends Controller {
 					if(!in_array($date, $days_with_classes)) {
 						$days_with_classes[$key] = $date;
 					}
-					$data[$center->id]['class'][$level->id][$key] = $class;
+					$data[$center->id]['class'][$level->id][$key] = $class; 
 					$attendance[$class->id]  = $this->class_model->get__kids_attendance ($class->id);
 				}	
 			}
@@ -174,7 +174,58 @@ class Analysis extends Controller {
 			'event_attendance_count'=> $event_attendance_count,
 		));
 	}
-	
+	function exam_report()
+	{
+		$all_centers = $this->center_model->get_exam_centers();
+		$data = array();
+		$datas = array();
+		$marks = array();
+		$totalAttendance=array();
+		foreach($all_centers as $center) {
+			//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+			$data[$center->id] = array(
+				'center_id'	=> $center->id,
+				'center_name'=>$center->name,
+			);
+			//$allLevels=$this->level_model->get_only_alllevels_in_center($center->id);
+			$all_levels[$center->id] = $this->level_model->get_only_levels_in_center($center->id);
+			//$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
+			
+			$days_with_classes = array();
+			foreach($all_levels[$center->id] as $level) {
+				//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+				$datas[$level->id] = array(
+					'level_id'	=> $level->id,
+					'level_name'=>$level->name,
+				);
+				$all_kids[$level->id] = $this->level_model->get_all_kidsname_in_level($level->id);
+				$all_exams = $this->class_model->get_examname_by_level_and_center($center->id);
+				
+				$totalAttendance=0;
+				foreach($all_kids[$level->id] as $students){
+					
+					foreach($all_exams as $exam) {
+						$exam_name=$exam->name;
+						$month =$exam->id;
+						$key = $month . '-'.date('d',strtotime($exam->exam_on));
+						if(!in_array($exam_name, $days_with_classes)) {
+							$days_with_classes[$key] = $exam_name;
+						}
+						$data[$center->id]['class'][$level->id][$key] = $exam; 
+						$marks[$exam->id][$students->id]  = $this->class_model->get__student_marks ($exam->id,$students->id);
+						//print_r($marks);
+					} 
+					//print_r($attendance[$exam->id]);
+				}
+			}
+			//print_r($days_with_classes);
+			ksort($days_with_classes);
+			$data[$center->id]['days_with_classes'] = $days_with_classes;
+		}
+		
+		$this->load->view('analysis/exam_report', array(
+				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids,'attendance'=>$marks));
+	}
 	function monthly_review() {
 		$this->user_auth->check_permission('monthly_review');
 		$data = array();

@@ -3,20 +3,23 @@ $this->load->view('layout/header', array('title'=>'Class Progress Report'));
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/sections/analysis/class_progress_report.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
-
 <?php
 foreach($data as $center_id => $center_info) {
 	if(empty($center_info)) continue;
 ?>
-<?php //print_r($center_info); ?>
+
 <h3><?php echo $center_info['center_name'] ?></h3>
 <table class="madsheet data-table info-box-table">
 <tr>
 <th>Level</th>
 <th>Kids</th>
 <?php
+//print_r($center_info);
 foreach($center_info['days_with_classes'] as $day) print "<th>$day</th>";
+
 ?>
+<th>Classes Attended</th>
+
 <th>Aggr</th>
 </tr>
 
@@ -34,14 +37,20 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 ?>
 <tr class="<?php echo ($row_count % 2) ? 'odd' : 'even' ?>">
 <td nowrap='nowrap'><?php echo $level_info->name ?></td>
-<td><?php echo $all_kids[$level_info->id] ?></td>
-<?php 
-	$var += $all_kids[$level_info->id];
+<td><?php foreach($all_kids[$level_info->id] as $names){?><div style="border-bottom:1px solid #063; "><?php   echo $names->name.'<br>'; ?> </div><?php }?></td>
+
+
+    <td class="class">
+    <?php 
+	
 	$sum=0;
 	$totNumber=0;
 	$ar="";
 	$tets="";
-	foreach($center_info['days_with_classes'] as $date_index => $day) { echo $date_index;
+	foreach($all_kids[$level_info->id] as $names){
+		
+	foreach($center_info['days_with_classes'] as $date_index => $day) { 
+	
 		$totNumber++;
 		if(!isset($center_info['class'][$level_info->id][$date_index])) { 
 			$classdateid = 0;
@@ -51,37 +60,38 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		
 		if(!isset($center_info['class'][$level_info->id][$date_index])) { 
 			$status="null"; 
-			$attendanses =0;
+			$examMarks =0;
 		} else {
-			$attendanses=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
-			$test=$center_info['class'][$level_info->id][$date_index]; 
-			$status=$test->status;
+			$examMarks=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
+			//$test=$center_info['class'][$level_info->id][$date_index]; 
+			//echo $status=$examMarks->name;
+			print_r($examMarks);
 		}
-		$percentage = ($attendanses * 100) / $all_kids[$level_info->id];
-		
-		$class_type = 'good';
-		if($classdateid == 0 or $status == 'projected') $class_type = 'no-data';
-		elseif($status == "cancelled" or $status == 'null') $class_type = 'cancelled';
-		elseif($percentage < $comppercentage ) $class_type = 'low-attendance';
+	
 	?>
-
-    <td class="class-<?php echo $class_type ?>">
     <?php  
 		//Attendance ...
-		echo $attendanses;
-		$sum += $attendanses;
+		if(sizeof($examMarks) >0){foreach($examMarks as $y=>$x){
+			//print_r($x);
+			//echo $y;
+			//echo $x->name;
+		}
+		}
 	?></td>
  	<?php
-		$level_attendence[$level_info->id][$date_index] = $attendanses;
+		$level_attendence[$level_info->id][$date_index] = $examMarks;
+	}
 	}
 	
 	?>
-<td nowrap='nowrap'><?php $netSum += $sum/$totNumber; echo round($sum/$totNumber, 2);?></td>
-</tr>
+<td nowrap='nowrap'>Classes</td>
+<td>Agg</td>
+</tr><td nowrap='nowrap'>Total</td>
 <?php
 	$row_count++;
+	
 } // Level end ?>
-<td nowrap='nowrap'>Total</td>	
+	
 <td nowrap='nowrap'><?php echo $var;?></td>
 
 <!--Get Total Rows-->
@@ -89,17 +99,17 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 foreach($center_info['days_with_classes'] as $date_index => $day) { // All Days
 	$sum = 0;
 	print '<td>';
-	foreach($all_levels[$center_id] as $level_info) { // All Levels
+	/*foreach($all_levels[$center_id] as $level_info) { // All Levels
 		if(isset($level_attendence[$level_info->id][$date_index])) $sum += $level_attendence[$level_info->id][$date_index];
-	}
+	}*/
 	print $sum . '</td>';
 }
 
-$perc= ($netSum*100)/$var;
-$class_status = 'good';
-if($perc < $comppercentage) $class_status = 'low-attendance';
+//$perc= ($netSum*100)/$var;
+//$class_status = 'good';
+//if($perc < $comppercentage) $class_status = 'low-attendance';
 ?>
-<td nowrap='nowrap' class="class-<?php echo $class_status ?>"><?php echo round($netSum, 1);?></td>
+<td nowrap='nowrap' class="class"><?php //echo round($netSum, 1);?></td>
 </table>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
 <hr />
 <?php 

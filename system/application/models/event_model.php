@@ -242,7 +242,4 @@ class Event_model extends Model{
 			$difference = date_diff(date_create($year_month.'-01'), date_create($starts_on));
 			return $difference->format('%m');
 		}
-	
-
-
 }

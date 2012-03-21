@@ -415,8 +415,9 @@ class Class_model extends Model {
 	function get__student_marks ($exam,$students)
 	{
 		
-		return $this->db->query("SELECT exam_subject.name,exam_mark.mark FROM exam_mark JOIN exam_subject ON exam_subject.exam_id = 
-			exam_mark.exam_id WHERE exam_mark.exam_id=$exam AND exam_mark.student_id=$students")->result();	
+		return $this->db->query("SELECT exam_subject.name,exam_mark.mark FROM exam_mark JOIN exam_subject ON exam_mark.subject_id = 
+			exam_subject.id WHERE exam_mark.exam_id=$exam AND exam_mark.student_id=$students")->result();	
+			
 	}
 	
 }

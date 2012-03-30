@@ -107,15 +107,13 @@ class Level_model extends Model {
     **/
 	function get_all_kidsname_in_level($level_id)
 	{
-		
-		return $this->db->query("SELECT student.name,student.id FROM student JOIN 
-		studentlevel ON studentlevel.student_id = student.id WHERE studentlevel.level_id=$level_id")->result();
+		return $this->db->query("SELECT Student.id,Student.name FROM Student JOIN 
+			StudentLevel ON StudentLevel.student_id = Student.id WHERE StudentLevel.level_id=$level_id")->result();
 		
 	}
 	function get_only_levels_in_center($center_id) {
-		
-		return $this->db->query("SELECT level.name,level.id FROM level JOIN 
-		exam_event ON level.id = exam_event.level_id WHERE exam_event.center_id=$center_id")->result();
+		return $this->db->query("SELECT Level.id, Level.name FROM Level JOIN 
+			Exam_Event ON Level.id = Exam_Event.level_id WHERE Exam_Event.center_id=$center_id")->result();
 		
 	}
 }

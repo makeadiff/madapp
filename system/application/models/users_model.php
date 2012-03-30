@@ -603,7 +603,7 @@ class Users_model extends Model {
 		} else {
 			foreach($result as $r) {
 				if($r->email == $data['email']) $this->session->set_flashdata('error', 'Email already in database. Use another email address.');
-				else if($r->phone == $data['mobileno']) $this->session->set_flashdata('error', 'Phone number already in database. You have registered already.');
+				else if($r->phone == $data['phone']) $this->session->set_flashdata('error', 'Phone number already in database. You have registered already.');
 				break;
 			}
 			

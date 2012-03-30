@@ -174,6 +174,28 @@ class Analysis extends Controller {
 			'event_attendance_count'=> $event_attendance_count,
 		));
 	}
+	
+	
+	function monthly_review() {
+		$this->user_auth->check_permission('monthly_review');
+		$data = array();
+		$this->load->model('kids_model');
+		$this->load->model('review_model');
+		
+		$data['center_count'] = count($this->center_model->get_all());
+		$data['student_count']= count($this->kids_model->getkids_details()->result());
+		$data['teacher_count']= count($this->user_model->search_users(array('user_group'=>9))); // 9 = Teacher
+		
+		$data['months'] = get_month_list();
+		foreach($data['months'] as $year_month) {
+			$data['review'][$year_month] = idNameFormat($this->review_model->get_monthly_review($year_month, $this->session->userdata('city_id')), array('name'));
+		}
+		
+		
+		$this->load->view('analysis/monthly_review', $data);
+	}
+	
+	
 	function exam_report()
 	{
 		$all_centers = $this->center_model->get_exam_centers();
@@ -203,7 +225,7 @@ class Analysis extends Controller {
 				
 				$totalAttendance=0;
 				foreach($all_kids[$level->id] as $students){
-					
+					//print_r($students);
 					foreach($all_exams as $exam) {
 						$exam_name=$exam->name;
 						$month =$exam->id;
@@ -212,6 +234,7 @@ class Analysis extends Controller {
 							$days_with_classes[$key] = $exam_name;
 						}
 						$data[$center->id]['class'][$level->id][$key] = $exam; 
+						//echo $students->id;
 						$marks[$exam->id][$students->id]  = $this->class_model->get__student_marks ($exam->id,$students->id);
 						
 					} 
@@ -225,24 +248,53 @@ class Analysis extends Controller {
 		
 		$this->load->view('analysis/exam_report', array(
 				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids,'attendance'=>$marks));
+			
 	}
-	function monthly_review() {
-		$this->user_auth->check_permission('monthly_review');
+	function exam_report_test()
+	{
+		$all_centers = $this->center_model->get_exam_centers();
 		$data = array();
-		$this->load->model('kids_model');
-		$this->load->model('review_model');
-		
-		$data['center_count'] = count($this->center_model->get_all());
-		$data['student_count']= count($this->kids_model->getkids_details()->result());
-		$data['teacher_count']= count($this->user_model->search_users(array('user_group'=>9))); // 9 = Teacher
-		
-		$data['months'] = get_month_list();
-		foreach($data['months'] as $year_month) {
-			$data['review'][$year_month] = idNameFormat($this->review_model->get_monthly_review($year_month, $this->session->userdata('city_id')), array('name'));
-		}
+		$datas = array();
+		$marks = array();
+		$totalAttendance=array();
+		$this->load->view('analysis/exam_report/report_header');
 		
 		
-		$this->load->view('analysis/monthly_review', $data);
+		foreach($all_centers as $center) {
+			$data['name']=$center->name;
+			$data['all_exams'] = $this->class_model->get_examname_by_level_and_center($center->id);
+			
+			$this->load->view('analysis/exam_report/report_center',$data);
+			
+			$all_levels= $this->level_model->get_only_levels_in_center($center->id);
+			foreach($all_levels as $level){
+				$data['levelname']=$level->name;
+				$this->load->view('analysis/exam_report/report_level',$data);
+				$all_kids = $this->level_model->get_all_kidsname_in_level($level->id);
+				//print_r($all_kids);
+				foreach($all_kids as $kids){
+					$data['kidsname']=$kids->name;
+					$this->load->view('analysis/exam_report/report_kidsname',$data);
+					foreach($data['all_exams'] as $exam)
+					{
+					$data['attendance']= $this->class_model->get__student_attendence($kids->id);
+					
+					$data['marks']= $this->class_model->get__student_marks ($exam->id,$kids->id);
+						$this->load->view('analysis/exam_report/report_marks',$data);
+					
+					}
+					
+					$this->load->view('analysis/exam_report/report_close_tr',$data);
+				}
+				$this->load->view('analysis/exam_report/report_total');
+			}
+			
+			}
+			
+			$this->load->view('analysis/exam_report/report_footer');
+			
+		
+		
 	}
 }
 

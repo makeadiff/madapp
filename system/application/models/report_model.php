@@ -13,7 +13,7 @@ class Report_model extends Model {
 	function get_users_with_low_credits($credit=0, $sign='<', $city_id=-1, $project_id=-1) {
 		if($sign != '<' and $sign != '>') $sign = '<';
 		if($city_id == -1) $city_id = $this->city_id;
-		if(!$project_id) $project_id = $this->project_id;
+		if($project_id == -1) $project_id = $this->project_id;
 		
 		$this->db->select("id AS user_id,name,credit");
 		if($city_id) $this->db->where('city_id', $city_id);

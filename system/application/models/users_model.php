@@ -516,6 +516,9 @@ class Users_model extends Model {
 		}
 		
 		
+		if(!empty($data['user_type']) and $data['user_type'] == 'applicant') {
+			$this->db->orderby('User.joined_on');
+		} 
 		$this->db->orderby('User.name');
 		
 		$all_users = $this->db->get()->result();
@@ -584,7 +587,7 @@ class Users_model extends Model {
 			$userdetailsArray = array(	'name'		=> $data['name'],
 										'email'		=> $data['email'],
 										'phone'		=> $this->_correct_phone_number($data['phone']),
-										'address'=> $data['address'],
+										'address'	=> $data['address'],
 										'city_id'	=> $data['city_id'],
 										'job_status'=> $data['job_status'],
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),

@@ -9,8 +9,8 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
 <script src="<?php echo base_url()?>js/cal.js"></script>
 <?php
-$sdt=1980;
-$edt=date('Y');
+$sdt=1950;
+$edt=date('Y') - 10;
 ?>
 <script>
 jQuery(document).ready(function () {

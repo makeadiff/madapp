@@ -1,4 +1,13 @@
 <?php
+/** 
+ * CodeIgniter
+ * An open source application development framework for PHP 4.3.2 or newer
+ *
+ * @package         MaddApp
+ * @author          Rabeesh
+ * @since           Version 1.0
+ * @filesource
+ */
 class National_dashboard extends Controller {
 	private $message;
 	
@@ -15,11 +24,26 @@ class National_dashboard extends Controller {
 			redirect('auth/login');
 		}
 	}
-	
+	 /**
+    *
+    * Function to index
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	public function index() {
 		$this->user_auth->check_permission('report_index');
 		$this->load->view('national_reports/index');
 	}
+	 /**
+    *
+    * Function to footprint_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	public function footprint_table_of_all_cities()
 	{
 		$city_report_data = $this->national_model->get_city_details();
@@ -81,6 +105,14 @@ class National_dashboard extends Controller {
 		}
 		$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
+	 /**
+    *
+    * Function to classes_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function classes_table_of_all_cities()
 	{
 		$city_report_data = $this->national_model->get_city_details();
@@ -135,6 +167,14 @@ class National_dashboard extends Controller {
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
+	 /**
+    *
+    * Function to classes_progress_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function classes_progress_table_of_all_cities()
 	{
 		$city_report_data = $this->national_model->get_city_details();

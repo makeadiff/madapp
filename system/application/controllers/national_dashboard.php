@@ -226,7 +226,7 @@ class National_dashboard extends Controller {
 	}
 	 /**
     *
-    * Function to classes_progress_table_of_all_cities
+    * Function to events_table_of_all_cities
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
@@ -236,19 +236,19 @@ class National_dashboard extends Controller {
 	{
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
-				'city'		            => 'City', 
-				'tot_mad_level'	        => 'Total No of Volunteers',
-				'no_slow'		        => 'No of Process trainings',
-				'no_fast'		        => 'Total Process Training attendance',
-				'median_unit'           => 'No of CTs',
-				'least_unit'            => 'Total CT attendance',
-				'most_unit'			    => 'No of TTs',
-				'no_mad_levels_p'	    => 'Total TT attendance',
-				'no_slow_classes_p'    	=>'Total No of CCTs',
-				'no_fats_classes_p'    	=>'Avg Attendance at CCTs',
-				'median_unit_covered_s' =>'Total No of Focused Content Workshops',
-				'least_unit_covered_s'  =>'Total Attendance at FCW',
-				'most_unit_covered_s'   =>'AVG Attendance at FCW',
+				'city'		             => 'City', 
+				'tot_no_volunteers'	     => 'Total No of Volunteers',
+				'no_process_training'    => 'No of Process trainings',
+				'total_process_training' => 'Total Process Training attendance',
+				'no_of_cts'              => 'No of CTs',
+				'tot_ct_att'             => 'Total CT attendance',
+				'no_of_tts'			     => 'No of TTs',
+				'tot_tt_att'	         => 'Total TT attendance',
+				'tot_no_ccts'    	     =>'Total No of CCTs',
+				'avg_att_ccts'    	     =>'Avg Attendance at CCTs',
+				'tot_focused_content'    =>'Total No of Focused Content Workshops',
+				'tot_att_fcw'            =>'Total Attendance at FCW',
+				'avg_att_fcw'            =>'AVG Attendance at FCW',
 				
 			);
 			$title='City Footprint';
@@ -261,10 +261,91 @@ class National_dashboard extends Controller {
 				$data['totalvolunteers']=$this->national_model->class_volunteers_count($city_id);
 				//Total Number Of CCTs.
 				$data['cct_count']=$this->national_model->class_cct_count($city_id);
-				//Total Number Of TTs.
+				//Total Number Of Teachers count.
 				$data['tt_count']=$this->national_model->class_tt_count($city_id);
+				// Total User events for TTs Attendance.
+				$tt_user_events=$this->national_model->tt_user_events($city_id);
+				$data['tt_user_events']=($tt_user_events * 80)/100;
+				//Present Total TTs Attendance.
+				$data['tt_count_Attendance']=$this->national_model->class_tt_attendance($city_id);
+				//Present Total TTs Attendance.
+				$data['no_process_training']=$this->national_model->no_process_training($city_id);
+				
+				// Total User events for Process Training Attendance
+				$process_training_user_events=$this->national_model->process_training_user_events($city_id);
+				$data['process_training_user_events']=($process_training_user_events * 66)/100;
+				// Process Training  Attendance.
+				$data['process_training_Attendance']=$this->national_model->process_training_Attendance($city_id);
 				
 				$this->load->view('national_reports/city_events', array('data'=>$data, 'fields'=>$header_names, 'title'=>$title));
+				}
+			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
+	}
+	 /**
+    *
+    * Function to exam_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function exam_table_of_all_cities()
+	{
+		$city_report_data = $this->national_model->get_city_details();
+		$header_names=array(
+				'city'		            => 'City', 
+				'p_last_test'	        => 'P - Last Test Completed',
+				's_last_test'		    => 'S - Last Test Completed',
+				'l1_last_test'		    => 'L1 - Last Test Completed',
+				'l2_last_test'          => 'L2 - Last Test Completed',
+				'l3_last_test'          => 'L3 - Last Test Completed',
+			);
+			$title='City Footprint';
+			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
+			foreach($city_report_data as $row)
+				{
+				$data['city_name']=$row->name;
+				$city_id=$row->id;
+				//Total Voluteers.
+				$data['totalvolunteers']=$this->national_model->class_volunteers_count($city_id);
+			
+				
+				$this->load->view('national_reports/city_exams', array('data'=>$data, 'fields'=>$header_names, 'title'=>$title));
+				}
+			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
+	}
+	function starters_table_of_all_cities()
+	{
+		$city_report_data = $this->national_model->get_city_details();
+		$header_names=array(
+				'city'		                => 'City', 
+				'tot_mad_level_p'	        => 'No of MAD Levels - P',
+				'no_child_p'		        => 'No of Children - P',
+				'avg_score_ass1'		    => 'AVG Score-Asst 1',
+				'avg_score_ass2'            => 'AVG Score-Asst 2',
+				'avg_score_ass3'            => 'AVG Score-Asst 3',
+				'avg_score_ass4'            => 'AVG Score -Asst 4',
+				'no_class_low_score_ass1'   => 'No of Classes with Low Score -Asst 1',
+				'no_class_low_score_ass2'   => 'No of Classes with LowScore - Asst 2',
+				'no_class_low_score_ass3'   => 'No of Classes with Low Score - Asst 3',
+				'no_class_low_score_ass4'   => 'No of Classes with Low Score - Asst 4',
+				'no_child_low_score_ass1'   => 'No of Children with low score - Asst 1',
+				'no_child_low_score_ass2'   => 'No of Children with low score - Asst 2',
+				'no_child_low_score_ass3'   => 'No of Children with low score - Asst 3',
+				'no_child_low_score_ass4'   => 'No of Children with low score - Asst 4',
+			);
+			$title='City Footprint';
+			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
+			foreach($city_report_data as $row)
+				{
+				$data['city_name']=$row->name;
+				$city_id=$row->id;
+				//Number of Madd Levels-P.
+				$data['number_of_Levels_P']=$this->national_model->class_number_of_level_p($city_id);
+				//Getting Children count_P
+			    $data['childPcount'] = $this->national_model->get_children_P($city_id);
+				
+				$this->load->view('national_reports/city_starters', array('data'=>$data, 'fields'=>$header_names, 'title'=>$title));
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}

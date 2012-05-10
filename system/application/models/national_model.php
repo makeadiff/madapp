@@ -420,6 +420,7 @@ class National_model extends Model {
 	{
 		return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND name='CCT' AND type='others'")->row()->count;
 	}
+	
 	/**
     *
     * Function to class_cct_count
@@ -430,8 +431,74 @@ class National_model extends Model {
     **/
 	public function class_tt_count($city_id)
 	{
-				return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='teacher'")->row()->count;
+		return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='teacher'")->row()->count;
 
+	}
+	/**
+    *
+    * Function to tt_user_events
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function tt_user_events($city_id)
+	{
+		return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
+				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='teacher'")->row()->count;
+
+	}
+	/**
+    *
+    * Function to class_tt_attendance
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function class_tt_attendance($city_id)
+	{
+				return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
+				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='teacher' AND userevent.present='1'")->row()->count;
+
+	}
+	/**
+    *
+    * Function to no_process_training
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function no_process_training($city_id)
+	{
+			return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='process'")->row()->count;
+	}
+	/**
+    *
+    * Function to process_training_Attendance
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function process_training_user_events($city_id)
+	{
+		return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
+				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='process'")->row()->count;
+	}
+	/**
+    *
+    * Function to process_training_Attendance
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function process_training_Attendance($city_id)
+	{
+		return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
+				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='process' AND userevent.present='1'")->row()->count;
 	}
 	
 }

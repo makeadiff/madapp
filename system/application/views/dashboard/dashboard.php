@@ -108,6 +108,11 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('settings/index') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/settings.png" alt="" /> <span>Settings</span></a></div>
 	<?php } ?>
+    
+    <?php if($this->user_auth->get_permission('report_index')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('national_dashboard/index') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>National</span></a></div>
+	<?php } ?>
 	
    	<br />
 

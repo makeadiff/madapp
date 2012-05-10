@@ -286,8 +286,23 @@ class National_model extends Model {
     **/
 	public function class_volunteers_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id ={$city_id}")->row()->count;
+		return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id ={$city_id} AND user_type ='volunteer' ")->row()->count;
 	}
+	/**
+    *
+    * Function to class_avg_attendance
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function class_volunteers_in_letgo($city_id)
+	{
+		return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id ={$city_id} AND user_type ='let_go'")->row()->count;
+	}
+	
+	
+	
 	/**
     *
     * Function to class_avg_attendance
@@ -353,6 +368,70 @@ class National_model extends Model {
 	{
 		return $this->db->query("SELECT COUNT(userclass.id ) AS count FROM userclass JOIN User ON User.id = userclass.user_id 
 		WHERE User.city_id = {$city_id} AND userclass.status ='cancelled'")->row()->count;
+	}
+	/**
+    *
+    * Function to class_number_of_level_p
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function class_number_of_level_p($city_id)
+	{
+		return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level INNER JOIN  Center ON Center.id = Level.center_id
+			WHERE Level.name LIKE '%p%' AND Center.city_id=$city_id")->row()->count;
+	}
+	/**
+    *
+    * Function to class_number_of_level_s
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function class_number_of_level_s($city_id)
+	{
+		return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level INNER JOIN  Center ON Center.id = Level.center_id
+			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id")->row()->count;
+	}
+	/**
+    *
+    * Function to class_number_of_level_l1
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	function class_number_of_level_l1($city_id)
+	{
+		return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level INNER JOIN  Center ON Center.id = Level.center_id
+			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id")->row()->count;
+	}
+	/**
+    *
+    * Function to class_cct_count
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function class_cct_count($city_id)
+	{
+		return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND name='CCT' AND type='others'")->row()->count;
+	}
+	/**
+    *
+    * Function to class_cct_count
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+	public function class_tt_count($city_id)
+	{
+				return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='teacher'")->row()->count;
+
 	}
 	
 }

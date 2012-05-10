@@ -6,7 +6,7 @@
 <td></td>
 <td><?php echo $data['totalvolunteers']; ?></td>
 <td></td>
-<td></td>
+<td><?php echo $data['letgovolunteers']; ?></td>
 <td><?php echo $data['totalmaddclasses']; ?></td>
 <?php if( $data['class_substitute_count'] > $data['substitute_madd_percentage']){?>
 <td style="color:#F00"><?php  echo $data['class_substitute_count']; ?></td><?php } else {?>

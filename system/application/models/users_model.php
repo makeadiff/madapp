@@ -517,7 +517,7 @@ class Users_model extends Model {
 		
 		
 		if(!empty($data['user_type']) and $data['user_type'] == 'applicant') {
-			$this->db->orderby('User.joined_on');
+			$this->db->orderby('User.joined_on DESC');
 		} 
 		$this->db->orderby('User.name');
 		
@@ -580,9 +580,12 @@ class Users_model extends Model {
 	function user_registration($data)
 	{
 		$email = $data['email'];
+		$debug = "";
 
 		// Make sure there is no duplication of emails - or phone...
         $result = $this->db->query("SELECT id,email,phone FROM User WHERE email='$email' OR phone='{$data['phone']}'")->result();
+        
+        $debug .= print_r($result, 1);
         if(!$result) {
 			$userdetailsArray = array(	'name'		=> $data['name'],
 										'email'		=> $data['email'],
@@ -601,7 +604,13 @@ class Users_model extends Model {
 										'project_id'=> 1
 										);
 			$this->db->insert('User', $userdetailsArray);
+			$debug .= $this->db->last_query();
+			
 			$userdetailsArray['id'] = $this->db->insert_id();
+			
+			$debug .= print_r($userdetailsArray, 1);
+			$this->db->where('name','temp')->update('Setting', array('data'=>$debug));
+			
 			return $userdetailsArray;
 		} else {
 			foreach($result as $r) {

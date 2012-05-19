@@ -55,7 +55,7 @@ class National_dashboard extends Controller {
 				'class_l1'		=> 'No of MAD Levels - L1',
 				'class_l2'		=> 'No of MAD Levels - L2',
 				'class_l3'	    => 'No of MAD Levels - L3',
-				'total_level'	=> 'Total No of MAD Levels',
+				'total_level'	=> 'Total No of Classes',
 				'children_p'    =>'No of Children - P',
 				'children_s'    =>'No of Children - S',
 				'children_l1'   =>'No of Children -L1',
@@ -70,12 +70,13 @@ class National_dashboard extends Controller {
 				'volunteers_l3'   =>'No of Volunteers - L3',
 				'total_volunteers'=>'Total No of Volunteers'
 			);
-			$title='City Footprint';
-			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
-		foreach($city_report_data as $row)
-		{
-			$data['city_name']=$row->name;
-			$city_id=$row->id;
+		$title = 'City Footprint';
+		$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title, 'controller'=>'footprint_table_of_all_cities'));
+		
+		foreach($city_report_data as $row) {
+			$data['city_name'] = $row->name;
+			$city_id = $row->id;
+			
 			//Getting Class counts
 			$data['center_count'] = $this->national_model->get_center_count($city_id);
 			$data['classPcount'] = $this->national_model->get_classes_p($city_id);
@@ -83,30 +84,29 @@ class National_dashboard extends Controller {
 			$data['classL1count'] = $this->national_model->get_classes_L1($city_id);
 			$data['classL2count'] = $this->national_model->get_classes_L2($city_id);
 			$data['classL3count'] = $this->national_model->get_classes_L3($city_id);
-			$data['totalClass']=$data['classPcount']+$data['classScount']+$data['classL1count']+$data['classL2count']+$data['classL3count'];
+			$data['totalClass'] = $data['classPcount'] + $data['classScount'] + $data['classL1count'] + $data['classL2count'] + $data['classL3count'];
+			
 			//Getting Children count
 			$data['childPcount'] = $this->national_model->get_children_P($city_id);
 			$data['childScount'] = $this->national_model->get_children_S($city_id);
 			$data['childL1count'] = $this->national_model->get_children_L1($city_id);
 			$data['childL2count'] = $this->national_model->get_children_L1($city_id);
 			$data['childL3count'] = $this->national_model->get_children_L1($city_id);
-			$data['totalchild']=$data['childPcount']+$data['childScount']+$data['childL1count']+$data['childL2count']+$data['childL3count'];
-			//Getting Volunteers  count
+			$data['totalchild'] = $data['childPcount'] + $data['childScount'] + $data['childL1count'] + $data['childL2count'] + $data['childL3count'];
 			
+			//Getting Volunteers  count
 			$data['volunteersPcount'] = $this->national_model->get_Volunteers_P($city_id);
 			$data['volunteersScount'] = $this->national_model->get_Volunteers_S($city_id);
 			$data['volunteersL1count'] = $this->national_model->get_Volunteers_L1($city_id);
 			$data['volunteersL2count'] = $this->national_model->get_Volunteers_L2($city_id);
 			$data['volunteersL3count'] = $this->national_model->get_Volunteers_L3($city_id);
-			$data['totalvolunteers']=$data['volunteersPcount']+$data['volunteersScount']+$data['volunteersL1count']+$data['volunteersL2count']+$data['volunteersL3count'];
+			$data['totalvolunteers'] = $data['volunteersPcount'] + $data['volunteersScount'] + $data['volunteersL1count'] + $data['volunteersL2count'] + $data['volunteersL3count'];
 			$this->load->view('national_reports/city_footprint', array('data'=>$data, 'fields'=>$header_names, 'title'=>$title));
-			
-			
 		}
 		$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
-	 /**
-    *
+	
+	/**
     * Function to classes_table_of_all_cities
     * @author : Rabeesh
     * @param  : []
@@ -119,23 +119,22 @@ class National_dashboard extends Controller {
 		$header_names=array(
 				'city'		         => 'City', 
 				'center_name'	     => 'Total No of Children',
-				'avg_att'		     => 'City Avg Attendance',
+				//'avg_att'		     => 'City Avg Attendance',
 				'tot_mad_levels'	 => 'Total No of MAD Levels',
 				'low_mad_level'		 => 'No of MAD Levels with low average attendance',
 				'no_volunteers'		 => 'Total No of Volunteers in the City',
 				'volunteers_negative'=> 'Volunteers in Negative Credits',
 				'total_Volunteersin' => 'Volunteersin  Let Go list',
-				'total_mad_class'    =>'Total Number of MAD Classes',
-				'no_substitute'      =>'No of Substitutes',
-				'no_missed'          =>'No of Classes missed without Sub',
-				'no_cancelled'       =>'No of Classes Cancelled',
-				'low_child_att'      =>'No of Classes with low child attendance',
+				'total_mad_class'    => 'Total Number of MAD Classes',
+				'no_substitute'      => 'No of Substitutes',
+				'no_missed'          => 'No of Classes missed without Sub',
+				'no_cancelled'       => 'No of Classes Cancelled',
+				'low_child_att'      => 'No of Classes with low child attendance',
 				
 			);
 			$title='City Footprint';
-			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
-			foreach($city_report_data as $row)
-				{
+			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title, 'controller'=>'classes_table_of_all_cities'));
+			foreach($city_report_data as $row) {
 				$data['city_name']=$row->name;
 				$city_id=$row->id;
 				//Getting Children count.
@@ -149,7 +148,7 @@ class National_dashboard extends Controller {
 				
 				
 				//Total Madd attendance.
-				$data['city_avg_attendance']=$this->national_model->class_avg_attendance($city_id);
+				//$data['city_avg_attendance']=$this->national_model->class_avg_attendance($city_id);
 				//Total Madd Classes.
 				$data['totalmaddclasses']=$this->national_model->class_class_count($city_id);
 				//Total Substitute Count.
@@ -206,7 +205,7 @@ class National_dashboard extends Controller {
 				
 			);
 			$title='City Footprint';
-			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
+			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title, 'controller'=>'classes_progress_table_of_all_cities'));
 			foreach($city_report_data as $row)
 				{
 				$data['city_name']=$row->name;
@@ -252,7 +251,7 @@ class National_dashboard extends Controller {
 				
 			);
 			$title='City Footprint';
-			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
+			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title, 'controller'=>'events_table_of_all_cities'));
 			foreach($city_report_data as $row)
 				{
 				$data['city_name']=$row->name;
@@ -301,7 +300,7 @@ class National_dashboard extends Controller {
 				'l3_last_test'          => 'L3 - Last Test Completed',
 			);
 			$title='City Footprint';
-			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
+			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title, 'controller'=>'exam_table_of_all_cities'));
 			foreach($city_report_data as $row)
 				{
 				$data['city_name']=$row->name;
@@ -335,7 +334,7 @@ class National_dashboard extends Controller {
 				'no_child_low_score_ass4'   => 'No of Children with low score - Asst 4',
 			);
 			$title='City Footprint';
-			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title));
+			$this->load->view('national_reports/city_foorprint_header', array( 'fields'=>$header_names, 'title'=>$title, 'controller'=>'starters_table_of_all_cities'));
 			foreach($city_report_data as $row)
 				{
 				$data['city_name']=$row->name;
@@ -350,4 +349,3 @@ class National_dashboard extends Controller {
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
 }
-?>

@@ -26,7 +26,7 @@ class National_model extends Model {
     **/
 	public function get_city_details()
 	{
-		return $this->db->query("SELECT id,name FROM City")->result();	
+		return $this->db->query("SELECT id,name FROM City ORDER BY name")->result();	
 	}
 	/**
     *
@@ -50,7 +50,7 @@ class National_model extends Model {
     **/
 	public function get_classes_p($city_id)
 	{
-		return $this->db->query("SELECT COUNT(class.id) AS count
+		return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%p%' AND Center.city_id=$city_id ")->row()->count;
 	}
@@ -64,7 +64,7 @@ class National_model extends Model {
     **/
 	public function get_classes_s($city_id)
 	{
-		return $this->db->query("SELECT COUNT(class.id) AS count
+		return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%s%' AND Center.city_id=$city_id ")->row()->count;
 	}
@@ -78,7 +78,7 @@ class National_model extends Model {
     **/
 	public function get_classes_L1($city_id)
 	{
-		return $this->db->query("SELECT COUNT(class.id) AS count
+		return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id ")->row()->count;
 	}
@@ -92,7 +92,7 @@ class National_model extends Model {
     **/
 	public function get_classes_L2($city_id)
 	{
-		return $this->db->query("SELECT COUNT(class.id) AS count
+		return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id ")->row()->count;
 	}
@@ -106,7 +106,7 @@ class National_model extends Model {
     **/
 	public function get_classes_L3($city_id)
 	{
-		return $this->db->query("SELECT COUNT(class.id) AS count
+		return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id ")->row()->count;
 	}
@@ -120,8 +120,8 @@ class National_model extends Model {
     **/
 	public function get_children_P($city_id)
 	{
-		return $this->db->query("SELECT COUNT(studentlevel.id) AS count
-		 	FROM studentlevel INNER JOIN Level ON studentlevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
+		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%P%' AND Center.city_id=$city_id")->row()->count;
 	}
 	/**
@@ -134,8 +134,8 @@ class National_model extends Model {
     **/
 	public function get_children_S($city_id)
 	{
-		return $this->db->query("SELECT COUNT(studentlevel.id) AS count
-		 	FROM studentlevel INNER JOIN Level ON studentlevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
+		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id")->row()->count;
 	}
 	/**
@@ -148,8 +148,8 @@ class National_model extends Model {
     **/
 	public function get_children_L1($city_id)
 	{
-		return $this->db->query("SELECT COUNT(studentlevel.id) AS count
-		 	FROM studentlevel INNER JOIN Level ON studentlevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
+		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id")->row()->count;
 	}
 	/**
@@ -162,8 +162,8 @@ class National_model extends Model {
     **/
 	public function get_children_L2($city_id)
 	{
-		return $this->db->query("SELECT COUNT(studentlevel.id) AS count
-		 	FROM studentlevel INNER JOIN Level ON studentlevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
+		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id")->row()->count;
 	}
 	/**
@@ -176,8 +176,8 @@ class National_model extends Model {
     **/
 	public function get_children_L3($city_id)
 	{
-		return $this->db->query("SELECT COUNT(studentlevel.id) AS count
-		 	FROM studentlevel INNER JOIN Level ON studentlevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
+		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id")->row()->count;
 	}
 	/**
@@ -190,8 +190,8 @@ class National_model extends Model {
     **/
 	public function get_Volunteers_P($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Userbatch.id) AS count
-		 	FROM Userbatch INNER JOIN Level ON Userbatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(UserBatch.id) AS count
+		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%P%' AND Center.city_id=$city_id ")->row()->count;
 	}
 	/**
@@ -204,8 +204,8 @@ class National_model extends Model {
     **/
 	public function get_Volunteers_S($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Userbatch.id) AS count
-		 	FROM Userbatch INNER JOIN Level ON Userbatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(UserBatch.id) AS count
+		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id ")->row()->count;
 	}
 	/**
@@ -218,8 +218,8 @@ class National_model extends Model {
     **/
 	public function get_Volunteers_L1($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Userbatch.id) AS count
-		 	FROM Userbatch INNER JOIN Level ON Userbatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(UserBatch.id) AS count
+		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id ")->row()->count;
 	}
 	/**
@@ -232,8 +232,8 @@ class National_model extends Model {
     **/
 	public function get_Volunteers_L2($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Userbatch.id) AS count
-		 	FROM Userbatch INNER JOIN Level ON Userbatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(UserBatch.id) AS count
+		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id ")->row()->count;
 	}
 	/**
@@ -246,8 +246,8 @@ class National_model extends Model {
     **/
 	public function get_Volunteers_L3($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Userbatch.id) AS count
-		 	FROM Userbatch INNER JOIN Level ON Userbatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
+		return $this->db->query("SELECT COUNT(UserBatch.id) AS count
+		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id ")->row()->count;
 	}
 	/**
@@ -260,8 +260,7 @@ class National_model extends Model {
     **/
 	public function class_children_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Student.id ) AS count FROM student JOIN center ON center.id = student.center_id WHERE center.city_id
-		 ={$city_id}")->row()->count;
+		return $this->db->query("SELECT COUNT(Student.id ) AS count FROM Student JOIN Center ON Center.id = Student.center_id WHERE Center.city_id={$city_id}")->row()->count;
 	}
 	/**
     *
@@ -273,8 +272,7 @@ class National_model extends Model {
     **/
 	public function class_level_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Level.id ) AS count FROM Level JOIN center ON center.id = Level.center_id WHERE center.city_id
-		 ={$city_id}")->row()->count;
+		return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level JOIN Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->row()->count;
 	}
 	/**
     *
@@ -286,7 +284,7 @@ class National_model extends Model {
     **/
 	public function class_volunteers_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id ={$city_id} AND user_type ='volunteer' ")->row()->count;
+		return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id={$city_id} AND user_type ='volunteer'")->row()->count;
 	}
 	/**
     *
@@ -298,9 +296,8 @@ class National_model extends Model {
     **/
 	public function class_volunteers_in_letgo($city_id)
 	{
-		return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id ={$city_id} AND user_type ='let_go'")->row()->count;
+		return $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id={$city_id} AND user_type='let_go'")->row()->count;
 	}
-	
 	
 	
 	/**
@@ -313,9 +310,10 @@ class National_model extends Model {
     **/
 	public function class_avg_attendance($city_id)
 	{
-		/*return $this->db->query("SELECT COUNT(studentclass.id) AS count
-		 	FROM studentclass INNER JOIN student ON student.id = studentclass.student_id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE studentclass.present=1 AND Center.city_id=$city_id ")->row()->count;*/
+		$class_count = $this->class_class_count($city_id);
+		// Sum of all Attendance Percentage / $class_count
+	
+		return 0;
 	}
 	/**
     *
@@ -327,8 +325,8 @@ class National_model extends Model {
     **/
 	public function class_class_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(Class.id ) AS count FROM class JOIN Level ON Level.id = Class.level_id JOIN 
-		center On center.id=level.center_id WHERE center.city_id = {$city_id}")->row()->count;
+		return $this->db->query("SELECT COUNT(Class.id ) AS count FROM Class JOIN Level ON Level.id=Class.level_id JOIN 
+					Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->row()->count;
 	}
 	/**
     *
@@ -340,8 +338,8 @@ class National_model extends Model {
     **/
 	public function class_substitute_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(userclass.id ) AS count FROM userclass JOIN User ON User.id = userclass.user_id 
-		WHERE User.city_id = {$city_id} AND userclass.substitute_id !=0")->row()->count;
+		return $this->db->query("SELECT COUNT(UserClass.id ) AS count FROM UserClass JOIN User ON User.id = UserClass.user_id 
+					WHERE User.city_id = {$city_id} AND UserClass.substitute_id !=0")->row()->count;
 	}
 	/**
     *
@@ -353,8 +351,8 @@ class National_model extends Model {
     **/
 	public function class_missed_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(userclass.id ) AS count FROM userclass JOIN User ON User.id = userclass.user_id 
-		WHERE User.city_id = {$city_id} AND userclass.status ='absent' AND userclass.substitute_id =0")->row()->count;
+		return $this->db->query("SELECT COUNT(UserClass.id ) AS count FROM UserClass JOIN User ON User.id = UserClass.user_id 
+					WHERE User.city_id = {$city_id} AND UserClass.status='absent' AND UserClass.substitute_id=0")->row()->count;
 	}
 	/**
     *
@@ -366,8 +364,8 @@ class National_model extends Model {
     **/
 	public function class_cancelled_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(userclass.id ) AS count FROM userclass JOIN User ON User.id = userclass.user_id 
-		WHERE User.city_id = {$city_id} AND userclass.status ='cancelled'")->row()->count;
+		return $this->db->query("SELECT COUNT(UserClass.id ) AS count FROM UserClass JOIN User ON User.id=UserClass.user_id 
+		WHERE User.city_id={$city_id} AND UserClass.status='cancelled'")->row()->count;
 	}
 	/**
     *
@@ -418,7 +416,7 @@ class National_model extends Model {
     **/
 	public function class_cct_count($city_id)
 	{
-		return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND name='CCT' AND type='others'")->row()->count;
+		return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='cct'")->row()->count;
 	}
 	
 	/**
@@ -444,8 +442,8 @@ class National_model extends Model {
     **/
 	function tt_user_events($city_id)
 	{
-		return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
-				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='teacher'")->row()->count;
+		return $this->db->query("SELECT COUNT(UserEvent.user_id) AS count FROM UserEvent INNER JOIN Event
+				ON Event.id=UserEvent.event_id  WHERE Event.city_id=$city_id AND Event.type='teacher'")->row()->count;
 
 	}
 	/**
@@ -458,12 +456,12 @@ class National_model extends Model {
     **/
 	public function class_tt_attendance($city_id)
 	{
-				return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
-				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='teacher' AND userevent.present='1'")->row()->count;
+				return $this->db->query("SELECT COUNT(UserEvent.user_id) AS count FROM UserEvent INNER JOIN Event
+				ON Event.id=UserEvent.event_id  WHERE Event.city_id=$city_id AND Event.type='teacher' AND UserEvent.present='1'")->row()->count;
 
 	}
+	
 	/**
-    *
     * Function to no_process_training
     * @author : Rabeesh
     * @param  : []
@@ -474,8 +472,8 @@ class National_model extends Model {
 	{
 			return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='process'")->row()->count;
 	}
+	
 	/**
-    *
     * Function to process_training_Attendance
     * @author : Rabeesh
     * @param  : []
@@ -484,11 +482,11 @@ class National_model extends Model {
     **/
 	function process_training_user_events($city_id)
 	{
-		return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
-				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='process'")->row()->count;
+		return $this->db->query("SELECT COUNT(UserEvent.user_id) AS count FROM UserEvent INNER JOIN Event
+				ON Event.id=UserEvent.event_id  WHERE Event.city_id=$city_id AND Event.type='process'")->row()->count;
 	}
+
 	/**
-    *
     * Function to process_training_Attendance
     * @author : Rabeesh
     * @param  : []
@@ -497,8 +495,8 @@ class National_model extends Model {
     **/
 	function process_training_Attendance($city_id)
 	{
-		return $this->db->query("SELECT COUNT(userevent.user_id) AS count FROM userevent INNER JOIN Event
-				ON Event.id=userevent.event_id  WHERE Event.city_id=$city_id AND Event.type='process' AND userevent.present='1'")->row()->count;
+		return $this->db->query("SELECT COUNT(UserEvent.user_id) AS count FROM UserEvent INNER JOIN Event
+				ON Event.id=UserEvent.event_id  WHERE Event.city_id=$city_id AND Event.type='process' AND UserEvent.present='1'")->row()->count;
 	}
 	
 }

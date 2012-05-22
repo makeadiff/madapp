@@ -3,9 +3,9 @@
 <td><?php echo $data['totalchild']; ?></td>
 <!-- <td></td> -->
 <td><?php echo $data['maddlevels']; ?></td>
-<td></td>
+<td> </td>
 <td><?php echo $data['totalvolunteers']; ?></td>
-<td></td>
+<td><?php echo $data['totalvolunteers_negcredit']; ?></td>
 <td><?php echo $data['letgovolunteers']; ?></td>
 <td><?php echo $data['totalmaddclasses']; ?></td>
 <?php if( $data['class_substitute_count'] > $data['substitute_madd_percentage']){?>

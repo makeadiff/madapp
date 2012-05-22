@@ -498,5 +498,9 @@ class National_model extends Model {
 		return $this->db->query("SELECT COUNT(UserEvent.user_id) AS count FROM UserEvent INNER JOIN Event
 				ON Event.id=UserEvent.event_id  WHERE Event.city_id=$city_id AND Event.type='process' AND UserEvent.present='1'")->row()->count;
 	}
+	function class_volunteers_negative_credit($city_id)
+	{
+		return $this->db->query("SELECT COUNT(id) AS count FROM user  WHERE city_id=$city_id AND credit < 0")->row()->count;
+	}
 	
 }

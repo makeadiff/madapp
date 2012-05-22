@@ -143,6 +143,8 @@ class National_dashboard extends Controller {
 				$data['maddlevels']=$this->national_model->class_level_count($city_id);
 				//Total Volunteers.
 				$data['totalvolunteers']=$this->national_model->class_volunteers_count($city_id);
+				//Volunteers with negative credits
+				$data['totalvolunteers_negcredit']=$this->national_model->class_volunteers_negative_credit($city_id);
 				//Total Let go Volunteers.
 				$data['letgovolunteers']=$this->national_model->class_volunteers_in_letgo($city_id);
 				

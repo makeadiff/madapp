@@ -112,3 +112,32 @@ div.info-box li {
 	line-height:30px;
 	font-weight:bold;
 }
+
+
+/****************** Tabby ************/
+.tabs {
+	width:100%;
+	margin:0;
+	padding:0;
+	border-bottom:1px solid #000;
+	height:19px;
+}
+.tabs li {
+	margin:auto 0 0 5px;
+	border:1px solid #000;
+	list-style: none;
+	float:left;
+}
+.tabs li.tab-selected {
+	border-bottom:1px solid #E2E4E3;
+}
+
+.tabs li a {
+	padding:5px 5px 0 5px;
+	border-bottom:none;
+}
+.tabs li.here {
+	border-bottom: 1px solid #ffc;
+	list-style: none;
+	display: inline;
+}

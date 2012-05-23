@@ -33,7 +33,7 @@ class National_dashboard extends Controller {
     *
     **/
 	public function index() {
-		$this->user_auth->check_permission('report_index');
+		$this->user_auth->check_permission('national_dashboard');
 		$this->load->view('national_reports/index');
 	}
 	 /**
@@ -44,8 +44,9 @@ class National_dashboard extends Controller {
     * @return : type : []
     *
     **/
-	public function footprint_table_of_all_cities()
-	{
+	public function footprint_table_of_all_cities() {
+		$this->user_auth->check_permission('national_dashboard');
+		
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
 				'city'		    => 'City', 
@@ -113,8 +114,9 @@ class National_dashboard extends Controller {
     * @return : type : []
     *
     **/
-	function classes_table_of_all_cities()
-	{
+	function classes_table_of_all_cities() {
+		$this->user_auth->check_permission('national_dashboard');
+		
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
 				'city'		         => 'City', 
@@ -178,8 +180,9 @@ class National_dashboard extends Controller {
     * @return : type : []
     *
     **/
-	function classes_progress_table_of_all_cities()
-	{
+	function classes_progress_table_of_all_cities() {
+		$this->user_auth->check_permission('national_dashboard');
+		
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
 				'city'		            => 'City', 
@@ -225,16 +228,16 @@ class National_dashboard extends Controller {
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
-	 /**
-    *
+	
+	/**
     * Function to events_table_of_all_cities
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
-    *
     **/
-	function events_table_of_all_cities()
-	{
+	function events_table_of_all_cities() {
+		$this->user_auth->check_permission('national_dashboard');
+		
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
 				'city'		             => 'City', 
@@ -292,6 +295,8 @@ class National_dashboard extends Controller {
     **/
 	function exam_table_of_all_cities()
 	{
+		$this->user_auth->check_permission('national_dashboard');
+		
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
 				'city'		            => 'City', 
@@ -317,6 +322,8 @@ class National_dashboard extends Controller {
 	}
 	function starters_table_of_all_cities()
 	{
+		$this->user_auth->check_permission('national_dashboard');
+		
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
 				'city'		                => 'City', 

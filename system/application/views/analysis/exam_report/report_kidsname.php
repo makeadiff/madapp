@@ -1,1 +1,3 @@
- <td><?php echo $kidsname;?></td>
+<tr>
+<td><?php echo $levelname;?></td>
+<td><?php echo $kidsname;?></td>

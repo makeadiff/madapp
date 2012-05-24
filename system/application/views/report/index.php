@@ -10,7 +10,6 @@
 <a href="<?php echo site_url('analysis/class_progress_report') ?>">Class Progress Report</a><br />
 <a href="<?php echo site_url('analysis/kids_attendance') ?>">Attendance Of The Kids</a><br />
 <a href="<?php echo site_url('analysis/event_attendance') ?>">Attendance For Volunteer Events</a><br />
-<a href="<?php echo site_url('analysis/exam_report') ?>">Exam Reports</a><br />
-<a href="<?php echo site_url('analysis/exam_report_test') ?>">Exam Reports Test</a><br />
+<a href="<?php echo site_url('analysis/exam_report_test') ?>">Exam Reports</a><br />
 
 <?php $this->load->view('layout/footer'); ?>

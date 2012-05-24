@@ -1,12 +1,11 @@
-<?php if($attendance > 0){?>
-<td>
-<?php echo $attendance;?>
-</td>
-<?php } else { ?>
-<td>
-</td>
-<?php } ?>
-<td></td>
+<td><?php echo $attendance;?></td>
+<td><?php if(sizeof($marks) > 0) {
+	$sum = 0;
+	foreach($marks as $row) { 
+		$sum += $row->mark;
+	} 
+	echo $sum;
+} else {
+	echo '&nbsp;';
+} ?></td>
 </tr>
-<tr>
-<td style="border-right:none;"></td>

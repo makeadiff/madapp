@@ -266,6 +266,6 @@ class Center_model extends Model
 	
 	function get_exam_centers()
 	{
-		return $this->db->query("SELECT Center.name,Center.id FROM Center JOIN Exam_Event ON Center.id = Exam_Event.center_id")->result();
+		return $this->db->query("SELECT Center.name,Center.id FROM Center JOIN Exam_Event ON Center.id = Exam_Event.center_id WHERE Center.city_id={$this->city_id}")->result();
 	}
 }

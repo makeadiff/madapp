@@ -196,6 +196,7 @@ class Analysis extends Controller {
 	}
 	
 	
+	/// NOT IN USE. DELETE.
 	function exam_report()
 	{
 		$all_centers = $this->center_model->get_exam_centers();
@@ -250,8 +251,9 @@ class Analysis extends Controller {
 				'data'=>$data, 'all_centers'=>$all_centers, 'all_levels'=>$all_levels,'all_kids'=>$all_kids,'attendance'=>$marks));
 			
 	}
-	function exam_report_test()
-	{
+	
+	
+	function exam_report_test() {
 		$all_centers = $this->center_model->get_exam_centers();
 		$data = array();
 		$datas = array();
@@ -267,33 +269,29 @@ class Analysis extends Controller {
 			$this->load->view('analysis/exam_report/report_center',$data);
 			
 			$all_levels= $this->level_model->get_only_levels_in_center($center->id);
-			foreach($all_levels as $level){
+			foreach($all_levels as $level) {
 				$data['levelname']=$level->name;
-				$this->load->view('analysis/exam_report/report_level',$data);
 				$all_kids = $this->level_model->get_all_kidsname_in_level($level->id);
-				//print_r($all_kids);
+				
 				foreach($all_kids as $kids){
-					$data['kidsname']=$kids->name;
+					$data['kidsname'] = $kids->name;
 					$this->load->view('analysis/exam_report/report_kidsname',$data);
-					foreach($data['all_exams'] as $exam)
-					{
-					$data['attendance']= $this->class_model->get__student_attendence($kids->id);
-					
-					$data['marks']= $this->class_model->get__student_marks ($exam->id,$kids->id);
+					foreach($data['all_exams'] as $exam) {
+						$data['attendance']= $this->class_model->get__student_attendence($kids->id);
+						
+						$data['marks']= $this->class_model->get__student_marks ($exam->id,$kids->id);
 						$this->load->view('analysis/exam_report/report_marks',$data);
-					
 					}
 					
 					$this->load->view('analysis/exam_report/report_close_tr',$data);
+					$data['levelname'] = '&nbsp;';
 				}
-				$this->load->view('analysis/exam_report/report_total');
 			}
 			
-			}
+			$this->load->view('analysis/exam_report/report_center_footer');
+		}
 			
-			$this->load->view('analysis/exam_report/report_footer');
-			
-		
+		$this->load->view('analysis/exam_report/report_footer');
 		
 	}
 }

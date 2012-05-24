@@ -33,7 +33,7 @@ class Report_model extends Model {
     			AND UserClass.substitute_id=0 AND UserClass.status='absent'")->result();
     }
     
-    function get_volunteer_requirements($city_id) {
+    function get_volunteer_requirements($city_id=0) {
 		if(!$city_id) $city_id = $this->city_id;
     	return $this->db->query("SELECT Center.name, SUM(requirement) AS requirement
     		FROM UserBatch 
@@ -50,6 +50,7 @@ class Report_model extends Model {
 					INNER JOIN Task ON AdminCredit.task_id=Task.id
 					INNER JOIN UserGroup ON UserGroup.user_id=User.id
 			WHERE UserGroup.group_id=14
+			AND User.user_type='volunteer'
 			AND User.city_id={$this->city_id} GROUP BY AdminCredit.user_id")->result();
 		
 		$months = get_month_list();

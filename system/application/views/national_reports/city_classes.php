@@ -22,6 +22,6 @@
 <?php } else { ?>
 <td><?php  echo $data['class_cancelled_count']; ?></td>
 <?php } ?>
-<td></td>
+<td><?php echo $data['low_child_attendance']; ?></td>
 
 </tr>

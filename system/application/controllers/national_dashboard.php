@@ -10,6 +10,7 @@
  */
 class National_dashboard extends Controller {
 	private $message;
+        
 	
 	function National_dashboard() {
 		parent::Controller();
@@ -117,6 +118,7 @@ class National_dashboard extends Controller {
 	function classes_table_of_all_cities() {
 		$this->user_auth->check_permission('national_dashboard');
 		
+             
 		$city_report_data = $this->national_model->get_city_details();
 		$header_names=array(
 				'city'		         => 'City', 
@@ -167,11 +169,32 @@ class National_dashboard extends Controller {
 				$data['class_cancelled_count']=$this->national_model->class_cancelled_count($city_id);
 				//finding 25% of Total Madd Classes.
 				$data['cancelled_madd_percentage']=($data['totalmaddclasses'] * 25)/100;
+                                
+                                //No of Classes with low child attendance.
+				$data['low_child_attendance']=$this->getCount_number($city_id);
 				
 				$this->load->view('national_reports/city_classes', array('data'=>$data, 'fields'=>$header_names, 'title'=>$title));
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
+        function getCount_number($city_id)
+        {
+            $lowchild=80;
+            $class_count=0;
+           $classes= $this->national_model->class_getClasses($city_id);
+           foreach($classes as $row)
+           {
+             $total_student_count = $this->national_model->class_getfull_students($row->id);
+             $eightypercentage=($total_student_count * $lowchild)/100;
+             $total_student_count = $this->national_model->class_getpresent_students($row->id);
+             if($eightypercentage > $total_student_count)
+             {
+               $class_count ++; 
+             }
+             
+           }
+           return $class_count;
+        }
 	 /**
     *
     * Function to classes_progress_table_of_all_cities
@@ -313,13 +336,55 @@ class National_dashboard extends Controller {
 				$data['city_name']=$row->name;
 				$city_id=$row->id;
 				//Total Voluteers.
-				$data['totalvolunteers']=$this->national_model->class_volunteers_count($city_id);
-			
-				
+				//$data['totalvolunteers']=$this->national_model->class_volunteers_count($city_id);
+                        //P - Last Test Completed
+                                $p_lasttest=$this->national_model->last_test_p($city_id);                               
+                               if(sizeof($p_lasttest )> 0) {
+				foreach($p_lasttest as $rows)
+                                {
+                                 $data['p_lasttest']=$rows->exam_on;   
+                                }}else{$data['p_lasttest']='';  }
+                       //S - Last Test Completed
+                                $s_lasttest=$this->national_model->last_test_s($city_id);
+                                 if(sizeof($s_lasttest )> 0) {
+				foreach($s_lasttest as $rows)
+                                {
+                                 $data['s_lasttest']=$rows->exam_on;   
+                                }}else{$data['s_lasttest']='';  }
+                       //L1 - Last Test Completed
+                                $l1_lasttest=$this->national_model->last_test_l1($city_id);
+                                 if(sizeof($l1_lasttest )> 0) {
+				foreach($l1_lasttest as $rows)
+                                {
+                                 $data['l1_lasttest']=$rows->exam_on;   
+                                }}else{$data['l1_lasttest']='';  }
+                       //L2 - Last Test Completed
+                                $l2_lasttest=$this->national_model->last_test_l2($city_id);
+                                 if(sizeof($l2_lasttest )> 0) {
+				foreach($l2_lasttest as $rows)
+                                {
+                                 $data['l2_lasttest']=$rows->exam_on;   
+                                }}else{$data['l2_lasttest']='';  }
+                      //L3 - Last Test Completed
+                                $l3_lasttest=$this->national_model->last_test_l3($city_id);
+                                 if(sizeof($l3_lasttest )> 0) {
+				foreach($l3_lasttest as $rows)
+                                {
+                                 $data['l3_lasttest']=$rows->exam_on;   
+                                }}else{$data['l3_lasttest']='';  }
+                                
 				$this->load->view('national_reports/city_exams', array('data'=>$data, 'fields'=>$header_names, 'title'=>$title));
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
+         /**
+    *
+    * Function to starters_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function starters_table_of_all_cities()
 	{
 		$this->user_auth->check_permission('national_dashboard');

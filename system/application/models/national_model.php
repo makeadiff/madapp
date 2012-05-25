@@ -82,7 +82,7 @@ class National_model extends Model {
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
 			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id ")->row()->count;
 	}
-	/**
+    /**
     *
     * Function to get_classes_L2
     * @author : Rabeesh
@@ -486,7 +486,7 @@ class National_model extends Model {
 				ON Event.id=UserEvent.event_id  WHERE Event.city_id=$city_id AND Event.type='process'")->row()->count;
 	}
 
-	/**
+    /**
     * Function to process_training_Attendance
     * @author : Rabeesh
     * @param  : []
@@ -498,9 +498,111 @@ class National_model extends Model {
 		return $this->db->query("SELECT COUNT(UserEvent.user_id) AS count FROM UserEvent INNER JOIN Event
 				ON Event.id=UserEvent.event_id  WHERE Event.city_id=$city_id AND Event.type='process' AND UserEvent.present='1'")->row()->count;
 	}
+         /**
+    * Function to class_volunteers_negative_credit
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function class_volunteers_negative_credit($city_id)
 	{
 		return $this->db->query("SELECT COUNT(id) AS count FROM user  WHERE city_id=$city_id AND credit < 0")->row()->count;
 	}
+         /**
+    * Function to class_getClasses
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function class_getClasses($city_id)
+        {
+         return $this->db->query("SELECT Class.id FROM Class JOIN Level ON Level.id=Class.level_id JOIN 
+					Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->result();  
+                                                    
+        }
+         /**
+    * Function to class_getfull_students
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function class_getfull_students($class_id)
+        {
+           return $this->db->query("SELECT COUNT(id) AS count FROM studentclass WHERE class_id={$class_id}")->row()->count;
+        }
+    /**
+    * Function to class_getpresent_students
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function class_getpresent_students($class_id)
+        {
+           return $this->db->query("SELECT COUNT(id) AS count FROM studentclass WHERE class_id={$class_id} AND present='1'")->row()->count;             
+        }
+         /**
+    * Function to last_test_p
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function last_test_p($city_id)
+        {
+          return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
+              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%P%') ORDER BY exam_on DESC ")->result();  
+        }
+      /**
+    * Function to last_test_s
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function last_test_s($city_id)
+        {
+           return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
+              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%S%') ORDER BY exam_on DESC ")->result();    
+        }
+         /**
+    * Function to last_test_l1
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function last_test_l1($city_id)
+        {
+             return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
+              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%L1%') ORDER BY exam_on DESC ")->result();  
+        }
+         /**
+    * Function to last_test_l2
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function last_test_l2($city_id)
+        {
+             return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
+              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%L2%') ORDER BY exam_on DESC ")->result();  
+        }
+         /**
+    * Function to last_test_l3
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
+        function last_test_l3($city_id)
+        {
+             return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
+              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%L3%') ORDER BY exam_on DESC ")->result();  
+        }
 	
 }

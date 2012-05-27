@@ -186,7 +186,7 @@ class Analysis extends Controller {
 		$data['student_count']= count($this->kids_model->getkids_details()->result());
 		$data['teacher_count']= count($this->user_model->search_users(array('user_group'=>9))); // 9 = Teacher
 		
-		$data['months'] = get_month_list();
+		$data['months'] = array('2011-04', '2011-05', '2011-06', '2011-07', '2011-08', '2011-09', '2011-10', '2011-11', '2011-12', '2012-01', '2012-02', '2012-03', ); get_month_list();
 		foreach($data['months'] as $year_month) {
 			$data['review'][$year_month] = idNameFormat($this->review_model->get_monthly_review($year_month, $this->session->userdata('city_id')), array('name'));
 		}

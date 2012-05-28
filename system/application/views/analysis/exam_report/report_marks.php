@@ -1,5 +1,5 @@
 <td>
-<?php 
+<?php
 if(sizeof($marks) > 0) {
 	foreach($marks as $row) { 
 		echo $row->name.':'.$row->mark . '<br />';

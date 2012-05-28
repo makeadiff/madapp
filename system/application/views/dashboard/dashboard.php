@@ -110,7 +110,7 @@ foreach($upcomming_classes as $class) { ?>
 	<?php } ?>
     
     <?php if($this->user_auth->get_permission('national_dashboard')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('national_dashboard/index') ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('national_dashboard/footprint_table_of_all_cities') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>National</span></a></div>
 	<?php } ?>
 	

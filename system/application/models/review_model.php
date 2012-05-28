@@ -20,7 +20,7 @@ class Review_model extends Model {
 		$data = array(
 			'name'		=> $name,
 			'value'		=> $value,
-			'review_on'	=> $date,
+			'review_on'	=> $date."-01",
 			'flag'		=> $flag,
 			'city_id'	=> $city_id,
 		);

@@ -195,6 +195,15 @@ class Analysis extends Controller {
 		$this->load->view('analysis/monthly_review', $data);
 	}
 	
+	function save_review_data($name, $year_month, $value) {
+		$this->load->model('review_model');
+		
+		$flag = 'green';
+		
+		$this->review_model->save($name, $value, $year_month, $flag, $this->session->userdata('city_id'));
+		echo "Saved";
+	}
+	
 	
 	/// NOT IN USE. DELETE.
 	function exam_report()

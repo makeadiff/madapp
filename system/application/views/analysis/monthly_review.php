@@ -4,6 +4,20 @@ $this->load->view('layout/header', array('title'=>'Monthly Review'));
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/hide_sidebar.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/analysis.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
+<script type="text/javascript">
+function inputData(name, value, month_year, ele) {
+	var title = name.replace(/_/g," ");
+	var input_value = prompt(title, value);
+	if(input_value == undefined) return;
+	ele.innerHTML = input_value;
+	jQuery.ajax({
+				"url": "<?php echo site_url('analysis/save_review_data'); ?>/" + name + '/' + month_year + '/' + input_value,
+				"success": function(data) {
+					alert(data);
+				}
+			});
+}
+</script>
 
 Number of Centers: <?php echo $center_count ?><br />
 Number of Children: <?php echo $student_count ?><br />
@@ -77,41 +91,26 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <tr><td class="vertical-name" colspan="14">PR</td></tr>
 
 <tr><td></td><td class="name">Months Since Last Ping</td>
-<?php showCells('months_since_ping', $review, $months); ?>
+<?php showCells('months_since_ping', $review, $months, true); ?>
 </tr>
 
 <tr><td></td><td class="name">Blog Post Count</td>
-<?php showCells('blog_post_count', $review, $months); ?>
+<?php showCells('blog_post_count', $review, $months, true); ?>
 </tr>
 
 <tr><td></td><td class="name">Months Since Last PR Initiative</td>
-<?php showCells('months_since_pr_initiative', $review, $months); ?>
-</tr>
-
-
-<tr><td class="vertical-name" colspan="14">CR</td></tr>
-
-<tr><td></td><td class="name">Monthly Target</td>
-<?php showCells('monthly_target', $review, $months); ?>
-</tr>
-
-<tr><td></td><td class="name">Money Raised</td>
-<?php showCells('money_raised', $review, $months); ?>
-</tr>
-
-<tr><td></td><td class="name">Donor Upate Sent</td>
-<?php showCells('donor_update_sent', $review, $months); ?>
+<?php showCells('months_since_pr_initiative', $review, $months, true); ?>
 </tr>
 
 
 <tr><td class="vertical-name" colspan="14">Finance</td></tr>
 
 <tr><td></td><td class="name">Accounts Updated</td>
-<?php showCells('accounts_updated_status', $review, $months); ?>
+<?php showCells('accounts_updated_status', $review, $months, true); ?>
 </tr>
 
 <tr><td></td><td class="name">Number of Donors Pending Receipt</td>
-<?php showCells('pending_receipt_count', $review, $months); ?>
+<?php showCells('pending_receipt_count', $review, $months, true); ?>
 </tr>
 
 
@@ -131,14 +130,16 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <?php 
 $this->load->view('layout/footer');
 
-function showCells($name, $review, $months) {
+function showCells($name, $review, $months, $input=false) {
 	foreach($months as $month_year) {
 		if(isset($review[$month_year][$name])) {
 			$r = $review[$month_year][$name];
 			if($r->flag == 'red') echo "<td class='bad'>";
 			elseif($r->flag == 'green') echo "<td class='good'>";
 
-			echo $r->value;
+			if($input) echo "<a onclick='inputData(\"$name\",\"{$r->value}\", \"$month_year\", this);'>{$r->value}</a>";
+			else echo $r->value;
+			
 			if(strpos($name, 'percentage')) echo '%';
 			echo "</td>";
 			

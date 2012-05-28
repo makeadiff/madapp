@@ -112,7 +112,7 @@ class Level_model extends Model {
 		
 	}
 	function get_only_levels_in_center($center_id) {
-		return $this->db->query("SELECT Level.id, Level.name FROM Level JOIN 
+		return $this->db->query("SELECT DISTINCT(Level.id), Level.name FROM Level JOIN 
 			Exam_Event ON Level.id = Exam_Event.level_id WHERE Exam_Event.center_id=$center_id")->result();
 		
 	}

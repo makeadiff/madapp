@@ -112,7 +112,6 @@ class Analysis extends Controller {
 				$all_classes = $this->class_model->get_classes_by_level_and_center($level->id);
 				$totalAttendance=0;
 				foreach($all_classes as $class) {
-				
 					$date = date('d M',strtotime($class->class_on));
 					$month = date('m',strtotime($class->class_on));
 					if($month <= 3) $month = $month + 12; // So that january comes after december.
@@ -270,7 +269,6 @@ class Analysis extends Controller {
 		$totalAttendance=array();
 		$this->load->view('analysis/exam_report/report_header');
 		
-		
 		foreach($all_centers as $center) {
 			$data['name']=$center->name;
 			$data['all_exams'] = $this->class_model->get_examname_by_level_and_center($center->id);
@@ -285,13 +283,16 @@ class Analysis extends Controller {
 				foreach($all_kids as $kids){
 					$data['kidsname'] = $kids->name;
 					$this->load->view('analysis/exam_report/report_kidsname',$data);
+					$sum = 0;
 					foreach($data['all_exams'] as $exam) {
 						$data['attendance']= $this->class_model->get__student_attendence($kids->id);
 						
 						$data['marks']= $this->class_model->get__student_marks ($exam->id,$kids->id);
+						foreach($data['marks'] as $m) $sum += $m->mark;
 						$this->load->view('analysis/exam_report/report_marks',$data);
 					}
 					
+					$data['sum'] = $sum;
 					$this->load->view('analysis/exam_report/report_close_tr',$data);
 					$data['levelname'] = '&nbsp;';
 				}

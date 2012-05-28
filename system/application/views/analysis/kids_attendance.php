@@ -41,7 +41,7 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 	$totNumber=0;
 	$ar="";
 	$tets="";
-	foreach($center_info['days_with_classes'] as $date_index => $day) { echo $date_index;
+	foreach($center_info['days_with_classes'] as $date_index => $day) {
 		$totNumber++;
 		if(!isset($center_info['class'][$level_info->id][$date_index])) { 
 			$classdateid = 0;

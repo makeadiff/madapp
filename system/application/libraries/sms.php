@@ -19,7 +19,7 @@ class sms {
 	
 	function send($number, $message) {
 		if(!$number) return;
-		
+		$number_array = array();
 		if(is_array($number)) {
 			$number_array = $number;
 			$number = implode('|', $number);

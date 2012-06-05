@@ -112,6 +112,41 @@ class Common extends Controller {
 		
  		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
 	}
+	
+
+	/// SMS Registerations.
+	function sms_register() {
+		$this->load->library('sms');
+		$this->load->helper('misc_helper');
+		
+		$log = '';
+		
+		$phone = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
+		$time = $_REQUEST['timestamp'];
+		$keyword = strtolower($_REQUEST['keyword']);
+		$content = $_REQUEST['content'];
+		$log .= "From $phone at $time:";
+
+		// Find the user with who sent the SMS - using the phone number.
+		$user = reset($this->users_model->search_users(array('phone'=>$phone,'city_id'=>0)));
+		if($user) {
+			// User exists in the database. Can't add.
+			$this->sms->send($phone, "You are already in the MAD Database. Thanks for your interest.");
+			return;
+		}
+		list($city, $name, $email) = explode(",", $content);
+		
+		// Then sent a thank you sms to that user.
+		$name = short_name($name);
+		$this->sms->send($phone, "Thank you for registering in MAD $name :-)");
+		
+		$log .= " Sent a thank you SMS to $name.";
+		
+		log_message('info', $log);
+		
+ 		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
+	}
+	
 
 	function show() {
 		print "<pre>";

@@ -14,7 +14,7 @@
 <?php
 echo form_hidden('class_id', $class_info['id']);
 echo form_hidden('project_id', 1);
-echo form_submit('action', 'Edit');
+echo form_submit('action', 'Save', 'class="button green"');
 ?>
 </form>
 

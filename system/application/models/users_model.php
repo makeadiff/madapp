@@ -492,7 +492,7 @@ class Users_model extends Model {
 		if($data['status'] !== false) $this->db->where('User.status', $data['status']); // Setting status as 'false' gets you even the deleted users
 		
 		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
-		else $this->db->where('User.project_id', $this->project_id);
+		elseif($this->project_id) $this->db->where('User.project_id', $this->project_id);
 		
 		if(isset($data['city_id']) and $data['city_id'] != 0) $this->db->where('User.city_id', $data['city_id']);
 		else if(!isset($data['city_id'])) $this->db->where('User.city_id', $this->city_id);
@@ -579,6 +579,28 @@ class Users_model extends Model {
 	
 	function user_registration($data)
 	{
+		if(!empty($data['user_id'])) {
+			$user_type = $this->db->query("SELECT user_type FROM User WHERE id=$data[user_id]")->row();
+			if($user_type->user_type != 'applicant') {
+				$this->session->set_flashdata('error', 'Only Applicants can use this form.');
+				return;
+			}
+			$userdetailsArray = array(	'name'		=> $data['name'],
+										'email'		=> $data['email'],
+										'phone'		=> $this->_correct_phone_number($data['phone']),
+										'address'	=> $data['address'],
+										'city_id'	=> $data['city_id'],
+										'job_status'=> $data['job_status'],
+										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
+										'why_mad'	=> $data['why_mad'],
+										'preferred_day'=> $data['preferred_day'],
+										'source'	=> $data['source'],
+										);
+			$this->db->where('id', $data['user_id'])->update('User', $userdetailsArray);
+			$userdetailsArray['id'] = $data['user_id'];
+			return $userdetailsArray;
+		}
+	
 		$email = $data['email'];
 		$debug = "";
 
@@ -609,7 +631,7 @@ class Users_model extends Model {
 			$userdetailsArray['id'] = $this->db->insert_id();
 			
 			$debug .= print_r($userdetailsArray, 1);
-			$this->db->where('name','temp')->update('Setting', array('data'=>$debug));
+			$this->db->where('name','registeration_debug_info')->update('Setting', array('data'=>$debug));
 			
 			return $userdetailsArray;
 		} else {

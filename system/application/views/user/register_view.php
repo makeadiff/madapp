@@ -64,7 +64,9 @@ jQuery(document).ready(function () {
             <div class="content-row-large"><span>City:</span>
             <select class="dropdown" id="city_id" name="city_id" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/7-expansions';">
 				<?php foreach($cities as $id=>$name) { ?>
-				<option value="<?php echo $id ?>"><?php echo $name ?></option>
+				<option value="<?php echo $id ?>" <?php 
+					if(!empty($this->validation->city_id) and $this->validation->city_id == $id) echo 'selected="selected"'; 
+				?>><?php echo $name ?></option>
 				<?php } ?>
 				<option value="0">Other</option>
 			</select>
@@ -107,6 +109,7 @@ jQuery(document).ready(function () {
             <input type="hidden" name="password" value="pass" />
             <input type="hidden" name="center" value="0" />
             <input type="hidden" name="position" value="" />
+            <?php if(!empty($user_id)) { ?><input type="hidden" name="user_id" value="<?php echo $user_id ?>" /><?php } ?>
             
             <div class="content-row-reg" style="margin-top: 30px;">
 				  <input name="button" type="submit" class="reg-button" id="button" value="Register" />

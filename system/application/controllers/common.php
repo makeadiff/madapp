@@ -31,7 +31,7 @@ class Common extends Controller {
     * @param  : []
     * @return : type : []
     **/
-    function register()
+    function register($user_id_encoded='')
     {
 		if(Navigation::isPost()){
 			$data = $_POST;
@@ -63,6 +63,16 @@ class Common extends Controller {
 			}
           }
         else {
+			if($user_id_encoded) {
+				$user_id_text = base64_decode($user_id_encoded);
+				$user_id = reset(explode(":", $user_id_text));
+				
+				$user_data = $this->users_model->get_user($user_id); //:HACK:
+				if($user_data) {
+					$data['user_id'] = $user_id;
+					$this->validation = $user_data;
+				}
+			}
 			$data['cities'] = $this->city_model->get_unique_cities();
 			$this->load->view('user/register_view',$data);
 		}
@@ -118,6 +128,7 @@ class Common extends Controller {
 	function sms_register() {
 		$this->load->library('sms');
 		$this->load->helper('misc_helper');
+		$this->load->model('settings_model');
 		
 		$log = '';
 		
@@ -125,26 +136,95 @@ class Common extends Controller {
 		$time = $_REQUEST['timestamp'];
 		$keyword = strtolower($_REQUEST['keyword']);
 		$content = $_REQUEST['content'];
-		$log .= "From $phone at $time:";
+		$log .= "From $phone at $time:\n";
+		
+		list($full_name, $email, $city) = explode(",", str_replace('IMAD ','', $content));
+		$name = short_name($full_name);
+		$city = strtolower(trim($city));
+		$name = short_name(trim($full_name));
+		$email = trim($email);
+		
+		
+		$log .= "$city:$full_name:$name:$email\n";
 
 		// Find the user with who sent the SMS - using the phone number.
-		$user = reset($this->users_model->search_users(array('phone'=>$phone,'city_id'=>0)));
+		$user = $this->city_model->db->query("SELECT id,name,phone,email FROM User WHERE phone='$phone' OR email='$email'")->row();
 		if($user) {
 			// User exists in the database. Can't add.
-			$this->sms->send($phone, "You are already in the MAD Database. Thanks for your interest.");
-			return;
+			$this->sms->send($phone, "$name, you are already in the MAD Database. Thanks for your interest.");
+			$log .= "User exists in Database.";
+			
+		} else {
+			// Then sent a thank you sms to that user.
+			$this->sms->send($phone, "Dear $name, thank you for registering with Make A Difference. Check your email for more details.");
+			
+			// Find which city the user is from...
+			// First, use some presets...
+			if($city == 'hyd') $city = 'hyderabad';
+			elseif($city == 'blore') $city = 'bangalore';
+			elseif($city == 'mlore') $city = 'mangalore';
+			elseif($city == 'tvm') $city = 'trivandrum';
+			elseif($city == 'calcutta') $city = 'kolkata';
+			elseif($city == 'cmb') $city = 'coimbatore';
+			elseif($city == 'ekm') $city = 'cochin';
+			elseif($city == 'poona') $city = 'pune';
+			
+			// Now find the city with least text distance from the given text
+			$cities = $this->city_model->get_unique_cities();
+			$most_likely = 0;
+			$most_likely_difference = 100;
+			foreach($cities as $city_id=>$city_name) {
+				$difference = levenshtein(strtolower($city_name), $city);
+				if(!$difference) {
+					$most_likely = $city_id;
+					$most_likely_difference = 0;
+					break;
+				}
+				
+				if($most_likely_difference > $difference) {
+					$most_likely_difference = $difference;
+					$most_likely = $city_id;
+				}
+			}
+			if($most_likely_difference > 4) $most_likely = 0;
+			
+			$log .= "Given City : $city. Most likely means: ".$cities[$most_likely]."($most_likely) with $most_likely_difference difference.\n";
+			$log .= "Sent a thank you SMS to $name.";
+			
+			// Add the user to the database.
+			$user_array = array(
+				'name'		=> $full_name,
+				'email'		=> $email,
+				'phone'		=> $phone,
+				'password'	=> 'pass',
+				'city_id'	=> $most_likely,
+				'city_other'=> $city,
+				'project_id'=> 1,
+				'user_type' => 'applicant',
+				'joined_on'	=> date('Y-m-d'),
+			);
+			$this->users_model->db->insert('User',$user_array);
+			$user_id = $this->users_model->db->insert_id();
+			
+			$link = site_url('common/register/'.base64_encode($user_id . ":;-)"));
+			
+			// Send email to the user...
+			$email_body = $this->settings_model->get_setting_value('sms_registration_email');
+			$email_body = str_replace(array('%NAME%', '%LINK%'),array($name, $link), $email_body);
+			
+			$hr_email = $this->ci->settings_model->get_setting_value('hr_email_city_common'); // For diff city, use 'hr_email_city_'.$status['city_id']
+			$this->ci->email->from($hr_email, "Make A Difference");
+			$this->ci->email->to($email);
+			$this->ci->email->subject('Thanks for Registering with Make A Difference');
+			$this->ci->email->message($email_body);
+			$this->ci->email->send();
+			
 		}
-		list($city, $name, $email) = explode(",", $content);
-		
-		// Then sent a thank you sms to that user.
-		$name = short_name($name);
-		$this->sms->send($phone, "Thank you for registering in MAD $name :-)");
-		
-		$log .= " Sent a thank you SMS to $name.";
 		
 		log_message('info', $log);
 		
  		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
+ 		// localhost/Projects/Madapp/CI/trunk/index.php/common/sms_register?msisdn=91974608565&timestamp=1339356546&keyword=IMAD&content=IMAD+Binny+V+A,binnyva@gmail.com,Cochin
 	}
 	
 

@@ -127,8 +127,12 @@ class Common extends Controller {
 	/// SMS Registerations.
 	function sms_register() {
 		$this->load->library('sms');
+		$this->load->library('email');
 		$this->load->helper('misc_helper');
 		$this->load->model('settings_model');
+		$debug = false;
+		
+		if(!$debug) error_reporting(0);
 		
 		$log = '';
 		
@@ -137,6 +141,7 @@ class Common extends Controller {
 		$keyword = strtolower($_REQUEST['keyword']);
 		$content = $_REQUEST['content'];
 		$log .= "From $phone at $time:\n";
+		if($debug) print "From $phone at $time:<br />";
 		
 		list($full_name, $email, $city) = explode(",", str_replace('IMAD ','', $content));
 		$name = short_name($full_name);
@@ -146,17 +151,20 @@ class Common extends Controller {
 		
 		
 		$log .= "$city:$full_name:$name:$email\n";
+		if($debug) print "$city:$full_name:$name:$email<br />";
 
 		// Find the user with who sent the SMS - using the phone number.
-		$user = $this->city_model->db->query("SELECT id,name,phone,email FROM User WHERE phone='$phone' OR email='$email'")->row();
+		$user = $this->city_model->db->query("SELECT id,name,phone,email,city_id,status FROM User WHERE phone='$phone' OR email='$email'")->row();
 		if($user) {
 			// User exists in the database. Can't add.
-			$this->sms->send($phone, "$name, you are already in the MAD Database. Thanks for your interest.");
-			$log .= "User exists in Database.";
+			if(!$debug) $this->sms->send($phone, "$name, you are already in the MAD Database. Thanks for your interest.");
+			$log .= "User exists in Database.\n";
+			$log .= print_r($user, 1);
+			if($debug) print "User Exists...<br />" . print_r($user, 1);
 			
 		} else {
 			// Then sent a thank you sms to that user.
-			$this->sms->send($phone, "Dear $name, thank you for registering with Make A Difference. Check your email for more details.");
+			if(!$debug) $this->sms->send($phone, "Dear $name, thank you for registering with Make A Difference. Check your email for more details.");
 			
 			// Find which city the user is from...
 			// First, use some presets...
@@ -203,28 +211,32 @@ class Common extends Controller {
 				'user_type' => 'applicant',
 				'joined_on'	=> date('Y-m-d'),
 			);
-			$this->users_model->db->insert('User',$user_array);
+			if(!$debug) $this->users_model->db->insert('User',$user_array);
 			$user_id = $this->users_model->db->insert_id();
-			
+			if($debug) print $user_id."<br />";
 			$link = site_url('common/register/'.base64_encode($user_id . ":;-)"));
+			if($debug) print $link."<br />";
 			
 			// Send email to the user...
 			$email_body = $this->settings_model->get_setting_value('sms_registration_email');
 			$email_body = str_replace(array('%NAME%', '%LINK%'),array($name, $link), $email_body);
+			if($debug) print $email_body."<br />";
 			
-			$hr_email = $this->ci->settings_model->get_setting_value('hr_email_city_common'); // For diff city, use 'hr_email_city_'.$status['city_id']
-			$this->ci->email->from($hr_email, "Make A Difference");
-			$this->ci->email->to($email);
-			$this->ci->email->subject('Thanks for Registering with Make A Difference');
-			$this->ci->email->message($email_body);
-			$this->ci->email->send();
+			$hr_email = $this->settings_model->get_setting_value('hr_email_city_common'); // For diff city, use 'hr_email_city_'.$status['city_id']
+			if($debug) print $hr_email."<br />";
+			$this->email->from($hr_email, "Make A Difference");
+			$this->email->to($email);
+			$this->email->subject('Thanks for Registering with Make A Difference');
+			$this->email->message($email_body);
+			$this->email->send();
+			if($debug) echo $this->email->print_debugger();
 			
 		}
 		
 		log_message('info', $log);
 		
  		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
- 		// localhost/Projects/Madapp/CI/trunk/index.php/common/sms_register?msisdn=91974608565&timestamp=1339356546&keyword=IMAD&content=IMAD+Binny+V+A,binnyva@gmail.com,Cochin
+ 		// localhost/Projects/Madapp/CI/trunk/index.php/common/sms_register?msisdn=919746068565&timestamp=1339356546&keyword=IMAD&content=IMAD+Binny+V+A,binnyva@gmail.com,Cochin
 	}
 	
 

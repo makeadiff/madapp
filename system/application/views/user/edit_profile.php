@@ -20,6 +20,12 @@
 <label for="address">Address : </label>
 <textarea id="address" name="address"  rows="5" cols="30"><?php echo $user->address; ?></textarea><br />
 
+<label for="phone">Sex: </label>
+<select id="sex" name="sex">
+		<option value="m" <?php if($user->sex == 'm') echo ' selected="selected"'; ?>>Male</option>
+		<option value="f" <?php if($user->sex == 'f') echo ' selected="selected"'; ?>>Female</option>
+	</select><br />
+
 <?php if($user->photo) { ?>
 <label for="date">Photo</label>
 <img src="<?php echo base_url().'uploads/users/thumbnails/'.$user->photo; ?>" style="float:left;" /><br />

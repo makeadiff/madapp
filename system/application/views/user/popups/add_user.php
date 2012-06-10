@@ -97,6 +97,15 @@ jQuery(document).ready(function () {
 </li>
 
 <li>
+	<label for="sex">Sex : </label>
+	<select id="sex" name="sex">
+		<option value="m">Male</option>
+		<option value="f">Female</option>
+	</select>
+</li>
+	
+
+<li>
 	<label for="txtName">Joined On : </label>
 	<input id="joined_on" name="joined_on" class="date-pick" type="text" value=""  /><br />	 
 </li>

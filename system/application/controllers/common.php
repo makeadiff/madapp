@@ -228,9 +228,9 @@ class Common extends Controller {
 	}
 	
 
-	function show() {
+	function show($setting='temp') {
 		print "<pre>";
-		print $this->db->query("SELECT data FROM Setting WHERE name='temp'")->row()->data;
+		print $this->db->query("SELECT data FROM Setting WHERE name='$setting'")->row()->data;
 		print "</pre>";
 	}
 	

@@ -14,6 +14,7 @@ $user_type	= $user->user_type;
 $joined_on	= $user->joined_on;
 $left_on	= $user->left_on;
 $photo		= $user->photo;
+$sex		= $user->sex;
 
 
 ?>
@@ -70,6 +71,15 @@ jQuery(document).ready(function () {
 	<label for="address">Address : </label>
 	<textarea id="address" name="address"  rows="5" cols="30"><?php echo $address; ?></textarea> 
 </li>
+
+<li>
+	<label for="sex">Sex : </label>
+	<select id="sex" name="sex">
+		<option value="m" <?php if($sex == 'm') echo ' selected="selected"'; ?>>Male</option>
+		<option value="f" <?php if($sex == 'f') echo ' selected="selected"'; ?>>Female</option>
+	</select>
+</li>
+	
 <?php 
 $this_city_id = $this->session->userdata('city_id');
 if($this->user_auth->get_permission('change_city')) { ?>

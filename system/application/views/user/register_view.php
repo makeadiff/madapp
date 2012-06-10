@@ -59,6 +59,13 @@ jQuery(document).ready(function () {
             <div class="content-row-large"><span>Address:</span>
             <textarea class="textarea" name="address" id="address" rows="5" cols="40"></textarea>
             </div>
+            
+            <div class="content-row-large"><span>Sex:</span>
+            <select class="dropdown" id="sex" name="sex">
+				<option value="m">Male</option>
+				<option value="f">Female</option>
+			</select>
+            </div>
 
 				 
             <div class="content-row-large"><span>City:</span>

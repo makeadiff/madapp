@@ -253,6 +253,7 @@ class Users_model extends Model {
 				'phone'		=> $this->_correct_phone_number($data['phone']),
 				'password'	=> $data['password'],
 				'address'	=> $data['address'],
+				'sex'		=> $data['sex'],
 				'city_id'	=> $data['city'],
 				'project_id'=> $data['project'],
 				'user_type' => $data['type']
@@ -361,6 +362,7 @@ class Users_model extends Model {
 			'email' => $data['email'],
 			'phone' => $this->_correct_phone_number($data['phone']),
 			'address'=>$data['address'],
+			'sex'	=> $data['sex'],
 		);
 		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
 		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
@@ -589,6 +591,7 @@ class Users_model extends Model {
 										'email'		=> $data['email'],
 										'phone'		=> $this->_correct_phone_number($data['phone']),
 										'address'	=> $data['address'],
+										'sex'		=> $data['sex'],
 										'city_id'	=> $data['city_id'],
 										'job_status'=> $data['job_status'],
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
@@ -613,6 +616,7 @@ class Users_model extends Model {
 										'email'		=> $data['email'],
 										'phone'		=> $this->_correct_phone_number($data['phone']),
 										'address'	=> $data['address'],
+										'sex'		=> $data['sex'],
 										'city_id'	=> $data['city_id'],
 										'job_status'=> $data['job_status'],
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),

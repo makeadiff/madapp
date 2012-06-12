@@ -42,7 +42,7 @@ if($to_date) {
 
 <form action="<?php echo site_url('classes/batch_view_save'); ?>" method="post">
 <table class="data-table info-box-table">
-<tr><th>Level</th><th>Unit Taught</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendance</th><th>Cancellation</th></tr>
+<tr><th>Level</th><th>Unit Taught</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendance</th><th>Zero Hour</th><th>Cancellation</th></tr>
 
 <?php
 $row_count = 0;
@@ -82,6 +82,7 @@ if($class['teachers'][$teacher_index]['substitute_id'] and !isset($all_user_name
 ?>
 </div></td>
 <td><?php echo form_dropdown('status['.$class['id'].']['.$class['teachers'][$teacher_index]['id'].']', $statuses, $class['teachers'][$teacher_index]['status'], 'style="width:100px;"'); ?></td>
+<td><input type="checkbox" name="zero_hour_attendance[<?php echo $class['id'].']['.$class['teachers'][$teacher_index]['id']; ?>]" value="1" <?php if($class['teachers'][$teacher_index]['zero_hour_attendance'] != '0') echo 'checked="checked"'; ?>/></td>
 
 <?php if($teacher_index == 0) { ?><td <?php echo $rowspan ?>>
 <?php if($class['teachers'][0]['status'] == 'cancelled') { ?><a class="uncancel" href="<?php echo site_url('classes/uncancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Undo Class Cancellation<a/>

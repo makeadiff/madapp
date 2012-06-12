@@ -106,7 +106,8 @@ class Classes extends Controller {
 						'user_type'	=>isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
 						'substitute_id'=>$row->substitute_id,
 						'substitute'=> ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
-											$all_users[$row->substitute_id]->name : 'None'
+											$all_users[$row->substitute_id]->name : 'None',
+						'zero_hour_attendance'	=> $row->zero_hour_attendance
 					)),
 				);
 			} else { // We got another class with same id. Which means more than one teachers in the same class. Add the teacher to the class.
@@ -117,7 +118,8 @@ class Classes extends Controller {
 					'user_type'	=>isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
 					'substitute_id'=>$row->substitute_id,
 					'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
-											$all_users[$row->substitute_id]->name : 'None'
+											$all_users[$row->substitute_id]->name : 'None',
+					'zero_hour_attendance'	=> $row->zero_hour_attendance
 				);
 			}
 		}
@@ -132,6 +134,7 @@ class Classes extends Controller {
 		$lessons = $this->input->post('lesson_id');
 		$substitutes = $this->input->post('substitute_id');
 		$status = $this->input->post('status');
+		$zero_hour_attendance = $this->input->post('zero_hour_attendance');
 		
 		$this->load->helper('misc_helper');
 		foreach($lessons as $class_id => $lesson_id) {
@@ -142,6 +145,7 @@ class Classes extends Controller {
 					'class_id'	=> $class_id,
 					'substitute_id'=>$substitute_id,
 					'status'	=> $status[$class_id][$teacher_id],
+					'zero_hour_attendance'	=> isset($zero_hour_attendance[$class_id][$teacher_id]) ? '1' : '0',
 				));
 			}
 		}

@@ -99,6 +99,7 @@ class User extends Controller  {
 		$data['password'] = $_POST['spassword'];
 		$data['phone'] = $_POST['phone'];
 		$data['address'] = $_POST['address'];
+		$data['sex'] = $_POST['sex'];
 		$data['joined_on'] = $_REQUEST['joined_on'];
 		$data['left_on'] = $_REQUEST['left_on'];
 		$data['type'] = $_POST['type'];

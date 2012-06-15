@@ -2,10 +2,11 @@
 
 <form action="<?php echo site_url('user/search_email') ?>" method="post">
 
-<label>Email</label><?php echo form_input('email', $email); ?><?php echo form_submit('action', "Search"); ?>
+<label>Email</label><?php echo form_input('email', $email); ?><br />
+<label>Phone</label><?php echo form_input('phone', $phone); ?><br /><?php echo form_submit('action', "Search"); ?>
 </form>
 
-<?php if($email) { ?>
+<?php if($email or $phone) { ?>
 <h3>Results</h3>
 <ul>
 <?php foreach($data as $row) { ?>

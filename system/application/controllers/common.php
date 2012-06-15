@@ -250,4 +250,51 @@ class Common extends Controller {
 		$this->load->library('sms');
 		$this->sms->send('9746068565', $text);
 	}
+	
+	
+	function runners() {
+		$cities = array('Lucknow','Mumbai','Ahmedabad','Dehradun','Pune','Gawlior','Delhi','Kolkata','Nagpur','Chandigarh','Bhopal');
+
+		$count = 0;
+		foreach($cities as $city_name) {
+			$city = strtolower($city_name);
+			$user_id = $this->users_model->adduser(array(
+				'name' 		=> "$city_name President",
+				'email'		=> "president.$city@makeadiff.in",
+				'phone'		=> '97460685'.$count,
+				'address'	=> '',
+				'sex'		=> 'f',
+				'password'	=> 'pass',
+				'city'		=> '0',
+				'project'	=> '1',
+				'type' 		=> 'volunteer',
+			));
+			if(!$user_id) continue;
+			
+			$city_id  = $this->city_model->createCity(array('name'=>$city_name,'president_id'=>$user_id));
+			$this->users_model->adduser_to_group($user_id, array(2));
+			
+			$roles = array(
+				array('name' => 'EPH',	'group_id' => 4,	'email' => 'englishproject'),
+				array('name' => 'HR',	'group_id' => 4,	'email' => 'hr'),
+				array('name' => 'Ops',	'group_id' => 5,	'email' => 'operations'),
+				);
+			foreach($roles as $role) {
+				$user_id = $this->users_model->adduser(array(
+					'name' 		=> $role['name'],
+					'email'		=> "{$role['email']}.$city@makeadiff.in",
+					'phone'		=> '97460685'. $count,
+					'password'	=> 'pass',
+					'address'	=> '',
+					'sex'		=> 'f',
+					'city'		=> $city_id,
+					'project'	=> '1',
+					'type'		 => 'volunteer',
+				));
+				if($user_id) $this->users_model->adduser_to_group($user_id, array($role['group_id']));
+				
+				$count++;
+			}
+		}
+	}
 }

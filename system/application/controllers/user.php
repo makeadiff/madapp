@@ -316,12 +316,18 @@ class User extends Controller  {
 	
 	function search_email() {
 		$email = '';
+		$phone = '';
 		$data = array();
 		if($this->input->post('email')) {
 			$email = $this->input->post('email');
-			$data = $this->users_model->search_users(array('email'=>$email, 'city_id'=>false, 'status'=>false));
+			$data = $this->users_model->db->query("SELECT * FROM User WHERE email LIKE '%$email%'")->result();
 		}
-		$this->load->view('user/search_email', array('email'=>$email, 'data'=>$data));
+		
+		if($this->input->post('phone')) {
+			$phone = $this->input->post('phone');
+			$data = $this->users_model->db->query("SELECT * FROM User WHERE phone LIKE '%$phone%'")->result();
+		}
+		$this->load->view('user/search_email', array('email'=>$email, 'phone'=>$phone, 'data'=>$data));
 	}
 
 	/// Export to CSV

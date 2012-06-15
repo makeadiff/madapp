@@ -68,15 +68,18 @@ class City_model extends Model {
 				'president_id'	=>	$data['president_id'],
 				'added_on'		=>	date('Y-m-d H:i:s')
 			));
+		$city_id = $this->db->insert_id();
 		
 		//  If the City was just created, the president don't belong to that city yet. Make sure s/he belongs to it.
 		if($success) {
 			$this->db->where('id',$data['president_id'])->update('User', 
 				array(
-					'city_id'=>$this->db->insert_id()
+					'city_id'=>$city_id
 				)
 			);
 		}
+		
+		return $city_id;
     }
     
     function editCity($data) {

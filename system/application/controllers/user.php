@@ -408,6 +408,8 @@ class User extends Controller  {
 	}
 	
 	function import_field_select() {
+		ini_set("auto_detect_line_endings", "1");
+
 		// Read the CSV file and analyis it. Give the user a chance to make sure the connections are correct.
 		if(!empty($_FILES['csv_file']['tmp_name'])) {
 			ini_set('auto_detect_line_endings', true);
@@ -432,6 +434,8 @@ class User extends Controller  {
 	
 	/// User has made the choice - add the data into the database
 	function import_action() {
+		ini_set("auto_detect_line_endings", "1");
+
 		if($this->input->post('uploaded_file')) {
 			if(!preg_match('/^\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
 			$handle = fopen($this->input->post('uploaded_file'),'r');

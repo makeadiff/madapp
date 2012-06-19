@@ -93,7 +93,7 @@ jQuery(document).ready(function () {
 
 <li> 
 	<label for="txtName">Address : </label>
-	<textarea id="address" name="address"  rows="5" cols="30"></textarea><br />	 
+	<textarea id="address" name="address"  rows="5" cols="30"></textarea><br />
 </li>
 
 <li>
@@ -107,12 +107,12 @@ jQuery(document).ready(function () {
 
 <li>
 	<label for="txtName">Joined On : </label>
-	<input id="joined_on" name="joined_on" class="date-pick" type="text" value=""  /><br />	 
+	<input id="joined_on" name="joined_on" class="date-pick" type="text" value=""  /><br />
 </li>
 
 <li>
 	<label for="txtName">Left On : </label>
-	<input id="left_on" name="left_on" class="date-pick" type="text" value=""  /><br />	 
+	<input id="left_on" name="left_on" class="date-pick" type="text" value=""  /><br />
 </li>
 
 <li>

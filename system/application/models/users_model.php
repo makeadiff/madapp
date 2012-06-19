@@ -259,7 +259,7 @@ class Users_model extends Model {
 				'user_type' => $data['type']
 			);
 			if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
-			else $user_array['joined_on'] = date('Y-m-d');
+			else $user_array['joined_on'] = date('Y-m-d H:i:s');
 			
 			if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
 			
@@ -626,7 +626,7 @@ class Users_model extends Model {
 										'user_type'	=> 'applicant',
 										'status'	=> '1',
 										'password'  => 'pass',
-										'joined_on' => date('Y-m-d'),
+										'joined_on' => date('Y-m-d H:i:s'),
 										'project_id'=> 1
 										);
 			$this->db->insert('User', $userdetailsArray);

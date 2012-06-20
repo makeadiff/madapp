@@ -485,7 +485,9 @@ class Users_model extends Model {
 	
 
 	function search_users($data) {
-		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,User.joined_on,User.title,User.user_type,User.address, City.name as city_name');
+		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,
+							User.joined_on,User.user_type,User.address,User.sex,User.source,User.birthday,
+							User.job_status,User.preferred_day,User.why_mad, City.name as city_name');
 		$this->db->from('User');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
 		

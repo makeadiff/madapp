@@ -87,7 +87,7 @@ jQuery(document).ready(function () {
 			</select>
             </div>
 
-            <div class="content-row-large"><span>Preferred Day of Class:</span>
+            <div class="content-row-large"><span>Preferred Class Day:</span>
             <select class="dropdown" id="preferred_day" name="preferred_day">
 				<option value="flexible">Flexible</option>
 				<option value="weekday">Weekdays Only</option>

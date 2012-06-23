@@ -38,8 +38,8 @@ body {
 	}
 	
 #main-content {
-	width:1000px;
-	height:600px;
+	width:900px;
+	height:800px;
 	float:left;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px
@@ -63,7 +63,7 @@ body {
 	
 #content {
 	width:500px;
-	height:550px;
+	height:650px;
 	background-color:#f0f0f0;
 	filter:alpha(opacity=60);
 	opacity:0.8;
@@ -136,7 +136,7 @@ body {
 .content-row-reg .reg-button {
 	text-align:center;
 	padding:7px 10px;
-	background-color:#999;
+	background-color:#333;
 	background-image: url(../../images/li-main.gif);
     color: #FFF;
     border: 1px solid #7c7c7c;

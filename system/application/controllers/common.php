@@ -79,7 +79,12 @@ class Common extends Controller {
     }
     
     function thank_you() {
-		$this->load->view('common/thank_you');
+		$this->load->model('settings_model');
+		$reg_count = $this->settings_model->get_setting_value('registeration_count');
+		$reg_count++;
+		$this->settings_model->set_setting_value('registeration_count', $reg_count);
+		
+		$this->load->view('common/thank_you',array('reg_count'=>$reg_count));
     }
 
 	/// Handle the responses sent as the reply to the confirmation text here.

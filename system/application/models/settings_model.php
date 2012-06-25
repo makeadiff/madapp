@@ -67,4 +67,8 @@ class Settings_model extends Model {
 		
 		return ($setting->value) ? $setting->value : $setting->data;
 	}
+	
+	function set_setting_value($name, $value, $type='value') {
+		$this->db->where('name',$name)->update('Setting', array($type=>$value));
+	}
 }

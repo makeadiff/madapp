@@ -7,6 +7,7 @@ body {
 	margin:0;
 	font-family:Arial, Helvetica, sans-serif;
 	overflow:scroll;
+	background:#666 url(../../../images/madapp/background.png);
 	}
 
 #container {
@@ -158,7 +159,3 @@ body {
 	font-size:14px;
 	}
 
-#main-content {
-	height:750px;
-	background:#000 url(../../../images/madapp/background.png) 0 80px;
-}

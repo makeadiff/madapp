@@ -209,7 +209,9 @@ class Common extends Controller {
 				'city_other'=> $city,
 				'project_id'=> 1,
 				'user_type' => 'applicant',
-				'joined_on'	=> date('Y-m-d'),
+				'source'	=> 'sms',
+				'source_other'=>'sms',
+				'joined_on'	=> date('Y-m-d H:i:s'),
 			);
 			if(!$debug) $this->users_model->db->insert('User',$user_array);
 			$user_id = $this->users_model->db->insert_id();

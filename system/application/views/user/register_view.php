@@ -23,7 +23,7 @@ jQuery(document).ready(function () {
 <div id="container">
   <div id="wraper">
     <div id="main-content">
-      <div id="title"><h1>Register and Make A Difference</h1></div>
+      
 	  <div id="content">
 	   <?php
 		$message['success'] = $this->session->flashdata('success');
@@ -34,6 +34,8 @@ jQuery(document).ready(function () {
 		<?php } ?>
 	  
         <form method="post" action="<?php echo site_url('common/register')?>"  name="regform" id="regForm" onsubmit="return validate();" >
+			<div id="title"><h1>Register and Make A Difference</h1></div>
+			
             <div class="content-row-large">
 				<span>Name:</span>
 				<input type="text" class="textfield" id="name" name="name" value="<?php if(isset($this->validation->name)){ echo $this->validation->name; } ?>" />

@@ -46,12 +46,11 @@ body {
 	}
 
 #title {
-	width:960px;
 	height:40px;
 	line-height:40px;
 	font-size:16px;
 	font-weight:bold;
-	color:#FFF;
+	color:#e4003d;
 	text-align:center;
 	border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
@@ -63,10 +62,8 @@ body {
 	
 #content {
 	width:500px;
-	height:650px;
+	height:700px;
 	background-color:#f0f0f0;
-	filter:alpha(opacity=60);
-	opacity:0.8;
 	border:1px solid #D6D6D6;
 	-moz-border-radius-bottomright:5px;
 	-webkit-border-bottom-right-radius:5px;
@@ -84,107 +81,21 @@ body {
 	clear:both;
 	}
 	
-.content-row {
-	width:460px;
-	float:left;
-	margin-top:10px;
-	}
-	
-.content-row img {
-	float:left;
-	margin-top:4px;
-	}
-
-.content-row span {
-	width:140px;
-	float:left;
-	text-align:right;
-	font-size:15px;
-	color:#333;
-	line-height:25px;
-	margin-right:7px;
-	}
-
-.content-row .textfield {
-	width:300px;
-	padding:3px;
-	font-size:15px;
-	border:1px solid #C7C7C7;
-	float:left;
-	}
-
-.content-row .button {
-	padding:5px;
-	border:none;
-	color:#FFF;
-	font-weight:bold;
-	width:120px;
-	height:30px;
-	background:url(../../images/login-button.png) no-repeat;
-	cursor:pointer;
-	}
-
-.content-row .dropdown {
-	width:auto;
-	padding:3px;
-	font-size:15px;
-	border:1px solid #C7C7C7;
-	float:left;
-	margin-right:20px;
-	}
-
-.content-row-reg .reg-button {
-	text-align:center;
-	padding:7px 10px;
-	background-color:#333;
-	background-image: url(../../images/li-main.gif);
-    color: #FFF;
-    border: 1px solid #7c7c7c;
-	cursor:pointer;
-	border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-	float:left;
-	margin-left:8px;
-	font-weight:bold;
-	}
-	
-.content-row-reg {
-	width:320px;
-	float:left;
-	margin-top:10px;
-	margin-left:140px;
-	}
-
-.content-row .textarea {
-	width:300px;
-	padding:3px;
-	font-size:15px;
-	border:1px solid #C7C7C7;
-	float:left;
-	}
-
-.content-row .radio-button {
-	width:auto;
-	padding:3px;
-	float:left;
-	margin-top:10px;
-	}	
-	
 .content-row-large {
-	width:920px;
+	width:460px;
 	float:left;
 	margin-top:10px;
 	}
 	
 .content-row-large img {
 	float:left;
+	margin-top:4px;
 	}
 
 .content-row-large span {
 	width:140px;
 	float:left;
+	font-family:Impact;
 	text-align:right;
 	font-size:15px;
 	color:#333;
@@ -192,37 +103,48 @@ body {
 	margin-right:7px;
 	}
 
-.content-row-large .textfield {
+.content-row-large .textfield, .content-row-large .textarea {
 	width:300px;
 	padding:3px;
 	font-size:15px;
-	border:1px solid #C7C7C7;
+	background:#e5e5e5;
+	border:1px solid #e5e5e5;
 	float:left;
 	}
 
-.content-row-large .textarea {
-	width:300px;
-	padding:3px;
-	font-size:15px;
-	border:1px solid #C7C7C7;
-	float:left;
+.content-row-large .button {
+	padding:5px;
+	border:none;
+	color:#FFF;
+	font-weight:bold;
+	width:120px;
+	height:30px;
+	cursor:pointer;
 	}
 
 .content-row-large .dropdown {
 	width:auto;
 	padding:3px;
 	font-size:15px;
-	border:1px solid #C7C7C7;
+	border:1px solid #e5e5e5;
+	background:#e5e5e5;
 	float:left;
 	margin-right:20px;
 	}
 
-.content-row-large .radio-button {
-	width:auto;
-	padding:3px;
-	float:left;
-	margin-top:5px;
+.content-row-reg .reg-button {
+	text-align:center;
+	padding:3px 10px;
+	background-color:#fff;
+    	color: #e4003d;
+    	border: 1px solid #e4003d;
+	cursor:pointer;
+	margin-top:30px;
+	margin-left:150px;
+	font-weight:bold;
 	}
+	
+
 	
 #floting-div {
 	position:absolute;
@@ -237,6 +159,6 @@ body {
 	}
 
 #main-content {
-	height:800px;
-	background:#000 url(../../../images/wallpapers/udhya_bw.jpg) 0 80px no-repeat;
+	height:750px;
+	background:#000 url(../../../images/madapp/background.png) 0 80px;
 }

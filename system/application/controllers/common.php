@@ -80,9 +80,8 @@ class Common extends Controller {
     
     function thank_you() {
 		$this->load->model('settings_model');
-		$reg_count = $this->settings_model->get_setting_value('registeration_count');
-		$reg_count++;
-		$this->settings_model->set_setting_value('registeration_count', $reg_count);
+		$registerations = $this->users_model->db->query("SELECT COUNT(id) AS count FROM User WHERE user_type='applicant'")->row();
+		$reg_count = $registerations->count;
 		
 		$this->load->view('common/thank_you',array('reg_count'=>$reg_count));
     }

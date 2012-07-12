@@ -27,7 +27,7 @@ class Level extends Controller {
 		if(!is_numeric($center_id) or !$center_id) {
 			show_error("Choose a center.");
 		}
-		$all_levels = $this->model->db->where('center_id',$center_id)->where('project_id',1)->get('Level')->result();
+		$all_levels = $this->model->get_all_levels_in_center($center_id);
 		$center_name = $this->model->db->where('id',$center_id)->get('Center')->row();
 		
 		$this->load->view('level/index', array('all_levels'	=> $all_levels,'center_name'=>$center_name->name, 'center_id'=>$center_id));

@@ -18,10 +18,11 @@ class Level_model extends Model {
         $this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
+		$this->year = $this->ci->session->userdata('year');
     }
     
 	function get_all_levels_in_center($center_id) {
-		return $this->db->where('project_id', $this->project_id)->where('center_id',$center_id)->get('Level')->result();
+		return $this->db->where('project_id', $this->project_id)->where('center_id',$center_id)->where('year', $this->year)->get('Level')->result();
 	}
 	
 	function get_level($level_id) {
@@ -51,6 +52,7 @@ class Level_model extends Model {
 				'center_id'	=>	$data['center_id'],
 				'project_id'=>	$data['project_id'],
 				'book_id'	=>	$data['book_id'],
+				'year'		=> 	$this->year
 			));
 			
 		$level_id = $this->db->insert_id();
@@ -113,7 +115,7 @@ class Level_model extends Model {
 	}
 	function get_only_levels_in_center($center_id) {
 		return $this->db->query("SELECT DISTINCT(Level.id), Level.name FROM Level JOIN 
-			Exam_Event ON Level.id = Exam_Event.level_id WHERE Exam_Event.center_id=$center_id")->result();
+			Exam_Event ON Level.id = Exam_Event.level_id WHERE Exam_Event.center_id=$center_id AND Level.year={$this->year}")->result();
 		
 	}
 }

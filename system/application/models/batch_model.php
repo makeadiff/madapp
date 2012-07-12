@@ -7,6 +7,7 @@ class Batch_model extends Model {
         $this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
+		$this->year = $this->ci->session->userdata('year');
     }
     
     function get_batch($batch_id) {
@@ -32,11 +33,12 @@ class Batch_model extends Model {
     }
     
     function get_all_batches() {
-    	return $this->db->where('project_id', $this->project_id)->get('Batch')->result();
+    	return $this->db->where('project_id', $this->project_id)->where('year', $this->year)->get('Batch')->result();
     }
     
     function get_batches_in_level($level_id) {
-    	return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id WHERE UserBatch.level_id=$level_id AND Batch.project_id={$this->project_id}")->result();
+    	return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id 
+			WHERE UserBatch.level_id=$level_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year}")->result();
     }
     
     function get_volunteer_requirement_in_batch($batch_id) {
@@ -44,11 +46,13 @@ class Batch_model extends Model {
     }
     
     function get_levels_in_batch($batch_id) {
-    	return $this->db->query("SELECT Level.id,Level.name FROM Level INNER JOIN UserBatch ON Level.id=UserBatch.level_id WHERE UserBatch.batch_id=$batch_id AND Level.project_id={$this->project_id}")->result();
+    	return $this->db->query("SELECT Level.id,Level.name FROM Level INNER JOIN UserBatch ON Level.id=UserBatch.level_id 
+			WHERE UserBatch.batch_id=$batch_id AND Level.project_id={$this->project_id}")->result();
     }
     
     function get_batches_in_center($center_id) {
-    	return $this->db->where('center_id',$center_id)->where('project_id', $this->project_id)->orderby('day')->get('Batch')->result();
+		print "------{$this->year}------";
+    	return $this->db->where('center_id',$center_id)->where('project_id', $this->project_id)->where('year', $this->year)->orderby('day')->get('Batch')->result();
     }
     
     function create_batch_name($day, $time) {
@@ -66,7 +70,7 @@ class Batch_model extends Model {
     }
   	
   	function get_class_days($center_id) {
-		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} ORDER BY day")->result();
+		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} ORDER BY day")->result();
 		$return = array();
 		foreach($class_days as $batch) {
 			$return[$batch->id] = $this->create_batch_name($batch->day, $batch->class_time);
@@ -87,6 +91,7 @@ class Batch_model extends Model {
 	
     function create($data) {
     	$data['project_id'] = $this->project_id;
+    	$data['year'] = $this->year;
     	$this->db->insert("Batch", $data);
     	
     	if($data['batch_head_id'] > 0) {
@@ -107,7 +112,6 @@ class Batch_model extends Model {
     
     function delete($batch_id) {
     	$this->db->delete('Batch', array('id'=>$batch_id));
-    	$this->db->delete('UserBatch', array('batch_id'=>$batch_id));
     	$this->db->delete('UserBatch', array('batch_id'=>$batch_id));
     }
 }

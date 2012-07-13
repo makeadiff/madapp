@@ -5,10 +5,9 @@ $this->load->view('layout/header', array('title'=>'MAD Sheet'));
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
 
 <h3>Legend</h3>
-<table border="1">
+<table class="legend">
 <tr>
 <td class='class-projected'>Projected Class</td>
-<td class='class-confirmed'>Confirmed</td>
 <td class='class-attended'>Class Happened</td>
 <td class='class-absent'>Absent</td>
 <td class='class-cancelled' style='color:white;'>Cancelled</td>

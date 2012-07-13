@@ -14,7 +14,6 @@
 <?php if($upcomming_classes) {
 foreach($upcomming_classes as $class) { ?>
 <div class="upcomming">You have a class at <strong><?php echo $class->name ?></strong> on <?php echo date('M d\<\s\u\p\>S\<\/\s\u\p\>(D), h:i A', strtotime($class->class_on)) ?>. 
-	<?php if($class->status == 'projected') { ?><a href="<?php echo site_url('classes/confirm_class/'.$class->id); ?>" class="ajaxify ajaxify-replace">Confirm</a> / <?php } ?>
 	<a href="<?php echo site_url('classes/edit_class/'.$class->id); ?>">Substitute</a></div>
 <?php } 
 } ?>

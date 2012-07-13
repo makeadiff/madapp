@@ -172,6 +172,7 @@ class User extends Controller  {
 		
 		if($this->input->post('spassword')) $data['password'] = $this->input->post('spassword');
 		
+		$data['sex'] = $this->input->post('sex');
 		$data['phone'] = $this->input->post('phone');
 		if($this->input->post('city')) $data['city'] = $this->input->post('city');
 		$data['address'] = $this->input->post('address');

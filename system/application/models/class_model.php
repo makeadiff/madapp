@@ -192,7 +192,7 @@ class Class_model extends Model {
     		$user_class_id = $this->db->where(array('class_id'=>$data['class_id'],'user_id'=>$data['user_id']))->get('UserClass')->row()->id;
     	}
     
-    	// When editing the class info, make sure that the credits asigned durring the last edit is removed...
+    	// When editing the class info, make sure that the credits asigned during the last edit is removed...
     	$previous_class_data = $this->db->where(array('id'=>$user_class_id))->get('UserClass')->row_array();
     	$this->revert_user_class_credit($user_class_id, $previous_class_data);
     	

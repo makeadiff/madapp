@@ -102,7 +102,7 @@ class Event extends controller{
 	function user_event($event_id) {
 		$this->user_auth->check_permission('event_mark_attendance');
 
-		$data['events']= $this->event_model->get_event_type($event_id);
+		$data['event']= $this->event_model->get_event_type($event_id);
 		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
 		// Remove some national level groups.
 		unset($data['all_groups'][1]);
@@ -121,7 +121,6 @@ class Event extends controller{
 		$user_data['get_user_groups'] = true;
 		$user_data['user_type'] = 'volunteer';
 		$all_users = $this->users_model->search_users($user_data);
-		
 		
 		$this->load->view('event/user_event',$data);
 		
@@ -219,21 +218,20 @@ class Event extends controller{
 	function update_event()
 	{
 		$this->user_auth->check_permission('event_edit');
-		$data['root_id']=$_REQUEST['root_id'];
-		//$data['city']=$_REQUEST['city'];
-		$data['name']=$_REQUEST['name'];
-		$data['startdate']=$_REQUEST['date-pick'];
-		$data['enddate']=$_REQUEST['date-pick-ends'];
-		$data['place']=$_REQUEST['place'];
-		$data['type']=$_REQUEST['type'];
+		$data['root_id']=$this->input->post('root_id');
+		$data['name']=$this->input->post('name');
+		$data['startdate'] = $this->input->post('date-pick');
+		$data['enddate'] =$this->input->post('date-pick-ends');
+		$data['place']=$this->input->post('place');
+		$data['type']=$this->input->post('type');
 		$flag= $this->event_model->update_event($data);
-		if($flag)
-		{
+		
+		if($flag) {
 			$this->session->set_flashdata('success', 'Event Updated Successfully.');
 			redirect('event/index');  
-		}else{
-		$this->session->set_flashdata('success', 'No Updation Performed.');
-		redirect('event/index');
+		} else{
+			$this->session->set_flashdata('success', 'No Updation Performed.');
+			redirect('event/index');
 		}
 		
 	
@@ -254,7 +252,7 @@ class Event extends controller{
 		if($flag)
 		{
 			$this->session->set_flashdata('success', 'Event Deleted Successfully.');
-			redirect('event/index');  
+			redirect('event/index');
 		}
 	}
 	/**
@@ -265,12 +263,11 @@ class Event extends controller{
     * @return : type : []
     *
     **/
-	function mark_attendence()
+	function mark_attendence($event_id)
 	{
 		$this->user_auth->check_permission('event_mark_attendance');
-		$id=$this->uri->segment(3);
-		$data['events']= $this->event_model->get_event_type($id);
-		$data['attended_users']= $this->event_model->get_event_users($id);
+		$data['event']= $this->event_model->get_event_type($event_id);
+		$data['attended_users']= $this->event_model->get_event_users($event_id);
 		$this->load->view('event/attended_users',$data);
 	}
 	/**
@@ -287,7 +284,6 @@ class Event extends controller{
 		$data['event_id']=$this->uri->segment(3);
 		$data['user_id']=$this->uri->segment(4);
 		$flag= $this->event_model->update_user_status($data);
-	
 	}
 	/**
     *
@@ -302,6 +298,6 @@ class Event extends controller{
 		$this->user_auth->check_permission('event_mark_attendance');
 		$this->session->set_flashdata('success', 'Status Updated  Successfully.');
 		redirect('event/index');  
-	}	
+	}
 
 }

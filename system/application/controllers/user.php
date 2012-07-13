@@ -503,6 +503,7 @@ class User extends Controller  {
 		else $for_user = ' of ' . $this->users_model->get_user($current_user_id)->name;
 		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
 		$this->load->model('level_model');
+		$this->load->model('event_model');
 
 		$details = $this->users_model->get_usercredits($current_user_id);
 
@@ -561,6 +562,21 @@ class User extends Controller  {
 				$credit_log[] = $data;
 			}
 		}
+		
+		$event_attendence = $this->event_model->get_missing_user_attendance_for_event_type($current_user_id, 'avm');
+		foreach($event_attendence as $event) {
+			$i++;
+			$data = array(
+				'i' 	=> $i,
+				'credit'=> $credit - 1,
+				'class_on'=> $event->starts_on,
+				'Substitutedby' => 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
+				'lost'	=> 'Lost 1 credit'
+			);
+			$credit_log[] = $data;
+		}
+		
+		
 		$this->load->view('user/usercredit', array('credit_log'=>$credit_log));
 		$this->load->view('layout/footer');
 	}	

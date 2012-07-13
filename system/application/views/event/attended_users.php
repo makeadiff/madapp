@@ -25,34 +25,28 @@ jQuery(document).ready(function () {
 </script>
 <div id="message"></div>
 <form  class="mainForm clear" id="formEditor"  action="<?php echo site_url('event/update_user_status')?>" method="post" enctype="multipart/form-data"  >
+
+Current Event: <strong> <?php echo $event->name; ?></strong><br /><br />
+<?php $id = $event->id ;?>
+<label for="txtName"><strong>Users Attendence Status:</strong></label>
+<div >
 <ul class="form city-form">
-<li><label for="selBulkActions">Current Event: </label> 
-<?php foreach($events as $row) { ?>
-<?php $id=$row->id ;?>
-<input type="text" style="background:#CCCCCC; width:260px;" disabled="disabled" value="<?=$row->name;?>" />
-<?php } ?>
-</li>
- <label for="txtName">Users Attendence Status :</label>
-<div  style="height:100px; overflow:scroll; border:1px solid #999; padding:5px; width: 250px; overflow-x:hidden; float:left;">
-<li>
-       
-		<?php
-		if(count($attended_users) > 0){ 
-		foreach($attended_users as $row){?>
-         </li>
-         <li>
-         <label for="txtName"><?php echo $row->user_name; ?></label>
-         <input type="hidden" value="<?php echo $id ?>" name="event" id="event" />
-         <input type="hidden" value="<?php echo $row->user_id ?>" name="user_id" id="user_id" />
-         <input type="checkbox" <?php if($row->present == 1){ ?> checked="checked" <?php } ?>  id="users" name="user" 
-         onClick="javascript:update_userstatus('<?php echo $id?>','<?php echo $row->user_id?>');"  /> 
-		<?php } }else{ ?>
-        No Members in this event 
-        <?php } ?>
-			</li></div>	
-            <li>
-  
+	<?php
+	if(count($attended_users) > 0){ 
+	foreach($attended_users as $row){?>
+		<li>
+		<label for="txtName"><?php echo $row->user_name; ?></label>
+		<input type="hidden" value="<?php echo $id ?>" name="event" id="event" />
+		<input type="hidden" value="<?php echo $row->user_id ?>" name="user_id" id="user_id" />
+		<input type="checkbox" <?php if($row->present == 1){ ?> checked="checked" <?php } ?>  id="users" name="user" 
+		onClick="javascript:update_userstatus('<?php echo $id?>','<?php echo $row->user_id?>');"  />
+		</li>
+	<?php } }else{ ?>
+	No Members in this event 
+	<?php } ?>
  </ul>
+ </div>
+ 
  <ul>
 <li>
 <?php if(count($attended_users) > 0){ ?>

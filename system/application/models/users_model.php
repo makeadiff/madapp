@@ -449,6 +449,7 @@ class Users_model extends Model {
     
     function recalculate_user_credit($user_id, $update_if_wrong=false, $debug=false) {
 		$this->ci->load->model('level_model');
+		$this->ci->load->model('event_model');
 		$credit = 3;
 		$classes_so_far = $this->get_usercredits($user_id);
 		
@@ -469,6 +470,11 @@ class Users_model extends Model {
 				}
 				$credit = $credit + $credit_sub_gets;
 			}
+		}
+		
+		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
+		foreach($event_attendence as $event) {
+			$credit = $credit - 1;
 		}
 		
 		if($update_if_wrong) {

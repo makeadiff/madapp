@@ -21,8 +21,7 @@ function validate() {
 
 <form action="" method="post" class="self" target="_self">
 <ul class="form city-form">
-<?php $row = reset($events); ?>
-<li>Current Event: <strong><?php echo $row->name;?></strong></label></li>
+<li>Current Event: <strong><?php echo $event->name;?></strong></label></li>
 <li>User Group: <br />
 	<select name="user_group[]" id="user_group" style="width:150px; height:100px;" multiple>
 	<?php
@@ -49,7 +48,7 @@ function validate() {
 
 
 <form class="form-area" action="<?php echo site_url('event/insert_userevent')?>" method="post" onsubmit="return validate();" >
-<input type="hidden" value="<?php echo $row->id; ?>" name="event" id="event" />
+<input type="hidden" value="<?php echo $event->id; ?>" name="event" id="event" />
 <ul>
 <li><label for="txtName"><strong>Users :</strong></label></li>
 <li><a onclick="selectAll()">Select All</a></li>

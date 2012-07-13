@@ -114,6 +114,23 @@ function get_month_list() {
 	return $months;
 }
 
+/// Set the City and Year if someone changes it. Save it to a cookie.
+function set_city_year($that) {
+	if($that->input->post('city_id') and $that->user_auth->check_permission('change_city')) {
+		$city_id = $that->input->post('city_id');
+		$year = $that->input->post('year');
+		$that->session->set_userdata('city_id', $city_id);
+		$that->session->set_userdata('year', $year);
+		
+		$that->center_model->city_id = $city_id;
+		$that->center_model->year = $year;
+		$that->batch_model->year = $year;
+		$that->level_model->year = $year;
+		$that->user_model->city_id = $city_id;
+		$that->user_model->year = $year;
+	}
+}
+
 
 
 /**

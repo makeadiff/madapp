@@ -200,12 +200,7 @@ class Classes extends Controller {
 	function madsheet() {
 		$this->user_auth->check_permission('classes_madsheet');
 		
-		if($this->input->post('city_id') and $this->user_auth->check_permission('change_city')) {
-			$city_id = $this->input->post('city_id');
-			$this->session->set_userdata('city_id', $city_id);
-			$this->center_model->city_id = $city_id;
-			$this->user_model->city_id = $city_id;
-		}
+		set_city_year($this);
 		
 		$all_centers = $this->center_model->get_all();
 		$all_levels = array();

@@ -64,12 +64,7 @@ class Kids extends Controller  {
 		$this->user_auth->check_permission('kids_index');
 		
 		// This page can get a change city request.
-		if($this->input->post('city_id') and $this->user_auth->check_permission('change_city')) {
-			$city_id = $this->input->post('city_id');
-			$this->session->set_userdata('city_id', $city_id);
-			$this->center_model->city_id = $city_id;
-			$this->kids_model->city_id = $city_id;
-		}
+		set_city_year($this);
 	
 		$this->load->view('layout/header',array('title'=>'Manage Kids'));
 		

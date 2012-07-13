@@ -25,8 +25,9 @@
 			if($this->uri->segment(1) == 'classes') $url = site_url('classes/madsheet');
 			
 			echo form_open($url);
-			echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id')); 
-			echo form_submit('action', "Change City");
+			echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id'));
+			echo form_dropdown('year', array('2011'=>'2011','2012'=>'2012'), $this->session->userdata('year')); //:HARDCODE:
+			echo form_submit('action', "Change");
 			echo form_close();
 		}
 		?>

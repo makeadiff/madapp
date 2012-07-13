@@ -36,9 +36,7 @@ class Dashboard extends Controller  {
     function dashboard_view() {	
 		$data['title'] = 'MADApp Dashboard';
 		
-		if($this->input->post('city_id') and $this->user_auth->check_permission('change_city')) {
-			$this->session->set_userdata('city_id', $this->input->post('city_id'));
-		}
+		set_city_year($this);
 		
 		$this->load->view('layout/header',$data);
 		$upcomming_classes = $this->class_model->get_upcomming_classes();

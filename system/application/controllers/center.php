@@ -50,9 +50,7 @@ class Center extends Controller  {
 	{
 		$this->user_auth->check_permission('center_index');
 		
-		if($this->input->post('city_id') and $this->user_auth->check_permission('change_city')) {
-			$this->session->set_userdata('city_id', $this->input->post('city_id'));
-		}
+		set_city_year($this);
 		
 		$page_no = !empty($_REQUEST['pageno']) ? $_REQUEST['pageno'] : 0;
 		$data['title'] = 'Manage Centers';

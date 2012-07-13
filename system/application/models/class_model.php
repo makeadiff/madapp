@@ -205,8 +205,9 @@ class Class_model extends Model {
     /// Calculates the credit that should be given to the user for the given class.
     /// Argument: $user_class_id - the id of a row in the UserClass table.
     function calculate_users_class_credit($user_class_id, $data = array()) {
-    	if(!$data) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
+    	if(!$data or empty($data->class_id)) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
     	$this->load->model('user_model','user_model');
+		$this->load->model('level_model','level_model');
     	
     	$debug = false;
     	if($debug) {print "Class Data: ";dump($data);}
@@ -214,10 +215,19 @@ class Class_model extends Model {
     	extract($data);
     	if($status == 'attended') {
     		if($substitute_id) {
-    			// A substitute has attended the class. Substitute gets one credit, Original teacher loses one credit.
-    			$this->user_model->update_credit($substitute_id, 1);
+				$credit_sub_gets = 1;
+				
+				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
+				$substitute_levels = $this->level_model->get_user_level($substitute_id);
+				$current_class_level = $this->level_model->get_class_level($class_id);
+				if(in_array($current_class_level, $substitute_levels)) {
+					$credit_sub_gets = 2;
+				}
+				
+    			// A substitute has attended the class. Substitute gets one/two credit, Original teacher loses one credit.
+    			$this->user_model->update_credit($substitute_id, $credit_sub_gets);
     			$this->user_model->update_credit($user_id, -1);
-    			if($debug) print "<br />Substitute attended. Sub +1 and Teacher -1";
+    			if($debug) print "<br />Substitute attended. Sub +$credit_sub_gets and Teacher -1";
     		}
     	} elseif($status == 'absent') {
     		if($substitute_id) {
@@ -248,9 +258,18 @@ class Class_model extends Model {
     	if($status == 'attended') {
     		if($substitute_id) {
     			// A substitute had attended the class. That would have changed the credits like S = +1, OT = -1. So we make S = -1 and OT = +1 - to make the changed credits 0
-    			$this->user_model->update_credit($substitute_id, -1);
+				
+				$credit_sub_gets = 1;
+				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
+				$substitute_levels = $this->level_model->get_user_level($substitute_id);
+				$current_class_level = $this->level_model->get_class_level($class_id);
+				if(in_array($current_class_level, $substitute_levels)) {
+					$credit_sub_gets = 2;
+				}
+				
+    			$this->user_model->update_credit($substitute_id, -($credit_sub_gets));
     			$this->user_model->update_credit($user_id, 1);
-    			if($debug) print "<br />Substitute had attended. Reverting means Sub -1 and Teacher +1";
+    			if($debug) print "<br />Substitute had attended. Reverting means Sub -$credit_sub_gets and Teacher +1";
     		}
     	} elseif($status == 'absent') {
     		if($substitute_id) {

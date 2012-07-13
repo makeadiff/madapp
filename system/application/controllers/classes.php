@@ -275,7 +275,6 @@ class Classes extends Controller {
 						}
 					}
 					
-					
 					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['name'] = $level->name;
 					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['users'] = $teachers_info;
 				}
@@ -378,7 +377,7 @@ class Classes extends Controller {
 	
 		$class_details = $this->class_model->get_class($class_id);
 		$level_details = $this->level_model->get_level($class_details['level_id']);
-		$teachers = idNameFormat($this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0)));
+		$teachers = idNameFormat($this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false)));
 		$substitutes = $teachers;
 		$substitutes[0] = 'No Substitute';
 		$substitutes[-1] = 'Other City';
@@ -483,7 +482,7 @@ class Classes extends Controller {
 	
 	function city_teachers($city_id, $flag) {
 		$data['flag']=$flag;
-		$data['users']=$this->user_model->getuser_details(array('city_id'=>$city_id))->result();
+		$data['users']=$this->user_model->search_users(array('city_id'=>$city_id, 'not_user_type'=>array('applicant','well_wisher'),'status'=>false));
 		
 		$this->load->view('classes/city_teachers',$data);
 	}

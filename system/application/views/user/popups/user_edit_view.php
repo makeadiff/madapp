@@ -114,15 +114,15 @@ if($this->user_auth->get_permission('change_city')) { ?>
 		<option value="applicant" <?php if($user_type == 'applicant') echo ' selected="selected"'; ?>>Applicant</option>
 		<option value="volunteer" <?php if($user_type == 'volunteer') echo ' selected="selected"'; ?>>Volunteer</option>
 		<option value="well_wisher" <?php if($user_type == 'well_wisher') echo ' selected="selected"'; ?>>Well Wisher</option>
-		<option value="alumni"> <?php if($user_type == 'alumni') echo ' selected="selected"'; ?>Alumni</option>
+		<option value="alumni" <?php if($user_type == 'alumni') echo ' selected="selected"'; ?>>Alumni</option>
 		<option value="other" <?php if($user_type == 'other') echo ' selected="selected"'; ?>>Other</option>
 		<option value="let_go" <?php if($user_type == 'let_go') echo ' selected="selected"'; ?>>Let Go</option>
 	</select>
 </li>
 </ul>
 <div class="field clear" style="width:550px;"> 
-		<input type="hidden" value="<?php echo $root_id; ?>"  id="rootId" name="rootId" />
-		<input type="hidden" value="<?php echo $this->session->userdata('project_id'); ?>"  name="project" />
+		<input type="hidden" value="<?php echo $root_id; ?>" id="rootId" name="rootId" />
+		<input type="hidden" value="<?php echo $this->session->userdata('project_id'); ?>" name="project" />
 		<input  id="btnSubmit" class="button green" type="submit" value="Submit" />
 		<a href="<?php echo site_url('user/view_users');?>" class="cancel-button">Cancel</a>
 </div>

@@ -448,6 +448,7 @@ class Users_model extends Model {
     }
     
     function recalculate_user_credit($user_id, $update_if_wrong=false, $debug=false) {
+		$this->ci->load->model('level_model');
 		$credit = 3;
 		$classes_so_far = $this->get_usercredits($user_id);
 		
@@ -459,7 +460,14 @@ class Users_model extends Model {
 			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
 				$credit = $credit - 2;
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
-				$credit = $credit + 1;
+				$credit_sub_gets = 1;
+				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
+				$substitute_levels = $this->ci->level_model->get_user_level($row['substitute_id']);
+				$current_class_level = $this->ci->level_model->get_class_level($row['class_id']);
+				if(in_array($current_class_level, $substitute_levels)) {
+					$credit_sub_gets = 2;
+				}
+				$credit = $credit + $credit_sub_gets;
 			}
 		}
 		

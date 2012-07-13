@@ -27,7 +27,7 @@ class City_model extends Model {
     // Find the errors in the city. - if any.
 	function find_issuse($city_id) {
 		$president_id = $this->db->query("SELECT president_id FROM City WHERE id=$city_id")->row()->president_id;
-		$center_count = $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id WHERE Center.status='1'")->row()->count;
+		$center_count = $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id AND Center.status='1'")->row()->count;
 		$kids_count = 0;
 		if($center_count) {
 			$kids_count = $this->db->query("SELECT COUNT(Student.id) AS count 

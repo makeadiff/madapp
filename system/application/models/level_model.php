@@ -85,37 +85,34 @@ class Level_model extends Model {
 				'student_id'=> $student_id
 			));
 		}
-    } 
-	/**
-    *
-    * Function to
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function get_all_kids_in_level($level_id)
-	{
-		return $this->db->query("SELECT COUNT(id) AS count FROM StudentLevel WHERE level_id=$level_id")->row()->count;
+    }
+	
+	/// Returs all the ids of the levels the given user teachs at.
+	function get_user_level($user_id) {
+		$levels = $this->db->query("SELECT level_id FROM UserBatch WHERE user_id=$user_id")->result();
+		$return = array();
+		foreach($levels as $l) $return[] = $l->level_id;
 		
+		return $return;
 	}
-	/**
-    *
-    * Function to
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function get_all_kidsname_in_level($level_id)
-	{
+	
+	/// Returns the id of the level of the given class...
+	function get_class_level($class_id) {
+		$level = $this->db->query("SELECT level_id FROM Class WHERE id=$class_id")->row();
+		return $level->level_id;
+	}
+
+	function get_all_kids_in_level($level_id) {
+		return $this->db->query("SELECT COUNT(id) AS count FROM StudentLevel WHERE level_id=$level_id")->row()->count;
+	}
+
+	function get_all_kidsname_in_level($level_id) {
 		return $this->db->query("SELECT Student.id,Student.name FROM Student JOIN 
 			StudentLevel ON StudentLevel.student_id = Student.id WHERE StudentLevel.level_id=$level_id")->result();
-		
 	}
+	
 	function get_only_levels_in_center($center_id) {
 		return $this->db->query("SELECT DISTINCT(Level.id), Level.name FROM Level JOIN 
 			Exam_Event ON Level.id = Exam_Event.level_id WHERE Exam_Event.center_id=$center_id AND Level.year={$this->year}")->result();
-		
 	}
 }

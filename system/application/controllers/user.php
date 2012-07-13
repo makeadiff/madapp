@@ -502,6 +502,7 @@ class User extends Controller  {
 		if(!$current_user_id) $current_user_id = $this->session->userdata('id');
 		else $for_user = ' of ' . $this->users_model->get_user($current_user_id)->name;
 		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
+		$this->load->model('level_model');
 
 		$details = $this->users_model->get_usercredits($current_user_id);
 
@@ -537,12 +538,21 @@ class User extends Controller  {
 				$data['credit'] = $credit;
 				
 			} elseif ($row['substitute_id'] == $current_user_id and $row['status'] == 'attended') {
-				$credit = $credit + 1;
-				$data['class_on']= $row['class_on'];
+				$sub_get_credits = 1;
+				
+				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
+				$substitute_levels = $this->level_model->get_user_level($row['substitute_id']);
+				$current_class_level = $this->level_model->get_class_level($row['class_id']);
+				if(in_array($current_class_level, $substitute_levels)) {
+					$sub_get_credits = 2;
+				}
+				
+				$credit = $credit + $sub_get_credits;
+				$data['class_on'] = $row['class_on'];
 				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);
-				$data['Substitutedby']="Substituted for " . $teacher_name->name;
-				$data['lost']="Gained 1 credit";
-				$data['credit']=$credit;
+				$data['Substitutedby'] = "Substituted for " . $teacher_name->name;
+				$data['lost'] = "Gained $sub_get_credits credit";
+				$data['credit'] = $credit;
 			}
 			
 			if(isset($data['credit'])) {

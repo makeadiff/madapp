@@ -31,7 +31,7 @@ class Center_model extends Model
     **/
 	function getcenter_count()
 	{
-		$this->db->select('*')->where('Center.city_id',$this->city_id)->from('Center');
+		$this->db->select('*')->where('Center.city_id',$this->city_id)->where('Center.status','1')->from('Center');
 		$count = $this->db->get();	
 		return count($count->result());
 	}
@@ -49,7 +49,7 @@ class Center_model extends Model
 		
 		$this->db->select("Center.*, User.name as user_name");
 		$this->db->from('Center');
-		$this->db->where('Center.city_id',$this->city_id);
+		$this->db->where('Center.city_id',$this->city_id)->where('Center.status','1');
 		$this->db->join('User', 'Center.center_head_id = User.id' ,'left');
 		
 		$result = $this->db->get()->result();
@@ -147,8 +147,8 @@ class Center_model extends Model
     **/
 	function delete_center($center_id)
 	{
-		 $this->db->where('id',$center_id);
-		 $this->db->delete('Center');
+ 		 $this->db->where('id',$center_id)->update('Center', array('status'=>'0'));
+
 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
@@ -175,12 +175,12 @@ class Center_model extends Model
 	// Get all the centers in the current city
 	function get_all($city_id=0) {
 		if(!$city_id) $city_id = $this->city_id;
-		return $this->db->where('city_id',$city_id)->orderby('name')->get('Center')->result();
+		return $this->db->where('city_id',$city_id)->where('status','1')->orderby('name')->get('Center')->result();
 	}
 	
 	// Get all the centers. No matter what city
 	function get_all_centers() {
-		return $this->db->select(array('id','name'))->get('Center')->result();
+		return $this->db->select(array('id','name'))->where('status','1')->get('Center')->result();
 	}
 	
 	// Find the errors in the center - if any.

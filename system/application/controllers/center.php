@@ -167,14 +167,7 @@ class Center extends Controller  {
 	function deletecenter($center_id)
 	{
 		$this->user_auth->check_permission('center_delete');
-		
-		if($this->level_model->get_all_levels_in_center($center_id)) {
-			show_error("This Center has levels under it. Please delete those first.");
-		}
-		if($this->kids_model->get_kidsby_center($center_id)->result()) {
-			show_error("This Center has Kids under it. Please delete them first.");
-		}
-		
+				
 		if($this->center_model->delete_center($center_id)) $this->session->set_flashdata("success", "Center deleted");
 		else $this->session->set_flashdata("error", "Error deleting center.");
 		

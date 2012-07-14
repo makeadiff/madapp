@@ -507,7 +507,7 @@ class National_model extends Model {
     **/
 	function class_volunteers_negative_credit($city_id)
 	{
-		return $this->db->query("SELECT COUNT(id) AS count FROM user  WHERE city_id=$city_id AND credit < 0")->row()->count;
+		return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id=$city_id AND credit < 0 AND user_type='volunteer'")->row()->count;
 	}
          /**
     * Function to class_getClasses
@@ -516,23 +516,23 @@ class National_model extends Model {
     * @return : type : []
     *
     **/
-        function class_getClasses($city_id)
-        {
-         return $this->db->query("SELECT Class.id FROM Class JOIN Level ON Level.id=Class.level_id JOIN 
-					Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->result();  
-                                                    
-        }
-         /**
+	function class_getClasses($city_id)
+	{
+		return $this->db->query("SELECT Class.id FROM Class JOIN Level ON Level.id=Class.level_id JOIN 
+				Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->result();  
+												
+	}
+    /**
     * Function to class_getfull_students
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
     *
     **/
-        function class_getfull_students($class_id)
-        {
-           return $this->db->query("SELECT COUNT(id) AS count FROM studentclass WHERE class_id={$class_id}")->row()->count;
-        }
+	function class_getfull_students($class_id)
+	{
+		return $this->db->query("SELECT COUNT(id) AS count FROM StudentClass WHERE class_id={$class_id}")->row()->count;
+	}
     /**
     * Function to class_getpresent_students
     * @author : Rabeesh
@@ -540,12 +540,12 @@ class National_model extends Model {
     * @return : type : []
     *
     **/
-        function class_getpresent_students($class_id)
-        {
-           return $this->db->query("SELECT COUNT(id) AS count FROM studentclass WHERE class_id={$class_id} AND present='1'")->row()->count;             
-        }
-         /**
-    * Function to last_test_p
+	function class_getpresent_students($class_id)
+	{
+		return $this->db->query("SELECT COUNT(id) AS count FROM StudentClass WHERE class_id={$class_id} AND present='1'")->row()->count;             
+	}
+	/**
+	* Function to last_test_p
     * @author : Rabeesh
     * @param  : []
     * @return : type : []
@@ -553,8 +553,8 @@ class National_model extends Model {
     **/
         function last_test_p($city_id)
         {
-          return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
-              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%P%') ORDER BY exam_on DESC ")->result();  
+          return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%P%') ORDER BY exam_on DESC ")->result();  
         }
       /**
     * Function to last_test_s
@@ -565,8 +565,8 @@ class National_model extends Model {
     **/
         function last_test_s($city_id)
         {
-           return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
-              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%S%') ORDER BY exam_on DESC ")->result();    
+           return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%S%') ORDER BY exam_on DESC ")->result();    
         }
          /**
     * Function to last_test_l1
@@ -577,8 +577,8 @@ class National_model extends Model {
     **/
         function last_test_l1($city_id)
         {
-             return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
-              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%L1%') ORDER BY exam_on DESC ")->result();  
+             return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L1%') ORDER BY exam_on DESC ")->result();  
         }
          /**
     * Function to last_test_l2
@@ -589,8 +589,8 @@ class National_model extends Model {
     **/
         function last_test_l2($city_id)
         {
-             return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
-              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%L2%') ORDER BY exam_on DESC ")->result();  
+             return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L2%') ORDER BY exam_on DESC ")->result();  
         }
          /**
     * Function to last_test_l3
@@ -601,8 +601,8 @@ class National_model extends Model {
     **/
         function last_test_l3($city_id)
         {
-             return $this->db->query("SELECT exam_event.exam_on FROM exam_event JOIN level ON level.id=exam_event.level_id
-              WHERE exam_event.city_id={$city_id} AND (level.name LIKE '%L3%') ORDER BY exam_on DESC ")->result();  
+             return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L3%') ORDER BY exam_on DESC ")->result();  
         }
 	
 }

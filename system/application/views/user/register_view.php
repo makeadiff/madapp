@@ -38,38 +38,31 @@ jQuery(document).ready(function () {
 			
             <div class="content-row-large">
 				<span>Name:</span>
-				<input type="text" class="textfield" id="name" name="name" value="<?php if(isset($this->validation->name)){ echo $this->validation->name; } ?>" />
-				<?php if(!empty($this->validation->name_error)) { ?>
-				<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-				<?php } ?>
+				<input type="text" class="textfield" id="name" name="name" value="<?php if(isset($this->validation->name)){ echo $this->validation->name; } ?>" /><?php 
+				if(!empty($this->validation->name_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
 
             <div class="content-row-large"><span>Email:</span>
-                <input type="text" class="textfield" id="email" name="email" value="<?php if(!empty($this->validation->email)){ echo $this->validation->email; } ?>" />
-                <?php if(!empty($this->validation->email_error)) { ?>
-                <img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-                <?php } ?>
+                <input type="text" class="textfield" id="email" name="email" value="<?php if(!empty($this->validation->email)){ echo $this->validation->email; } ?>" /><?php 
+                if(!empty($this->validation->email_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
 
             <div class="content-row-large"><span>Phone:</span>
-				<input type="text" class="textfield" id="phone" name="phone" value="<?php if(isset($this->validation->phone)){ echo $this->validation->phone; } ?>" />
-				<?php if(!empty($this->validation->phone_error)) { ?>
-				<img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" />
-				<?php } ?>
+				<input type="text" class="textfield" id="phone" name="phone" value="<?php if(isset($this->validation->phone)){ echo $this->validation->phone; } ?>" /><?php 
+				if(!empty($this->validation->phone_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
             
             <div class="content-row-large"><span>Address:</span>
-            <textarea class="textarea" name="address" id="address" rows="5" cols="40"></textarea>
+            <textarea class="textarea" name="address" id="address" rows="5" cols="40"><?php if(isset($_POST['address'])) echo $_POST['address']; ?></textarea>
             </div>
             
             <div class="content-row-large"><span>Sex:</span>
             <select class="dropdown" id="sex" name="sex">
-				<option value="m">Male</option>
-				<option value="f">Female</option>
+				<option value="m" <?php if(isset($_POST['sex']) and $_POST['sex'] == 'm') echo 'selected="selected"'; ?>>Male</option>
+				<option value="f" <?php if(isset($_POST['sex']) and $_POST['sex'] == 'f') echo 'selected="selected"'; ?>>Female</option>
 			</select>
             </div>
 
-				 
             <div class="content-row-large"><span>City:</span>
             <select class="dropdown" id="city_id" name="city_id" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/7-expansions';">
 				<?php foreach($cities as $id=>$name) { ?>
@@ -83,35 +76,35 @@ jQuery(document).ready(function () {
 
             <div class="content-row-large"><span>Job Status:</span>
             <select class="dropdown" id="job_status" name="job_status">
-				<option value="student">Student</option>
-				<option value="working">Working</option>
-				<option value="other">Other</option>
+				<option value="student" <?php if(isset($_POST['job_status']) and $_POST['job_status'] == 'student') echo 'selected="selected"'; ?>>Student</option>
+				<option value="working" <?php if(isset($_POST['job_status']) and $_POST['job_status'] == 'working') echo 'selected="selected"'; ?>>Working</option>
+				<option value="other" <?php if(isset($_POST['job_status']) and $_POST['job_status'] == 'other') echo 'selected="selected"'; ?>>Other</option>
 			</select>
             </div>
 
             <div class="content-row-large"><span>Preferred Class Day:</span>
             <select class="dropdown" id="preferred_day" name="preferred_day">
-				<option value="flexible">Flexible</option>
-				<option value="weekday">Weekdays Only</option>
-				<option value="weekend">Weekends Only</option>
+				<option value="flexible" <?php if(isset($_POST['preferred_day']) and $_POST['preferred_day'] == 'flexible') echo 'selected="selected"'; ?>>Flexible</option>
+				<option value="weekday" <?php if(isset($_POST['preferred_day']) and $_POST['preferred_day'] == 'weekday') echo 'selected="selected"'; ?>>Weekdays Only</option>
+				<option value="weekend" <?php if(isset($_POST['preferred_day']) and $_POST['preferred_day'] == 'weekend') echo 'selected="selected"'; ?>>Weekends Only</option>
 			</select>
             </div>
 
             <div class="content-row-large"><span>Date of Birth:</span>
-            <input class="textfield" type="text" id="birthday" name="birthday" />
+            <input class="textfield" type="text" id="birthday" name="birthday" value="<?php if(isset($_POST['birthday'])) echo $_POST['birthday']; ?>" />
             </div>
 
             <div class="content-row-large"><span>Why MAD:</span>
-            <textarea class="textarea" name="why_mad" rows="5" cols="40"></textarea>
+            <textarea class="textarea" name="why_mad" rows="5" cols="40"><?php if(isset($_POST['why_mad'])) echo $_POST['why_mad']; ?></textarea>
             </div>
 
 			<div class="content-row-large"><span>Source:</span>
             <select class="dropdown" id="source" name="source">
-				<option value="friends">Friends</option>
-				<option value="college">College Presentation</option>
-				<option value="media">Media</option>
-				<option value="internet">Blogs/Facebook</option>
-				<option value="other">Other</option>
+				<option value="friends" <?php if(isset($_POST['source']) and $_POST['source'] == 'friends') echo 'selected="selected"'; ?>>Friends</option>
+				<option value="college" <?php if(isset($_POST['source']) and $_POST['source'] == 'college') echo 'selected="selected"'; ?>>College Presentation</option>
+				<option value="media" <?php if(isset($_POST['source']) and $_POST['source'] == 'media') echo 'selected="selected"'; ?>>Media</option>
+				<option value="internet" <?php if(isset($_POST['source']) and $_POST['source'] == 'internet') echo 'selected="selected"'; ?>>Blogs/Facebook</option>
+				<option value="other" <?php if(isset($_POST['source']) and $_POST['source'] == 'other') echo 'selected="selected"'; ?>>Other</option>
 			</select>
             </div>
 

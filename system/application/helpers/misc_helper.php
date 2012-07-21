@@ -128,7 +128,8 @@ function set_city_year($that) {
 		$that->center_model->year = $year;
 		$that->batch_model->year = $year;
 		$that->level_model->year = $year;
-		$that->user_model->year = $year;
+		if(isset($that->user_model)) $that->user_model->year = $year;
+		if(isset($that->users_model)) $that->users_model->year = $year;
 	}
 }
 

@@ -18,6 +18,7 @@ class Users_model extends Model {
         $this->ci = &get_instance();
         $this->city_id = $this->ci->session->userdata('city_id');
         $this->project_id = $this->ci->session->userdata('project_id');
+        $this->year = $this->ci->session->userdata('year');
     }
     
     /**
@@ -551,7 +552,8 @@ class Users_model extends Model {
 			if(!empty($data['get_user_groups'])) $user->groups = $this->get_user_groups_of_user($user->id);
 			if(!empty($data['get_user_class'])) $user->batch = $this->db->query("SELECT Batch.day, Batch.class_time, Center.name 
 					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
-					INNER JOIN Center ON Batch.center_id=Center.id WHERE UserBatch.user_id={$user->id}")->row();
+					INNER JOIN Center ON Batch.center_id=Center.id 
+					WHERE UserBatch.user_id={$user->id} AND Batch.year={$this->year}")->row();
 			
 			$return[$user->id] = $user;
 		}

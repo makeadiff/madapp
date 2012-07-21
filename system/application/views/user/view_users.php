@@ -150,7 +150,7 @@ $.tablesorter.addParser({
 <a class="with-icon add" href="<?php echo site_url('user/import'); ?>">Import Users...</a> &nbsp; &nbsp;
 <?php if($this->user_auth->get_permission('user_export')) { ?><a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;<?php } ?>
 <?php if($this->user_auth->get_permission('user_bulk_email')) { ?><a class="with-icon email" href="#" onclick="showEmail();">EMail...</a> &nbsp; &nbsp;<?php } ?>
-<?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?>
+<!-- <?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?> -->
 <br /><br />
 
 <table cellpadding="0"  cellspacing="0" class="clear data-table">

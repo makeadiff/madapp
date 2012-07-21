@@ -35,11 +35,13 @@ class Common extends Controller {
     {
 		if(Navigation::isPost()){
 			$data = $_POST;
-
+			$data['phone'] = $_POST['phone'] = preg_replace('/[^+\d]/','', $_POST['phone']);
+			$data['cities'] = $this->city_model->get_unique_cities();
+			
 			//Set Rules..........
 			$rules['name']	= "required";
 			$rules['email']	= "required|valid_email";
-			$rules['phone'] = "trim|required|min_length[8]|max_length[12]|callback__validate_phone_number";
+			$rules['phone'] = "trim|required|min_length[8]|max_length[12]";
 			$this->validation->set_rules($rules);
 			$fields['name'] 	= "Name";
 			$fields['email']	= "Email";
@@ -48,8 +50,7 @@ class Common extends Controller {
 
 			$this->validation->set_fields($fields);
 			if ($this->validation->run() == FALSE) {
-				$data['cities'] = $this->city_model->get_unique_cities();
-				$this->load->view('user/register_view');
+				$this->load->view('user/register_view', $data);
 				
 			} else {
 				$status = $this->user_auth->register($data);
@@ -57,7 +58,6 @@ class Common extends Controller {
 					redirect('common/thank_you');
 				
 				} else {
-					$data['cities'] = $this->city_model->get_unique_cities();
 					$this->load->view('user/register_view',$data);
 				}
 			}
@@ -74,7 +74,7 @@ class Common extends Controller {
 				}
 			}
 			$data['cities'] = $this->city_model->get_unique_cities();
-			$this->load->view('user/register_view',$data);
+			$this->load->view('user/register_view', $data);
 		}
     }
     

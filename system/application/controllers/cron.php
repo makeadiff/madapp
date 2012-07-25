@@ -159,6 +159,9 @@ class Cron extends Controller  {
 	
 	/// This will calculate the Stats necessary for the monthly review
 	function monthly_review_stats_collection($year_month='') {
+            
+           
+            
 		if(!$year_month) $year_month = date('Y-m', strtotime('last month'));
 		
 		$this->load->model('report_model');
@@ -168,6 +171,8 @@ class Cron extends Controller  {
 		$this->load->model('kids_model');
 		$this->load->model('review_model');
 		
+                
+                
 		$project_id = 1;
 		$cities = $this->city_model->get_all();
 		
@@ -206,6 +211,8 @@ class Cron extends Controller  {
 				// President
 				'core_team_meeting_stauts'				=> 0,
 				'red_flag_count'						=> 0,
+                                'teacher_training_1_havnt_attent' => 0,
+                            'teacher_training_1_havnt_attent_status' => 0
 			);
 			
 			$flags = array();
@@ -261,7 +268,18 @@ class Cron extends Controller  {
 			// Count number of red flags.
 			foreach($flags as $name=>$color) if($color == 'red') $categories['red_flag_count']++;
 			if($categories['red_flag_count'] >= 4) $flag['red_flag_count'] = 'red';
-				
+                        
+                        
+			//Count of volunteers to attend training 1.
+                        $teacher_training1='Teacher Training 1';
+                        $volunteerCount = $this->event_model->get_volunteers_to_attend_training_1($year_month, $city->id, $teacher_training1);
+                        
+			if($volunteerCount) {				
+                                $categories['teacher_training_1_havnt_attent'] = $volunteerCount;				
+				if($categories['teacher_training_1_havnt_attent'] > 4 ) $flags['teacher_training_1_havnt_attent_status'] = 'red'; // If less than 90% of the kids attended the class, red flag.
+			}
+                        
+                        
 			// Save status to DB...
 			foreach($categories as $name => $value) {
 				$this->review_model->save($name, $value, $year_month.'-01', $flags[$name], $city->id);
@@ -269,5 +287,6 @@ class Cron extends Controller  {
 			}
 		}
 	}
+               
 }
 

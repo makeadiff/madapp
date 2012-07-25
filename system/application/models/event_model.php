@@ -266,4 +266,11 @@ class Event_model extends Model{
 		$difference = date_diff(date_create($year_month.'-01'), date_create($starts_on));
 		return $difference->format('%m');
 	}
+        function get_volunteers_to_attend_training_1($year_month, $city_id ,$teacher_training1)
+        {
+           
+            return $this->db->query("SELECT COUNT(id) AS count FROM Event JOIN Userevent ON Event.id=Userevent.event_id
+                                WHERE Userevent.present='0' AND Event.name='$teacher_training1'")->row()->count;
+           
+        }
 }

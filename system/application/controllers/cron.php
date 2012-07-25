@@ -1,4 +1,14 @@
 <?php
+/**
+ * CodeIgniter
+ * An open source application development framework for PHP 4.3.2 or newer
+ * @package         MadApp
+ * @author          
+ * @copyright       
+ * @link            
+ * @since           Version 1.0
+ * @filesource
+ */
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends Controller  {
@@ -8,8 +18,14 @@ class Cron extends Controller  {
         
         $this->load->model('Class_model','class_model', TRUE);
 	}
-	
-	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
+	/*
+     * Function Name : schedule_classes()
+     * Wroking :This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
+     * @author:
+     * @param :[]
+     * @return: type: []
+     */
+	 
 	function schedule_classes($debug=0) {
 		$this->load->model('Batch_model','batch_model', TRUE);
 		$all_batches = $this->batch_model->get_all_batches();
@@ -61,8 +77,13 @@ class Cron extends Controller  {
 			}
 		}
 	}
-	
-	/// Send SMSs to people who haven't confirmed their classes.
+	/*
+     * Function Name : send_unconfirmed_class_sms()
+     * Wroking :Send SMSs to people who haven't confirmed their classes.
+     * @author:
+     * @param :[]
+     * @return: type: []
+     */
 	function send_unconfirmed_class_sms() {
 		$this->load->model('Center_model','center_model', TRUE);
 		$this->load->model('Batch_model','batch_model', TRUE);
@@ -101,8 +122,13 @@ class Cron extends Controller  {
 					. ". Please take the necessary steps to make sure that the classes happen.");
 		}
 	}
-	
-	/// Sometimes, the credits go bad. In such cases, rebuild the credits using the credit history.
+	/*
+     * Function Name : recalculate_credits()
+     * Wroking :Sometimes, the credits go bad. In such cases, rebuild the credits using the credit history.
+     * @author:
+     * @param :[]
+     * @return: type: []
+     */
 	function recalculate_credits($city_id=0) {
 		$this->load->model('users_model');
 		
@@ -117,8 +143,13 @@ class Cron extends Controller  {
 			print "\n";
 		}
 	}
-	
-	/// Sometimes, the classes linger in the database even after the user has been removed from the batch. This function clears that.
+	/*
+     * Function Name : delete_orphan_classes()
+     * Wroking :Sometimes, the classes linger in the database even after the user has been removed from the batch. This function clears that.
+     * @author:
+     * @param :[]
+     * @return: type: []
+     */
 	function delete_orphan_classes() {
 		$this->load->model('Batch_model','batch_model');
 		$this->load->model('Center_model','center_model');
@@ -156,8 +187,13 @@ class Cron extends Controller  {
 			}
 		}
 	}
-	
-	/// This will calculate the Stats necessary for the monthly review
+	/*
+     * Function Name : monthly_review_stats_collection()
+     * Wroking :This will calculate the Stats necessary for the monthly review
+     * @author:
+     * @param :[]
+     * @return: type: []
+     */
 	function monthly_review_stats_collection($year_month='') {
             
            

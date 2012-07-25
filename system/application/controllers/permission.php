@@ -35,12 +35,13 @@ class Permission extends controller {
     {
         
     }
-	/**
-    * Function to manage_permission
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+	/*
+     * Function Name : manage_permission()
+     * Wroking :This function used for showing permission window
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function manage_permission()
 	{
 		$this->user_auth->check_permission('permission_index');
@@ -53,24 +54,26 @@ class Permission extends controller {
 	
 	}
 	
-	/**
-    * Function to popupAddPermission
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+	/*
+     * Function Name : popupAddPermission()
+     * Wroking :This function used for showing permission add window
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function popupAddPermission()
 	{
 		$this->user_auth->check_permission('permission_add');
 		$this->load->view('permission/popups/addpermission');
 	
 	}
-	/**
-    * Function to addpermission
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+	/*
+     * Function Name : addpermission()
+     * Wroking :This function used for save permissions
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function addpermission()
 	{
 		$this->user_auth->check_permission('permission_add');
@@ -86,12 +89,13 @@ class Permission extends controller {
 		
 	}
 	
-	/**
-    * Function to popupEdit_permission
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+	/*
+     * Function Name : popupEdit_permission()
+     * Wroking :This function used for showing permission edit window
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function popupEdit_permission()
 	{
 		$this->user_auth->check_permission('permission_edit');
@@ -99,12 +103,13 @@ class Permission extends controller {
 		$data['content']= $this->permission_model->getedit_permission($uid);
 		$this->load->view('permission/popups/edit_permission',$data);
 	}
-	/**
-    * Function to edit_permission
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+	/*
+     * Function Name : edit_permission()
+     * Wroking :This function used for edit permissions
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function edit_permission()
 	{
 		$this->user_auth->check_permission('permission_edit');
@@ -121,12 +126,13 @@ class Permission extends controller {
 		}
 	}
 	
-	/**
-    * Function to ajax_deletepermission
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+	/*
+     * Function Name : ajax_deletepermission()
+     * Wroking :This function used for delete permissions
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function ajax_deletepermission()
 	{
 		$this->user_auth->check_permission('permission_delete');

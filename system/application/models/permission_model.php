@@ -21,12 +21,13 @@ class Permission_model extends Model
 	
 	
 	}
-	/**
-    * Function to getpermission_details
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Array()]
-    **/
+	/*
+     * Function Name : getpermission_details()
+     * Wroking :This function used for return all the permission.
+     * @author:Rabeesh
+     * @param :[$city_id]
+     * @return: type: [array]
+     */
 	function getpermission_details()
 	{
 		$this->db->select('*');
@@ -36,12 +37,13 @@ class Permission_model extends Model
 		return $result;
 	
 	}
-	/**
-    * Function to add_permission
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, int]
-    **/
+	/*
+     * Function Name : add_permission()
+     * Wroking :This function used for save permission.
+     * @author:Rabeesh
+     * @param :[$city_id]
+     * @return: type: [array]
+     */
 	function add_permission($permission)
 	{
 		$data = array('name'=> $permission);
@@ -49,12 +51,13 @@ class Permission_model extends Model
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
-	/**
-    * Function to getedit_permission
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Array()]
-    **/
+	/*
+     * Function Name : getedit_permission()
+     * Wroking :This function used for getting  permissions.
+     * @author:Rabeesh
+     * @param :[$city_id]
+     * @return: type: [array]
+     */
 	function getedit_permission($uid)
 	{
 		$this->db->select('*');
@@ -64,12 +67,13 @@ class Permission_model extends Model
 		return $result;
 	
 	}
-	/**
-    * Function to update_permission
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, int]
-    **/
+	/*
+     * Function Name : update_permission()
+     * Wroking :This function used for updating  permissions.
+     * @author:Rabeesh
+     * @param :[$city_id]
+     * @return: type: [array]
+     */
 	function update_permission($data)
 	{
 		$rootId=$data['rootId'];
@@ -79,12 +83,13 @@ class Permission_model extends Model
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
-	/**
-    * Function to delete_permission
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, int]
-    **/
+	/*
+     * Function Name : delete_permission()
+     * Wroking :This function used for deleting  permissions.
+     * @author:Rabeesh
+     * @param :[$city_id]
+     * @return: type: [array]
+     */
 	function delete_permission($data)
 	{
 		$id = $data['entry_id'];
@@ -93,12 +98,13 @@ class Permission_model extends Model
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
-	/**
-    * Function to getgroup_permission_details
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Array()]
-    **/
+	/*
+     * Function Name : getgroup_permission_details()
+     * Wroking :This function used for getting all group  permissions.
+     * @author:Rabeesh
+     * @param :[$city_id]
+     * @return: type: [array]
+     */
 	function getgroup_permission_details($uid)
 	{
 		$this->db->select('permission_id');

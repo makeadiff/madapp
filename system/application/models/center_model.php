@@ -23,12 +23,13 @@ class Center_model extends Model
 		$this->year = $this->ci->session->userdata('year');
     }
 	
-	 /**
-    * Function to getcenter_count
-    * @author:Rabeesh
-    * @param :[$data]
-    * @return: type: [Boolean,int]
-    **/
+	 /*
+     * Function Name : getcenter_count()
+     * Wroking :This function returns  total center count 
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: [count]
+     */
 	function getcenter_count()
 	{
 		$this->db->select('*')->where('Center.city_id',$this->city_id)->where('Center.status','1')->from('Center');
@@ -36,13 +37,13 @@ class Center_model extends Model
 		return count($count->result());
 	}
     
-	
-    /**
-    * Function to getcenter_details
-    * @author : Rabeesh
-    * @param  : [$data]
-    * @return : type: [Array()]
-    **/
+ /*
+     * Function Name : getcenter_details()
+     * Wroking :This function returns  center details
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: [array]
+     */
     function getcenter_details()
     {
 		$this->ci->load->model('city_model');
@@ -67,12 +68,13 @@ class Center_model extends Model
 		
 		return $result;	
     }
-	 /**
-    * Function to getcity
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [ Array()]
-    **/
+	/*
+     * Function Name : getcity()
+     * Wroking :This function returns  all cities details
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: [array]
+     */
 	function getcity() {
 		$this->db->select('*');
 		$this->db->from('City');
@@ -80,12 +82,13 @@ class Center_model extends Model
 		return $result;
 	
 	}
-	/**
-    * Function to add_center
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean]
-    **/
+	/*
+     * Function Name : add_center()
+     * Wroking :This function save center details
+     * @author:Rabeesh
+     * @param :[$data]
+     * @return: type: [boolean]
+     */
 	function add_center($data)
 	{
 		$data = array(
@@ -98,12 +101,13 @@ class Center_model extends Model
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	
 	}
-	 /**
-    * Function to edit_center
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Array()]
-    **/
+	/*
+     * Function Name : edit_center()
+     * Wroking :This function return center details for editing.
+     * @author:Rabeesh
+     * @param :[$uid]
+     * @return: type: [array]
+     */
 	function edit_center($uid) {
 		$this->db->select('*');
 		$this->db->from('Center');
@@ -111,12 +115,13 @@ class Center_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
-	 /**
-    * Function to update_center
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean]
-    **/
+	/*
+     * Function Name : edit_center()
+     * Wroking :This function update the center details.
+     * @author:Rabeesh
+     * @param :[$data]
+     * @return: type: [array]
+     */
 	function update_center($data) {
 		$center_id = $data['rootId'];
 		$center_details = $this->edit_center($center_id)->row();
@@ -139,12 +144,13 @@ class Center_model extends Model
 		return $affected_rows;
 	}
 	
-	/**
-    * Function to delete_center
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean]
-    **/
+	/*
+     * Function Name : delete_center()
+     * Wroking :This function used for deleting the centers
+     * @author:Rabeesh
+     * @param :[$data]
+     * @return: type: [array]
+     */
 	function delete_center($center_id)
 	{
  		 $this->db->where('id',$center_id)->update('Center', array('status'=>'0'));
@@ -152,12 +158,13 @@ class Center_model extends Model
 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	
 	}
-	/**
-    * Function to center_name
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Array]
-    **/
+	/*
+     * Function Name : center_name()
+     * Wroking :This function returns center names
+     * @author:Rabeesh
+     * @param :[$center_id]
+     * @return: type: [array]
+     */
 	function center_name($center_id) {
 		$this->db->select('name');
 		$this->db->from('Center');
@@ -166,24 +173,45 @@ class Center_model extends Model
 		return $result;
 	
 	}
-	
+	/*
+     * Function Name : get_center_name()
+     * Wroking :This function returns center names for given center id
+     * @author:Rabeesh
+     * @param :[$center_id]
+     * @return: type: [array]
+     */
 	function get_center_name($center_id) {
 		$center = $this->db->where('id', $center_id)->get('Center')->row();
 		return $center->name;
 	}
-	
-	// Get all the centers in the current city
+	/*
+     * Function Name : get_center_name()
+     * Wroking :Get all the centers in the current city
+     * @author:Rabeesh
+     * @param :[$city_id]
+     * @return: type: [array]
+     */
 	function get_all($city_id=0) {
 		if(!$city_id) $city_id = $this->city_id;
 		return $this->db->where('city_id',$city_id)->where('status','1')->orderby('name')->get('Center')->result();
 	}
-	
-	// Get all the centers. No matter what city
+	/*
+     * Function Name : get_center_name()
+     * Wroking :Get all the centers. No matter what city
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: [array]
+     */
 	function get_all_centers() {
 		return $this->db->select(array('id','name'))->where('status','1')->get('Center')->result();
 	}
-	
-	// Find the errors in the center - if any.
+	/*
+     * Function Name : find_issues()
+     * Wroking :Find the errors in the center - if any.
+     * @author:
+     * @param :[]
+     * @return: type: [array]
+     */
 	function find_issues($center_id) {
 		$teacher_count = 0;
 		$problem_flag = 0;
@@ -250,12 +278,13 @@ class Center_model extends Model
 	}
 	
 	
-	/**
-    * Function to getcenter
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Array]
-    **/
+	/*
+     * Function Name : getcenter()
+     * Wroking :returns the city details of given city
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: [array]
+     */
 	function getcenter() {
 		$this->db->select('*');
 		$this->db->from('Center');
@@ -264,9 +293,17 @@ class Center_model extends Model
 		return $result;
 	}
 	
-	
+	/*
+     * Function Name : get_exam_centers()
+     * Wroking :returns all the exam centers
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: [array]
+     */
 	function get_exam_centers()
 	{
+
 		return $this->db->query("SELECT DISTINCT(Center.name),Center.id FROM Center JOIN Exam_Event ON Center.id = Exam_Event.center_id WHERE Center.city_id={$this->city_id}")->result();
+
 	}
 }

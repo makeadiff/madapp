@@ -30,16 +30,23 @@ class Exam extends Controller  {
 		$this->load->model('kids_model');
 		$this->load->model('exam_model');
     }
-	
+	/*
+     * Function Name : index()
+     * Wroking :Showing index page of exam
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
     function index() {
         redirect('exam/manage_exam');
     }
-	/**
-    * Function to manage_exam
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+    /*
+     * Function Name : manage_exam()
+     * Wroking :This function used for managing exams
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function manage_exam()
 	{
 		$data['title'] = 'Manage Exam';
@@ -49,12 +56,13 @@ class Exam extends Controller  {
 		$this->load->view('student_exam_score/exam_list',$data);
 		$this->load->view('layout/footer');
 	}
-	/**
-    * Function to view_exam_details
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
+	/*
+     * Function Name : view_exam_details()
+     * Wroking :This function used for viewing of all the exam details
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
 	function view_exam_details($exam_id)
 	{
 		$this->user_auth->check_permission('exam_view');
@@ -64,12 +72,24 @@ class Exam extends Controller  {
 	}
 	
 
-	
+	/*
+     * Function Name : add_exam()
+     * Wroking :This function used for generate add exam window
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
     function add_exam() {	
 		$this->user_auth->check_permission('exam_add');
 		$this->load->view('student_exam_score/add_exam');
     }
-    
+    /*
+     * Function Name : insert()
+     * Wroking :This function used for insert exam details
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
     function insert() {
 		$subject_names = $this->input->post('subject');
 		$totals = $this->input->post('subject_total');
@@ -84,7 +104,13 @@ class Exam extends Controller  {
 		$this->session->set_flashdata("success", "Exam Added Successfully.");
 		redirect('exam/manage_exam');
     }
-    
+    /*
+     * Function Name : add_event()
+     * Wroking :This function used for adding events
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
     function add_event($exam_id) {
 		$this->user_auth->check_permission('exam_add_event');
 		
@@ -96,7 +122,13 @@ class Exam extends Controller  {
 			
 		$this->load->view('student_exam_score/add_event', $data);
     }
-    
+    /*
+     * Function Name : add_marks()
+     * Wroking :This function used for generate exam mark adding window
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
     function add_marks() {
 		$this->user_auth->check_permission('exam_add_marks');
 		$exam_id = $this->input->post('exam_id');
@@ -114,7 +146,13 @@ class Exam extends Controller  {
 		
 		$this->load->view('student_exam_score/add_marks', $data);
     }
-    
+     /*
+     * Function Name : save_marks()
+     * Wroking :This function used for save marks
+     * @author:Rabeesh
+     * @param :[]
+     * @return: type: []
+     */
     function save_marks() {
 		$this->user_auth->check_permission('exam_save_marks');
 		
@@ -133,13 +171,25 @@ class Exam extends Controller  {
 		redirect('exam/manage_exam');
     }
     
-    
+     /*
+     * Function Name : view_exam_events()
+     * Wroking :This function used for viewing all exam events
+     * @author:Rabeesh
+     * @param :[$exam_id]
+     * @return: type: []
+     */
     function view_exam_events($exam_id=0) {
 		$this->user_auth->check_permission('exam_view_exam_events');
 		$events = $this->exam_model->get_exam_events($exam_id);
 		$this->load->view('student_exam_score/view_exam_events', array('events'=>$events,'title'=>'Exam Events'));
     }
-    
+    /*
+     * Function Name : view_scores()
+     * Wroking :This function used for viewing all exam scores
+     * @author:Rabeesh
+     * @param :[$event_id]
+     * @return: type: []
+     */
     function view_scores($event_id) {
 		$this->user_auth->check_permission('exam_view_scores');
 		
@@ -161,7 +211,13 @@ class Exam extends Controller  {
 			'students'		=> $students,
 			'title'			=> 'Exam Events'));
     }
-	
+    /*
+     * Function Name : delete_event()
+     * Wroking :This function used for deleting a perticular event
+     * @author:Rabeesh
+     * @param :[$event_id]
+     * @return: type: []
+     */
 	function delete_event($event_id) {
 		$this->user_auth->check_permission('exam_delete_event');
 		$this->exam_model->delete_event($event_id);
@@ -178,8 +234,13 @@ class Exam extends Controller  {
 	}
 	
 	
-	
-    // Ajax functions
+/*
+     * Function Name : get_levels()
+     * Wroking :This function used for getting all the levels
+     * @author:Rabeesh
+     * @param :[$center_id]
+     * @return: type: []
+     */
     function get_levels($center_id) {
 		$this->load->model('level_model');
 		$data= array(
@@ -187,7 +248,13 @@ class Exam extends Controller  {
 		);
 		$this->load->view('student_exam_score/ajax/get_levels', $data);
     }
-    
+    /*
+     * Function Name : get_kids_in_level()
+     * Wroking :This function used for getting all the kids in the level
+     * @author:Rabeesh
+     * @param :[$level_id]
+     * @return: type: []
+     */
     function get_kids_in_level($level_id) {
 		$this->load->model('level_model');
 		$data = array(

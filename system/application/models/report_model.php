@@ -9,7 +9,13 @@ class Report_model extends Model {
 		$this->project_id = $this->ci->session->userdata('project_id');
     }
     
-    
+     /*
+     * Function Name : get_users_with_low_credits()
+     * Wroking :This function used for return users with low credit
+     * @author:Rabeesh
+     * @param :[$credit=0, $sign='<', $city_id=-1, $project_id=-1]
+     * @return: type: [array]
+     */
 	function get_users_with_low_credits($credit=0, $sign='<', $city_id=-1, $project_id=-1) {
 		if($sign != '<' and $sign != '>') $sign = '<';
 		if($city_id == -1) $city_id = $this->city_id;
@@ -23,7 +29,13 @@ class Report_model extends Model {
 		$this->db->order_by('credit');
 		return $this->db->get('User')->result();
     }
-    
+    /*
+     * Function Name : get_users_absent_without_substitute()
+     * Wroking :This function used for return absent users without substitute.
+     * @author:
+     * @param :[]
+     * @return: type: [array]
+     */
     function get_users_absent_without_substitute() {
     	return $this->db->query("SELECT UserClass.user_id,User.name,Class.class_on,Center.name AS center_name
     		FROM UserClass INNER JOIN User ON User.id=UserClass.user_id 
@@ -32,7 +44,13 @@ class Report_model extends Model {
     		WHERE User.city_id={$this->city_id} AND User.project_id={$this->project_id} 
     			AND UserClass.substitute_id=0 AND UserClass.status='absent'")->result();
     }
-    
+    /*
+     * Function Name : get_volunteer_requirements()
+     * Wroking :This function  return all volunteer requirments.
+     * @author:
+     * @param :[]
+     * @return: type: [array]
+     */
     function get_volunteer_requirements($city_id=0) {
 		if(!$city_id) $city_id = $this->city_id;
     	return $this->db->query("SELECT Center.name, SUM(requirement) AS requirement
@@ -41,7 +59,13 @@ class Report_model extends Model {
     		INNER JOIN Center ON Center.id=Level.center_id 
     		WHERE requirement > 0 AND Center.city_id=$city_id GROUP BY Level.center_id")->result();
     }
-	
+	/*
+     * Function Name : get_volunteer_admin_credits()
+     * Wroking :This function  return all volunteer admin credits.
+     * @author:
+     * @param :[]
+     * @return: type: [array]
+     */
 	function get_volunteer_admin_credits() {
 		$data = array();
 		$intern_user_group_id = 14; // 14 is the intern group

@@ -362,17 +362,28 @@ class User extends Controller  {
 	function search_email() {
 		$email = '';
 		$phone = '';
+		$id = '';
+		$name = '';
 		$data = array();
-		if($this->input->post('email')) {
+		
+		if($this->input->post('id')) {
+			$id = $this->input->post('id');
+			$data = $this->users_model->db->query("SELECT * FROM User WHERE id='$id'")->result();
+		
+		} elseif($this->input->post('name')) {
+			$name = $this->input->post('name');
+			$data = $this->users_model->db->query("SELECT * FROM User WHERE name LIKE '%$name%'")->result();
+
+		} else if($this->input->post('email')) {
 			$email = $this->input->post('email');
 			$data = $this->users_model->db->query("SELECT * FROM User WHERE email LIKE '%$email%'")->result();
-		}
 		
-		if($this->input->post('phone')) {
+		} else if($this->input->post('phone')) {
 			$phone = $this->input->post('phone');
 			$data = $this->users_model->db->query("SELECT * FROM User WHERE phone LIKE '%$phone%'")->result();
 		}
-		$this->load->view('user/search_email', array('email'=>$email, 'phone'=>$phone, 'data'=>$data));
+		
+		$this->load->view('user/search_email', array('email'=>$email, 'phone'=>$phone, 'name'=>$name, 'id'=>$id, 'data'=>$data));
 	}
  /*
      * Function Name : export()

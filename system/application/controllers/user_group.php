@@ -34,13 +34,14 @@
 		$this->load->model('users_model');
 		$this->load->model('permission_model');
     }
-	/*
-     * Function Name : manageadd_group()
-     * Wroking :This function used create manage group window
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	 /**
+    *
+    * Function to manageadd_group
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function manageadd_group()
 	{
 		$this->user_auth->check_permission('user_group_index');
@@ -52,26 +53,28 @@
 		$this->load->view('layout/footer');
 	}
 	
-    /*
-     * Function Name : popupaddgroup()
-     * Wroking :This function used create window for popup window for add group
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+    /**
+    *
+    * Function to popupaddgroup
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
     function popupaddgroup()
 	{	
 		$this->user_auth->check_permission('user_group_add');
 		$data['permission']= $this->permission_model->getpermission_details();
 		$this->load->view('user_group/popups/add_group',$data);
 	}
-	/*
-     * Function Name : addgroup_name()
-     * Wroking :This function used saving group name.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to addgroup_name
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function addgroup_name()
 	{	
 		$this->user_auth->check_permission('user_group_add');
@@ -93,13 +96,14 @@
 		}
 		
 	}
-	/*
-     * Function Name : popupEdit_group()
-     * Wroking :This function used for create popup window for edit group
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to popupEdit_group
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function popupEdit_group()
 	{		
 		$this->user_auth->check_permission('user_group_edit');
@@ -109,13 +113,14 @@
 		$data['group_permission']= $this->permission_model->getgroup_permission_details($uid);
 		$this->load->view('user_group/popups/group_edit_view',$data);
 	}
-	/*
-     * Function Name : updategroup_name()
-     * Wroking :This function used for update group info
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to updategroup_name
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function updategroup_name()
 	{
 		$this->user_auth->check_permission('user_group_edit');
@@ -139,13 +144,14 @@
 				redirect('user_group/manageadd_group');
 			 }
 	}
-	/*
-     * Function Name : updategroup_name()
-     * Wroking :This function used for delete group info
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to ajax_deletegroup
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function ajax_deletegroup()
 	{
 		$this->user_auth->check_permission('user_group_delete');
@@ -159,13 +165,14 @@
 		redirect('user_group/manageadd_group');
 		}
 	}
-	/*
-     * Function Name : updategroup_name()
-     * Wroking :This function used for view all  group permissions
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to view_permission
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function view_permission()
 	{
 		$this->user_auth->check_permission('user_group_view');

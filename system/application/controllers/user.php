@@ -33,24 +33,13 @@ class User extends Controller  {
 		$this->load->model('city_model');
 		$this->load->library('upload');
     }
-    /*
-     * Function Name : index()
-     * Wroking :This function used for showing index.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+
     function index()
     {
         
     }
-    /*
-     * Function Name : view()
-     * Wroking :View all the important details about the user in one convinent location.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+    
+    /// View all the important details about the user in one convinent location.
     function view($user_id) {
 		$this->user_auth->check_permission('user_view');
 		$data['all_cities']= idNameFormat($this->city_model->get_all());
@@ -61,13 +50,13 @@ class User extends Controller  {
 		
 		$this->load->view('user/view',$data);
     }
-/*
-     * Function Name : get_userlist()
-     * Wroking :View all the important details about the user .
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+
+	/**
+    * Function to get_userlist
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function get_userlist()
 	{
 		$page_no = $_REQUEST['pageno'];
@@ -77,13 +66,12 @@ class User extends Controller  {
 		$this->load->view('user/user_list',$data);
 	}
 	
-	/*
-     * Function Name : popupAdduser()
-     * Wroking :This function used for create popup window for add users
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    * Function to popupAdduser
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function popupAdduser()
 	{
 		$this->user_auth->check_permission('user_add');
@@ -96,13 +84,12 @@ class User extends Controller  {
 		$this->load->view('user/popups/add_user',$data);
 	}
 	
-		/*
-     * Function Name : adduser()
-     * Wroking :This function used for saving  users
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    * Function to adduser
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function adduser()
 	{
 		$this->user_auth->check_permission('user_add');
@@ -154,13 +141,13 @@ class User extends Controller  {
 		}
 		redirect('user/view_users');
 	}
-		/*
-     * Function Name : popupEditusers()
-     * Wroking :This function used for create popup window for edit users
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
+	/**
+    * Function to popupEditusers
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function popupEditusers($user_id)
 	{	
 		$this->user_auth->check_permission('user_edit');
@@ -172,14 +159,8 @@ class User extends Controller  {
 		
 		$this->load->view('user/popups/user_edit_view',$data);
 	}
-    /*
-     * Function Name : update_user()
-     * Wroking :This function used for update  users
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
-
+	
+	/// Edits a user.
 	function update_user() {
 		$this->user_auth->check_permission('user_edit');
 		$data['rootId'] = $this->input->post('rootId');
@@ -224,13 +205,7 @@ class User extends Controller  {
 
 		redirect('user/view_users');
 	}
-	 /*
-     * Function Name : delete()
-     * Wroking :This function used for delete  users
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function delete($user_id) {	
 		$this->user_auth->check_permission('user_delete');
 	
@@ -238,25 +213,14 @@ class User extends Controller  {
 		else $this->session->set_flashdata('error', 'Error deleting User!');
 		redirect('user/view_users');
 	}
-	 /*
-     * Function Name : undelete()
-     * Wroking :This function used for undelete  users
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function undelete($user_id) {
 		$this->users_model->undelete($user_id);
 		$this->session->set_flashdata('success', "User has been restored.");
 		redirect('user/view/'.$user_id);
     }
-	 /*
-     * Function Name : bulk_communication()
-     * Wroking :This function used for Bulk SMS and Email goes thru here.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
+	/// Bulk SMS and Email goes thru here.
 	function bulk_communication() {
 		if($this->input->post('action') == 'Send Emails') {
 			$this->user_auth->check_permission('user_bulk_email');
@@ -292,14 +256,8 @@ class User extends Controller  {
 			redirect('user/view_users/'.$this->input->post('query_string'));
 		}
 	}
-	 /*
-     * Function Name : view_users()
-     * Wroking :The User index is handled by this action
-     * @author:
-     * @param :[]
-     * @return: type: []
-     */
-
+	
+	/// The User index is handled by this action
 	function view_users($city_id='', $user_groups='', $name='',$user_type='volunteer') {
 		$this->user_auth->check_permission('user_index');
 		set_city_year($this);
@@ -352,13 +310,7 @@ class User extends Controller  {
 		
 		$this->load->view('user/view_users', $data);
 	}
-	 /*
-     * Function Name : search_email()
-     * Wroking :This function searches all the mails
-     * @author:
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function search_email() {
 		$email = '';
 		$phone = '';
@@ -385,14 +337,8 @@ class User extends Controller  {
 		
 		$this->load->view('user/search_email', array('email'=>$email, 'phone'=>$phone, 'name'=>$name, 'id'=>$id, 'data'=>$data));
 	}
- /*
-     * Function Name : export()
-     * Wroking :This function Export to CSV
-     * @author:
-     * @param :[]
-     * @return: type: []
-     */
 
+	/// Export to CSV
 	function export($city_id='0', $user_group='0', $name='', $user_type="volunteer") {
 		$this->user_auth->check_permission('user_export');
 		$data['city_id']	= $city_id;
@@ -410,26 +356,25 @@ class User extends Controller  {
 		$this->load->view('user/export_csv', $data);
 	}
 	
-	/*
-     * Function Name : edit_profile()
-     * Wroking :This function create edit profile window
-     * @author:Rabeeshm
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    * Function to edit_profile
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function edit_profile()
 	{	
 		$uid = $this->session->userdata('id');
 		$data['user']= $this->users_model->user_details($uid);
 		$this->load->view('user/edit_profile',$data);
 	}
-	/*
-     * Function Name : update_profile()
-     * Wroking :This function update users profile
-     * @author:Rabeeshm
-     * @param :[]
-     * @return: type: []
-     */
+	
+	/**
+    * Function to update_profile
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function update_profile()
 	{
 		$data['rootId'] = $this->session->userdata('id');
@@ -463,24 +408,13 @@ class User extends Controller  {
 		}
 	}
 	
-	/*
-     * Function Name : import()
-     * Wroking :This function Importing the CSV file
-     * @author:Rabeeshm
-     * @param :[]
-     * @return: type: []
-     */
+	
+	/// Importing the CSV file
 	function import() {
 		$this->user_auth->check_permission('user_add');
 		$this->load->view('user/import/import');
 	}
-	/*
-     * Function Name : import_field_select()
-     * Wroking :Read the CSV file and analyis it. Give the user a chance to make sure the connections are correct.
-     * @author:Rabeeshm
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function import_field_select() {
 		ini_set("auto_detect_line_endings", "1");
 
@@ -505,13 +439,8 @@ class User extends Controller  {
 			$this->load->view('user/import/import_field_select', array('all_rows'=>$rows));
 		}
 	}
-	/*
-     * Function Name : import_action()
-     * Wroking :User has made the choice - add the data into the database
-     * @author:
-     * @param :[]
-     * @return: type: []
-     */
+	
+	/// User has made the choice - add the data into the database
 	function import_action() {
 		ini_set("auto_detect_line_endings", "1");
 
@@ -573,13 +502,12 @@ class User extends Controller  {
 		}
 	}
 	
-	/*
-     * Function Name : credithistory()
-     * Wroking :This function will show the history of all user credits,If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
-     * @author:Rabeesh
-     * @param :[$current_user_id]
-     * @return: type: []
-     */
+	/**
+    * Function to credithistory
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, Array()]
+    **/
 	function credithistory($current_user_id = 0) {
 		$for_user = '';
 		if(!$current_user_id) $current_user_id = $this->session->userdata('id');

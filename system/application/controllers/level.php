@@ -1,9 +1,7 @@
 <?php
 class Level extends Controller {
 	private $message;
-	/**
-     * constructor 
-     * */
+	
 	function Level() {
 		parent::Controller();
 		$this-> message = array('success'=>false, 'error'=>false);
@@ -22,13 +20,7 @@ class Level extends Controller {
 		$this->load->model('center_model', 'center_model');
 		$this->load->helper('url');
 	}
-	/*
-     * Function Name : index()
-     * Wroking :This function used for showing index of level
-     * @author:Rabeesh
-     * @param :[$holder,$center_id]
-     * @return: type: []
-     */
+	
 	function index($holder='', $center_id = 0) {
 		$this->user_auth->check_permission('level_index');
 		
@@ -40,13 +32,7 @@ class Level extends Controller {
 		
 		$this->load->view('level/index', array('all_levels'	=> $all_levels,'center_name'=>$center_name->name, 'center_id'=>$center_id));
 	}
-	/*
-     * Function Name : create()
-     * Wroking :This function used for adding level details.
-     * @author:Rabeesh
-     * @param :[$holder,$center_id]
-     * @return: type: []
-     */
+	
 	function create($holder, $center_id = 0) { 
 		$this->user_auth->check_permission('level_create');
 		
@@ -87,14 +73,7 @@ class Level extends Controller {
 				));
 		}
 	}
-	/*
-     * Function Name : create()
-     * Wroking :This function used for editing level details.Make sure only the Kids in this Level and the Free kids are shown. Free kids means that they are not in any other level.
-		We do this to bring down the number of kids in the selecte box. Its confusing otherwise.
-     * @author:Rabeesh
-     * @param :[$level_id]
-     * @return: type: []
-     */
+	
 	function edit($level_id) {
 		$this->user_auth->check_permission('level_edit');
 		
@@ -147,13 +126,7 @@ class Level extends Controller {
 				));
 		}
 	}
-	/*
-     * Function Name : delete()
-     * Wroking :This function used for deleting level details.
-     * @author:Rabeesh
-     * @param :[$level_id]
-     * @return: type: []
-     */
+	
 	function delete($level_id) {
 		$this->user_auth->check_permission('level_delete');
 		
@@ -170,13 +143,12 @@ class Level extends Controller {
 		redirect('level/index/center/' . $this->input->post('center_id'));
 	}
 	
-	/*
-     * Function Name : update_student()
-     * Wroking :This function used for updating level student details.
-     * @author:Rabeesh
-     * @param :[$level_id]
-     * @return: type: []
-     */
+	/**
+    * Function to update_student
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    **/
 	function update_student()
 	{
 		$level = $_REQUEST['level'];

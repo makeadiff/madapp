@@ -35,13 +35,14 @@ class Event extends controller{
 		$this->load->model('center_model');
 		$this->load->model('event_model');
 		}
-	/*
-     * Function Name : index()
-     * Wroking :This function used for showing index of events
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to index
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function index()
 	{
 		$this->user_auth->check_permission('event_index');
@@ -51,26 +52,28 @@ class Event extends controller{
 		$this->load->view('layout/footer');
 	
 	}
-	/*
-     * Function Name : addevent()
-     * Wroking :This function used for create add event window
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to addevent
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function addevent()
 	{
 		$this->user_auth->check_permission('event_add');
 		$data['center']= $this->center_model->getcity();
 		$this->load->view('event/add_event',$data);
 	}
-	/*
-     * Function Name : insert_event()
-     * Wroking :This function used for inserting events into database
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to insert_event
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function insert_event()
 	{
 		$this->user_auth->check_permission('event_add');
@@ -88,13 +91,14 @@ class Event extends controller{
 			redirect('event/index');
 		}
 	}
-	/*
-     * Function Name : user_event()
-     * Wroking :This function used for getting current user events
-     * @author:Rabeesh
-     * @param :[$event_id]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to user_event
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function user_event($event_id) {
 		$this->user_auth->check_permission('event_mark_attendance');
 
@@ -137,13 +141,14 @@ class Event extends controller{
 		$this->load->view('event/user_event_footer',$data);
 		
 	}
-	/*
-     * Function Name : insert_userevent()
-     * Wroking :This function used for inserting current user events.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to insert_userevent
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function insert_userevent()
 	{
 		$this->user_auth->check_permission('event_mark_attendance');
@@ -186,13 +191,14 @@ class Event extends controller{
 			}
 		}
 	}
-	/*
-     * Function Name : event_edit()
-     * Wroking :This function used for edit events.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to event_edit
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function event_edit()
 	{
 		$this->user_auth->check_permission('event_edit');
@@ -201,13 +207,14 @@ class Event extends controller{
 		$data['event']= $this->event_model->getevent($id);
 		$this->load->view('event/edit_event',$data);
 	}
-	/*
-     * Function Name : update_event()
-     * Wroking :This function used for update events.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to update_event
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function update_event()
 	{
 		$this->user_auth->check_permission('event_edit');
@@ -229,13 +236,14 @@ class Event extends controller{
 		
 	
 	}
-	/*
-     * Function Name : event_delete()
-     * Wroking :This function used for delete events.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to event_delete
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function event_delete()
 	{
 		$this->user_auth->check_permission('event_delete');
@@ -247,13 +255,14 @@ class Event extends controller{
 			redirect('event/index');
 		}
 	}
-	/*
-     * Function Name : mark_attendence()
-     * Wroking :This function used for mark attendeace.
-     * @author:Rabeesh
-     * @param :[$event_id]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to mark_attendence
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function mark_attendence($event_id)
 	{
 		$this->user_auth->check_permission('event_mark_attendance');
@@ -261,13 +270,14 @@ class Event extends controller{
 		$data['attended_users']= $this->event_model->get_event_users($event_id);
 		$this->load->view('event/attended_users',$data);
 	}
-    /*
-     * Function Name : update_userstatus()
-     * Wroking :This function used for update current user status.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to update_userstatus
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function update_userstatus()
 	{
 		$this->user_auth->check_permission('event_mark_attendance');

@@ -314,8 +314,8 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_substitute_count($city_id) {
-        return $this->db->query("SELECT COUNT(UserClass.id ) AS count FROM UserClass JOIN User ON User.id = UserClass.user_id 
-					WHERE User.city_id = {$city_id} AND UserClass.substitute_id !=0")->row()->count;
+        return $this->db->query("SELECT COUNT(UserClass.id) AS count FROM UserClass JOIN User ON User.id = UserClass.user_id 
+					WHERE User.city_id={$city_id} AND UserClass.substitute_id!=0 AND UserClass.status='attended'")->row()->count;
     }
 
     /*
@@ -465,7 +465,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     function class_volunteers_negative_credit($city_id) {
-        return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id=$city_id AND credit < 0 AND user_type='volunteer'")->row()->count;
+        return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id=$city_id AND credit <= 0 AND user_type='volunteer'")->row()->count;
     }
 
     /*

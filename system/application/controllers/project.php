@@ -15,8 +15,9 @@
 class Project extends Controller  {
 
     /**
-     * constructor 
-     * */
+    * constructor 
+    **/
+
     function Project()
     {
         parent::Controller();
@@ -33,13 +34,14 @@ class Project extends Controller  {
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
     }
-   /*
-     * Function Name : manage_project()
-     * Wroking :This function used for showing the project window with all the project list
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+    /**
+    *
+    * Function to manage_project
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function manage_project()
 	{
 		$this->user_auth->check_permission('project_index');
@@ -50,25 +52,27 @@ class Project extends Controller  {
 		$this->load->view('project/manage_project', $data);
 		$this->load->view('layout/footer');
 	}
-	/*
-     * Function Name : popupaddproject()
-     * Wroking :This function used for showing the project add window.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to popupaddproject
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function popupaddproject()
 	{
 		$this->user_auth->check_permission('project_add');
 		$this->load->view('project/popups/add_projects');
 	}
-	/*
-     * Function Name : addproject()
-     * Wroking :This function used for saving the project.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to addproject
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function addproject()
 	{
 		$this->user_auth->check_permission('project_add');
@@ -82,13 +86,14 @@ class Project extends Controller  {
 	   	redirect('project/manage_project');
 		}
 	}
-	/*
-     * Function Name : popupEdit_project()
-     * Wroking :This function used for showing the project edit window.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to popupEdit_project
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function popupEdit_project()
 	{	
 		$this->user_auth->check_permission('project_edit');
@@ -96,13 +101,14 @@ class Project extends Controller  {
 		$data['details']=$this->project_model->get_project_byid($uid);
 		$this->load->view('project/popups/edit_projects',$data);
 	}
-	/*
-     * Function Name : update_project()
-     * Wroking :This function used for updating the project details.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to update_project
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function update_project()
 	{
 		$this->user_auth->check_permission('project_edit');
@@ -119,13 +125,14 @@ class Project extends Controller  {
 		}
 		
 	}
-	/*
-     * Function Name : ajax_deleteproject()
-     * Wroking :This function used for deleting the project details.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to ajax_deleteproject
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function ajax_deleteproject()
 	{	
 		$this->user_auth->check_permission('project_delete');

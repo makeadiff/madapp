@@ -1,23 +1,7 @@
 <?php
-
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-/**
- * CodeIgniter
- * An open source application development framework for PHP 4.3.2 or newer
- * @package         MadApp
- * @author          
- * @copyright       
- * @link            
- * @since           Version 1.0
- * @filesource
- */
 class City extends Controller {
 	private $message;
-    /*
-     * Function Name : City()
-     * Constructor
-     */
+	
 	function City() {
 		parent::Controller();
 		$message = array('success'=>false, 'error'=>false);
@@ -33,13 +17,7 @@ class City extends Controller {
 		$this->load->model('City_model','model', TRUE);
 		$this->load->helper('url');
 	}
-	/*
-     * Function Name : index()
-     * Wroking :redirect to City view.
-     * @author:
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function index() {
 		$this->user_auth->check_permission('city_index');
 		
@@ -47,13 +25,7 @@ class City extends Controller {
 		
 		$this->load->view('city/index', array('all_cities'	=> $all_cities, 'message'=>$this->message));
 	}
-	/*
-     * Function Name : create()
-     * Wroking :This function used for Show the form to make a new city,creating city.
-     * @author:
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function create() {
 		$this->user_auth->check_permission('city_create');
 		
@@ -92,13 +64,14 @@ class City extends Controller {
 		}
 		
 	}
-	/*
-     * Function Name : edit()
-     * Wroking :This function used for Editing the current city
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to edit
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function edit() {
 		$this->user_auth->check_permission('city_edit');
 		
@@ -134,4 +107,7 @@ class City extends Controller {
 		}
 	}
 	
+	function view()
+	{
+	}
 }

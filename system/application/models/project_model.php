@@ -25,13 +25,6 @@ class Project_model extends Model
 	{
 	
 	}
-        /*
-     * Function Name : add_project()
-     * Wroking :This function used for save project details.
-     * @author:Rabeesh
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
 	function add_project($data)
 	{
 		$date=date("Y-m-d H:i:s");
@@ -39,13 +32,6 @@ class Project_model extends Model
 		$this->db->insert('Project',$data_array);
 		return ($this->db->affected_rows() >0)?true: false;
 	}
-         /*
-     * Function Name : get_project_byid()
-     * Wroking :This function used for getting project By id
-     * @author:Rabeesh
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
 	function get_project_byid($uid)
 	{
 		$this->db->select('*');
@@ -54,13 +40,6 @@ class Project_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
-         /*
-     * Function Name : update_project()
-     * Wroking :This function used for update project details.
-     * @author:Rabeesh
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
 	function update_project($data)
 	{
 		$rootId=$data['rootId'];
@@ -70,16 +49,9 @@ class Project_model extends Model
 		$this->db->update('Project',$data_array);
 		return ($this->db->affected_rows() >0) ? true: false;
 	}
-         /*
-     * Function Name : delete_project()
-     * Wroking :This function used for delete project details.
-     * @author:Rabeesh
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
 	function delete_project($data)
 	{
-		$entry_id=$data['entry_id'];
+		echo 	$entry_id=$data['entry_id'];
 		$this->db->where('id',$entry_id);
 		$this->db->delete('Project');
 	}

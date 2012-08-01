@@ -1,7 +1,9 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * CodeIgniter
+ *
  * An open source application development framework for PHP 4.3.2 or newer
+ *
  * @package         MadApp
  * @author          Rabeesh
  * @copyright       Copyright (c) 2008 - 2010, OrisysIndia, LLP.
@@ -35,57 +37,65 @@ class Center extends Controller  {
 		$this->load->model('level_model');
 		$this->load->model('users_model');
     }
-	/*
-     * Function Name : manageaddcenters()
-     * Wroking :This function used for manage centers
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
+	/**
+    *
+    * Function to manageaddcenters
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function manageaddcenters()
 	{
-		$this->user_auth->check_permission('center_index');		
-		set_city_year($this);		
+		$this->user_auth->check_permission('center_index');
+		
+		set_city_year($this);
+		
 		$page_no = !empty($_REQUEST['pageno']) ? $_REQUEST['pageno'] : 0;
 		$data['title'] = 'Manage Centers';
-		$data['details']= $this->center_model->getcenter_details($page_no);		
+		$data['details']= $this->center_model->getcenter_details($page_no);
+		
 		$this->load->view('layout/header',$data);
 		$this->load->view('center/center_list',$data);
 		$this->load->view('layout/footer');
 	
 	}
-    /*
-     * Function Name : getcenterlist()
-     * Wroking :
-     * @author:Rabeesh
-     * @param :[$type,$item_id]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to getcenterlist
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function getcenterlist()
 	{
 	
 		
 	}
-	/*
-     * Function Name : popupaddCenter()
-     * Wroking :This function used for viewing the window for add centers
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to popupaddCneter
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function popupaddCenter()
 	{
 		$this->user_auth->check_permission('center_add');
 		$data['all_users']= $this->users_model->get_users_in_city();
 		$this->load->view('center/popups/addcenter_popup',$data);
 	}
-/*
-     * Function Name : addCenter()
-     * Wroking :This function used for adding centers under the perticular city
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to addCenter
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function addCenter() {
 		$this->user_auth->check_permission('center_add');
 		$data['city']= $this->session->userdata('city_id');
@@ -103,13 +113,14 @@ class Center extends Controller  {
 	
 	}
 	
-        /*
-     * Function Name : popupEdit_center()
-     * Wroking :This function used for adding centers under the perticular city
-     * @author:Rabeesh
-     * @param :[$center_id]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to popupEdit_center
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function popupEdit_center($center_id)
 	{
 		$this->user_auth->check_permission('center_edit');
@@ -118,13 +129,14 @@ class Center extends Controller  {
 		$this->load->view('center/popups/center_edit_view',$data);
 	}
 	
-   /*
-     * Function Name : update_Center()
-     * Wroking :This function used for updating centers
-     * @author:Rabeesh
-     * @param :[$center_id]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to update_Center
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function update_Center()
 	{
 		$this->user_auth->check_permission('center_edit');
@@ -144,13 +156,14 @@ class Center extends Controller  {
 	}
 	
 	
-/*
-     * Function Name : deletecenter()
-     * Wroking :This function used for deleting centers
-     * @author:Rabeesh
-     * @param :[$center_id]
-     * @return: type: []
-     */
+	/**
+    *
+    * Function to ajax_deletecenter
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function deletecenter($center_id)
 	{
 		$this->user_auth->check_permission('center_delete');
@@ -161,13 +174,7 @@ class Center extends Controller  {
 		redirect("center/manageaddcenters");
 	}
 	
-	/*
-     * Function Name : manage()
-     * Wroking :This function used for managing centers.
-     * @author:Rabeesh
-     * @param :[$center_id]
-     * @return: type: []
-     */
+	
 	function manage($center_id) {
 		$this->user_auth->check_permission('center_edit');
 		

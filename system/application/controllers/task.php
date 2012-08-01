@@ -13,9 +13,6 @@
  */
 class Task extends controller
 {
-        /*
-        * constructor 
-        */
 	function Task()
 	{
 		parent::Controller();
@@ -35,13 +32,6 @@ class Task extends controller
 		$this->load->model('task_model');
 		
 	}
-        /*
-     * Function Name : index()
-     * Wroking :This function used for showing index of task window
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
 	function index()
 	{
 		$this->user_auth->check_permission('task_index');
@@ -50,25 +40,11 @@ class Task extends controller
 		$this->load->view('task/index',$data);
 		$this->load->view('layout/footer');
 	}
-        /*
-     * Function Name : addtask()
-     * Wroking :This function used for showing add window of task list
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
 	function addtask()
 	{
 		$this->user_auth->check_permission('task_add');
 		$this->load->view('task/add_task');
 	}
-         /*
-     * Function Name : insert_task()
-     * Wroking :This function used for saving  task list
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
 	function insert_task()
 	{
 		$this->user_auth->check_permission('task_add');
@@ -81,13 +57,7 @@ class Task extends controller
 			redirect('task/index');  
 		}
 	}
-	 /*
-     * Function Name : task_delete()
-     * Wroking :This function used for deleting  task list
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function task_delete()
 	{
 		$this->user_auth->check_permission('task_delete');
@@ -99,25 +69,12 @@ class Task extends controller
 			redirect('task/index');  
 		}
 	}
-         /*
-     * Function Name : task_edit()
-     * Wroking :This function used for showing edit  task list
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
 	function task_edit($task_id) {
 		$this->user_auth->check_permission('task_edit');
 		$data['event']= $this->task_model->gettask($task_id);
 		$this->load->view('task/edit_task',$data);
 	}
-	  /*
-     * Function Name : update_task()
-     * Wroking :This function used for updating task list
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
 	function update_task() {
 		$this->user_auth->check_permission('task_edit');
 		$data['root_id']=$_REQUEST['root_id'];

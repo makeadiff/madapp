@@ -65,18 +65,22 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		elseif($percentage < $comppercentage ) $class_type = 'low-attendance';
 	?>
 
-    <td class="class-<?php echo $class_type ?>">
-    <?php  
+    <td class="class-<?php echo $class_type ?>"><?php
+    if($class_type == 'no-data' or $class_type == 'cancelled') echo '&nbsp;';
+    else { ?><a href="<?php echo site_url('classes/mark_attendence/'.$classdateid); ?>"><?php  
 		//Attendance ...
 		echo $attendanses;
 		$sum += $attendanses;
-	?></td>
+	?></a><?php } ?></td>
  	<?php
 		$level_attendence[$level_info->id][$date_index] = $attendanses;
 	}
 	
 	?>
-<td nowrap='nowrap'><?php $netSum += $sum/$totNumber; echo round($sum/$totNumber, 2);?></td>
+<td nowrap='nowrap'><?php if($totNumber) {
+	$netSum += $sum / $totNumber; 
+	echo round($sum/$totNumber, 2); 
+}?></td>
 </tr>
 <?php
 	$row_count++;
@@ -95,7 +99,8 @@ foreach($center_info['days_with_classes'] as $date_index => $day) { // All Days
 	print $sum . '</td>';
 }
 
-$perc= ($netSum*100)/$var;
+if($var) $perc = ($netSum * 100)/$var;
+else $perc = 0;
 $class_status = 'good';
 if($perc < $comppercentage) $class_status = 'low-attendance';
 ?>

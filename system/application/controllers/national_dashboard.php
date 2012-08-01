@@ -25,24 +25,26 @@ class National_dashboard extends Controller {
 			redirect('auth/login');
 		}
 	}
-	/*
-     * Function Name : index()
-     * Wroking :This function used for showing index of national dashboard
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	 /**
+    *
+    * Function to index
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	public function index() {
 		$this->user_auth->check_permission('national_dashboard');
 		$this->load->view('national_reports/index');
 	}
-	/*
-     * Function Name : footprint_table_of_all_cities()
-     * Wroking :This function used for showing all the city details
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	 /**
+    *
+    * Function to footprint_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	public function footprint_table_of_all_cities() {
 		$this->user_auth->check_permission('national_dashboard');
 		
@@ -105,13 +107,14 @@ class National_dashboard extends Controller {
 		}
 		$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
-	/*
-     * Function Name : classes_table_of_all_cities()
-     * Wroking :This function used for showing all the classes of the all the cities.
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	
+	/**
+    * Function to classes_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function classes_table_of_all_cities() {
 		$this->user_auth->check_permission('national_dashboard');
 		
@@ -174,18 +177,10 @@ class National_dashboard extends Controller {
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
-        /*
-     * Function Name : getCount_number()
-     * Wroking :This function used for getting the total class count of a given city
-     * @author:Rabeesh
-     * @param :[$city_id]
-     * @return: type: []
-     */
-        
         function getCount_number($city_id)
         {
-            $lowchild=80;
-            $class_count=0;
+           $lowchild=80;
+           $class_count=0;
            $classes= $this->national_model->class_getClasses($city_id);
            foreach($classes as $row)
            {
@@ -200,13 +195,14 @@ class National_dashboard extends Controller {
            }
            return $class_count;
         }
- /*
-     * Function Name : classes_progress_table_of_all_cities()
-     * Wroking :This function used for showing class progress of all the cities
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	 /**
+    *
+    * Function to classes_progress_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function classes_progress_table_of_all_cities() {
 		$this->user_auth->check_permission('national_dashboard');
 		
@@ -256,13 +252,12 @@ class National_dashboard extends Controller {
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
 	
-	/*
-     * Function Name : events_table_of_all_cities()
-     * Wroking :This function used for showing all the events of the given city
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	/**
+    * Function to events_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    **/
 	function events_table_of_all_cities() {
 		$this->user_auth->check_permission('national_dashboard');
 		
@@ -313,13 +308,14 @@ class National_dashboard extends Controller {
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
-	/*
-     * Function Name : exam_table_of_all_cities()
-     * Wroking :This function used for showing exams of all the cities
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+	 /**
+    *
+    * Function to exam_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function exam_table_of_all_cities()
 	{
 		$this->user_auth->check_permission('national_dashboard');
@@ -381,13 +377,14 @@ class National_dashboard extends Controller {
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
-    /*
-     * Function Name : starters_table_of_all_cities()
-     * Wroking :This function used for showing details about starters
-     * @author:Rabeesh
-     * @param :[]
-     * @return: type: []
-     */
+         /**
+    *
+    * Function to starters_table_of_all_cities
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
 	function starters_table_of_all_cities()
 	{
 		$this->user_auth->check_permission('national_dashboard');

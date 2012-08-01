@@ -19,13 +19,12 @@ class Kids_model extends Model {
 		$this->project_id = $this->ci->session->userdata('project_id');
     }
     
-     /*
-     * Function Name : getkids_details()
-     * Wroking :This function used for return all kids details of current city
-     * @author:Rabeesh
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
+    /**
+    * Function to getkids_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [ Array()]
+    **/
 	function getkids_details($city_id = 0) {
 		if(!$city_id) $city_id = $this->city_id;
 		
@@ -43,13 +42,12 @@ class Kids_model extends Model {
 	
 	}
 	
-	/*
-     * Function Name : add_kids()
-     * Wroking :This function used for add kids
-     * @author:Rabeesh
-     * @param :[$data]
-     * @return: type: [array]
-     */
+	/**
+    * Function to add_kids
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,]
+    **/
 	function add_kids($data) {
 		$data = array('center_id' 	=> $data['center'],
 					  'name' 	 	=> $data ['name'],
@@ -62,13 +60,12 @@ class Kids_model extends Model {
 	 	return ($this->db->affected_rows() > 0) ? $this->db->insert_id()  : false ;
 	}
 	
-	/*
-     * Function Name : delete_kids()
-     * Wroking :This function used for delete kids
-     * @author:Rabeesh
-     * @param :[$id]
-     * @return: type: [array]
-     */
+	/**
+    * Function to delete_kids
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean]
+    **/
 	function delete_kids($id) {
 		 $this->db->where('id',$id);
 		 $this->db->delete('Student');
@@ -79,13 +76,12 @@ class Kids_model extends Model {
 		 
 		 return ($affected) ? true: false;
 	}
-	/*
-     * Function Name : delete_kids()
-     * Wroking :This function used for return kids details for given kid
-     * @author:Rabeesh
-     * @param :[$id]
-     * @return: type: [array]
-     */
+	/**
+    * Function to get_kids_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [ Array()]
+    **/
 	function get_kids_details($uid)
 	{
 		$this->db->select('*');
@@ -95,13 +91,12 @@ class Kids_model extends Model {
 		return $result;
 	
 	}
-	/*
-     * Function Name : get_kids_name()
-     * Wroking :This function used for return kids name for given kid
-     * @author:Rabeesh
-     * @param :[$id]
-     * @return: type: [array]
-     */
+	/**
+    * Function to get_kids_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [ Array()]
+    **/
 	function get_kids_name($uid)
 	{
 		$this->db->select('id,name');
@@ -112,14 +107,8 @@ class Kids_model extends Model {
 		return $result;
 	
 	}
-	/*
-     * Function Name : get_free_kids()
-     * Wroking :Returns the ID and name of the Kids who are NOT assigned to any levels
-     * @author:Rabeesh
-     * @param :[$center_id]
-     * @return: type: [array]
-     */
-
+	
+	/// Returns the ID and name of the Kids who are NOT assigned to any levels
 	function get_free_kids($center_id) {
 		$students = $this->db->query("SELECT Student.id,Student.name
 			FROM StudentLevel INNER JOIN Level ON Level.id = StudentLevel.level_id AND Level.project_id={$this->project_id}
@@ -128,13 +117,12 @@ class Kids_model extends Model {
 		return $students;
 	}
 	
-	/*
-     * Function Name : update_student()
-     * Wroking :This function used for update student details.
-     * @author:Rabeesh
-     * @param :[$data]
-     * @return: type: [array]
-     */
+	/**
+    * Function to update_student
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, ]
+    **/
 	function update_student($data) {
 		$rootId=$data['rootId'];
 		$data = array(	'center_id'	=> $data['center'],
@@ -147,25 +135,23 @@ class Kids_model extends Model {
 		
 		return ($this->db->affected_rows() > 0) ? 1: 0 ;
 	}
-	/*
-     * Function Name : kids_level_update()
-     * Wroking :This function used for update student level details.
-     * @author:Rabeesh
-     * @param :[$student_id,$level]
-     * @return: type: [array]
-     */
+	/**
+    * Function to kids_level_update
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, ]
+    **/
 	function kids_level_update($student_id,$level)
 	{
 		$this->db->where('student_id',$student_id);
 		$this->db->update('StudentLevel', array('level_id'=>$level));
 	}
-	/*
-     * Function Name : getkids_name_incenter()
-     * Wroking :This function used for getting kids name
-     * @author:Rabeesh
-     * @param :[$uid]
-     * @return: type: [array]
-     */
+	/**
+    * Function to getkids_name_incenter
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,Array() ]
+    **/
 	function getkids_name_incenter($uid)
 	{
 		$this->db->select('id,name');
@@ -175,13 +161,7 @@ class Kids_model extends Model {
 		return $result;
 	
 	}
-        /*
-     * Function Name : get_kidsby_center()
-     * Wroking :This function used for getting all kids by center.
-     * @author:Rabeesh
-     * @param :[$uid]
-     * @return: type: [array]
-     */
+
 	function get_kidsby_center($center_id)
 	{
 		$this->db->select('*');

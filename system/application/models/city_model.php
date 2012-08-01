@@ -8,13 +8,7 @@ class City_model extends Model {
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
     }
-     /*
-     * Function Name : getCities()
-     * Wroking :This function returns  all city details,Highlight the errors in the center - if any.
-     * @author:
-     * @param :[]
-     * @return: type: []
-     */
+    
     function getCities() {
     	$cities = $this->db->orderby('name')->get('City')->result();
     	
@@ -29,14 +23,8 @@ class City_model extends Model {
     	
     	return $cities;
     }
-    /*
-     * Function Name : find_issuse()
-     * Wroking :Find the errors in the city. - if any.
-     * @author:
-     * @param :[$city_id]
-     * @return: type: []
-     */
-
+    
+    // Find the errors in the city. - if any.
 	function find_issuse($city_id) {
 		$president_id = $this->db->query("SELECT president_id FROM City WHERE id=$city_id")->row()->president_id;
 		$center_count = $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id AND Center.status='1'")->row()->count;
@@ -72,13 +60,7 @@ class City_model extends Model {
 		
 		return array($information, $problem_flag);
 	}
-    /*
-     * Function Name : createCity()
-     * Wroking :This function save city details,and If the City was just created, the president don't belong to that city yet. Make sure s/he belongs to it.
-     * @author:
-     * @param :[$data]
-     * @return: type: [integer]
-     */
+    
     function createCity($data) {
 		$success = $this->db->insert('City', 
 			array(
@@ -99,45 +81,21 @@ class City_model extends Model {
 		
 		return $city_id;
     }
-    /*
-     * Function Name : editCity()
-     * Wroking :This function update the city details.
-     * @author:
-     * @param :[$data]
-     * @return: type: [boolean]
-     */
+    
     function editCity($data) {
     	$this->db->where('id', $this->input->post('id'))->update('City', $data);
 		return ($this->db->affected_rows() > 0) ? true : false;
     }
-     /*
-     * Function Name : getCity()
-     * Wroking :This function return city details of given city id.
-     * @author:
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
+    
     function getCity($city_id) {
     	return $this->db->where('id',$city_id)->get('City')->row_array();
     }
     
-    /*
-     * Function Name : get_all()
-     * Wroking :This function return all city details.
-     * @author:
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
+    
 	function get_all() {
 		return $this->db->order_by('name')->get('City')->result();
 	}
-	/*
-     * Function Name : get_unique_cities()
-     * Wroking :This function return unique city details.
-     * @author:
-     * @param :[$city_id]
-     * @return: type: [array]
-     */
+	
 	function get_unique_cities() {
 		$cities = idNameFormat($this->get_all());
 		foreach($cities as $id => $name) {

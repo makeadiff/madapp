@@ -17,6 +17,7 @@ class Kids_model extends Model {
 		$this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
+		$this->year = $this->ci->session->userdata('year');
     }
     
     /**
@@ -32,6 +33,7 @@ class Kids_model extends Model {
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
 		$this->db->where('Center.city_id', $city_id);
+		$this->db->where('Center.status', 1);
 		$this->db->orderby('Student.id');
 		$result=$this->db->get();
 		return $result;
@@ -117,6 +119,7 @@ class Kids_model extends Model {
 		return $students;
 	}
 	
+	
 	/**
     * Function to update_student
     * @author:Rabeesh 
@@ -157,6 +160,7 @@ class Kids_model extends Model {
 		$this->db->select('id,name');
 		$this->db->from('Student');
 		$this->db->where('center_id',$uid);
+		$this->db->orderby('name');
 		$result=$this->db->get();
 		return $result;
 	

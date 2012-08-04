@@ -1,7 +1,6 @@
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <?php $this->load->view('layout/thickbox_header'); ?>
-<?php 
-
+<?php
 if(!isset($level)) $level = array(
 	'id'		=> 0,
 	'name'		=> '',
@@ -22,10 +21,10 @@ if(!isset($level)) $level = array(
 <label for="selBulkActions">Kids:</label>
 
 <select id="students" name="students[]" multiple>
-<?php foreach($level['kids'] as $row) { ?>
-<option value="<?php echo $row->id; ?>" <?php 
-	if(in_array($row->id, $level['selected_students'])) echo 'selected'; 
-?>><?php echo $row->name; ?></option> 
+<?php foreach($level['kids'] as $id=>$name) { ?>
+<option value="<?php echo $id; ?>" <?php 
+	if(in_array($id, $level['selected_students'])) echo 'selected'; 
+?>><?php echo $name; ?></option> 
 <?php } ?>
 </select>
 </li>

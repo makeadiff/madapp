@@ -33,6 +33,15 @@ $statusIco = '';
 $statusText = '';
 //$content = $details->result_array();
 $count = 0;
+$event_types = array(
+	'process' => 'Process Training',
+	'curriculum' => 'Curriculum Training',
+	'teacher' => 'Teacher Training I',
+	'teacher2' => 'Teacher Training II',
+	'avm' => 'City Circle Time',
+	'coreteam_meeting' => 'Core Team Meeting',
+	'admin_meeting' => 'Admin Meeting',
+);
 foreach($details as $row) {	
 	$count++;
 	$shadeClass = 'even';
@@ -42,7 +51,7 @@ foreach($details as $row) {
     <td class="colName left"><?php echo $row->name ?></td>
     <td class="colCount"><?php echo date('dS M, Y h:i A', strtotime($row->starts_on)); ?></td> 
 	<td class="colPosition"><?php echo $row->place; ?></td>
-    <td class="colPosition"><?php echo $row->type; ?></td>
+    <td class="colPosition"><?php echo $event_types[$row->type]; ?></td>
     <td class="colPosition"><a href="<?php echo site_url('event/user_event/'.$row->id)?>" class="thickbox  popup">manage</a> | <a href="<?php echo site_url('event/mark_attendence/'.$row->id)?>" class="thickbox  popup">attended</a></td>
     <td class="colActions right"> 
     <?php if($this->user_auth->get_permission('event_edit')) { ?>

@@ -64,6 +64,40 @@ class Cron extends Controller  {
 		}
 	}
 	
+	/// Copies all the existing credits over to the Archive table and reset credits to 3.
+	function archive_credits() {
+		$this->load->model('Users_model', 'users_model');
+		$users = $this->users_model->db->query("SELECT User.id,credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id 
+				WHERE UserGroup.group_id=9 AND user_type='volunteer'")->result(); // 9 is Teacher Group
+		
+		$data = array();
+		$count = 0;
+		foreach($users as $u) {
+			$data[] = "{$u->id}, 'user_english_credit', '{$u->credit}', '2011', NOW()";
+			$this->users_model->db->query("UPDATE User SET credit=3 WHERE id={$u->id}");
+			$count++;
+		}
+		$this->users_model->db->query("INSERT INTO Archive(user_id, name, value, year, added_on) VALUES (" . implode("),(", $data) . ")");
+		print "Saved engish credits of $count people.\n";
+		
+		// Interns
+		$admin_users = $this->users_model->db->query("SELECT User.id,admin_credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id 
+				WHERE UserGroup.group_id=14 AND user_type='volunteer'")->result(); // 9 is Teacher Group
+		
+		$data = array();
+		$count = 0;
+		foreach($admin_users as $u) {
+			$data[] = "{$u->id}, 'user_admin_credit', '{$u->admin_credit}', '2011', NOW()";
+			$this->users_model->db->query("UPDATE User SET admin_credit=0 WHERE id={$u->id}");
+			$count++;
+		}
+		$this->users_model->db->query("INSERT INTO Archive(user_id, name, value, year, added_on) VALUES (" . implode("),(", $data) . ")");
+		print "Saved admin credits of $count people.\n";
+		
+		
+		
+	}
+	
 	/// Send SMSs to people who haven't confirmed their classes.
 	function send_unconfirmed_class_sms() {
 		$this->load->model('Center_model','center_model', TRUE);

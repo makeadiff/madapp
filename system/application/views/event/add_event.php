@@ -34,8 +34,9 @@
 	<option value="others">Other</option> 
 	<option value="process">Process Training</option> 
 	<option value="curriculum">Curriculum Training</option> 
-    <option value="teacher">Teacher Training</option> 
-	<option value="avm">AVM</option>
+    <option value="teacher">Teacher Training I</option>
+    <option value="teacher2">Teacher Training II</option> 
+	<option value="avm">City Circle Time</option>
 	<option value="coreteam_meeting">Core Team Meeting</option> 
 	<option value="admin_meeting">Admin Meeting</option> 
 </select>

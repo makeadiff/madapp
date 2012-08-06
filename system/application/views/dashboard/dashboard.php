@@ -132,7 +132,16 @@ foreach($upcomming_classes as $class) { ?>
     <?php if($this->user_auth->get_permission('admincredit_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('admincredit/index') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/credit.png" alt="" /> <span>Admin Credits</span></a></div>
+	<?php } ?><br />
+	
+	<?php if($this->user_auth->get_permission('comps_view')) { ?>
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/comps/points.php?competition_id=11&amp;city_id=<?php echo $this->session->userdata('city_id'); ?>">
+	<img src="<?php echo base_url(); ?>images/ico/comps.png" alt="" /> <span>WeDoist Comps</span></a></div>
+	
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/comps/?competition_id=11">
+	<img src="<?php echo base_url(); ?>images/ico/add_points.png" alt="" /> <span>WeDoist Comps Points</span></a></div>
 	<?php } ?>
+	
 </div>
 </div>
 </div>

@@ -40,8 +40,9 @@ foreach($event as $event_row):
 	<option value="others"<?php if($event_row->type == 'others') { ?> selected="selected"<?php } ?>>Other</option> 
 	<option value="process"<?php if($event_row->type == 'process') { ?> selected="selected"<?php } ?>>Process Training</option> 
 	<option value="curriculum"<?php if($event_row->type == 'curriculum') { ?> selected="selected"<?php } ?>>Curriculum Training</option> 
-    <option value="teacher"<?php if($event_row->type == 'teacher') { ?> selected="selected"<?php } ?>>Teacher Training</option> 
-	<option value="avm"<?php if($event_row->type == 'avm') { ?> selected="selected"<?php } ?>>AVM</option>
+    <option value="teacher"<?php if($event_row->type == 'teacher') { ?> selected="selected"<?php } ?>>Teacher Training I</option>
+    <option value="teacher2"<?php if($event_row->type == 'teacher2') { ?> selected="selected"<?php } ?>>Teacher Training II</option>
+	<option value="avm"<?php if($event_row->type == 'avm') { ?> selected="selected"<?php } ?>>City Circle Time</option>
 	<option value="coreteam_meeting"<?php if($event_row->type == 'coreteam_meeting') { ?> selected="selected"<?php } ?>>Core Team Meeting</option> 
 	<option value="admin_meeting"<?php if($event_row->type == 'admin_meeting') { ?> selected="selected"<?php } ?>>Admin Meeting</option> 
 </select>

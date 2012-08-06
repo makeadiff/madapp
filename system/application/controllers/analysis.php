@@ -138,14 +138,14 @@ class Analysis extends Controller {
 		$event_attendance_count = array();
 		$user_attendance_count = array();
 		
+		foreach($events as $e) {
+			$event_attendance_count[$e->id] = array('total'=>0, 'present'=>0);
+		}
+		
 		//Users have to be initiazied seperately as not all users will be there in events
 		foreach($users as $user_id=>$name) $user_attendance_count[$user_id] = array('total'=>0, 'present'=>0);
 		foreach($user_attendance as $event_id => $attendance) {
 			foreach($attendance as $user_id => $present) {
-				// for events...
-				if(!isset($event_attendance_count[$event_id])) {
-					$event_attendance_count[$event_id] = array('total'=>0, 'present'=>0);
-				}
 				$event_attendance_count[$event_id]['total']++;
 				if($present) $event_attendance_count[$event_id]['present']++;
 				

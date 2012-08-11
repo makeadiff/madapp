@@ -72,7 +72,7 @@ class Class_model extends Model {
     }
     
     function get_last_class_in_batch($batch_id) {
-    	return $this->db->query("SELECT * FROM Class WHERE batch_id=$batch_id AND class_on<NOW() ORDER BY class_on DESC LIMIT 0,1")->row();
+    	return $this->db->query("SELECT * FROM Class WHERE batch_id=$batch_id AND DATE(class_on)<=DATE(NOW()) ORDER BY class_on DESC LIMIT 0,1")->row();
     }
     
     

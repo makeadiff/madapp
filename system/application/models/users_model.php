@@ -493,7 +493,7 @@ class Users_model extends Model {
     }
     
     function get_users_batch($user_id) {
-		$users_batch = $this->db->query("SELECT batch_id FROM UserBatch WHERE user_id=$user_id")->row();
+		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch INNER JOIN Batch ON Batch.id=UserBatch.batch_id WHERE UserBatch.user_id=$user_id AND Batch.year={$this->year}")->row();
 		if($users_batch) return $users_batch->batch_id;
 		else return 0;
     }

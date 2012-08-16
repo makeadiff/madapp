@@ -33,7 +33,7 @@ class Batch extends Controller {
 			$all_batches = $this->model->get_batches_in_center($item_id);
 			$center_id = $item_id;
 			$item_name = $this->center_model->get_center_name($center_id);
-			
+
 		} elseif($type == 'level') {
 			$level = $this->level_model->get_level($item_id);
 			$all_batches = $this->model->get_batches_in_level($item_id);

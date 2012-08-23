@@ -29,6 +29,18 @@ class Report extends Controller {
 		$report_data = $this->report_model->get_users_with_low_credits($credit, $signs[$sign], $city_id);
 		$this->show_report($report_data, array('name'=>'Name', 'credit'=>'Credits'), 'Users With Low Credits('.$credit.' or less)');
 	}
+        
+        function cityusers_with_low_credits() {
+            $city_id= $this->uri->segment(3);
+            $credit=1;
+            $sign='less';
+		$this->user_auth->check_permission('report_view');
+		$credit = intval($credit);
+		
+		$signs = array('more'=>'>', 'less'=>'<');
+		$report_data = $this->report_model->get_users_with_low_credits($credit, $signs[$sign], $city_id);
+		$this->show_report($report_data, array('name'=>'Name', 'credit'=>'Credits'), 'Users With Low Credits('.$credit.' or less)');
+	}
 	
 	function absent() {
 		$report_data = $this->report_model->get_users_absent_without_substitute();

@@ -141,6 +141,7 @@ class National_dashboard extends Controller {
 			foreach($city_report_data as $row) {
 				$data['city_name']=$row->name;
 				$city_id=$row->id;
+                                $data['city_id'] = $row->id;
 				//Getting Children count.
 				$data['totalchild']=$this->national_model->class_children_count($city_id);
 				//Total Madd Level.
@@ -157,6 +158,7 @@ class National_dashboard extends Controller {
 				//$data['city_avg_attendance']=$this->national_model->class_avg_attendance($city_id);
 				//Total Madd Classes.
 				$data['totalmaddclasses']=$this->national_model->class_class_count($city_id);
+                                //echo "test=".$data['totalmaddclasses'];
 				//Total Substitute Count.
 				$data['class_substitute_count']=$this->national_model->class_substitute_count($city_id);
 				//finding 33% of Total Madd Classes.
@@ -177,6 +179,14 @@ class National_dashboard extends Controller {
 				}
 			$this->load->view('national_reports/city_foorprint_footer', array( 'fields'=>$header_names, 'title'=>$title));
 	}
+        /**
+    *
+    * Function to getCount_number
+    * @author : Rabeesh
+    * @param  : []
+    * @return : type : []
+    *
+    **/
         function getCount_number($city_id)
         {
            $lowchild=80;
@@ -190,12 +200,11 @@ class National_dashboard extends Controller {
              if($eightypercentage > $total_student_count)
              {
                $class_count ++; 
-             }
-             
+             }           
            }
            return $class_count;
         }
-	 /**
+    /**
     *
     * Function to classes_progress_table_of_all_cities
     * @author : Rabeesh

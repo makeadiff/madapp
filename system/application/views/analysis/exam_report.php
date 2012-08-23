@@ -62,6 +62,7 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 			$status="null"; 
 			$examMarks =0;
 		} else {
+			
 			$examMarks=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
 			
 			//print_r($examMarks);
@@ -72,7 +73,7 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		//Attendance ...
 		if(sizeof($examMarks) >0){foreach($examMarks as $y=>$x){
 			//print_r($x);
-			//echo $y;
+			//echo $y.'l';
 			
 		}
 		}

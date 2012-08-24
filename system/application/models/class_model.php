@@ -404,6 +404,20 @@ class Class_model extends Model {
 		return $data;
     }
     
+    /// Return the number of cancelled classes in the given month
+    function get_cancelled_class_count($year_month, $city_id=0, $project_id=1) {
+		if(!$city_id) $city_id = $this->city_id;
+		$data = $this->db->query("SELECT DISTINCT(Class.id) AS count FROM Class 
+				INNER JOIN UserClass ON Class.id=UserClass.class_id 
+				INNER JOIN Level ON Class.level_id=Level.id
+				INNER JOIN Center ON Level.center_id=Center.id
+			WHERE DATE_FORMAT(Class.class_on, '%Y-%m')='$year_month'
+				AND Class.project_id=$project_id
+				AND UserClass.status='cancelled'
+				AND Center.city_id=$city_id
+			GROUP BY UserClass.class_id")->result();
+		return count($data);
+    }
         
 	 /**
     *

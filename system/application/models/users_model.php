@@ -176,9 +176,8 @@ class Users_model extends Model {
 	
 	/// Returns the groups the current user belongs to...
 	function get_user_groups_of_user($user_id, $data='name') {
-		$groups = $this->db->query("SELECT Group.$data AS data FROM `Group` INNER JOIN UserGroup ON Group.id=UserGroup.group_id WHERE UserGroup.user_id=$user_id")->result();
-		$all_groups = array();
-		foreach($groups as $g) $all_groups[] = $g->data;
+		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group` INNER JOIN UserGroup ON Group.id=UserGroup.group_id WHERE UserGroup.user_id=$user_id")->result();
+		$all_groups = idNameFormat($groups);
 		
 		return $all_groups;
 	}

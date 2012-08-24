@@ -224,12 +224,17 @@ class Event_model extends Model{
 		return $data;
 	}
 	
-	function get_all($event_type='') {
+	function get_all($event_type='', $date_range=false) {
 		$city_id = $this->city_id;
 		$this->db->select('*')->from('Event')->where('city_id', $city_id);
 		if($event_type) $this->db->where('type',$event_type);
+		if($date_range) {
+			$this->db->where("DATE(starts_on) >", $date_range['from']);
+			$this->db->where("DATE(starts_on) <", $date_range['to']);
+		}
+		$result = $this->db->get();
 		
-		return $this->db->get()->result();
+		return $result->result();
 	}
 	
 	function get_all_event_user_attendance($event_type='') {
@@ -266,11 +271,10 @@ class Event_model extends Model{
 		$difference = date_diff(date_create($year_month.'-01'), date_create($starts_on));
 		return $difference->format('%m');
 	}
-        function get_volunteers_to_attend_training_1($year_month, $city_id ,$teacher_training1)
-        {
+
+	function get_volunteers_to_attend_training_1($year_month, $city_id ,$teacher_training1) {
+		return $this->db->query("SELECT COUNT(id) AS count FROM Event JOIN UserEvent ON Event.id=UserEvent.event_id
+                                WHERE UserEvent.present='0' AND Event.name='$teacher_training1'")->row()->count;
            
-            return $this->db->query("SELECT COUNT(id) AS count FROM Event JOIN Userevent ON Event.id=Userevent.event_id
-                                WHERE Userevent.present='0' AND Event.name='$teacher_training1'")->row()->count;
-           
-        }
+    }
 }

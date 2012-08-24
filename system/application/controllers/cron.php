@@ -194,9 +194,6 @@ class Cron extends Controller  {
 	
 	/// This will calculate the Stats necessary for the monthly review
 	function monthly_review_stats_collection($year_month='') {
-            
-           
-            
 		if(!$year_month) $year_month = date('Y-m', strtotime('last month'));
 		
 		$this->load->model('report_model');
@@ -205,14 +202,15 @@ class Cron extends Controller  {
 		$this->load->model('event_model');
 		$this->load->model('kids_model');
 		$this->load->model('review_model');
-		
-                
-                
+
 		$project_id = 1;
 		$cities = $this->city_model->get_all();
 		
 		foreach($cities as $city) {
-			//if($city->id != 10) continue;
+			if($city->id != 10) continue; // :DEBUG:
+			$this->event_model->city_id = $city->id;
+			$categories = array();
+			$flags = array();
 			
 			$categories = array(
 				'class_count'							=> 0,
@@ -221,21 +219,31 @@ class Cron extends Controller  {
 				'absent_without_substitute_percentage'	=> 0,
 				'negative_credit_volunteer_count'		=> 0,
 				'negative_credit_volunteer_percentage'	=> 0,
-				'madapp_updation_status'				=> -1,
 				'attended_kids_percentage'				=> 0,
+				'madapp_updated_ops'					=> -1,
+				'classes_cancelled_count'				=> 0,
+				'classes_cancelled_percentage'			=> 0,
+				'center_authorities_visited'			=> -1,
 				// EPH
 				'periodic_assessment_updation_status'	=> -1,
 				'class_progress'						=> 0,
+				'teacher_training_1_havnt_attent'		=> 0,
+				'teacher_training_1_havnt_attent_status'=> 0,
 				// HR
 				'volunteer_requirement_count'			=> 0,
 				'volunteer_requirement_percentage'		=> 0,
 				'attirition_count'						=> 0,
 				'attirition_percentage'					=> 0,
 				'months_since_avm'						=> 0,
+				'madapp_updated_hr'						=> -1,
+				'exit_interviews_conducted'				=> -1,
 				// PR
 				'months_since_ping'						=> -1,
 				'blog_post_count'						=> -1,
 				'months_since_pr_initiative'			=> -1,
+				'activity_on_city_page'					=> -1,
+				'fb_plan_submission'					=> -1,
+				'attendance_in_concall'					=> -1,
 				// CR
 				'monthly_target'						=> -1,
 				'money_raised'							=> -1,
@@ -246,8 +254,8 @@ class Cron extends Controller  {
 				// President
 				'core_team_meeting_stauts'				=> 0,
 				'red_flag_count'						=> 0,
-                                'teacher_training_1_havnt_attent' => 0,
-                            'teacher_training_1_havnt_attent_status' => 0
+				'number_of_fellows_pimped'				=> -1,
+				'madapp_updated_president'				=> -1,
 			);
 			
 			$flags = array();
@@ -257,12 +265,14 @@ class Cron extends Controller  {
 			$teacher_count = count($this->users_model->search_users(array('user_group'=>9, 'city_id'=>$city->id, 'project_id'=>$project_id))); // 9 = Teacher
 			
 			$info = $this->class_model->get_classes_in_month($year_month, $city->id, $project_id);
-				
+			
 			foreach($info as $c) {
 				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
 				if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
-			}
-			
+ 			}
+ 			
+ 			$categories['classes_cancelled_count'] = $this->class_model->get_cancelled_class_count($year_month, $city->id, $project_id);
+
 			if($categories['class_count']) {
 				$categories['absent_without_substitute_percentage'] = ceil($categories['absent_without_substitute_count'] / $categories['class_count'] * 100);
 				if($categories['absent_without_substitute_percentage'] > 10) $flags['absent_without_substitute_percentage'] = 'red'; // If more than 10% is absent without substitute, its a red flag.
@@ -306,20 +316,50 @@ class Cron extends Controller  {
                         
                         
 			//Count of volunteers to attend training 1.
-                        $teacher_training1='Teacher Training 1';
-                        $volunteerCount = $this->event_model->get_volunteers_to_attend_training_1($year_month, $city->id, $teacher_training1);
+			$teacher_training1='Teacher Training 1';
+			$volunteerCount = $this->event_model->get_volunteers_to_attend_training_1($year_month, $city->id, $teacher_training1);
                         
 			if($volunteerCount) {				
-                                $categories['teacher_training_1_havnt_attent'] = $volunteerCount;				
+				$categories['teacher_training_1_havnt_attent'] = $volunteerCount;				
 				if($categories['teacher_training_1_havnt_attent'] > 4 ) $flags['teacher_training_1_havnt_attent_status'] = 'red'; // If less than 90% of the kids attended the class, red flag.
 			}
-                        
-                        
-			// Save status to DB...
+			
+			// VPs attending events
+			$core_team_groups = array(2,4,5,11,12,15,19);
+			$vps = $this->users_model->search_users(array('city_id'=>$city->id, 'user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true)); //18(Library), 10(CR) and 20(FOM) Excluded
+			
+			$events = array();
+			$events['avm'] = reset($this->event_model->get_all('avm', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
+			$events['review_meeting'] = reset($this->event_model->get_all('monthly_review', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
+			$events['core_team_meeting']  = reset($this->event_model->get_all('coreteam_meeting', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
+			
+			foreach($events as $event_name => $ev) {
+				foreach($vps as $vp) {
+					$core_team_position = reset(array_intersect($core_team_groups, array_keys($vp->groups)));
+					$name = 'core_team_'.$event_name.'_attendance_'.$core_team_position.'_'.$vp->id;
+					
+					if($ev) {
+						$attendance = $this->event_model->getEventUser($ev->id, $vp->id);
+						if($attendance) {
+							$categories[$name] = $attendance->present;
+							if($categories[$name]) $flags[$name] = 'green';
+							else $flags[$name] = 'red';
+						}
+						else {
+							$categories[$name] = -1;
+							$flags[$name] = 'none';
+						}
+					} else {
+						$categories[$name] = -1;
+						$flags[$name] = 'none';
+					}
+				}
+			}
+
+ 			// Save status to DB...
 			foreach($categories as $name => $value) {
 				$this->review_model->save($name, $value, $year_month.'-01', $flags[$name], $city->id);
-				
-			}
+ 			}
 		}
 	}
                

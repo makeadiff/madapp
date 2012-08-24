@@ -178,7 +178,23 @@ class Analysis extends Controller {
 		$data['student_count']= count($this->kids_model->getkids_details()->result());
 		$data['teacher_count']= count($this->user_model->search_users(array('user_group'=>9))); // 9 = Teacher
 		
-		$data['months'] = array('2011-04', '2011-05', '2011-06', '2011-07', '2011-08', '2011-09', '2011-10', '2011-11', '2011-12', '2012-01', '2012-02', '2012-03', ); get_month_list();
+		$core_team_groups = array(2,4,5,11,12,15,19);
+		$vps = $this->users_model->search_users(array('user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true)); //18(Library), 10(CR) and 20(FOM) Excluded
+		$attendance_matrix = array();
+		foreach($core_team_groups as $vertical) {
+			$people = array();
+			foreach($vps as $vp) {
+				if(in_array($vertical, array_keys($vp->groups))) {
+					$people[] = $vp;
+				}
+			}
+			
+			$attendance_matrix[$vertical] = $people;
+		}
+		
+		$data['attendance_matrix'] = $attendance_matrix;
+		
+		$data['months'] = array('2012-04', '2012-05', '2012-06', '2012-07', '2012-08', '2012-09', '2012-10', '2012-11', '2012-12', '2013-01', '2013-02', '2013-03', ); get_month_list();
 		foreach($data['months'] as $year_month) {
 			$data['review'][$year_month] = idNameFormat($this->review_model->get_monthly_review($year_month, $this->session->userdata('city_id')), array('name'));
 		}

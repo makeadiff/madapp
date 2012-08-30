@@ -193,7 +193,7 @@ class Cron extends Controller  {
 	}
 	
 	/// This will calculate the Stats necessary for the monthly review
-	function monthly_review_stats_collection($year_month='') {
+	function monthly_review_stats_collection($year_month='', $city_id = false) {
 		if(!$year_month) $year_month = date('Y-m', strtotime('last month'));
 		
 		$this->load->model('report_model');
@@ -204,10 +204,18 @@ class Cron extends Controller  {
 		$this->load->model('review_model');
 
 		$project_id = 1;
-		$cities = $this->city_model->get_all();
+		if(!$cities) {
+			$cities = $this->city_model->get_all();
+		} else {
+			$array = array( 'id' => $city_id );
+			$cities = (object) $array;
+		}
 		
 		foreach($cities as $city) {
-			if($city->id != 10) continue; // :DEBUG:
+			//if($city->id != 10) continue; // :DEBUG:
+			
+			print "Collecting data for city: {$cit->id}...\n";
+			
 			$this->event_model->city_id = $city->id;
 			$categories = array();
 			$flags = array();

@@ -204,17 +204,17 @@ class Cron extends Controller  {
 		$this->load->model('review_model');
 
 		$project_id = 1;
-		if(!$cities) {
+		if(!$city_id) {
 			$cities = $this->city_model->get_all();
 		} else {
 			$array = array( 'id' => $city_id );
-			$cities = (object) $array;
+			$cities = array((object) $array);
 		}
 		
 		foreach($cities as $city) {
 			//if($city->id != 10) continue; // :DEBUG:
 			
-			print "Collecting data for city: {$cit->id}...\n";
+			print "Collecting data for city: {$city->id}...\n";
 			
 			$this->event_model->city_id = $city->id;
 			$categories = array();

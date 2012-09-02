@@ -169,6 +169,8 @@ class National_dashboard extends Controller {
 				$data['missed_madd_percentage']=($data['totalmaddclasses'] * 10)/100;
 				//Total Cancelled Classes.
 				$data['class_cancelled_count']=$this->national_model->class_cancelled_count($city_id);
+                                
+                                $data['class_cancelled_count']=$data['class_cancelled_count']->num_rows();
 				//finding 25% of Total Madd Classes.
 				$data['cancelled_madd_percentage']=($data['totalmaddclasses'] * 25)/100;
                                 
@@ -181,7 +183,7 @@ class National_dashboard extends Controller {
 	}
         /**
     *
-    * Function to getCount_number
+    * Function to getCount_number of low child attendance.
     * @author : Rabeesh
     * @param  : []
     * @return : type : []

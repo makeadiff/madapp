@@ -338,9 +338,19 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_cancelled_count($city_id) {
-        //DISTINCT User.id
-        return $this->db->query("SELECT COUNT(DISTINCT UserClass.id) AS count FROM UserClass JOIN User ON User.id=UserClass.user_id 
-		WHERE User.city_id={$city_id} AND UserClass.status='cancelled'")->row()->count;
+
+//        return $this->db->query("SELECT COUNT(DISTINCT UserClass.id) AS count FROM UserClass JOIN User ON User.id=UserClass.user_id 
+//		WHERE User.city_id={$city_id} AND UserClass.status='cancelled'")->row()->count;
+                $year_month = date('Y-m');
+             return $this->db->query("SELECT DISTINCT(Class.id) AS count FROM Class
+                                INNER JOIN UserClass ON Class.id=UserClass.class_id
+                                INNER JOIN Level ON Class.level_id=Level.id
+                                INNER JOIN Center ON Level.center_id=Center.id
+                        WHERE DATE_FORMAT(Class.class_on, '%Y-%m')='$year_month'
+                                AND Class.project_id=$this->project_id
+                                AND UserClass.status='cancelled'
+                                AND Center.city_id=$city_id
+                        GROUP BY UserClass.class_id");
     }
 
     /*

@@ -200,14 +200,16 @@ class Event_model extends Model{
 		
 		// If people didn't come for the AVM thats a -1 credit.
 		$event = $this->getevent($event_id);
-		if($event->type == 'avm') {
-			$this->ci->load->model('user_model');
-			if($status['present'] == 0) {
-				$this->ci->user_model->update_credit($user_id, -1);
-			} else {
-				$this->ci->user_model->update_credit($user_id, 1); // He was marked absent - but was marked present after that.(everone is marked present by default).
+		if($event) {
+			$event = $event[0];
+			if($event->type == 'avm') {
+				$this->ci->load->model('users_model');
+				if($status['present'] == 0) {
+					$this->ci->users_model->update_credit($user_id, -1);
+				} else {
+					$this->ci->users_model->update_credit($user_id, 1); // He was marked absent - but was marked present after that.(everone is marked present by default).
+				}
 			}
-			
 		}
 	}
 	
@@ -217,7 +219,8 @@ class Event_model extends Model{
 	}
 	
 	function get_missing_user_attendance_for_event_type($user_id, $event_type) {
-		$data = $this->db->query("SELECT Event.name, Event.starts_on, UserEvent.present FROM UserEvent INNER JOIN Event ON UserEvent.event_id=Event.id 
+		$data = $this->db->query("SELECT Event.name, Event.starts_on, UserEvent.present FROM UserEvent 
+							INNER JOIN Event ON UserEvent.event_id=Event.id 
 							WHERE Event.type='$event_type' AND UserEvent.user_id=$user_id AND UserEvent.present='0'
 							AND Event.starts_on > '{$this->year}-04-01 00:00:00' 
 							AND Event.starts_on < '".($this->year + 1)."-03-31 23:59:59'")->result();

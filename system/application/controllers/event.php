@@ -220,6 +220,7 @@ class Event extends controller{
 		$this->user_auth->check_permission('event_edit');
 		$data['root_id']=$this->input->post('root_id');
 		$data['name']=$this->input->post('name');
+		$data['description']=$this->input->post('description');
 		$data['startdate'] = $this->input->post('date-pick');
 		$data['enddate'] =$this->input->post('date-pick-ends');
 		$data['place']=$this->input->post('place');

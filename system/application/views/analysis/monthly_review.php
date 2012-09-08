@@ -202,7 +202,9 @@ function showEventAttendance($vertical, $attendance_matrix, $review, $months) {
 	
 	foreach($people as $p)
 	foreach($events as $event_name => $name) {
-		print "<tr><td></td><td class='name'>Attended $name</td>";
+		$person_responsible  = '';
+		if(count($people) > 1) $person_responsible = "({$p->name})";
+		print "<tr><td></td><td class='name'>Attended $name $person_responsible</td>";
 		showCells('core_team_'.$event_name.'_attendance_'.$vertical.'_'.$p->id, $review, $months, false, true);
 		print "</tr>";
 	}

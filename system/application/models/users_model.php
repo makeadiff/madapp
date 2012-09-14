@@ -441,6 +441,7 @@ class Users_model extends Model {
     function update_credit($user_id, $change) {
     	if($change == 1) $change = '+1';
     	if($change == 2) $change = '+2';
+		if($change == .5) $change = '+.5';
     	$this->db->query("UPDATE User SET credit=credit $change WHERE id=$user_id");
     }
     function set_credit($user_id, $credit) {
@@ -450,23 +451,31 @@ class Users_model extends Model {
     function recalculate_user_credit($user_id, $update_if_wrong=false, $debug=false) {
 		$this->ci->load->model('level_model');
 		$this->ci->load->model('event_model');
-		$credit = 3;
+		$this->ci->load->model('settings_model');
+		
+		$credit_for_substituting = $this->settings_model->get_setting_value('credit_for_substituting');
+		$credit_for_substituting_in_same_level = $this->settings_model->get_setting_value('credit_for_substituting_in_same_level');
+		$credit_lost_for_getting_substitute = $this->settings_model->get_setting_value('credit_lost_for_getting_substitute');
+		$credit_lost_for_missing_class = $this->settings_model->get_setting_value('credit_lost_for_missing_class');
+		$credit_lost_for_missing_avm = $this->settings_model->get_setting_value('credit_lost_for_missing_avm');
+		$credit = $this->settings_model->get_setting_value('beginning_credit');
+		
 		$classes_so_far = $this->get_usercredits($user_id);
 		
 		foreach($classes_so_far as $row) {
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
-				$credit = $credit - 2;
+				$credit = $credit + $credit_lost_for_missing_class;
 			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and  ($row['status'] == 'absent' or $row['status'] == 'attended')) {
-				$credit = $credit - 1;
+				$credit = $credit + $credit_lost_for_getting_substitute;
 			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
-				$credit = $credit - 2;
+				$credit = $credit + $credit_lost_for_missing_class;
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
-				$credit_sub_gets = 1;
+				$credit_sub_gets = $credit_for_substituting;
 				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
 				$substitute_levels = $this->ci->level_model->get_user_level($row['substitute_id']);
 				$current_class_level = $this->ci->level_model->get_class_level($row['class_id']);
 				if(in_array($current_class_level, $substitute_levels)) {
-					$credit_sub_gets = 2;
+					$credit_sub_gets = $credit_for_substituting_in_same_level;
 				}
 				$credit = $credit + $credit_sub_gets;
 			}
@@ -474,7 +483,7 @@ class Users_model extends Model {
 		
 		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
 		foreach($event_attendence as $event) {
-			$credit = $credit - 1;
+			$credit = $credit + $credit_lost_for_missing_avm;
 		}
 		
 		if($update_if_wrong) {
@@ -681,8 +690,8 @@ class Users_model extends Model {
 		$this->db->select('UserClass.*,Class.class_on');
 		$this->db->from('UserClass');
 		$this->db->join('Class','Class.id=UserClass.class_id','join');
-		$this->db->where('UserClass.user_id',$current_user_id);
-		$this->db->or_where('UserClass.substitute_id',$current_user_id);
+		$this->db->where("Class.class_on BETWEEN '{$this->year}-04-01 00:00:00' AND '".($this->year + 1)."-03-31 23:59:59'");
+		$this->db->where("(UserClass.user_id=$current_user_id OR UserClass.substitute_id=$current_user_id)");
 		$result = $this->db->get();
 		
 		if($result) return $result->result_array();
@@ -711,6 +720,4 @@ class Users_model extends Model {
 		}
 		return $phone;
 	}
-
-	
 }

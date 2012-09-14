@@ -515,48 +515,55 @@ class User extends Controller  {
 		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
 		$this->load->model('level_model');
 		$this->load->model('event_model');
+		$this->load->model('settings_model');
 
 		$details = $this->users_model->get_usercredits($current_user_id);
-
-		$credit = 3;
+		
+		$credit_for_substituting = $this->settings_model->get_setting_value('credit_for_substituting');
+		$credit_for_substituting_in_same_level = $this->settings_model->get_setting_value('credit_for_substituting_in_same_level');
+		$credit_lost_for_getting_substitute = $this->settings_model->get_setting_value('credit_lost_for_getting_substitute');
+		$credit_lost_for_missing_class = $this->settings_model->get_setting_value('credit_lost_for_missing_class');
+		$credit_lost_for_missing_avm = $this->settings_model->get_setting_value('credit_lost_for_missing_avm');
+		$credit = $this->settings_model->get_setting_value('beginning_credit');
+		
 		$credit_log = array();
 		$i = 0;
 		foreach($details as $row) {
 			$data = array();
 			if ($row['user_id'] == $current_user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
-				$credit = $credit - 2;
-				$data['class_on']=$row['class_on'];
-				$data['Substitutedby']='Absent';
-				$data['lost']="Lost 2 credits";
-				$data['credit']=$credit;
+				$credit = $credit - $credit_lost_for_missing_class;
+				$data['class_on'] = $row['class_on'];
+				$data['Substitutedby'] = 'Absent';
+				$data['lost'] = "Lost $credit_lost_for_missing_class credits";
+				$data['credit']= $credit;
 				
 			} else if ($row['user_id'] == $current_user_id and $row['substitute_id'] != 0 and ($row['status'] == 'absent' or $row['status'] == 'attended')) {
-				$substitute_id=$row['substitute_id'];
+				$substitute_id = $row['substitute_id'];
 				$Name_of_Substitute=$this->users_model->get_name_of_Substitute($substitute_id);
 				if(sizeof($Name_of_Substitute) >0) $Name_of_Substitute = $Name_of_Substitute->name;
 				else $Name_of_Substitute ='No Name';
-				$credit = $credit - 1;
+				$credit = $credit - $credit_lost_for_getting_substitute;
 				$data['class_on']= $row['class_on'];
 				$data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
-				$data['lost'] = "Lost 1 credit";
+				$data['lost'] = "Lost $credit_lost_for_getting_substitute credit";
 				$data['credit'] = $credit;
 			
 			} else if($row['substitute_id'] == $current_user_id and $row['status'] == 'absent') {
-				$credit = $credit - 2;
+				$credit = $credit - $credit_lost_for_missing_class;
 				$data['class_on']= $row['class_on'];
 				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);
 				$data['Substitutedby'] = "Absent for " . $teacher_name->name . "'s substitute class";
-				$data['lost'] = "Lost 2 credit";
+				$data['lost'] = "Lost $credit_lost_for_missing_class credit";
 				$data['credit'] = $credit;
 				
 			} elseif ($row['substitute_id'] == $current_user_id and $row['status'] == 'attended') {
-				$sub_get_credits = 1;
+				$sub_get_credits = $credit_for_substituting;
 				
 				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
 				$substitute_levels = $this->level_model->get_user_level($row['substitute_id']);
 				$current_class_level = $this->level_model->get_class_level($row['class_id']);
 				if(in_array($current_class_level, $substitute_levels)) {
-					$sub_get_credits = 2;
+					$sub_get_credits = $credit_for_substituting_in_same_level;
 				}
 				
 				$credit = $credit + $sub_get_credits;
@@ -569,7 +576,7 @@ class User extends Controller  {
 			
 			if(isset($data['credit'])) {
 				$i++;
-				$data['i']=$i;
+				$data['i'] = $i;
 				$credit_log[] = $data;
 			}
 		}
@@ -579,10 +586,10 @@ class User extends Controller  {
 			$i++;
 			$data = array(
 				'i' 	=> $i,
-				'credit'=> $credit - 1,
+				'credit'=> $credit - $credit_lost_for_missing_avm,
 				'class_on'=> $event->starts_on,
 				'Substitutedby' => 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
-				'lost'	=> 'Lost 1 credit'
+				'lost'	=> "Lost $credit_lost_for_missing_avm credit"
 			);
 			$credit_log[] = $data;
 		}

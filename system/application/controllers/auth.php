@@ -52,7 +52,7 @@ class Auth extends Controller {
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', "Welcome, ".$this->session->userdata('name'));
 				redirect('dashboard/dashboard_view', 'refresh');
-			} else { 
+			} else {
 				//if the login was un-successful
 				//redirect them back to the login page
 				$this->session->set_flashdata('message', "Invalid login");
@@ -62,7 +62,7 @@ class Auth extends Controller {
 		} else {  
 			//the user is not logging in so display the login page
 			//set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			$this->data['message'] = array('error' => (validation_errors()) ? validation_errors() : $this->session->flashdata('message'));
 			$this->data['email'] = array('name' => 'email',
 				'id' => 'email',
 				'type' => 'text',

@@ -7,6 +7,7 @@ class Class_model extends Model {
         $this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
+		$this->year = $this->ci->session->userdata('year');
     }
     
     function get_all($user_id) {
@@ -15,6 +16,7 @@ class Class_model extends Model {
 				INNER JOIN Level ON Class.level_id=Level.id
 				INNER JOIN Center ON Level.center_id=Center.id
     		WHERE Class.project_id={$this->project_id} AND (UserClass.user_id=$user_id OR UserClass.substitute_id=$user_id)
+			AND Class.class_on BETWEEN '{$this->year}-04-01 00:00:00' AND '".($this->year + 1)."-03-31 23:59:59'
     		ORDER BY Class.class_on DESC")->result();
     }
     
@@ -204,19 +206,29 @@ class Class_model extends Model {
     
     /// Calculates the credit that should be given to the user for the given class.
     /// Argument: $user_class_id - the id of a row in the UserClass table.
-    function calculate_users_class_credit($user_class_id, $data = array()) {
+    function calculate_users_class_credit($user_class_id, $data = array(), $revert = false) {
     	if(!$data or empty($data->class_id)) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
     	$this->load->model('user_model','user_model');
 		$this->load->model('level_model','level_model');
 		$this->ci->load->model('settings_model','settings_model');
     	
     	$debug = false;
-    	if($debug) {print "Class Data: ";dump($data);}
+		if($revert) $debug = false;
+    	if($debug) {print "<br />Class Data: ";dump($data);}
 		
 		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
 		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
 		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
 		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
+		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
+		
+		if($revert) { // Revert all class data - negate everything.
+			$credit_for_substituting				= -($credit_for_substituting);
+			$credit_for_substituting_in_same_level	= -($credit_for_substituting_in_same_level);
+			$credit_lost_for_getting_substitute		= -($credit_lost_for_getting_substitute);
+			$credit_lost_for_missing_class			= -($credit_lost_for_missing_class);
+			$credit_lost_for_missing_zero_hour		= -($credit_lost_for_missing_zero_hour);
+		}
     	
     	extract($data);
     	if($status == 'attended') {
@@ -233,8 +245,21 @@ class Class_model extends Model {
     			// A substitute has attended the class. Substitute gets one/two credit, Original teacher loses one credit.
     			$this->user_model->update_credit($substitute_id, $credit_sub_gets);
     			$this->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
-    			if($debug) print "<br />Substitute attended. Sub +$credit_sub_gets and Teacher $credit_lost_for_getting_substitute";
-    		}
+    			if($debug) print "<br />Substitute attended. Sub: $credit_sub_gets and Teacher: $credit_lost_for_getting_substitute";
+				
+				if(!$zero_hour_attendance) {
+					// Sub didn't reach in time for zero hour. Loses a credit. 
+					$this->user_model->update_credit($substitute_id, $credit_lost_for_missing_zero_hour);
+					if($debug) print "<br />Missed Zero Hour. Sub $credit_lost_for_missing_zero_hour";
+				}
+    		} else {
+				if(!$zero_hour_attendance) {
+					// Sub didn't reach in time for zero hour. Loses a credit. 
+					$this->user_model->update_credit($user_id, $credit_lost_for_missing_zero_hour);
+					if($debug) print "<br />Missed Zero Hour. Vol $credit_lost_for_missing_zero_hour";
+				}
+			}
+			
     	} elseif($status == 'absent') {
     		if($substitute_id) {
     			// A substitute was supposed to come - but didn't. Substitute loses two credit, Original teacher loses one credit.
@@ -253,50 +278,7 @@ class Class_model extends Model {
     /// When editing the class info, we have to make sure that the credits asigned durring the last edit is removed. Thats what this function is for
     /// Argument: $user_class_id - the id of a row in the UserClass table.
     function revert_user_class_credit($user_class_id, $data = array()) {
-    	if(!$data) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
-    	$this->load->model('user_model','user_model');
-		$this->load->model('level_model','level_model');
-		$this->ci->load->model('settings_model','settings_model');
-    	
-    	$debug = false;
-    	if($debug) {print "Last Class Data: ";dump($data);}
-		
-		// Reverting means we are reversing everything. So minus all.
-		$credit_for_substituting = -($this->ci->settings_model->get_setting_value('credit_for_substituting'));
-		$credit_for_substituting_in_same_level = -($this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level'));
-		$credit_lost_for_getting_substitute = -($this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute'));
-		$credit_lost_for_missing_class = -($this->ci->settings_model->get_setting_value('credit_lost_for_missing_class'));
-    	
-    	extract($data);
-    	// Note - S = Substitute Teacher, OT= Original Teacher.
-    	if($status == 'attended') {
-    		if($substitute_id) {
-    			// A substitute had attended the class. That would have changed the credits like S = +1, OT = -1. So we make S = -1 and OT = +1 - to make the changed credits 0
-				$credit_sub_gets = $credit_for_substituting;
-				
-				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
-				$substitute_levels = $this->level_model->get_user_level($substitute_id);
-				$current_class_level = $this->level_model->get_class_level($class_id);
-				if(in_array($current_class_level, $substitute_levels)) {
-					$credit_sub_gets = $credit_for_substituting_in_same_level;
-				}
-				
-    			$this->user_model->update_credit($substitute_id, $credit_sub_gets);
-    			$this->user_model->update_credit($user_id, $credit_for_substituting);
-    			if($debug) print "<br />Substitute had attended. Reverting means Sub -$credit_sub_gets and Teacher $credit_for_substituting";
-    		}
-    	} elseif($status == 'absent') {
-    		if($substitute_id) {
-    			// A substitute was supposed to come - but didn't. S=-2, OT=-1. So in revert, S=+2,OT=+1
-    			$this->user_model->update_credit($substitute_id, $credit_lost_for_missing_class);
-    			$this->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
-    			if($debug) print "<br />Substitute was absent. Reverting means Sub +2 and Teacher +1";
-    		} else {
-    			// Absent without substitute. Teacher lost two credit. So, give them +2.
-    			$this->user_model->update_credit($user_id, $credit_lost_for_missing_class);
-    			if($debug) print "<br />Teacher was absent. Reverting Teacher +2";
-    		}
-    	}
+    	$this->calculate_users_class_credit($user_class_id, $data, true);
     }
     
     /// Returns all the unconfirmed classes for the next $days days. 

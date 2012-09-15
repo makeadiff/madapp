@@ -3,17 +3,19 @@
 <head>
 <title>MADApp Login</title>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/camp/master.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/style.css" />
 </head>
 <body id="pg-login">
 
 <div class="login-box">
 <h1>MADApp Login</h1>
 <?php
-$message['success'] = $this->session->flashdata('success');
-$message['error'] = $this->session->flashdata('error');
+if(empty($message['success'])) $message['success'] = $this->session->flashdata('success');
+if(empty($message['error'])) $message['error'] = $this->session->flashdata('error');
+
 if(!empty($message['success']) or !empty($message['error'])) { ?>
-<div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
-<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
+<div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><p><?php echo (empty($message['error'])) ? '':$message['error'] ?></p></div>
+<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><p><?php echo (empty($message['success'])) ? '': $message['success'] ?></p></div>
 <?php } ?>
 
 <?php echo form_open("auth/login");?>

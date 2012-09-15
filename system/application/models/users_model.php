@@ -35,6 +35,7 @@ class Users_model extends Model {
 		$query = $this->db->where('email', $username)->where('password',$password)->where('status','1')->where('user_type', 'volunteer')->get("User");
         if($query->num_rows() > 0) {
 			$user = $query->first_row();
+			
    			$memberCredentials['id'] = $user->id;
 			$memberCredentials['email'] = $user->email;
 			$memberCredentials['name'] = $user->name;
@@ -453,31 +454,50 @@ class Users_model extends Model {
 		$this->ci->load->model('event_model');
 		$this->ci->load->model('settings_model');
 		
-		$credit_for_substituting = $this->settings_model->get_setting_value('credit_for_substituting');
-		$credit_for_substituting_in_same_level = $this->settings_model->get_setting_value('credit_for_substituting_in_same_level');
-		$credit_lost_for_getting_substitute = $this->settings_model->get_setting_value('credit_lost_for_getting_substitute');
-		$credit_lost_for_missing_class = $this->settings_model->get_setting_value('credit_lost_for_missing_class');
-		$credit_lost_for_missing_avm = $this->settings_model->get_setting_value('credit_lost_for_missing_avm');
-		$credit = $this->settings_model->get_setting_value('beginning_credit');
+		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
+		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
+		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
+		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
+		$credit_lost_for_missing_avm = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_avm');
+		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
+		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
 		
 		$classes_so_far = $this->get_usercredits($user_id);
-		
+				
 		foreach($classes_so_far as $row) {
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
 				$credit = $credit + $credit_lost_for_missing_class;
+				if($debug) print "User missed class: $credit_lost_for_missing_class<br />\n";
+				
 			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and  ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$credit = $credit + $credit_lost_for_getting_substitute;
+				if($debug) print "Had to get a substitute: $credit_lost_for_getting_substitute<br />\n";
+				
 			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
+				if($debug) print "Missed a substitution class: $credit_lost_for_missing_class<br />\n";
+				
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
 				$credit_sub_gets = $credit_for_substituting;
-				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
+				// If the sub is from the same level, give him/her 1 credits. Because we are SO generous.
 				$substitute_levels = $this->ci->level_model->get_user_level($row['substitute_id']);
 				$current_class_level = $this->ci->level_model->get_class_level($row['class_id']);
 				if(in_array($current_class_level, $substitute_levels)) {
 					$credit_sub_gets = $credit_for_substituting_in_same_level;
 				}
 				$credit = $credit + $credit_sub_gets;
+				
+				if($debug) print "Credit for subbing: $credit_sub_gets<br />\n";
+				
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+					$credit = $credit + $credit_lost_for_missing_zero_hour;
+					if($debug) print "Missed Zero Hour: $credit_lost_for_missing_zero_hour<br />\n";
+				}
+			} elseif($row['substitute_id'] == '0' and $row['status'] == 'attended') {
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+					$credit = $credit + $credit_lost_for_missing_zero_hour;
+					if($debug) print "Missed Zero Hour: $credit_lost_for_missing_zero_hour<br />\n";
+				}
 			}
 		}
 		

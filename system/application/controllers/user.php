@@ -524,6 +524,7 @@ class User extends Controller  {
 		$credit_lost_for_getting_substitute = $this->settings_model->get_setting_value('credit_lost_for_getting_substitute');
 		$credit_lost_for_missing_class = $this->settings_model->get_setting_value('credit_lost_for_missing_class');
 		$credit_lost_for_missing_avm = $this->settings_model->get_setting_value('credit_lost_for_missing_avm');
+		$credit_lost_for_missing_zero_hour = $this->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
 		$credit = $this->settings_model->get_setting_value('beginning_credit');
 		
 		$credit_log = array();
@@ -531,7 +532,7 @@ class User extends Controller  {
 		foreach($details as $row) {
 			$data = array();
 			if ($row['user_id'] == $current_user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
-				$credit = $credit - $credit_lost_for_missing_class;
+				$credit = $credit + $credit_lost_for_missing_class;
 				$data['class_on'] = $row['class_on'];
 				$data['Substitutedby'] = 'Absent';
 				$data['lost'] = "Lost $credit_lost_for_missing_class credits";
@@ -539,17 +540,17 @@ class User extends Controller  {
 				
 			} else if ($row['user_id'] == $current_user_id and $row['substitute_id'] != 0 and ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$substitute_id = $row['substitute_id'];
-				$Name_of_Substitute=$this->users_model->get_name_of_Substitute($substitute_id);
+				$Name_of_Substitute = $this->users_model->get_name_of_Substitute($substitute_id);
 				if(sizeof($Name_of_Substitute) >0) $Name_of_Substitute = $Name_of_Substitute->name;
 				else $Name_of_Substitute ='No Name';
-				$credit = $credit - $credit_lost_for_getting_substitute;
+				$credit = $credit + $credit_lost_for_getting_substitute;
 				$data['class_on']= $row['class_on'];
 				$data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
 				$data['lost'] = "Lost $credit_lost_for_getting_substitute credit";
 				$data['credit'] = $credit;
 			
 			} else if($row['substitute_id'] == $current_user_id and $row['status'] == 'absent') {
-				$credit = $credit - $credit_lost_for_missing_class;
+				$credit = $credit + $credit_lost_for_missing_class;
 				$data['class_on']= $row['class_on'];
 				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);
 				$data['Substitutedby'] = "Absent for " . $teacher_name->name . "'s substitute class";
@@ -572,6 +573,24 @@ class User extends Controller  {
 				$data['Substitutedby'] = "Substituted for " . $teacher_name->name;
 				$data['lost'] = "Gained $sub_get_credits credit";
 				$data['credit'] = $credit;
+				
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+					$credit = $credit + $credit_lost_for_missing_zero_hour;
+					$data['class_on'] = $row['class_on'];
+					$data['Substitutedby'] = "Missed Zero Hour";
+					$data['lost'] = "Lost $credit_lost_for_missing_zero_hour credit";
+					$data['credit'] = $credit;
+				}
+			}
+			
+			if ($row['substitute_id'] == 0 and $row['status'] == 'attended') {
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+					$credit = $credit + $credit_lost_for_missing_zero_hour;
+					$data['class_on'] = $row['class_on'];
+					$data['Substitutedby'] = "Missed Zero Hour";
+					$data['lost'] = "Lost $credit_lost_for_missing_zero_hour credit";
+					$data['credit'] = $credit;
+				}
 			}
 			
 			if(isset($data['credit'])) {

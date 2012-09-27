@@ -226,7 +226,7 @@ class Event_model extends Model{
 							AND Event.starts_on < '".($this->year + 1)."-03-31 23:59:59'")->result();
 		return $data;
 	}
-	
+		
 	function get_all($event_type='', $date_range=false) {
 		$city_id = $this->city_id;
 		$this->db->select('*')->from('Event')->where('city_id', $city_id);
@@ -275,9 +275,11 @@ class Event_model extends Model{
 		return $difference->format('%m');
 	}
 
-	function get_volunteers_to_attend_training_1($year_month, $city_id ,$teacher_training1) {
-		return $this->db->query("SELECT COUNT(id) AS count FROM Event JOIN UserEvent ON Event.id=UserEvent.event_id
-                                WHERE UserEvent.present='0' AND Event.name='$teacher_training1'")->row()->count;
-           
+	function get_count_of_missing_volunteers_at_event($year_month, $city_id ,$event_name) {
+		return $this->db->query("SELECT COUNT(id) AS count FROM Event 
+									JOIN UserEvent ON Event.id=UserEvent.event_id
+									WHERE Event.city_id=$city_id AND UserEvent.present='0' 
+									AND DATE_FORMAT(Event.starts_on, '%Y-%m')='$year_month' 
+									AND Event.name='$event_name'")->row()->count;
     }
 }

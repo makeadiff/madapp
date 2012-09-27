@@ -219,11 +219,13 @@ class Cron extends Controller  {
 			
 			$categories = array(
 				'class_count'							=> 0,
+				'fellows_count'							=> 0,
 				// Ops
 				'absent_without_substitute_count'		=> 0,
 				'absent_without_substitute_percentage'	=> 0,
 				'negative_credit_volunteer_count'		=> 0,
 				'negative_credit_volunteer_percentage'	=> 0,
+				'substitute_percentage'					=> 0,
 				'attended_kids_percentage'				=> 0,
 				'madapp_updated_ops'					=> -1,
 				'classes_cancelled_count'				=> 0,
@@ -232,14 +234,17 @@ class Cron extends Controller  {
 				// EPH
 				'periodic_assessment_updation_status'	=> -1,
 				'class_progress'						=> 0,
-				'teacher_training_1_havnt_attent'		=> 0,
-				'teacher_training_1_havnt_attent_status'=> 0,
+				'substitute_count'						=> 0,
+				'volunteers_missing_teacher_training_1'	=> 0,
+				'volunteers_missing_curriculum_training'=> 0,
+				'volunteers_missing_teacher_training_2'	=> 0,
 				// HR
 				'volunteer_requirement_count'			=> 0,
 				'volunteer_requirement_percentage'		=> 0,
 				'attirition_count'						=> 0,
 				'attirition_percentage'					=> 0,
 				'months_since_avm'						=> 0,
+				'cc_attendance_percentage'				=> 0,
 				'madapp_updated_hr'						=> -1,
 				'exit_interviews_conducted'				=> -1,
 				// PR
@@ -257,7 +262,7 @@ class Cron extends Controller  {
 				'accounts_updated_status'				=> -1,
 				'pending_receipt_count'					=> -1,
 				// President
-				'core_team_meeting_stauts'				=> 0,
+				'core_team_meeting_status'				=> 0,
 				'red_flag_count'						=> 0,
 				'number_of_fellows_pimped'				=> -1,
 				'madapp_updated_president'				=> -1,
@@ -269,16 +274,30 @@ class Cron extends Controller  {
 			$student_count= count($this->kids_model->getkids_details($city->id)->result());
 			$teacher_count = count($this->users_model->search_users(array('user_group'=>9, 'city_id'=>$city->id, 'project_id'=>$project_id))); // 9 = Teacher
 			
+			// Fellow Count
+			$core_team_groups = array(2,4,5,11,12,15,19, 18,10,20);
+			$all_vps = $this->users_model->search_users(array('city_id'=>$city->id, 'user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true));
+			$categories['fellows_count'] = count($all_vps);
+			
+			
 			$info = $this->class_model->get_classes_in_month($year_month, $city->id, $project_id);
 			
 			foreach($info as $c) {
 				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
 				if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
+				if($c->status == 'attended' and $c->substitute_id) $categories['substitute_count']++;
  			}
+			
  			
  			$categories['classes_cancelled_count'] = $this->class_model->get_cancelled_class_count($year_month, $city->id, $project_id);
 
 			if($categories['class_count']) {
+				$categories['substitute_percentage'] = ceil($categories['substitute_count'] / $categories['class_count'] * 100);
+				if($categories['substitute_percentage'] > 15) $flags['substitute_percentage'] = 'red';
+				
+				$categories['classes_cancelled_percentage'] = ceil($categories['classes_cancelled_count'] / $categories['class_count'] * 100);
+				if($categories['classes_cancelled_percentage'] > 5) $flags['classes_cancelled_percentage'] = 'red';
+			
 				$categories['absent_without_substitute_percentage'] = ceil($categories['absent_without_substitute_count'] / $categories['class_count'] * 100);
 				if($categories['absent_without_substitute_percentage'] > 10) $flags['absent_without_substitute_percentage'] = 'red'; // If more than 10% is absent without substitute, its a red flag.
 			}
@@ -292,42 +311,62 @@ class Cron extends Controller  {
 					if($a->present) $attended++;
 				}
 				$categories['attended_kids_percentage'] = ceil($attended / $total_kids * 100);
-				if($categories['attended_kids_percentage'] < 90) $flags['attended_kids_percentage'] = 'red'; // If less than 90% of the kids attended the class, red flag.
+				if($categories['attended_kids_percentage'] < 80) $flags['attended_kids_percentage'] = 'red'; // If less than 80% of the kids attended the class, red flag.
 			}
 			
 			$categories['negative_credit_volunteer_count'] = count($this->report_model->get_users_with_low_credits(0, '<', $city->id, $project_id));
-			$categories['negative_credit_volunteer_percentage'] = ceil($categories['negative_credit_volunteer_count'] / $teacher_count * 100);
-			if($categories['negative_credit_volunteer_percentage'] > 10) $flags['negative_credit_volunteer_percentage'] = 'red';
 			
 			$requirements = $this->report_model->get_volunteer_requirements($city->id);
 			foreach($requirements as $r) {
 				$categories['volunteer_requirement_count'] += $r->requirement;
 			}
-			$categories['volunteer_requirement_percentage'] = ceil($categories['volunteer_requirement_count'] / $teacher_count * 100);
-			if($categories['volunteer_requirement_percentage'] > 10) $flags['volunteer_requirement_percentage'] = 'red';
 			
 			$categories['attirition_count'] = count($this->users_model->search_users(array('left_on'=>$year_month, 'city_id'=>$city->id, 'project_id'=>$project_id)));
-			$categories['attirition_percentage'] = ceil($categories['attirition_count'] / $teacher_count * 100);
-			if($categories['attirition_percentage'] > 10) $flags['attirition_percentage'] = 'red';
 			
+			if($teacher_count) {
+				$categories['negative_credit_volunteer_percentage'] = ceil($categories['negative_credit_volunteer_count'] / $teacher_count * 100);
+				if($categories['negative_credit_volunteer_percentage'] > 5) $flags['negative_credit_volunteer_percentage'] = 'red';
+
+				$categories['volunteer_requirement_percentage'] = ceil($categories['volunteer_requirement_count'] / $teacher_count * 100);
+				if($categories['volunteer_requirement_percentage'] > 10) $flags['volunteer_requirement_percentage'] = 'red';
+				
+				$categories['attirition_percentage'] = ceil($categories['attirition_count'] / $teacher_count * 100);
+				if($categories['attirition_percentage'] > 10) $flags['attirition_percentage'] = 'red';
+			}	
 			
 			$categories['months_since_avm'] = $this->event_model->months_since_event('avm', $year_month, $city->id);
 			$categories['core_team_meeting_stauts'] = ($this->event_model->months_since_event('coreteam_meeting', $year_month, $city->id)) ? 0 : 1;
 			if(!$categories['core_team_meeting_stauts']) $flags['core_team_meeting_stauts'] = 'red';
-			
-			// Count number of red flags.
-			foreach($flags as $name=>$color) if($color == 'red') $categories['red_flag_count']++;
-			if($categories['red_flag_count'] >= 4) $flag['red_flag_count'] = 'red';
+			          
                         
-                        
-			//Count of volunteers to attend training 1.
-			$teacher_training1='Teacher Training 1';
-			$volunteerCount = $this->event_model->get_volunteers_to_attend_training_1($year_month, $city->id, $teacher_training1);
-                        
-			if($volunteerCount) {				
-				$categories['teacher_training_1_havnt_attent'] = $volunteerCount;				
-				if($categories['teacher_training_1_havnt_attent'] > 4 ) $flags['teacher_training_1_havnt_attent_status'] = 'red'; // If less than 90% of the kids attended the class, red flag.
+			//Count of volunteers to attend trainings
+			$trainings = array(
+				'volunteers_missing_teacher_training_1'	=> 'Teacher Training 1',
+				'volunteers_missing_teacher_training_2'	=> 'Teacher Training 2',
+				'volunteers_missing_curriculum_training'=> 'Curriculum Training',
+				'volunteers_missing_process_training'	=> 'Process Training',
+			);
+			foreach($trainings as $category_name => $event_name) {
+				$volunteerCount = $this->event_model->get_count_of_missing_volunteers_at_event($year_month, $city->id, $event_name);
+							
+				if($volunteerCount) {				
+					$categories[$category_name] = $volunteerCount;
+					if($categories[$category_name] > 4 ) $flags[$category_name] = 'red';
+				}
 			}
+			
+			// Conut of people who atteneded the last CC
+			$cc_event = $this->event_model->get_last_event('avm', $city->id);
+			if($cc_event) {
+				$cc_attendees = $this->event_model->get_event_users($cc_event->id);
+				$missing_attendees_count = 0;
+				foreach($cc_attendees as $attend) {
+					if(!$attend->present) $missing_attendees_count++;
+				}
+				
+				$categories['cc_attendance_percentage'] = ceil( $missing_attendees_count / count($cc_attendees) * 100);
+			}
+			
 			
 			// VPs attending events
 			$core_team_groups = array(2,4,5,11,12,15,19);
@@ -360,6 +399,11 @@ class Cron extends Controller  {
 					}
 				}
 			}
+			
+			
+			// Count number of red flags.
+			foreach($flags as $name=>$color) if($color == 'red') $categories['red_flag_count']++;
+			if($categories['red_flag_count'] >= 4) $flag['red_flag_count'] = 'red';
 
  			// Save status to DB...
 			foreach($categories as $name => $value) {

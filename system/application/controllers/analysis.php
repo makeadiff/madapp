@@ -191,7 +191,7 @@ class Analysis extends Controller {
 			
 			$attendance_matrix[$vertical] = $people;
 		}
-		
+				
 		$data['attendance_matrix'] = $attendance_matrix;
 		
 		$data['months'] = array('2012-04', '2012-05', '2012-06', '2012-07', '2012-08', '2012-09', '2012-10', '2012-11', '2012-12', '2013-01', '2013-02', '2013-03', ); get_month_list();

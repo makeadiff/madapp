@@ -5,15 +5,27 @@ $this->load->view('layout/header', array('title'=>'Monthly Review'));
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/analysis.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
 <script type="text/javascript">
-function inputData(name, value, month_year, ele) {
+function inputData(name, value, month_year, ele, threshold, red_if) {
 	var title = name.replace(/_/g," ");
-	var input_value = prompt(title, value);
+	var input_value = Number(prompt(title, value));
 	if(input_value == undefined) return;
 	ele.innerHTML = input_value;
+	
+	var flag = "green";
+	if(red_if == '<') {
+		if(threshold < input_value) flag = "red";
+	}
+	else if(red_if == '>') {
+		if(threshold > input_value) flag = "red";
+	}
+	
+	if(flag == "red") ele.parentNode.className = "bad";
+	else ele.className = "good";
+	
 	jQuery.ajax({
-				"url": "<?php echo site_url('analysis/save_review_data'); ?>/" + name + '/' + month_year + '/' + input_value,
+				"url": "<?php echo site_url('analysis/save_review_data'); ?>/" + name + '/' + month_year + '/' + input_value + '/' + flag,
 				"success": function(data) {
-					alert(data);
+					//alert(data);
 				}
 			});
 }
@@ -28,7 +40,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <td></td><td></td>
 <td>April</td><td>May</td><td>June</td><td>July</td><td>August</td><td>September</td><td>October</td><td>November</td><td>December</td><td>January</td><td>February</td><td>March</td>
 <tr>
-
+<!--
 <tr>
 <td></td><td class="name">Number of MAD Classes</td>
 <?php showCells('class_count', $review, $months); ?>
@@ -38,66 +50,83 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <td></td><td class="name">Number of Fellows</td>
 <?php showCells('fellows_count', $review, $months); ?>
 </tr>
+-->
 
 <tr><td class="vertical-name" colspan="14">Operations</td></tr>
 
 <tr><td></td><td class="name">Volunteers Absent without Substitute</td>
-<?php showCells('absent_without_substitute_count', $review, $months); ?>
-</tr>
-
-<tr><td></td><td class="name"></td>
 <?php showCells('absent_without_substitute_percentage', $review, $months); ?>
 </tr>
 
-<tr><td></td><td class="name">Substitution Count</td>
-<?php showCells('substitute_count', $review, $months); ?>
-</tr>
-
-<tr><td></td><td class="name"></td>
+<tr><td></td><td class="name">Substitution Percentage</td>
 <?php showCells('substitute_percentage', $review, $months); ?>
 </tr>
 
-<tr><td></td><td class="name">Classes Cancelled</td>
-<?php showCells('classes_cancelled_count', $review, $months); ?>
-</tr>
-
-<tr><td></td><td class="name"></td>
-<?php showCells('classes_cancelled_percentage', $review, $months); ?>
-</tr>
-
 <tr><td></td><td class="name">Volunteers With Negative Credits</td>
-<?php showCells('negative_credit_volunteer_count', $review, $months); ?>
-</tr>
-
-<tr><td></td><td class="name"></td>
 <?php showCells('negative_credit_volunteer_percentage', $review, $months); ?>
 </tr>
 
+<tr><td></td><td class="name">Volunteer Attendance Marked</td>
+<?php showCells('madapp_volunteer_attendance_marked', $review, $months, false, true); ?>
+</tr>
 
-<tr><td></td><td class="name">MADApp Up To Date</td>
-<?php showCells('madapp_updated_ops', $review, $months); ?>
+<tr><td></td><td class="name">Student Attendance Marked</td>
+<?php showCells('madapp_student_attendance_marked', $review, $months, false, true); ?>
+</tr>
+
+<tr><td></td><td class="name">Class Progress Marked</td>
+<?php showCells('madapp_class_progress_marked', $review, $months, false, true); ?>
 </tr>
 
 <tr><td></td><td class="name">Student Attendance</td>
 <?php showCells('attended_kids_percentage', $review, $months); ?>
 </tr>
 
-<tr><td></td><td class="name">Center Authorities Visited</td>
-<?php showCells('center_authorities_visited', $review, $months, true); ?>
+<tr><td></td><td class="name">Classes Cancelled</td>
+<?php showCells('classes_cancelled_percentage', $review, $months); ?>
+</tr>
+
+<tr><td></td><td class="name">Center Authority not visited in the last 2 months</td>
+<?php showCells('center_authority_not_visited_2_months', $review, $months, true, false, 0, '>'); ?>
 </tr>
 
 <?php showEventAttendance(4, $attendance_matrix, $review, $months); ?>
 
+<!-- ############################################################################### -->
+
+<tr><td class="vertical-name" colspan="14">HR</td></tr>
+
+<tr><td></td><td class="name">Number of Volunteers left to be recruited</td>
+<?php showCells('volunteer_requirement_count', $review, $months); ?>
+</tr>
+
+<tr><td></td><td class="name">Volunteers Remaining for Process Training</td>
+<?php showCells('volunteers_missing_process_training', $review, $months); ?>
+</tr>
+
+<tr><td></td><td class="name">Months Since CC</td>
+<?php showCells('months_since_avm', $review, $months); ?>
+</tr>
+
+<tr><td></td><td class="name">Attrition</td>
+<?php showCells('attirition_percentage', $review, $months); ?>
+</tr>
+
+<?php showEventAttendance(5, $attendance_matrix, $review, $months); ?>
+
+<!-- ############################################################### -->
+
 <tr><td class="vertical-name" colspan="14">English Project Head</td></tr>
 
-<tr><td></td><td class="name">Periodic Assessment Results in MADApp</td>
+<!--
+<tr><td></td><td class="name">Children who passed monthly assesment</td>
 <?php showCells('periodic_assessment_updation_status', $review, $months); ?>
 </tr>
+-->
 
 <tr><td></td><td class="name">Class Progress</td>
 <?php showCells('class_progress', $review, $months); ?>
 </tr>
-
 
 <tr><td></td><td class="name">Volunteers Remaining for Teacher Training I</td>
 <?php showCells('volunteers_missing_teacher_training_1', $review, $months); ?>
@@ -113,70 +142,65 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 
 <?php showEventAttendance(19, $attendance_matrix, $review, $months); ?>
 
+<!-- ################################################################### -->
+<tr><td class="vertical-name" colspan="14">Placements</td></tr>
 
-<tr><td class="vertical-name" colspan="14">HR</td></tr>
-
-<tr><td></td><td class="name">Number of Volunteers left to be recruited</td>
-<?php showCells('volunteer_requirement_count', $review, $months); ?>
+<tr><td></td><td class="name">Number of Child Groups that did not go thru an activity</td>
+<?php showCells('inactive_child_group_count', $review, $months, true, false, 0, '<'); ?>
 </tr>
 
-<tr><td></td><td class="name"></td>
-<?php showCells('volunteer_requirement_percentage', $review, $months); ?>
+<tr><td></td><td class="name">Number of Kits contributed to repository</td>
+<?php showCells('new_kit_count', $review, $months, true, false, 2, '>'); ?>
 </tr>
 
-<tr><td></td><td class="name">Volunteers Remaining for Process Training</td>
-<?php showCells('volunteers_missing_process_training', $review, $months); ?>
+<tr><td></td><td class="name">Number of interns with incomplete targets</td>
+<?php showCells('inactive_intern_count', $review, $months, true, false, 0, '<'); ?>
 </tr>
 
-<tr><td></td><td class="name">Attrition</td>
-<?php showCells('attirition_count', $review, $months); ?>
+<tr><td></td><td class="name">Number of times kits sent late</td>
+<?php showCells('late_kit_count', $review, $months, true, false, 0, '<'); ?>
 </tr>
 
-<tr><td></td><td class="name"></td>
-<?php showCells('attirition_percentage', $review, $months); ?>
+<tr><td></td><td class="name">Monthly Calendar Ready by 30th</td>
+<?php showCells('monthly_calendar_status', $review, $months, true, true); ?>
 </tr>
 
-<tr><td></td><td class="name">Months Since CC</td>
-<?php showCells('months_since_avm', $review, $months); ?>
+<tr><td></td><td class="name">Percentage of Kids participating in the activities of the month</td>
+<?php showCells('participating_kids_percentage', $review, $months, true); ?>
+</tr>
+
+<?php showEventAttendance(12, $attendance_matrix, $review, $months); ?>
+
+<!-- ######################################################## -->
+
+<tr><td class="vertical-name" colspan="14">PR</td></tr>
+
+<tr><td></td><td class="name">Months Since Last Ping</td>
+<?php showCells('months_since_ping', $review, $months, true, false, 1, '<'); ?>
+</tr>
+
+<tr><td></td><td class="name">PR Campaign</td>
+<?php showCells('months_since_pr_initiative', $review, $months, true, true, 1, '>'); ?>
+</tr>
+
+<tr><td></td><td class="name">Strategic Tie-ups</td>
+<?php showCells('strategic_tie_ups', $review, $months, true, true, 1, '>'); ?>
+</tr>
+
+<tr><td></td><td class="name">FB Plan Submission</td>
+<?php showCells('fb_plan_submission', $review, $months, true, true, 1, '>'); ?>
+</tr>
+
+<tr><td></td><td class="name">Attendance in PR Concall</td>
+<?php showCells('attendance_in_concall', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">CC Attendance</td>
 <?php showCells('cc_attendance_percentage', $review, $months); ?>
 </tr>
 
-<tr><td></td><td class="name">MADApp Up To Date</td>
-<?php showCells('madapp_updated_hr', $review, $months, true); ?>
-
-<tr><td></td><td class="name">Exit Interviews Conducted</td>
-<?php showCells('exit_interviews_conducted', $review, $months, true); ?>
-
-<?php showEventAttendance(5, $attendance_matrix, $review, $months); ?>
-
-
-<tr><td class="vertical-name" colspan="14">PR</td></tr>
-
-<tr><td></td><td class="name">Months Since Last Ping</td>
-<?php showCells('months_since_ping', $review, $months, true); ?>
-</tr>
-
 <tr><td></td><td class="name">Post on Blog</td>
-<?php showCells('blog_post_count', $review, $months, true); ?>
-</tr>
-
-<tr><td></td><td class="name">PR Campaign</td>
-<?php showCells('months_since_pr_initiative', $review, $months, true); ?>
-</tr>
-
-<tr><td></td><td class="name">Strategic Tie-ups</td>
-<?php showCells('strategic_tie_ups', $review, $months, true); ?>
-</tr>
-
-<tr><td></td><td class="name">FB Plan Submission</td>
-<?php showCells('fb_plan_submission', $review, $months, true); ?>
-</tr>
-
-<tr><td></td><td class="name">Attendance in PR Concall</td>
-<?php showCells('attendance_in_concall', $review, $months, true); ?>
+<?php showCells('blog_post_count', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <?php showEventAttendance(11, $attendance_matrix, $review, $months); ?>
@@ -185,23 +209,19 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <tr><td class="vertical-name" colspan="14">Finance</td></tr>
 
 <tr><td></td><td class="name">Petty Cash Register Updated</td>
-<?php showCells('accounts_updated_status', $review, $months, true, true); ?>
+<?php showCells('accounts_updated_status', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">Non-80G Donor Register Updated</td>
-<?php showCells('non80g-donor-register-update', $review, $months, true, true); ?>
+<?php showCells('non80g-donor-register-update', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">80G Donor Register Updated</td>
-<?php showCells('80g-donor-register-update', $review, $months, true, true); ?>
+<?php showCells('80g-donor-register-update', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">Number of Donors Pending Receipt</td>
-<?php showCells('pending_receipt_count', $review, $months, true); ?>
-</tr>
-
-<tr><td></td><td class="name">Bills and Documents Submitted by the 5th</td>
-<?php showCells('bills-documents-submitted', $review, $months, true, true); ?>
+<?php showCells('pending_receipt_count', $review, $months, true, false, 1, '>'); ?>
 </tr>
 
 <?php showEventAttendance(15, $attendance_matrix, $review, $months); ?>
@@ -209,15 +229,24 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 
 <tr><td class="vertical-name" colspan="14">President</td></tr>
 
+<tr><td></td><td class="name">Fellows PIMPed</td>
+<?php showCells('number_of_fellows_pimped', $review, $months, true, false, 2); ?>
+</tr>
+
 <tr><td></td><td class="name">Core Team Meeting Conducted</td>
 <?php showCells('core_team_meeting_status', $review, $months); ?>
 </tr>
 
-<tr><td></td><td class="name">MADApp Up To Date</td>
-<?php showCells('madapp_updated_president', $review, $months, true); ?>
+<tr><td></td><td class="name">CC Attendance</td>
+<?php showCells('cc_attendance_percentage', $review, $months); ?>
+</tr>
 
-<tr><td></td><td class="name">Number of fellows PIMPed</td>
-<?php showCells('number_of_fellows_pimped', $review, $months, true); ?>
+<tr><td></td><td class="name">Bills and Documents Submitted by the 5th</td>
+<?php showCells('bills-documents-submitted', $review, $months, true, true, 1, '>'); ?>
+</tr>
+
+<tr><td></td><td class="name">Core Team Event Created</td>
+<?php showCells('core_team_meeting_status', $review, $months); ?>
 </tr>
 
 <tr><td></td><td class="name">Number of Red Flags</td>
@@ -232,7 +261,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <?php
 $this->load->view('layout/footer');
 
-function showCells($name, $review, $months, $input=false, $yes_no=false) {
+function showCells($name, $review, $months, $input=false, $yes_no=false, $threshold = false, $red_if = '>') {
 	foreach($months as $month_year) {
 		if(isset($review[$month_year][$name])) {
 			$r = $review[$month_year][$name];
@@ -246,7 +275,7 @@ function showCells($name, $review, $months, $input=false, $yes_no=false) {
 				$value = ($value) ? 'Yes' : 'No';
 			}
 
-			if($input) echo "<a onclick='inputData(\"$name\",\"{$r->value}\", \"$month_year\", this);'>$value</a>";
+			if($input) echo "<a onclick='inputData(\"$name\",\"{$r->value}\", \"$month_year\", this, $threshold, \"$red_if\");'>$value</a>";
 			else echo $value;
 			
 			if(strpos($name, 'percentage')) echo '%';

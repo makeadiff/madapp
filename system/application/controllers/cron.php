@@ -209,7 +209,7 @@ class Cron extends Controller  {
 		}
 		
 		foreach($cities as $city) {
-			//if($city->id != 10) continue; // :DEBUG:
+			if($city->id != 10) continue; // :DEBUG:
 			
 			print "Collecting data for city: {$city->id}...\n";
 			
@@ -228,6 +228,9 @@ class Cron extends Controller  {
 				'substitute_percentage'					=> 0,
 				'attended_kids_percentage'				=> 0,
 				'madapp_updated_ops'					=> -1,
+				'madapp_volunteer_attendance_marked'	=> 1,
+				'madapp_student_attendance_marked'		=> 1,
+				'madapp_class_progress_marked'			=> 1,
 				'classes_cancelled_count'				=> 0,
 				'classes_cancelled_percentage'			=> 0,
 				'center_authorities_visited'			=> -1,
@@ -278,16 +281,19 @@ class Cron extends Controller  {
 			$core_team_groups = array(2,4,5,11,12,15,19, 18,10,20);
 			$all_vps = $this->users_model->search_users(array('city_id'=>$city->id, 'user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true));
 			$categories['fellows_count'] = count($all_vps);
-			
-			
+						
 			$info = $this->class_model->get_classes_in_month($year_month, $city->id, $project_id);
-			
 			foreach($info as $c) {
 				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
 				if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
 				if($c->status == 'attended' and $c->substitute_id) $categories['substitute_count']++;
+				if($c->status == 'projected' or $c->status == 'confirmed') $categories['madapp_volunteer_attendance_marked'] = 0;
+				if($c->lesson_id == 0) $categories['madapp_class_progress_marked'] = 0;
+				
+				if($c->status == 'attended') {
+					if(!$this->class_model->get__kids_attendance($c->id)) $categories['madapp_student_attendance_marked'] = 0;
+				}
  			}
-			
  			
  			$categories['classes_cancelled_count'] = $this->class_model->get_cancelled_class_count($year_month, $city->id, $project_id);
 
@@ -302,6 +308,43 @@ class Cron extends Controller  {
 				if($categories['absent_without_substitute_percentage'] > 10) $flags['absent_without_substitute_percentage'] = 'red'; // If more than 10% is absent without substitute, its a red flag.
 			}
 			
+			
+// 			periodic_assessment_updation_status
+// 			
+// 			SELECT Exam_Event.exam_on, Exam_Mark.mark, Exam_Subject.total_mark 
+// 				FROM Exam INNER JOIN Exam_Event ON Exam.id=Exam_Event.exam_id
+// 				INNER JOIN Exam_Mark ON Exam_Event.id=Exam_Mark.exam_event_id
+// 				INNER JOIN Exam_Subject ON Exam_Subject.exam_id=Exam.id
+// 			WHERE Exam.name LIKE 'Assessment%' AND DATE_FORMAT(Exam_Event.exam_on, '%Y-%m')='$year_month'
+			
+			// class_progress
+			$late_class_count = 0;
+			list($cp_data, $cp_all_lessons, $cp_all_centers, $cp_all_levels) = $this->class_model->get_class_progress($year_month, $city->id, $project_id);
+			foreach($cp_data as $center_id => $center_info) {
+				if(empty($center_info)) continue;
+				foreach($cp_all_levels[$center_id] as $level_info) { 
+					$last_lesson_id = 0;
+					$repeat_count = 0;
+					foreach($center_info['days_with_classes'] as $date_index => $day) {
+						if(!isset($center_info['class'][$level_info->id][$date_index])) continue;
+						$lesson_id = $center_info['class'][$level_info->id][$date_index]->lesson_id;
+						if($lesson_id != $last_lesson_id and $lesson_id) {
+							$last_lesson_id = $lesson_id;
+							$repeat_count = 0;
+						} else {
+							$repeat_count++;
+						}
+						
+						if($repeat_count > 2 and $lesson_id) {
+							$late_class_count++;
+							
+							print $center_info['center_name'] . ") " . $level_info->name . ": " .$date_index . "\n";
+						}
+					}
+				}
+			}
+			$categories['class_progress'] = ceil( $late_class_count / $categories['class_count'] * 100);
+			if($categories['class_progress'] > 10) $flags['class_progress'] = 'red';
 			
 			$attendance = $this->class_model->get_attendance_in_month($year_month, $city->id, $project_id);
 			if($attendance) {
@@ -331,13 +374,12 @@ class Cron extends Controller  {
 				if($categories['volunteer_requirement_percentage'] > 10) $flags['volunteer_requirement_percentage'] = 'red';
 				
 				$categories['attirition_percentage'] = ceil($categories['attirition_count'] / $teacher_count * 100);
-				if($categories['attirition_percentage'] > 10) $flags['attirition_percentage'] = 'red';
+				if($categories['attirition_percentage'] > 2) $flags['attirition_percentage'] = 'red';
 			}	
 			
 			$categories['months_since_avm'] = $this->event_model->months_since_event('avm', $year_month, $city->id);
 			$categories['core_team_meeting_stauts'] = ($this->event_model->months_since_event('coreteam_meeting', $year_month, $city->id)) ? 0 : 1;
 			if(!$categories['core_team_meeting_stauts']) $flags['core_team_meeting_stauts'] = 'red';
-			          
                         
 			//Count of volunteers to attend trainings
 			$trainings = array(
@@ -351,7 +393,7 @@ class Cron extends Controller  {
 							
 				if($volunteerCount) {				
 					$categories[$category_name] = $volunteerCount;
-					if($categories[$category_name] > 4 ) $flags[$category_name] = 'red';
+					if($categories[$category_name] > 10 ) $flags[$category_name] = 'red';
 				}
 			}
 			
@@ -367,7 +409,6 @@ class Cron extends Controller  {
 				$categories['cc_attendance_percentage'] = ceil( $missing_attendees_count / count($cc_attendees) * 100);
 			}
 			
-			
 			// VPs attending events
 			$core_team_groups = array(2,4,5,11,12,15,19);
 			$vps = $this->users_model->search_users(array('city_id'=>$city->id, 'user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true)); //18(Library), 10(CR) and 20(FOM) Excluded
@@ -376,6 +417,8 @@ class Cron extends Controller  {
 			$events['avm'] = reset($this->event_model->get_all('avm', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
 			$events['review_meeting'] = reset($this->event_model->get_all('monthly_review', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
 			$events['core_team_meeting']  = reset($this->event_model->get_all('coreteam_meeting', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
+			
+			if($events['core_team_meeting']) $categories['core_team_meeting_status'] = 1;
 			
 			foreach($events as $event_name => $ev) {
 				foreach($vps as $vp) {

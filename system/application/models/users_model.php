@@ -463,7 +463,7 @@ class Users_model extends Model {
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
 		
 		$classes_so_far = $this->get_usercredits($user_id);
-				
+		
 		foreach($classes_so_far as $row) {
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
 				$credit = $credit + $credit_lost_for_missing_class;
@@ -521,7 +521,9 @@ class Users_model extends Model {
     }
     
     function get_users_batch($user_id) {
-		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch INNER JOIN Batch ON Batch.id=UserBatch.batch_id WHERE UserBatch.user_id=$user_id AND Batch.year={$this->year}")->row();
+		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch 
+			INNER JOIN Batch ON Batch.id=UserBatch.batch_id 
+			WHERE UserBatch.user_id=$user_id AND Batch.year={$this->year}")->row();
 		if($users_batch) return $users_batch->batch_id;
 		else return 0;
     }

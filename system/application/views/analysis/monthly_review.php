@@ -1,5 +1,6 @@
 <?php
 $this->load->view('layout/header', array('title'=>'Monthly Review'));
+$_GLOBALS['red_flag_count'] = 0;
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/hide_sidebar.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/analysis.css">
@@ -145,7 +146,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <!-- ################################################################### -->
 <tr><td class="vertical-name" colspan="14">Placements</td></tr>
 
-<tr><td></td><td class="name">Number of Child Groups that did not go thru an activity</td>
+<tr><td></td><td class="name">Number of child groups that did not go through an activity(monthly)</td>
 <?php showCells('inactive_child_group_count', $review, $months, true, false, 0, '<'); ?>
 </tr>
 
@@ -213,11 +214,11 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 </tr>
 
 <tr><td></td><td class="name">Non-80G Donor Register Updated</td>
-<?php showCells('non80g-donor-register-update', $review, $months, true, true, 1, '>'); ?>
+<?php showCells('non80g_donor_register_update', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">80G Donor Register Updated</td>
-<?php showCells('80g-donor-register-update', $review, $months, true, true, 1, '>'); ?>
+<?php showCells('80g_donor_register_update', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">Number of Donors Pending Receipt</td>
@@ -265,7 +266,10 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 	foreach($months as $month_year) {
 		if(isset($review[$month_year][$name])) {
 			$r = $review[$month_year][$name];
-			if($r->flag == 'red') echo "<td class='bad'>";
+			if($r->flag == 'red') {
+				echo "<td class='bad'>";
+				$_GLOBALS['red_flag_count']++;
+			}
 			elseif($r->flag == 'green') echo "<td class='good'>";
 			else echo "<td class='none'>";
 			
@@ -274,6 +278,7 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 			elseif($yes_no) {
 				$value = ($value) ? 'Yes' : 'No';
 			}
+			if($name == 'red_flag_count') $value = $_GLOBALS['red_flag_count'];
 
 			if($input) echo "<a onclick='inputData(\"$name\",\"{$r->value}\", \"$month_year\", this, $threshold, \"$red_if\");'>$value</a>";
 			else echo $value;

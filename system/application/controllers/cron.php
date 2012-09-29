@@ -145,6 +145,7 @@ class Cron extends Controller  {
 		print "Recalculating credits of " . count($all_users) . " users.\n";
 		foreach($all_users as $user) {
 			print $user->id . ") " . $user->name;
+			$this->users_model->year = 2012;
 			$this->users_model->recalculate_user_credit($user->id, true, true);
 			print "\n";
 		}

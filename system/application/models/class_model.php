@@ -379,11 +379,22 @@ class Class_model extends Model {
 	function get_class_progress($year_month=false, $city_id=false, $project_id=false) {
 		if(!$project_id) $project_id = $this->project_id;
 		if(!$city_id) $city_id = $this->city_id;
+		$year = $this->year;
+		if($year_month) {
+			list($year, $month) = explode("-", $year_month);
+			if($month < 3) $year++;
+		}
 		
 		$this->ci->load->model('center_model');
 		$this->ci->load->model('book_lesson_model');
 		$this->ci->load->model('batch_model');
 		$this->ci->load->model('level_model');
+		$this->ci->batch_model->project_id = $project_id;
+		$this->ci->batch_model->city_id = $city_id;
+		$this->ci->batch_model->year = $year;
+		$this->ci->level_model->project_id = $project_id;
+		$this->ci->level_model->city_id = $city_id;
+		$this->ci->level_model->year = $year;
 		
 		$all_centers = $this->ci->center_model->get_all($city_id);
 		$all_levels = array();

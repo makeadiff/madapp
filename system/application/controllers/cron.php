@@ -210,7 +210,7 @@ class Cron extends Controller  {
 		}
 		
 		foreach($cities as $city) {
-			if($city->id != 10) continue; // :DEBUG:
+			//if($city->id != 10) continue; // :DEBUG:
 			
 			print "Collecting data for city: {$city->id}...\n";
 			
@@ -235,6 +235,7 @@ class Cron extends Controller  {
 				'classes_cancelled_count'				=> 0,
 				'classes_cancelled_percentage'			=> 0,
 				'center_authorities_visited'			=> -1,
+				'center_authority_not_visited_2_months'	=> -1,
 				// EPH
 				'periodic_assessment_updation_status'	=> -1,
 				'class_progress'						=> 0,
@@ -251,12 +252,14 @@ class Cron extends Controller  {
 				'cc_attendance_percentage'				=> 0,
 				'madapp_updated_hr'						=> -1,
 				'exit_interviews_conducted'				=> -1,
+				'volunteers_missing_process_training'	=> 0,
 				// PR
 				'months_since_ping'						=> -1,
 				'blog_post_count'						=> -1,
 				'months_since_pr_initiative'			=> -1,
 				'activity_on_city_page'					=> -1,
 				'fb_plan_submission'					=> -1,
+				'strategic_tie_ups'						=> -1,
 				'attendance_in_concall'					=> -1,
 				// CR
 				'monthly_target'						=> -1,
@@ -265,10 +268,20 @@ class Cron extends Controller  {
 				// Finance
 				'accounts_updated_status'				=> -1,
 				'pending_receipt_count'					=> -1,
+				'non80g_donor_register_update'			=> -1,
+				'80g_donor_register_update'				=> -1,
+				// Placements
+				'inactive_child_group_count'			=> -1,
+				'new_kit_count'							=> -1,
+				'inactive_intern_count'					=> -1,
+				'late_kit_count'						=> -1,
+				'monthly_calendar_status'				=> -1,
+				'participating_kids_percentage'			=> -1,
 				// President
 				'core_team_meeting_status'				=> 0,
 				'red_flag_count'						=> 0,
 				'number_of_fellows_pimped'				=> -1,
+				'bills_documents_submitted'				=> -1,
 				'madapp_updated_president'				=> -1,
 			);
 			
@@ -295,6 +308,7 @@ class Cron extends Controller  {
 					if(!$this->class_model->get__kids_attendance($c->id)) $categories['madapp_student_attendance_marked'] = 0;
 				}
  			}
+			if(!$categories['class_count']) continue;
  			
  			$categories['classes_cancelled_count'] = $this->class_model->get_cancelled_class_count($year_month, $city->id, $project_id);
 
@@ -339,7 +353,7 @@ class Cron extends Controller  {
 						if($repeat_count > 2 and $lesson_id) {
 							$late_class_count++;
 							
-							print $center_info['center_name'] . ") " . $level_info->name . ": " .$date_index . "\n";
+							//print $center_info['center_name'] . ") " . $level_info->name . ": " .$date_index . "\n";
 						}
 					}
 				}
@@ -379,8 +393,8 @@ class Cron extends Controller  {
 			}	
 			
 			$categories['months_since_avm'] = $this->event_model->months_since_event('avm', $year_month, $city->id);
-			$categories['core_team_meeting_stauts'] = ($this->event_model->months_since_event('coreteam_meeting', $year_month, $city->id)) ? 0 : 1;
-			if(!$categories['core_team_meeting_stauts']) $flags['core_team_meeting_stauts'] = 'red';
+			$categories['core_team_meeting_status'] = ($this->event_model->months_since_event('coreteam_meeting', $year_month, $city->id)) ? 0 : 1;
+			if(!$categories['core_team_meeting_status']) $flags['core_team_meeting_stauts'] = 'red';
                         
 			//Count of volunteers to attend trainings
 			$trainings = array(
@@ -418,9 +432,7 @@ class Cron extends Controller  {
 			$events['avm'] = reset($this->event_model->get_all('avm', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
 			$events['review_meeting'] = reset($this->event_model->get_all('monthly_review', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
 			$events['core_team_meeting']  = reset($this->event_model->get_all('coreteam_meeting', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
-			
-			if($events['core_team_meeting']) $categories['core_team_meeting_status'] = 1;
-			
+						
 			foreach($events as $event_name => $ev) {
 				foreach($vps as $vp) {
 					$core_team_position = reset(array_intersect($core_team_groups, array_keys($vp->groups)));
@@ -445,7 +457,7 @@ class Cron extends Controller  {
 			}
 			
 			
-			// Count number of red flags.
+			// Count number of red flags. PS: This is recalculated at display. So this is not too important.
 			foreach($flags as $name=>$color) if($color == 'red') $categories['red_flag_count']++;
 			if($categories['red_flag_count'] >= 4) $flag['red_flag_count'] = 'red';
 

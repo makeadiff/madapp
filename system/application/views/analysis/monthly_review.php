@@ -1,6 +1,7 @@
 <?php
 $this->load->view('layout/header', array('title'=>'Monthly Review'));
-$_GLOBALS['red_flag_count'] = 0;
+
+foreach($months as $month_year) if(isset($review[$month_year]['red_flag_count'])) $review[$month_year]['red_flag_count']->value = 0;
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/hide_sidebar.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/analysis.css">
@@ -243,7 +244,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 </tr>
 
 <tr><td></td><td class="name">Bills and Documents Submitted by the 5th</td>
-<?php showCells('bills-documents-submitted', $review, $months, true, true, 1, '>'); ?>
+<?php showCells('bills_documents_submitted', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">Core Team Event Created</td>
@@ -266,9 +267,14 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 	foreach($months as $month_year) {
 		if(isset($review[$month_year][$name])) {
 			$r = $review[$month_year][$name];
+
+			if($name == 'red_flag_count') {
+				if($r->value >= 4) $r->flag = 'red';
+			}
+
 			if($r->flag == 'red') {
 				echo "<td class='bad'>";
-				$_GLOBALS['red_flag_count']++;
+				$review[$month_year]['red_flag_count']->value++;
 			}
 			elseif($r->flag == 'green') echo "<td class='good'>";
 			else echo "<td class='none'>";
@@ -278,7 +284,6 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 			elseif($yes_no) {
 				$value = ($value) ? 'Yes' : 'No';
 			}
-			if($name == 'red_flag_count') $value = $_GLOBALS['red_flag_count'];
 
 			if($input) echo "<a onclick='inputData(\"$name\",\"{$r->value}\", \"$month_year\", this, $threshold, \"$red_if\");'>$value</a>";
 			else echo $value;

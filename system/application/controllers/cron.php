@@ -309,6 +309,10 @@ class Cron extends Controller  {
 				}
  			}
 			if(!$categories['class_count']) continue;
+			
+			if(!$categories['madapp_volunteer_attendance_marked']) $flags['madapp_volunteer_attendance_marked'] = 'red';
+			if(!$categories['madapp_student_attendance_marked']) $flags['madapp_student_attendance_marked'] = 'red';
+			if(!$categories['madapp_class_progress_marked']) $flags['madapp_class_progress_marked'] = 'red';
  			
  			$categories['classes_cancelled_count'] = $this->class_model->get_cancelled_class_count($year_month, $city->id, $project_id);
 
@@ -369,8 +373,8 @@ class Cron extends Controller  {
 					if($a->present) $attended++;
 				}
 				$categories['attended_kids_percentage'] = ceil($attended / $total_kids * 100);
-				if($categories['attended_kids_percentage'] < 80) $flags['attended_kids_percentage'] = 'red'; // If less than 80% of the kids attended the class, red flag.
 			}
+			if($categories['attended_kids_percentage'] < 80) $flags['attended_kids_percentage'] = 'red'; // If less than 80% of the kids attended the class, red flag.
 			
 			$categories['negative_credit_volunteer_count'] = count($this->report_model->get_users_with_low_credits(0, '<', $city->id, $project_id));
 			
@@ -393,6 +397,7 @@ class Cron extends Controller  {
 			}	
 			
 			$categories['months_since_avm'] = $this->event_model->months_since_event('avm', $year_month, $city->id);
+			if($categories['months_since_avm'] > 1) $flags['months_since_avm'] = 'red';
 			$categories['core_team_meeting_status'] = ($this->event_model->months_since_event('coreteam_meeting', $year_month, $city->id)) ? 0 : 1;
 			if(!$categories['core_team_meeting_status']) $flags['core_team_meeting_stauts'] = 'red';
                         
@@ -422,6 +427,10 @@ class Cron extends Controller  {
 				}
 				
 				$categories['cc_attendance_percentage'] = ceil( $missing_attendees_count / count($cc_attendees) * 100);
+				if($categories['cc_attendance_percentage'] < 70) $flags['cc_attendance_percentage'] = 'red';
+			} else {
+				$flags['core_team_meeting_status'] = 'red';
+				$flags['cc_attendance_percentage'] = 'red';
 			}
 			
 			// VPs attending events
@@ -432,7 +441,7 @@ class Cron extends Controller  {
 			$events['avm'] = reset($this->event_model->get_all('avm', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
 			$events['review_meeting'] = reset($this->event_model->get_all('monthly_review', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
 			$events['core_team_meeting']  = reset($this->event_model->get_all('coreteam_meeting', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
-						
+		
 			foreach($events as $event_name => $ev) {
 				foreach($vps as $vp) {
 					$core_team_position = reset(array_intersect($core_team_groups, array_keys($vp->groups)));

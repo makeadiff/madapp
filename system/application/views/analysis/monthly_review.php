@@ -22,7 +22,7 @@ function inputData(name, value, month_year, ele, threshold, red_if) {
 	}
 	
 	if(flag == "red") ele.parentNode.className = "bad";
-	else ele.className = "good";
+	else ele.parentNode.className = "good";
 	
 	jQuery.ajax({
 				"url": "<?php echo site_url('analysis/save_review_data'); ?>/" + name + '/' + month_year + '/' + input_value + '/' + flag,
@@ -272,7 +272,7 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 				if($r->value >= 4) $r->flag = 'red';
 			}
 
-			if($r->flag == 'red') {
+			if($r->flag == 'red' or $r->value == -1) {
 				echo "<td class='bad'>";
 				$review[$month_year]['red_flag_count']->value++;
 			}

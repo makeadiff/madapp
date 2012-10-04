@@ -154,6 +154,7 @@ class Analysis extends Controller {
 		foreach($data['months'] as $year_month) {
 			$data['review'][$year_month] = idNameFormat($this->review_model->get_monthly_review($year_month, $this->session->userdata('city_id')), array('name'));
 		}
+		$data['review']['user_auth'] = $this->user_auth;
 		
 		
 		$this->load->view('analysis/monthly_review', $data);

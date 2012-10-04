@@ -239,6 +239,7 @@ class Cron extends Controller  {
 				// EPH
 				'periodic_assessment_updation_status'	=> -1,
 				'class_progress'						=> 0,
+				'class_progress_percentage'				=> 0,
 				'substitute_count'						=> 0,
 				'volunteers_missing_teacher_training_1'	=> 0,
 				'volunteers_missing_curriculum_training'=> 0,
@@ -362,8 +363,8 @@ class Cron extends Controller  {
 					}
 				}
 			}
-			$categories['class_progress'] = ceil( $late_class_count / $categories['class_count'] * 100);
-			if($categories['class_progress'] > 10) $flags['class_progress'] = 'red';
+			$categories['class_progress_percentage'] = ceil( $late_class_count / $categories['class_count'] * 100);
+			if($categories['class_progress_percentage'] > 10) $flags['class_progress_percentage'] = 'red';
 			
 			$attendance = $this->class_model->get_attendance_in_month($year_month, $city->id, $project_id);
 			if($attendance) {
@@ -414,6 +415,9 @@ class Cron extends Controller  {
 				if($volunteerCount) {				
 					$categories[$category_name] = $volunteerCount;
 					if($categories[$category_name] > 10 ) $flags[$category_name] = 'red';
+				} else { // Event Not created.
+					$categories[$category_name] = 'No Data';
+					$flags[$category_name] = 'red';
 				}
 			}
 			
@@ -472,6 +476,7 @@ class Cron extends Controller  {
 
  			// Save status to DB...
 			foreach($categories as $name => $value) {
+				//print "$name: $value\n";
 				$this->review_model->save($name, $value, $year_month.'-01', $flags[$name], $city->id);
  			}
 		}

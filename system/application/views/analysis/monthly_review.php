@@ -99,7 +99,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <tr><td class="vertical-name" colspan="14">HR</td></tr>
 
 <tr><td></td><td class="name">Number of Volunteers left to be recruited</td>
-<?php showCells('volunteer_requirement_count', $review, $months); ?>
+<?php showCells('volunteer_requirement_percentage', $review, $months); ?>
 </tr>
 
 <tr><td></td><td class="name">Volunteers Remaining for Process Training</td>
@@ -127,7 +127,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 -->
 
 <tr><td></td><td class="name">Class Progress</td>
-<?php showCells('class_progress', $review, $months); ?>
+<?php showCells('class_progress_percentage', $review, $months); ?>
 </tr>
 
 <tr><td></td><td class="name">Volunteers Remaining for Teacher Training I</td>
@@ -182,7 +182,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 </tr>
 
 <tr><td></td><td class="name">PR Campaign</td>
-<?php showCells('months_since_pr_initiative', $review, $months, true, true, 1, '>'); ?>
+<?php showCells('months_since_pr_initiative', $review, $months, true, true, 1, '<'); ?>
 </tr>
 
 <tr><td></td><td class="name">Strategic Tie-ups</td>
@@ -223,7 +223,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 </tr>
 
 <tr><td></td><td class="name">Number of Donors Pending Receipt</td>
-<?php showCells('pending_receipt_count', $review, $months, true, false, 1, '>'); ?>
+<?php showCells('pending_receipt_count', $review, $months, true, false, 0, '<'); ?>
 </tr>
 
 <?php showEventAttendance(15, $attendance_matrix, $review, $months); ?>
@@ -285,7 +285,7 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 				$value = ($value) ? 'Yes' : 'No';
 			}
 
-			if($input) echo "<a onclick='inputData(\"$name\",\"{$r->value}\", \"$month_year\", this, $threshold, \"$red_if\");'>$value</a>";
+			if($input and $review['user_auth']->get_permission('monthly_review_edit')) echo "<a onclick='inputData(\"$name\",\"{$r->value}\", \"$month_year\", this, $threshold, \"$red_if\");'>$value</a>";
 			else echo $value;
 			
 			if(strpos($name, 'percentage')) echo '%';

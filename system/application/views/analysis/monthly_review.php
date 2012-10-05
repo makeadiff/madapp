@@ -168,7 +168,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 </tr>
 
 <tr><td></td><td class="name">Percentage of Kids participating in the activities of the month</td>
-<?php showCells('participating_kids_percentage', $review, $months, true); ?>
+<?php showCells('participating_kids_percentage', $review, $months, true, false); ?>
 </tr>
 
 <?php showEventAttendance(12, $attendance_matrix, $review, $months); ?>
@@ -263,7 +263,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <?php
 $this->load->view('layout/footer');
 
-function showCells($name, $review, $months, $input=false, $yes_no=false, $threshold = false, $red_if = '>') {
+function showCells($name, $review, $months, $input=false, $yes_no=false, $threshold = 0, $red_if = '>') {
 	foreach($months as $month_year) {
 		if(isset($review[$month_year][$name])) {
 			$r = $review[$month_year][$name];

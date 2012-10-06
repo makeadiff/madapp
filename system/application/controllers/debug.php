@@ -27,7 +27,7 @@ class Debug extends Controller {
 	}
 
 	function delete_students_in_center() {
-		$centers = array(7,22,23,24,10,11,12,36);
+		$centers = array(30,31,32,33,34);
 		
 		$student_ids = $this->users_model->db->query("SELECT id FROM `Student` WHERE center_id IN(".implode(',',$centers).")")->result();
 		print "Total Students: " . count($student_ids) . '<br />';

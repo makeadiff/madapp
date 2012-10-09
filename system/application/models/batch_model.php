@@ -33,7 +33,8 @@ class Batch_model extends Model {
     }
     
     function get_all_batches() {
-    	return $this->db->where('project_id', $this->project_id)->where('year', $this->year)->get('Batch')->result();
+		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN Center ON Batch.center_id=Center.id 
+			WHERE Batch.project_id={$this->project_id} AND Batch.year={$this->year} AND Center.status='1'")->result();
     }
     
     function get_batches_in_level($level_id) {

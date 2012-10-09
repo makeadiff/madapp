@@ -17,6 +17,7 @@ class National_model extends Model {
         $this->ci = &get_instance();
         $this->city_id = $this->ci->session->userdata('city_id');
         $this->project_id = $this->ci->session->userdata('project_id');
+        $this->year = $this->ci->session->userdata('year');
     }
 
     /*
@@ -39,7 +40,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function get_center_count($city_id) {
-        return $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id")->row()->count;
+        return $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id WHERE status='1'")->row()->count;
     }
 
     /*

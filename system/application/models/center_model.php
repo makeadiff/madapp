@@ -148,6 +148,8 @@ class Center_model extends Model
 	function delete_center($center_id)
 	{
  		 $this->db->where('id',$center_id)->update('Center', array('status'=>'0'));
+ 		 $this->db->where('center_id',$center_id)->update('Level', array('status'=>'0'));
+ 		 $this->db->where('center_id',$center_id)->update('Batch', array('status'=>'0'));
 
 		 return ($this->db->affected_rows() > 0) ? true: false ;
 	

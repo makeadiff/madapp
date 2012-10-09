@@ -275,11 +275,54 @@ class Event_model extends Model{
 		return $difference->format('%m');
 	}
 
-	function get_count_of_missing_volunteers_at_event($year_month, $city_id ,$event_name) {
-		return $this->db->query("SELECT COUNT(id) AS count FROM Event 
+	function get_count_of_missing_volunteers_at_event($year_month, $city_id, $event_name='', $event_type='') {
+		$where = '1';
+		if($event_name) $where = "Event.name='$event_name'";
+		elseif($event_type) $Where = "Event.type='$event_type'";
+		
+		$result = $this->db->query("SELECT COUNT(id) AS count FROM Event 
 									JOIN UserEvent ON Event.id=UserEvent.event_id
 									WHERE Event.city_id=$city_id AND UserEvent.present='0' 
 									AND DATE_FORMAT(Event.starts_on, '%Y-%m')='$year_month' 
-									AND Event.name='$event_name'")->row()->count;
+									AND $where");
+		if(!$result) return false;
+		
+		return $result->row()->count;
+    }
+    
+	function get_count_of_expected_volunteers_at_event($year_month, $city_id, $event_name='', $event_type='') {
+		$where = '1';
+		if($event_name) $where = "Event.name='$event_name'";
+		elseif($event_type) $Where = "Event.type='$event_type'";
+		
+		$result = $this->db->query("SELECT COUNT(id) AS count FROM Event 
+									JOIN UserEvent ON Event.id=UserEvent.event_id
+									WHERE Event.city_id=$city_id
+									AND DATE_FORMAT(Event.starts_on, '%Y-%m')='$year_month' 
+									AND $where");
+		if(!$result) return false;
+		
+		return $result->row()->count;
+    } 
+    
+    function get_volunteers_at_event($year_month, $city_id, $event_name='', $event_type='') {
+		$where = '1';
+		if($event_name) $where = "Event.name='$event_name'";
+		elseif($event_type) $where = "Event.type='$event_type'";
+		
+		if($year_month == 0) $where_year = "Event.starts_on > '{$this->year}-04-01 00:00:00' 
+											AND Event.starts_on < '".($this->year + 1)."-03-31 23:59:59'";
+		else $where_year = "DATE_FORMAT(Event.starts_on, '%Y-%m')='$year_month'";
+		
+		$result = $this->db->query("SELECT UserEvent.user_id FROM Event 
+									JOIN UserEvent ON Event.id=UserEvent.event_id
+									WHERE Event.city_id=$city_id AND UserEvent.present='1' 
+									AND $where_year
+									AND $where")->result();
+
+		if(!$result) return false;
+		$users = array();
+		foreach($result as $u) $users[] = $u->user_id;
+		return $users;
     }
 }

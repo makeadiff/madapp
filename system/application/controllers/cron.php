@@ -24,7 +24,7 @@ class Cron extends Controller  {
 		// Wee have to add all the classes for the next two weeks.
 		for($week = 0; $week < 2; $week++) {
 			foreach($all_batches as $batch) {
-				//if($batch->id != 261) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+				//if($batch->id != 368) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
 				
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
@@ -47,14 +47,16 @@ class Cron extends Controller  {
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
 						print "Class by {$teacher->id} at $date\n";
-						$this->class_model->save_class(array(
+						
+						$class_data = array(
 							'batch_id'	=> $batch->id,
 							'level_id'	=> $teacher->level_id,
 							'teacher_id'=> $teacher->id,
 							'substitute_id'=>0,
 							'class_on'	=> $date,
 							'status'	=> 'projected'
-						));
+						);
+						$this->class_model->save_class($class_data);
 					}
 				}
 				
@@ -193,6 +195,8 @@ class Cron extends Controller  {
 	/// This will calculate the Stats necessary for the monthly review
 	function monthly_review_stats_collection($year_month='', $city_id = false) {
 		if(!$year_month) $year_month = date('Y-m', strtotime('last month'));
+		list($year, $month) = explode("-", $year_month);
+		if($month < 4) $year--;
 		
 		$this->load->model('report_model');
 		$this->load->model('city_model');
@@ -200,6 +204,7 @@ class Cron extends Controller  {
 		$this->load->model('event_model');
 		$this->load->model('kids_model');
 		$this->load->model('review_model');
+		$this->event_model->year = $year;
 
 		$project_id = 1;
 		if(!$city_id) {
@@ -290,7 +295,8 @@ class Cron extends Controller  {
 			foreach($categories as $name => $value) $flags[$name] = 'green';
 
 			$student_count= count($this->kids_model->getkids_details($city->id)->result());
-			$teacher_count = count($this->users_model->search_users(array('user_group'=>9, 'city_id'=>$city->id, 'project_id'=>$project_id))); // 9 = Teacher
+			$all_teachers = $this->users_model->search_users(array('user_group'=>9, 'city_id'=>$city->id, 'project_id'=>$project_id, 'user_type'=>'volunteer')); // 9 = Teacher
+			$teacher_count = count($all_teachers);
 			
 			// Fellow Count
 			$core_team_groups = array(2,4,5,11,12,15,19, 18,10,20);
@@ -404,36 +410,35 @@ class Cron extends Controller  {
                         
 			//Count of volunteers to attend trainings
 			$trainings = array(
-				'volunteers_missing_teacher_training_1'	=> 'Teacher Training 1',
-				'volunteers_missing_teacher_training_2'	=> 'Teacher Training 2',
-				'volunteers_missing_curriculum_training'=> 'Curriculum Training',
-				'volunteers_missing_process_training'	=> 'Process Training',
+				'volunteers_missing_teacher_training_1'	=> 'teacher',
+				'volunteers_missing_teacher_training_2'	=> 'teacher2',
+				'volunteers_missing_curriculum_training'=> 'curriculum',
+				'volunteers_missing_process_training'	=> 'process',
 			);
-			foreach($trainings as $category_name => $event_name) {
-				$volunteerCount = $this->event_model->get_count_of_missing_volunteers_at_event($year_month, $city->id, $event_name);
-							
-				if($volunteerCount) {				
-					$categories[$category_name] = $volunteerCount;
+			$all_teachers_ids = array_keys($all_teachers);
+			foreach($trainings as $category_name => $event_type) {
+				$volunters_who_atteneded = $this->event_model->get_volunteers_at_event('', $city->id, '', $event_type);
+				
+				if($volunters_who_atteneded !== false) {
+					$people_who_missed = array_diff($all_teachers_ids, $volunters_who_atteneded);
+					
+					$categories[$category_name] = count($people_who_missed);
 					if($categories[$category_name] > 10 ) $flags[$category_name] = 'red';
 				} else { // Event Not created.
-					$categories[$category_name] = 'No Data';
+					$categories[$category_name] = '-1';
 					$flags[$category_name] = 'red';
 				}
 			}
 			
 			// Conut of people who atteneded the last CC
-			$cc_event = $this->event_model->get_last_event('avm', $city->id);
-			if($cc_event) {
-				$cc_attendees = $this->event_model->get_event_users($cc_event->id);
-				$missing_attendees_count = 0;
-				foreach($cc_attendees as $attend) {
-					if(!$attend->present) $missing_attendees_count++;
-				}
+			$cc_missing_count = $this->event_model->get_count_of_missing_volunteers_at_event($year_month, $city->id, '', 'avm');
+			if($cc_missing_count !== false) {
+				$cc_expected_count = $this->event_model->get_count_of_expected_volunteers_at_event($year_month, $city->id, '', 'avm');
 				
-				$categories['cc_attendance_percentage'] = ceil( $missing_attendees_count / count($cc_attendees) * 100);
+				$categories['cc_attendance_percentage'] = ceil( $cc_missing_count / $cc_expected_count * 100);
 				if($categories['cc_attendance_percentage'] < 70) $flags['cc_attendance_percentage'] = 'red';
 			} else {
-				$flags['core_team_meeting_status'] = 'red';
+				$categories['cc_attendance_percentage'] = -1;
 				$flags['cc_attendance_percentage'] = 'red';
 			}
 			

@@ -315,6 +315,7 @@ class Cron extends Controller  {
 					if(!$this->class_model->get__kids_attendance($c->id)) $categories['madapp_student_attendance_marked'] = 0;
 				}
  			}
+ 			
 			if(!$categories['class_count']) continue;
 			
 			if(!$categories['madapp_volunteer_attendance_marked']) $flags['madapp_volunteer_attendance_marked'] = 'red';
@@ -435,8 +436,13 @@ class Cron extends Controller  {
 			if($cc_missing_count !== false) {
 				$cc_expected_count = $this->event_model->get_count_of_expected_volunteers_at_event($year_month, $city->id, '', 'avm');
 				
-				$categories['cc_attendance_percentage'] = ceil( $cc_missing_count / $cc_expected_count * 100);
-				if($categories['cc_attendance_percentage'] < 70) $flags['cc_attendance_percentage'] = 'red';
+				if($cc_expected_count) {
+					$categories['cc_attendance_percentage'] = ceil( $cc_missing_count / $cc_expected_count * 100);
+					if($categories['cc_attendance_percentage'] < 70) $flags['cc_attendance_percentage'] = 'red';
+				} else {
+					$categories['cc_attendance_percentage'] = -1;
+					$flags['cc_attendance_percentage'] = 'red';
+				}
 			} else {
 				$categories['cc_attendance_percentage'] = -1;
 				$flags['cc_attendance_percentage'] = 'red';
@@ -478,10 +484,10 @@ class Cron extends Controller  {
 			// Count number of red flags. PS: This is recalculated at display. So this is not too important.
 			foreach($flags as $name=>$color) if($color == 'red') $categories['red_flag_count']++;
 			if($categories['red_flag_count'] >= 4) $flag['red_flag_count'] = 'red';
-
+			
  			// Save status to DB...
 			foreach($categories as $name => $value) {
-				//print "$name: $value\n";
+				// print "$name: $value : {$city->id}\n";
 				$this->review_model->save($name, $value, $year_month.'-01', $flags[$name], $city->id);
  			}
 		}

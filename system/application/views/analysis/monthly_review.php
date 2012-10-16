@@ -7,6 +7,37 @@ foreach($months as $month_year) if(isset($review[$month_year]['red_flag_count'])
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/analysis.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
 <script type="text/javascript">
+function comment(name, month_year) {
+	var city_id = <?php echo $this->session->userdata('city_id'); ?>;
+	jQuery.ajax({
+				"url": "<?php echo site_url('analysis/monthly_review_get_comment'); ?>/" + month_year + '/' + name,
+				"success": function(data) {
+					jQuery("#comment").show();
+					jQuery("#note").val(data);
+					jQuery("#comment_month_year").val(month_year);
+					jQuery("#comment_name").val(name);
+				}
+			});
+	
+}
+
+function cancelComment() {
+	jQuery("#comment").hide();
+}
+
+function saveComment() {
+	var name = jQuery("#comment_name").val();
+	var month_year = jQuery("#comment_month_year").val();
+	jQuery.ajax({
+			"url": "<?php echo site_url('analysis/monthly_review_set_comment'); ?>/" + month_year + '/' + name,
+			"data": {"comment": jQuery("#note").val()},
+			"type": "POST",
+			"success": function(data) {
+				jQuery("#comment").hide();
+			}
+		});
+}
+
 function inputData(name, value, month_year, ele, threshold, red_if) {
 	var title = name.replace(/_/g," ");
 	var input_value = Number(prompt(title, value));
@@ -32,6 +63,28 @@ function inputData(name, value, month_year, ele, threshold, red_if) {
 			});
 }
 </script>
+<style type="text/css">
+#comment {
+	position:absolute;
+	top:200px;
+	left:40%;
+	width:300px;
+	background:#ccc;
+	border:1px solid black;
+	display:none;
+	padding:3px;
+}
+</style>
+
+<div id="comment">
+<form action="" method="post">
+<textarea name="note" id="note" rows="5" cols="40"></textarea><br />
+<input type="button" name="action" value="Cancel" onclick="cancelComment()" />
+<input type="button" name="action" value="Save" onclick="saveComment()" style="float:right;" />
+<input type="hidden" name="comment_month_year" id="comment_month_year" />
+<input type="hidden" name="comment_name" id="comment_name" />
+</form>
+</div>
 
 Number of Centers: <?php echo $center_count ?><br />
 Number of Children: <?php echo $student_count ?><br />
@@ -124,11 +177,11 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <tr><td></td><td class="name">Children who passed monthly assesment</td>
 <?php showCells('periodic_assessment_updation_status', $review, $months); ?>
 </tr>
--->
 
 <tr><td></td><td class="name">Class Progress</td>
 <?php showCells('class_progress_percentage', $review, $months); ?>
 </tr>
+-->
 
 <tr><td></td><td class="name">Volunteers Remaining for Teacher Training I</td>
 <?php showCells('volunteers_missing_teacher_training_1', $review, $months); ?>
@@ -289,6 +342,8 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 			else echo $value;
 			
 			if(strpos($name, 'percentage')) echo '%';
+			
+			if($review['user_auth']->get_permission('monthly_review_comment')) echo "<a href='#' onclick='comment(\"$name\",\"$month_year\");' class='icon edit'>Note</a>";
 			echo "</td>";
 			
 		} else {

@@ -167,6 +167,21 @@ class Analysis extends Controller {
 		echo "Saved";
 	}
 	
+	function monthly_review_get_comment($year_month, $name) {
+		$this->load->model('review_model');
+		
+		$comment = $this->review_model->get_comment($this->session->userdata('city_id'), $year_month, $name);
+		echo $comment;
+	}
+	
+	function monthly_review_set_comment($year_month, $name) {
+		$this->load->model('review_model');
+		
+		$comment = $this->input->post('comment');
+		$this->review_model->set_comment($this->session->userdata('city_id'), $year_month, $name, $comment);
+		echo "Done";
+	}
+	
 	
 	/// NOT IN USE. DELETE.
 	function exam_report()

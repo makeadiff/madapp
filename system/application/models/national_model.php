@@ -40,7 +40,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function get_center_count($city_id) {
-        return $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id WHERE status='1'")->row()->count;
+        return $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id AND status='1'")->row()->count;
     }
 
     /*
@@ -53,7 +53,7 @@ class National_model extends Model {
     public function get_classes_p($city_id) {
         return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%p%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%p%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -66,7 +66,7 @@ class National_model extends Model {
     public function get_classes_s($city_id) {
         return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%s%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%s%' AND Center.city_id=$city_id  AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -79,7 +79,7 @@ class National_model extends Model {
     public function get_classes_L1($city_id) {
         return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id  AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -92,7 +92,7 @@ class National_model extends Model {
     public function get_classes_L2($city_id) {
         return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id  AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -105,7 +105,7 @@ class National_model extends Model {
     public function get_classes_L3($city_id) {
         return $this->db->query("SELECT COUNT(Class.id) AS count
 			FROM Class INNER JOIN Level ON Level.id = Class.level_id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id  AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -118,7 +118,7 @@ class National_model extends Model {
     public function get_children_P($city_id) {
         return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
 		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%P%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%P%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -131,7 +131,7 @@ class National_model extends Model {
     public function get_children_S($city_id) {
         return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
 		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -144,7 +144,7 @@ class National_model extends Model {
     public function get_children_L1($city_id) {
         return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
 		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
      /*
@@ -157,7 +157,7 @@ class National_model extends Model {
     public function get_children_L2($city_id) {
         return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
 		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -170,7 +170,7 @@ class National_model extends Model {
     public function get_children_L3($city_id) {
         return $this->db->query("SELECT COUNT(StudentLevel.id) AS count
 		 	FROM StudentLevel INNER JOIN Level ON StudentLevel.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -183,7 +183,7 @@ class National_model extends Model {
     public function get_Volunteers_P($city_id) {
         return $this->db->query("SELECT COUNT(UserBatch.id) AS count
 		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%P%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%P%' AND Center.city_id=$city_id  AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -196,7 +196,7 @@ class National_model extends Model {
     public function get_Volunteers_S($city_id) {
         return $this->db->query("SELECT COUNT(UserBatch.id) AS count
 		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -209,7 +209,7 @@ class National_model extends Model {
     public function get_Volunteers_L1($city_id) {
         return $this->db->query("SELECT COUNT(UserBatch.id) AS count
 		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
      /*
@@ -222,7 +222,7 @@ class National_model extends Model {
     public function get_Volunteers_L2($city_id) {
         return $this->db->query("SELECT COUNT(UserBatch.id) AS count
 		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%L2%' AND Center.city_id=$city_id AND Level.year='{$this->year}' ")->row()->count;
     }
 /*
      * Function Name : get_Volunteers_L3()
@@ -234,7 +234,7 @@ class National_model extends Model {
     public function get_Volunteers_L3($city_id) {
         return $this->db->query("SELECT COUNT(UserBatch.id) AS count
 		 	FROM UserBatch INNER JOIN Level ON UserBatch.level_id = Level.id INNER JOIN Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id ")->row()->count;
+			WHERE Level.name LIKE '%L3%' AND Center.city_id=$city_id  AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -256,7 +256,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_level_count($city_id) {
-        return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level JOIN Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->row()->count;
+        return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level JOIN Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id} AND Level.year='{$this->year}'")->row()->count;
     }
 
      /*
@@ -304,7 +304,7 @@ class National_model extends Model {
      */
     public function class_class_count($city_id) {
         return $this->db->query("SELECT COUNT(DISTINCT Class.class_on) AS count FROM Class  JOIN Level ON Level.id=Class.level_id  JOIN 
-					Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->row()->count;
+					Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id} AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -315,8 +315,11 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_substitute_count($city_id) {
-        return $this->db->query("SELECT COUNT(UserClass.id) AS count FROM UserClass JOIN User ON User.id = UserClass.user_id 
-					WHERE User.city_id={$city_id} AND UserClass.substitute_id!=0 AND UserClass.status='attended'")->row()->count;
+        return $this->db->query("SELECT COUNT(UserClass.id) AS count 
+					FROM UserClass JOIN User ON User.id = UserClass.user_id 
+					INNER JOIN Class ON UserClass.class_id=Class.id
+					INNER JOIN Level ON Class.level_id=Level.id
+					WHERE User.city_id={$city_id} AND UserClass.substitute_id!=0 AND UserClass.status='attended' AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -327,8 +330,11 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_missed_count($city_id) {
-        return $this->db->query("SELECT COUNT(UserClass.id ) AS count FROM UserClass JOIN User ON User.id = UserClass.user_id 
-					WHERE User.city_id = {$city_id} AND UserClass.status='absent' AND UserClass.substitute_id=0")->row()->count;
+        return $this->db->query("SELECT COUNT(UserClass.id ) AS count 
+					FROM UserClass JOIN User ON User.id = UserClass.user_id
+					INNER JOIN Class ON UserClass.class_id=Class.id
+					INNER JOIN Level ON Class.level_id=Level.id
+					WHERE User.city_id = {$city_id} AND UserClass.status='absent' AND UserClass.substitute_id=0 AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -342,8 +348,8 @@ class National_model extends Model {
 
 //        return $this->db->query("SELECT COUNT(DISTINCT UserClass.id) AS count FROM UserClass JOIN User ON User.id=UserClass.user_id 
 //		WHERE User.city_id={$city_id} AND UserClass.status='cancelled'")->row()->count;
-                $year_month = date('Y-m');
-             return $this->db->query("SELECT DISTINCT(Class.id) AS count FROM Class
+		$year_month = date('Y-m');
+        return $this->db->query("SELECT DISTINCT(Class.id) AS count FROM Class
                                 INNER JOIN UserClass ON Class.id=UserClass.class_id
                                 INNER JOIN Level ON Class.level_id=Level.id
                                 INNER JOIN Center ON Level.center_id=Center.id
@@ -363,7 +369,7 @@ class National_model extends Model {
      */
     function class_number_of_level_p($city_id) {
         return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level INNER JOIN  Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%p%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%p%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -375,7 +381,7 @@ class National_model extends Model {
      */
     function class_number_of_level_s($city_id) {
         return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level INNER JOIN  Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%S%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
     /*
@@ -387,7 +393,7 @@ class National_model extends Model {
      */
     function class_number_of_level_l1($city_id) {
         return $this->db->query("SELECT COUNT(Level.id) AS count FROM Level INNER JOIN  Center ON Center.id = Level.center_id
-			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id")->row()->count;
+			WHERE Level.name LIKE '%L1%' AND Center.city_id=$city_id AND Level.year='{$this->year}'")->row()->count;
     }
 
      /*
@@ -489,7 +495,7 @@ class National_model extends Model {
      */
     function class_getClasses($city_id) {
         return $this->db->query("SELECT Class.id FROM Class JOIN Level ON Level.id=Class.level_id JOIN 
-				Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id}")->result();
+				Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id} AND Level.year='{$this->year}'")->result();
     }
 
      /*
@@ -523,7 +529,7 @@ class National_model extends Model {
      */
     function last_test_p($city_id) {
         return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
-              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%P%') ORDER BY exam_on DESC ")->result();
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%P%') AND Level.year='{$this->year}' ORDER BY exam_on DESC ")->result();
     }
 
     /*
@@ -535,7 +541,7 @@ class National_model extends Model {
      */
     function last_test_s($city_id) {
         return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
-              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%S%') ORDER BY exam_on DESC ")->result();
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%S%') AND Level.year='{$this->year}' ORDER BY exam_on DESC ")->result();
     }
 
     /*
@@ -547,7 +553,7 @@ class National_model extends Model {
      */
     function last_test_l1($city_id) {
         return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
-              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L1%') ORDER BY exam_on DESC ")->result();
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L1%') AND Level.year='{$this->year}' ORDER BY exam_on DESC ")->result();
     }
 
     /*
@@ -559,7 +565,7 @@ class National_model extends Model {
      */
     function last_test_l2($city_id) {
         return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
-              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L2%') ORDER BY exam_on DESC ")->result();
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L2%') AND Level.year='{$this->year}' ORDER BY exam_on DESC ")->result();
     }
 
     /*
@@ -571,7 +577,7 @@ class National_model extends Model {
      */
     function last_test_l3($city_id) {
         return $this->db->query("SELECT Exam_Event.exam_on FROM Exam_Event JOIN Level ON Level.id=Exam_Event.level_id
-              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L3%') ORDER BY exam_on DESC ")->result();
+              WHERE Exam_Event.city_id={$city_id} AND (Level.name LIKE '%L3%') AND Level.year='{$this->year}' ORDER BY exam_on DESC ")->result();
     }
 
 }

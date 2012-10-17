@@ -308,7 +308,10 @@ class Cron extends Controller  {
 				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
 				if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
 				if($c->status == 'attended' and $c->substitute_id) $categories['substitute_count']++;
-				if($c->status == 'projected' or $c->status == 'confirmed') $categories['madapp_volunteer_attendance_marked'] = 0;
+				if($c->status == 'projected' or $c->status == 'confirmed') {
+					dump($c);
+					$categories['madapp_volunteer_attendance_marked'] = 0;
+				}
 				if($c->lesson_id == 0) $categories['madapp_class_progress_marked'] = 0;
 				
 				if($c->status == 'attended') {

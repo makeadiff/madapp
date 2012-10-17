@@ -285,7 +285,7 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <tr><td class="vertical-name" colspan="14">President</td></tr>
 
 <tr><td></td><td class="name">Fellows PIMPed</td>
-<?php showCells('number_of_fellows_pimped', $review, $months, true, false, 2); ?>
+<?php showCells('number_of_fellows_pimped', $review, $months, true, false, 2, "<"); ?>
 </tr>
 
 <tr><td></td><td class="name">Core Team Meeting Conducted</td>

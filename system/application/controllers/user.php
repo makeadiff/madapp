@@ -110,8 +110,8 @@ class User extends Controller  {
 		$data['id']= $this->users_model->adduser($data);
 		
 		$config['upload_path'] = dirname(BASEPATH) . '/uploads/users/';
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size']    = '1000'; //2 meg
+                $config['allowed_types'] = 'gif|jpg|png';
+                $config['max_size']    = '1000'; //2 meg
 		foreach($_FILES as $key => $value)
         {
             if( ! empty($key['name']))

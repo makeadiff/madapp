@@ -1,0 +1,1 @@
+<div id="msgInfo" class="message" style="background-color:#CDE5EC; background-image: url(../images/ico/icoInfo.png);"><?php echo "Error occured"; ?></div>

@@ -141,8 +141,11 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="http://makeadiff.in/apps/comps/?competition_id=11">
 	<img src="<?php echo base_url(); ?>images/ico/add_points.png" alt="" /> <span>WeDoist Comps Points</span></a></div>
 	<?php } ?>
+	
+	<?php if($this->user_auth->get_permission('placement_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('placement/placement_view') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/add_points.png" alt="" /> <span>Placement</span></a></div>
+	<?php } ?>
 </div>
 </div>
 </div>

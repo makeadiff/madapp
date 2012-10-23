@@ -4,7 +4,7 @@
     	<div id="head" class="clear">
         	<h1><?php echo $title; ?></h1>
             <!-- start page actions-->
-            <a href="<?php echo site_url('placement/placement_view') ?>">< Placement Dashboard</a>
+            <a href="<?php echo site_url('placement/placement_view') ?>">Placement Dashboard</a>
         	<div id="actions"> 
 			<a href="<?php echo site_url('placement/popupaddactivity')?>" class="thickbox button primary green popup" name="Add New Activity">Add New Activity</a>
 			</div>
@@ -57,10 +57,6 @@ foreach($content as $row)
 <?php }?>
 </tbody>
 </table>
-<?php if($norecord_flag == 1) 
-{ 
-   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
-}  ?>
 </div>
 
 </div>

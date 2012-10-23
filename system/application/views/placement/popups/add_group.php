@@ -42,10 +42,10 @@ function validate(id)
 <label for="classgroup">Class Group : </label>
 <select name="cgroup" id="cgroup">
     <option value="">Select Group</option>
-    <option value="5_6">5&6</option>
-    <option value="7_8">7&8</option>
-    <option value="9_10">9&10</option>
-    <option value="11_12">11&12</option>
+    <option value="5_6">5 &amp; 6</option>
+    <option value="7_8">7 &amp; 8</option>
+    <option value="9_10">9 &amp; 10</option>
+    <option value="11_12">11 &amp; 12</option>
    
 </select>
     </li>
@@ -55,7 +55,7 @@ function validate(id)
     <option value="">Select Sex</option>
     <option value="m">Male</option>
     <option value="f">Female</option>
-    <option value="coed">coed</option>
+    <option value="coed">Co-ed</option>
    
 </select>
 </li>

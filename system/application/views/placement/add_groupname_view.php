@@ -59,10 +59,6 @@ foreach($content as $row)
 <?php }?>
 </tbody>
 </table>
-<?php if($norecord_flag == 1) 
-{ 
-   echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
-}  ?>
 </div>
 
 </div>

@@ -31,7 +31,7 @@ class Placement_model extends Model {
 	function getgroup_details()
 	{
 		$this->db->select('*');
-		$this->db->from('placement_group');
+		$this->db->from('Placement_Group');
                 $this->db->order_by('id','DESC');
 		$result=$this->db->get();
 		return $result;
@@ -52,7 +52,7 @@ class Placement_model extends Model {
                               'code'=> $data['code'],
                     
                     );
-		$this->db->insert('placement_group',$datas);
+		$this->db->insert('Placement_Group',$datas);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id(): false ;
 		
 	}
@@ -65,7 +65,7 @@ class Placement_model extends Model {
 	function edit_group($user_id)
 	{
 		$this->db->select('*');
-		$this->db->from('placement_group');
+		$this->db->from('Placement_Group');
 		$this->db->where('id',$user_id);
 		$result=$this->db->get();
 		return $result;
@@ -87,7 +87,7 @@ class Placement_model extends Model {
                     
                     );
 		$this->db->where('id', $data['group_id']);
-		$this->db->update('placement_group', $datas);
+		$this->db->update('Placement_Group', $datas);
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	}
 
@@ -101,7 +101,7 @@ class Placement_model extends Model {
 	{
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
-		$this->db->delete('placement_group');
+		$this->db->delete('Placement_Group');
 		
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
@@ -115,9 +115,9 @@ class Placement_model extends Model {
 	function getcenter_details()
 	{
 		$this->db->select('id,name');
-		$this->db->from('center');
+		$this->db->from('Center');
 		$this->db->where('city_id',$this->session->userdata('city_id'));
-		$result=$this->db->get();
+		$result = $this->db->get();
 		return $result;
 	}
         
@@ -141,7 +141,7 @@ class Placement_model extends Model {
                               'file'=> $data['filename'],
                               'link'=> $data['link'],
                     );
-		$this->db->insert('placement_activity',$datas);
+		$this->db->insert('Placement_Activity',$datas);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id(): false ;
 		
 	}
@@ -155,7 +155,7 @@ class Placement_model extends Model {
 	function getactivity_details()
 	{
 		$this->db->select('*');
-		$this->db->from('placement_activity');
+		$this->db->from('Placement_Activity');
                 $this->db->order_by('id','DESC');
 		$result=$this->db->get();
 		return $result;
@@ -170,7 +170,7 @@ class Placement_model extends Model {
 	function edit_activity($user_id)
 	{
 		$this->db->select('*');
-		$this->db->from('placement_activity');
+		$this->db->from('Placement_Activity');
 		$this->db->where('id',$user_id);
 		$result=$this->db->get();
 		return $result;
@@ -196,7 +196,7 @@ class Placement_model extends Model {
                               'link'=> $data['link'],
                     );
 		$this->db->where('id', $data['group_id']);
-		$this->db->update('placement_activity', $datas);
+		$this->db->update('Placement_Activity', $datas);
 	 	return ($this->db->affected_rows() > 0) ? true: false ;
 	}
         
@@ -210,7 +210,7 @@ class Placement_model extends Model {
 	{
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
-		$this->db->delete('placement_activity');
+		$this->db->delete('Placement_Activity');
 		
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}

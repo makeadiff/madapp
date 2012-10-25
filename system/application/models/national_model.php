@@ -245,7 +245,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_children_count($city_id) {
-        return $this->db->query("SELECT COUNT(Student.id ) AS count FROM Student JOIN Center ON Center.id = Student.center_id WHERE Center.city_id={$city_id}")->row()->count;
+        return $this->db->query("SELECT COUNT(Student.id ) AS count FROM Student JOIN Center ON Center.id = Student.center_id WHERE Center.city_id={$city_id} AND Center.status='1'")->row()->count;
     }
 
     /*
@@ -267,7 +267,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_volunteers_count($city_id) {
-        return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id={$city_id} AND user_type ='volunteer'")->row()->count;
+        return $this->db->query("SELECT COUNT(id) AS count FROM User  WHERE city_id={$city_id} AND user_type='volunteer' AND status='1'")->row()->count;
     }
 
     /*
@@ -303,7 +303,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_class_count($city_id) {
-        return $this->db->query("SELECT COUNT(DISTINCT Class.class_on) AS count FROM Class  JOIN Level ON Level.id=Class.level_id  JOIN 
+        return $this->db->query("SELECT COUNT(Class.id) AS count FROM Class  JOIN Level ON Level.id=Class.level_id  JOIN 
 					Center ON Center.id=Level.center_id WHERE Center.city_id={$city_id} AND Level.year='{$this->year}'")->row()->count;
     }
 
@@ -404,7 +404,7 @@ class National_model extends Model {
      * @return: type: [array]
      */
     public function class_cct_count($city_id) {
-        return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='cct'")->row()->count;
+        return $this->db->query("SELECT COUNT(id) AS count FROM Event  WHERE city_id=$city_id AND type='avm'")->row()->count;
     }
 
     /*

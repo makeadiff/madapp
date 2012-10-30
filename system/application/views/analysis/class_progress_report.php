@@ -43,7 +43,10 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 	$last_lesson_id = 0;
 	$repeat_count = 0;
 	foreach($center_info['days_with_classes'] as $date_index => $day) {
-		if(!isset($center_info['class'][$level_info->id][$date_index])) continue;
+		if(!isset($center_info['class'][$level_info->id][$date_index])) {
+			?><td>&nbsp;</td><?php
+			continue;
+		} 
 		$lesson_id = $center_info['class'][$level_info->id][$date_index]->lesson_id;
 		if($lesson_id != $last_lesson_id and $lesson_id) {
 			$last_lesson_id = $lesson_id;
@@ -57,7 +60,7 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 	?>
 	<td class="class-<?php echo $class_type ?>"><?php 
 		$lesson_name = $all_lessons[$lesson_id];
-		echo preg_replace('/UNIT ([\.\d]+).*/', "$1", $lesson_name); 
+		echo preg_replace('/UNIT ([\.\d]+).*/', "$1", $lesson_name);
 	?></td>
 <?php } ?>
 <td nowrap='nowrap'><?php echo $level_info->name ?></td>

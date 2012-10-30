@@ -308,10 +308,7 @@ class Cron extends Controller  {
 				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
 				if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
 				if($c->status == 'attended' and $c->substitute_id) $categories['substitute_count']++;
-				if($c->status == 'projected' or $c->status == 'confirmed') {
-					dump($c);
-					$categories['madapp_volunteer_attendance_marked'] = 0;
-				}
+				if($c->status == 'projected' or $c->status == 'confirmed') $categories['madapp_volunteer_attendance_marked'] = 0;
 				if($c->lesson_id == 0) $categories['madapp_class_progress_marked'] = 0;
 				
 				if($c->status == 'attended') {
@@ -349,7 +346,7 @@ class Cron extends Controller  {
 			
 			// class_progress
 			$late_class_count = 0;
-			list($cp_data, $cp_all_lessons, $cp_all_centers, $cp_all_levels) = $this->class_model->get_class_progress($year_month, $city->id, $project_id);
+			list($cp_data, $cp_all_lessons, $cp_all_centers, $cp_all_levels) = $this->class_model->get_class_progress($city->id, false, $project_id);
 			foreach($cp_data as $center_id => $center_info) {
 				if(empty($center_info)) continue;
 				foreach($cp_all_levels[$center_id] as $level_info) { 
@@ -365,14 +362,22 @@ class Cron extends Controller  {
 							$repeat_count++;
 						}
 						
-						if($repeat_count > 2 and $lesson_id) {
+						
+						print $center_info['center_name'] . ")\t\t" . $level_info->name . ": " .$date_index . "\t\t$lesson_id\n";
+						
+						$index_month = reset(explode("-", $date_index));
+						$class_month = end(explode("-", $year_month));
+						if($repeat_count > 2 and $lesson_id and $index_month == $class_month) {
 							$late_class_count++;
 							
-							//print $center_info['center_name'] . ") " . $level_info->name . ": " .$date_index . "\n";
+							print "++\n";
 						}
 					}
 				}
 			}
+			
+			dump($late_class_count);
+			exit;
 			$categories['class_progress_percentage'] = ceil( $late_class_count / $categories['class_count'] * 100);
 			if($categories['class_progress_percentage'] > 10) $flags['class_progress_percentage'] = 'red';
 			

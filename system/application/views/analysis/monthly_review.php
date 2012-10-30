@@ -177,11 +177,11 @@ Number of Volunteers: <?php echo $teacher_count ?><br />
 <tr><td></td><td class="name">Children who passed monthly assesment</td>
 <?php showCells('periodic_assessment_updation_status', $review, $months); ?>
 </tr>
+-->
 
 <tr><td></td><td class="name">Class Progress</td>
 <?php showCells('class_progress_percentage', $review, $months); ?>
 </tr>
--->
 
 <tr><td></td><td class="name">Volunteers Remaining for Teacher Training I</td>
 <?php showCells('volunteers_missing_teacher_training_1', $review, $months); ?>

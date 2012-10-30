@@ -376,7 +376,7 @@ class Class_model extends Model {
     }
 	
 	/// Returns class progress data. Moved to a model from a controller(where it should be) because we want the data to populate monthly review doc as well...
-	function get_class_progress($year_month=false, $city_id=false, $project_id=false) {
+	function get_class_progress($city_id=false, $year_month=false, $project_id=false) {
 		if(!$project_id) $project_id = $this->project_id;
 		if(!$city_id) $city_id = $this->city_id;
 		$year = $this->year;

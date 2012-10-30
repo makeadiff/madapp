@@ -117,6 +117,7 @@ class Placement_model extends Model {
 		$this->db->select('id,name');
 		$this->db->from('Center');
 		$this->db->where('city_id',$this->session->userdata('city_id'));
+		$this->db->where('status','1');
 		$result = $this->db->get();
 		return $result;
 	}

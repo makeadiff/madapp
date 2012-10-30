@@ -42,6 +42,7 @@ $event_types = array(
 	'coreteam_meeting' => 'Core Team Meeting',
 	'admin_meeting' => 'Admin Meeting',
 	'monthly_review'=> 'Monthly Review',
+	'others'	=> 'Other',
 );
 foreach($details as $row) {	
 	$count++;

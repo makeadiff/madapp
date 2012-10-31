@@ -68,6 +68,20 @@ class Debug extends Controller {
 		}
 		
 	}
+	
+	function delete_exam_marks_of_city($city_id) {
+		$exam_events_in_city = colFormat($this->db->query("SELECT id FROM Exam_Event WHERE city_id='$city_id'")->result());
+		
+		$count = 0;
+		foreach($exam_events_in_city as $exam_event_id) {
+			$count++;
+			$this->db->query("DELETE FROM Exam_Mark WHERE exam_event_id=$exam_event_id");
+		}
+		$this->db->query("DELETE FROM Exam_Event WHERE city_id=$city_id");
+		
+		print "Deleted $count exams.";
+	}
+	
 }
 
 

@@ -205,7 +205,7 @@ class Cron extends Controller  {
 		$this->load->model('kids_model');
 		$this->load->model('review_model');
 		$this->event_model->year = $year;
-		$this->batch_model->year = $year;
+		$this->class_model->year = $year;
 
 		$project_id = 1;
 		if(!$city_id) {

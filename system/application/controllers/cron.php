@@ -205,6 +205,7 @@ class Cron extends Controller  {
 		$this->load->model('kids_model');
 		$this->load->model('review_model');
 		$this->event_model->year = $year;
+		$this->batch_model->year = $year;
 
 		$project_id = 1;
 		if(!$city_id) {
@@ -363,21 +364,19 @@ class Cron extends Controller  {
 						}
 						
 						
-						print $center_info['center_name'] . ")\t\t" . $level_info->name . ": " .$date_index . "\t\t$lesson_id\n";
+						//print $center_info['center_name'] . ")\t\t" . $level_info->name . ": " .$date_index . "\t\t$lesson_id\n";
 						
 						$index_month = reset(explode("-", $date_index));
 						$class_month = end(explode("-", $year_month));
 						if($repeat_count > 2 and $lesson_id and $index_month == $class_month) {
 							$late_class_count++;
 							
-							print "++\n";
+							//print "++\n";
 						}
 					}
 				}
 			}
 			
-			dump($late_class_count);
-			exit;
 			$categories['class_progress_percentage'] = ceil( $late_class_count / $categories['class_count'] * 100);
 			if($categories['class_progress_percentage'] > 10) $flags['class_progress_percentage'] = 'red';
 			

@@ -215,5 +215,95 @@ class Placement_model extends Model {
 		
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
-
+        
+        	/**
+    * Function to add_group_name
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,]
+    **/
+	function add_event_name($data)
+	{
+		$datas = array('name'=> $data['eventname'],
+                              'user_id'=> $data['usid'],
+                              'started_on'=> $data['datepick'],
+                              'placement_activity_id'=> $data['activity_id'],
+                              'corporate_partner'=> $data['corpname'],
+                              'corporate_volunteer_count'=> $data['novol'],
+                              'corporate_poc'=> $data['corpoc'],
+                              'cr_intern_user_id'=> $data['crintrn'],
+                    
+                    );
+		$this->db->insert('Placement_Event',$datas);
+		return ($this->db->affected_rows() > 0) ? $this->db->insert_id(): false ;
+		
+	}
+        
+        /**
+    * Function to getgroup_details
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Array()]
+    **/
+	function getevent_details()
+	{
+		$this->db->select('*');
+		$this->db->from('Placement_Event');
+                $this->db->order_by('id','DESC');
+		$result=$this->db->get();
+		return $result;
+	}
+        
+        	/**
+    * Function to edit_group
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [ Array()]
+    **/
+	function edit_event($id)
+	{
+		$this->db->select('*');
+		$this->db->from('Placement_Event');
+		$this->db->where('id',$id);
+		$result=$this->db->get();
+		return $result;
+	}
+    
+            	/**
+    * Function to add_group_name
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean,]
+    **/
+	function update_event($data)
+	{
+		$datas = array('name'=> $data['eventname'],
+                              'started_on'=> $data['datepick'],
+                              'placement_activity_id'=> $data['activity_id'],
+                              'corporate_partner'=> $data['corpname'],
+                              'corporate_volunteer_count'=> $data['novol'],
+                              'corporate_poc'=> $data['corpoc'],
+                              'cr_intern_user_id'=> $data['crintrn'],
+                    
+                    );
+		$this->db->where('id', $data['event_id']);
+		$this->db->update('Placement_Event', $datas);
+	 	return ($this->db->affected_rows() > 0) ? true: false ;
+		
+	}
+        
+            	/**
+    * Function to delete_group
+    * @author:Rabeesh 
+    * @param :[$data]
+    * @return: type: [Boolean, ]
+    **/
+	function delete_event($data)
+	{
+		$id = $data['entry_id'];
+		$this->db->where('id',$id);
+		$this->db->delete('Placement_Event');
+		
+		return ($this->db->affected_rows() > 0) ? true: false ;
+	}
 }

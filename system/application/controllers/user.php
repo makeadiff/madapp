@@ -605,7 +605,7 @@ class User extends Controller  {
 			$i++;
 			$data = array(
 				'i' 	=> $i,
-				'credit'=> $credit - $credit_lost_for_missing_avm,
+				'credit'=> $credit + $credit_lost_for_missing_avm,
 				'class_on'=> $event->starts_on,
 				'Substitutedby' => 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
 				'lost'	=> "Lost $credit_lost_for_missing_avm credit"

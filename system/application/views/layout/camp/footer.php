@@ -12,7 +12,9 @@
      <div class="line"></div>
     </div>
 </div>
+<a id="fdbk_tab" class="fdbk_tab_bottom" style="background-color:#222" href="https://getsatisfaction.com/mad/topics/new">FEEDBACK</a>
 
+<!--
 <script type="text/javascript" charset="utf-8">
   var is_ssl = ("https:" == document.location.protocol);
   var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
@@ -28,5 +30,6 @@
   feedback_widget_options.style = "problem";
   var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 </script>
+-->
 </body>
 </html>

@@ -57,7 +57,10 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 			$test=$center_info['class'][$level_info->id][$date_index]; 
 			$status=$test->status;
 		}
-		$percentage = ($attendanses * 100) / $all_kids[$level_info->id];
+		$percentage = 0;
+		if($all_kids[$level_info->id]) {
+			$percentage = ($attendanses * 100) / $all_kids[$level_info->id];
+		}
 		
 		$class_type = 'good';
 		if($classdateid == 0 or $status == 'projected') $class_type = 'no-data';

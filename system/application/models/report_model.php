@@ -7,6 +7,7 @@ class Report_model extends Model {
         $this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
+		$this->year = $this->ci->session->userdata('year');
     }
     
     
@@ -39,7 +40,9 @@ class Report_model extends Model {
     		FROM UserBatch 
     		INNER JOIN `Level` ON UserBatch.level_id = Level.id 
     		INNER JOIN Center ON Center.id=Level.center_id 
-    		WHERE requirement > 0 AND Center.city_id=$city_id GROUP BY Level.center_id")->result();
+    		WHERE requirement > 0 AND Center.city_id=$city_id 
+    		AND Level.year={$this->year}
+    		GROUP BY Level.center_id")->result();
     }
 	
 	function get_volunteer_admin_credits() {

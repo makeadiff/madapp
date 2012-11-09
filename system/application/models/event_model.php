@@ -169,7 +169,7 @@ class Event_model extends Model{
 	**/
 	function get_event_users($id)
 	{
-		return $event = $this->db->query("SELECT UserEvent.*,User.name as user_name,User.id as user_id FROM UserEvent INNER JOIN User ON UserEvent.user_id = User.id WHERE event_id=$id")->result();
+		return $event = $this->db->query("SELECT UserEvent.*,User.name as user_name,User.id as user_id FROM UserEvent INNER JOIN User ON UserEvent.user_id = User.id WHERE event_id=$id ORDER BY User.name")->result();
 	}
 	/**
 	* Function to update_user_status
@@ -278,13 +278,14 @@ class Event_model extends Model{
 	function get_count_of_missing_volunteers_at_event($year_month, $city_id, $event_name='', $event_type='') {
 		$where = '1';
 		if($event_name) $where = "Event.name='$event_name'";
-		elseif($event_type) $Where = "Event.type='$event_type'";
+		elseif($event_type) $where = "Event.type='$event_type'";
 		
 		$result = $this->db->query("SELECT COUNT(id) AS count FROM Event 
 									JOIN UserEvent ON Event.id=UserEvent.event_id
 									WHERE Event.city_id=$city_id AND UserEvent.present='0' 
 									AND DATE_FORMAT(Event.starts_on, '%Y-%m')='$year_month' 
-									AND $where");
+									AND $where
+									GROUP BY UserEvent.event_id");
 		if(!$result) return false;
 		
 		return $result->row()->count;
@@ -293,7 +294,7 @@ class Event_model extends Model{
 	function get_count_of_expected_volunteers_at_event($year_month, $city_id, $event_name='', $event_type='') {
 		$where = '1';
 		if($event_name) $where = "Event.name='$event_name'";
-		elseif($event_type) $Where = "Event.type='$event_type'";
+		elseif($event_type) $where = "Event.type='$event_type'";
 		
 		$result = $this->db->query("SELECT COUNT(id) AS count FROM Event 
 									JOIN UserEvent ON Event.id=UserEvent.event_id

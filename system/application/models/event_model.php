@@ -286,9 +286,10 @@ class Event_model extends Model{
 									AND DATE_FORMAT(Event.starts_on, '%Y-%m')='$year_month' 
 									AND $where
 									GROUP BY UserEvent.event_id");
-		if(!$result) return false;
+		$data = $result->row();
+		if(!$data) return 0;
 		
-		return $result->row()->count;
+		return $data->count;
     }
     
 	function get_count_of_expected_volunteers_at_event($year_month, $city_id, $event_name='', $event_type='') {
@@ -301,9 +302,10 @@ class Event_model extends Model{
 									WHERE Event.city_id=$city_id
 									AND DATE_FORMAT(Event.starts_on, '%Y-%m')='$year_month' 
 									AND $where");
-		if(!$result) return false;
+		$data = $result->row();
+		if(!$data) return 0;
 		
-		return $result->row()->count;
+		return $data->count;
     } 
     
     function get_volunteers_at_event($year_month, $city_id, $event_name='', $event_type='') {

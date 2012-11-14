@@ -11,7 +11,7 @@ function update_userstatus(event_id,user_id)
 {
 	$.ajax({
 				type: "POST",
-				url: "<?= site_url('event/update_userstatus')?>"+'/'+event_id+'/'+user_id,
+				url: "<?php echo site_url('event/update_userstatus')?>"+'/'+event_id+'/'+user_id,
 				success: function(data){
 					$('#loading').hide();
 				}
@@ -30,22 +30,28 @@ Current Event: <strong> <?php echo $event->name; ?></strong><br /><br />
 <?php $id = $event->id ;?>
 <label for="txtName"><strong>Users Attendence Status:</strong></label>
 <div >
-<ul class="form city-form">
 	<?php
-	if(count($attended_users) > 0){ 
-	foreach($attended_users as $row){?>
+	if(count($attended_users) > 0) {
+		$present = 0;
+		echo '<ul class="form city-form">';
+		foreach($attended_users as $row) { ?>
 		<li>
 		<label for="txtName"><?php echo $row->user_name; ?></label>
 		<input type="hidden" value="<?php echo $id ?>" name="event" id="event" />
 		<input type="hidden" value="<?php echo $row->user_id ?>" name="user_id" id="user_id" />
-		<input type="checkbox" <?php if($row->present == 1){ ?> checked="checked" <?php } ?>  id="users" name="user" 
+		<input type="checkbox" <?php if($row->present == 1) { $present++; ?> checked="checked" <?php } ?>  id="users" name="user" 
 		onClick="javascript:update_userstatus('<?php echo $id?>','<?php echo $row->user_id?>');"  />
 		</li>
-	<?php } }else{ ?>
+	<?php } 
+		echo '</ul>';
+		echo "$present/".count($attended_users)." attended the event(";
+		echo ceil( $present / count($attended_users) * 100);
+		echo "%).";
+		
+	}else{ ?>
 	No Members in this event 
 	<?php } ?>
- </ul>
- </div>
+ </div><br />
  
  <ul>
 <li>

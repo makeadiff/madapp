@@ -16,7 +16,9 @@ class Report_model extends Model {
 		if($city_id == -1) $city_id = $this->city_id;
 		if($project_id == -1) $project_id = $this->project_id;
 		
-		$this->db->select("id AS user_id,name,credit");
+		$this->db->select("User.id AS user_id,name,credit");
+		$this->db->join('UserGroup', 'User.id=UserGroup.user_id');
+		$this->db->where('group_id', 9);
 		if($city_id) $this->db->where('city_id', $city_id);
 		$this->db->where('project_id',$project_id);
 		$this->db->where("credit $sign $credit");

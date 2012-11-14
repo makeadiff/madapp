@@ -465,10 +465,12 @@ class Class_model extends Model {
     /// Returns the attendance of classes that happened in the given month.
     function get_attendance_in_month($year_month, $city_id=0, $project_id=1) {
 		if(!$city_id) $city_id = $this->city_id;
-		$data = $this->db->query("SELECT StudentClass.* FROM Class 
+		$data = $this->db->query("SELECT StudentClass.*,Class.class_on,UserClass.status
+				FROM Class
 				INNER JOIN StudentClass ON Class.id=StudentClass.class_id 
 				INNER JOIN Level ON Class.level_id=Level.id
 				INNER JOIN Center ON Level.center_id=Center.id
+				INNER JOIN UserClass ON UserClass.class_id=Class.id
 			WHERE DATE_FORMAT(Class.class_on, '%Y-%m')='$year_month'
 				AND Class.project_id=$project_id
 				AND Center.city_id=$city_id")->result();

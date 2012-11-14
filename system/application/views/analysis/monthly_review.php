@@ -88,7 +88,8 @@ function inputData(name, value, month_year, ele, threshold, red_if) {
 
 Number of Centers: <?php echo $center_count ?><br />
 Number of Children: <?php echo $student_count ?><br />
-Number of Volunteers: <?php echo $teacher_count ?><br />
+Number of Teachers: <?php echo $teacher_count ?><br />
+Number of Volunteers: <?php echo $volunteer_count ?><br />
 
 <table class="data-table">
 <tr>

@@ -303,7 +303,7 @@ class Cron extends Controller  {
 			$core_team_groups = array(2,4,5,11,12,15,19, 18,10,20);
 			$all_vps = $this->users_model->search_users(array('city_id'=>$city->id, 'user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true));
 			$categories['fellows_count'] = count($all_vps);
-						
+			
 			$info = $this->class_model->get_classes_in_month($year_month, $city->id, $project_id);
 			foreach($info as $c) {
 				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
@@ -382,12 +382,12 @@ class Cron extends Controller  {
 			
 			$attendance = $this->class_model->get_attendance_in_month($year_month, $city->id, $project_id);
 			if($attendance) {
-				$total_kids = count($attendance);
+				$total_classes = count($attendance);
 				$attended = 0;
 				foreach($attendance as $a) {
-					if($a->present) $attended++;
+					if($a->present and ($a->status == 'attended' or $a->status == 'absent')) $attended++;
 				}
-				$categories['attended_kids_percentage'] = ceil($attended / $total_kids * 100);
+				$categories['attended_kids_percentage'] = ceil($attended / $total_classes * 100);
 			}
 			if($categories['attended_kids_percentage'] < 80) $flags['attended_kids_percentage'] = 'red'; // If less than 80% of the kids attended the class, red flag.
 			
@@ -402,7 +402,7 @@ class Cron extends Controller  {
 			
 			if($teacher_count) {
 				$categories['negative_credit_volunteer_percentage'] = ceil($categories['negative_credit_volunteer_count'] / $teacher_count * 100);
-				if($categories['negative_credit_volunteer_percentage'] > 5) $flags['negative_credit_volunteer_percentage'] = 'red';
+				if($categories['negative_credit_volunteer_percentage'] > 15) $flags['negative_credit_volunteer_percentage'] = 'red';
 
 				$categories['volunteer_requirement_percentage'] = ceil($categories['volunteer_requirement_count'] / $teacher_count * 100);
 				if($categories['volunteer_requirement_percentage'] > 10) $flags['volunteer_requirement_percentage'] = 'red';
@@ -444,7 +444,8 @@ class Cron extends Controller  {
 				$cc_expected_count = $this->event_model->get_count_of_expected_volunteers_at_event($year_month, $city->id, '', 'avm');
 				
 				if($cc_expected_count) {
-					$categories['cc_attendance_percentage'] = ceil( $cc_missing_count / $cc_expected_count * 100);
+					$cc_attended_count = $cc_expected_count - $cc_missing_count;
+					$categories['cc_attendance_percentage'] = ceil( $cc_attended_count / $cc_expected_count * 100);
 					if($categories['cc_attendance_percentage'] < 70) $flags['cc_attendance_percentage'] = 'red';
 				} else {
 					$categories['cc_attendance_percentage'] = -1;

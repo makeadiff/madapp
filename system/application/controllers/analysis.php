@@ -44,7 +44,7 @@ class Analysis extends Controller {
 		$attendance = array();
 		$totalAttendance=array();
 		foreach($all_centers as $center) {
-			//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+			//if($center->id != 65) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 			$data[$center->id] = array(
 				'center_id'	=> $center->id,
 				'center_name'=>$center->name,
@@ -132,7 +132,8 @@ class Analysis extends Controller {
 		
 		$data['center_count'] = count($this->center_model->get_all());
 		$data['student_count']= count($this->kids_model->getkids_details()->result());
-		$data['teacher_count']= count($this->user_model->search_users(array('user_group'=>9))); // 9 = Teacher
+		$data['volunteer_count']= count($this->user_model->search_users(array('user_type'=>'volunteer')));
+		$data['teacher_count']= count($this->user_model->search_users(array('user_group'=>9, 'user_type'=>'volunteer'))); // 9 = Teacher
 				
 		$core_team_groups = array(2,4,5,11,12,15,19);
 		$vps = $this->users_model->search_users(array('user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true)); //18(Library), 10(CR) and 20(FOM) Excluded

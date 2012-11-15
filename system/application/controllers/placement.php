@@ -381,7 +381,7 @@ class Placement extends Controller {
             redirect('placement/manageplacement_activity');
         }
     }
-    
+
     /**
      *
      * Function to manageadd_event
@@ -392,15 +392,15 @@ class Placement extends Controller {
      * */
     function manageevents() {
 
-      
+
         $data['title'] = 'Manage Events';
         $data['details'] = $this->placement_model->getevent_details();
         $this->load->view('layout/header', $data);
         $this->load->view('placement/add_eventname_view', $data);
         $this->load->view('layout/footer');
     }
-    
-     /**
+
+    /**
      *
      * Function to popupaddevent
      * @author : Rabeesh
@@ -409,21 +409,20 @@ class Placement extends Controller {
      *
      * */
     function popupaddevent() {
-       
+
+        $data['group'] = $this->placement_model->getgroup_details();
         $data['activity'] = $this->placement_model->getactivity_details();
         $this->load->view('placement/popups/add_event', $data);
     }
-    
-    
+
     // Ajax functions
     function get_corporate($corporate) {
-		 if($corporate == 1)
-                 {
-		$this->load->view('placement/ajax/corporate_details');
-                 }
+        if ($corporate == 1) {
+            $this->load->view('placement/ajax/corporate_details');
+        }
     }
-    
-     /**
+
+    /**
      *
      * Function to addevent_name
      * @author : Rabeesh
@@ -435,24 +434,24 @@ class Placement extends Controller {
 
         $data['eventname'] = $this->input->post('eventname');
         $data['datepick'] = $this->input->post('date-pick');
+        $data['group_id'] = $this->input->post('group_id');
         $data['activity_id'] = $this->input->post('activity_id');
-        if($this->input->post('corporate') == 1)
-        {
-        $data['corpname'] = $this->input->post('corpname');
-        $data['novol'] = $this->input->post('novol');
-        $data['corpoc'] = $this->input->post('corpoc');
-        $data['crintrn'] = $this->input->post('crintrn');
-        }
-        else
-        {
-        $data['corpname'] = '';
-        $data['novol'] = '';
-        $data['corpoc'] = '';
-        $data['crintrn'] = '';
+        if ($this->input->post('corporate') == 1) {
+            $data['corpname'] = $this->input->post('corpname');
+            $data['novol'] = $this->input->post('novol');
+            $data['corpoc'] = $this->input->post('corpoc');
+            $data['crintrn'] = $this->input->post('crintrn');
+        } else {
+            $data['corpname'] = '';
+            $data['novol'] = '';
+            $data['corpoc'] = '';
+            $data['crintrn'] = '';
         }
         $data['usid'] = $this->session->userdata('id');
         $group_id = $this->placement_model->add_event_name($data);
         if ($group_id) {
+            $data['event_id'] = $group_id;
+            $this->placement_model->add_event_group_name($data);
             $this->session->set_flashdata('success', "Successfully Inserted");
             redirect('placement/manageevents');
         } else {
@@ -460,9 +459,8 @@ class Placement extends Controller {
             redirect('placement/manageevents');
         }
     }
-    
-    
-     /**
+
+    /**
      *
      * Function to popupEdit_event
      * @author : Rabeesh
@@ -480,6 +478,64 @@ class Placement extends Controller {
 
     /**
      *
+     * Function to add feedback
+     * @author : Rabeesh
+     * @param  : []
+     * @return : type : []
+     *
+     * */
+    function addfeedback() {
+//print_r($this->input->post('attendance'));
+        $data['eventid'] = $this->input->post('event_id');
+
+        $data['feedback_score'] = $this->input->post('feedback_score');
+        $data['attendance'] = $this->input->post('attendance');
+        $data['feedback_career'] = $this->input->post('feedback_career');
+        $data['feedback_repeat'] = $this->input->post('feedback_repeat');
+        $data['feedback_volunteer_count'] = $this->input->post('feedback_volunteer_count');
+        $data['feedback_volunteer_repeat_strongly_agree'] = $this->input->post('feedback_volunteer_repeat_strongly_agree');
+        $data['feedback_volunteer_repeat_agree'] = $this->input->post('feedback_volunteer_repeat_agree');
+        $data['feedback_volunteer_repeat_strongly_neutral'] = $this->input->post('feedback_volunteer_repeat_strongly_neutral');
+        $data['feedback_volunteer_repeat_disagree'] = $this->input->post('feedback_volunteer_repeat_disagree');
+        $data['feedback_volunteer_repeat_strongly_disagree'] = $this->input->post('feedback_volunteer_repeat_strongly_disagree');
+        $data['feedback_volunteer_engaging_strongly_agree'] = $this->input->post('feedback_volunteer_engaging_strongly_agree');
+        $data['feedback_volunteer_engaging_agree'] = $this->input->post('feedback_volunteer_engaging_agree');
+        $data['feedback_volunteer_engaging_strongly_neutral'] = $this->input->post('feedback_volunteer_engaging_strongly_neutral');
+        $data['feedback_volunteer_engaging_disagree'] = $this->input->post('feedback_volunteer_engaging_disagree');
+        $data['feedback_volunteer_engaging_strongly_disagree'] = $this->input->post('feedback_volunteer_engaging_strongly_disagree');
+        $data['feedback_volunteer_suggestion'] = $this->input->post('feedback_volunteer_suggestion');
+        
+        $data['feedback_partner_engaging_strongly_agree'] = $this->input->post('feedback_partner_engaging_strongly_agree');
+        $data['feedback_partner_engaging_agree'] = $this->input->post('feedback_partner_engaging_agree');
+        $data['feedback_partner_engaging_neutral'] = $this->input->post('feedback_partner_engaging_neutral');
+        $data['feedback_partner_engaging_disagree'] = $this->input->post('feedback_partner_engaging_disagree');
+        $data['feedback_partner_engaging_strongly_disagree'] = $this->input->post('feedback_partner_engaging_strongly_disagree');
+        $data['feedback_partner_rating_excelent'] = $this->input->post('feedback_partner_rating_excelent');
+        $data['feedback_partner_rating_very_good'] = $this->input->post('feedback_partner_rating_very_good');
+        $data['feedback_partner_rating_average'] = $this->input->post('feedback_partner_rating_average');
+        $data['feedback_partner_rating_poor'] = $this->input->post('feedback_partner_rating_poor');
+        $data['feedback_partner_rating_very_poor'] = $this->input->post('feedback_partner_rating_very_poor');
+
+
+
+        if ($data['eventid'] && $data['feedback_score'] && $data['feedback_volunteer_count'] && $data['feedback_partner_engaging_strongly_agree']) {
+//            $data['event_id'] = $group_id;
+            if ($this->placement_model->add_feedback($data)) {
+                $this->session->set_flashdata('success', "Successfully Inserted");
+                redirect('placement/manageevents');
+            } else {
+                $this->session->set_flashdata('error', "Not Inserted");
+                redirect('placement/manageevents');
+            }
+        }
+        else {
+                $this->session->set_flashdata('error', "Not Inserted");
+                redirect('placement/manageevents');
+        }
+    }
+
+    /**
+     *
      * Function to updateevent_name
      * @author : Rabeesh
      * @param  : []
@@ -492,19 +548,16 @@ class Placement extends Controller {
         $data['eventname'] = $this->input->post('eventname');
         $data['datepick'] = $this->input->post('date-pick');
         $data['activity_id'] = $this->input->post('activity_id');
-        if($this->input->post('corporate') == 1)
-        {
-        $data['corpname'] = $this->input->post('corpname');
-        $data['novol'] = $this->input->post('novol');
-        $data['corpoc'] = $this->input->post('corpoc');
-        $data['crintrn'] = $this->input->post('crintrn');
-        }
-        else
-        {
-        $data['corpname'] = '';
-        $data['novol'] = '';
-        $data['corpoc'] = '';
-        $data['crintrn'] = '';
+        if ($this->input->post('corporate') == 1) {
+            $data['corpname'] = $this->input->post('corpname');
+            $data['novol'] = $this->input->post('novol');
+            $data['corpoc'] = $this->input->post('corpoc');
+            $data['crintrn'] = $this->input->post('crintrn');
+        } else {
+            $data['corpname'] = '';
+            $data['novol'] = '';
+            $data['corpoc'] = '';
+            $data['crintrn'] = '';
         }
         $returnFlag = $this->placement_model->update_event($data);
         if ($returnFlag) {
@@ -536,15 +589,33 @@ class Placement extends Controller {
             redirect('placement/manageevents');
         }
     }
-    
+
     // Ajax functions
-    function get_corporate_update($corporate,$id) {
-		 if($corporate == 1)
-                 {
-                      $data['details'] = $this->placement_model->edit_event($id);
-		$this->load->view('placement/ajax/updatecorporate_details',$data);
-                 }
+    function get_corporate_update($corporate, $id) {
+        if ($corporate == 1) {
+            $data['details'] = $this->placement_model->edit_event($id);
+            $this->load->view('placement/ajax/updatecorporate_details', $data);
+        }
     }
-    
-    
+
+    /**
+     *
+     * Function to popupaddevent
+     * @author : Rabeesh
+     * @param  : []
+     * @return : type : []
+     *
+     * */
+    function popupaddfeedback() {
+
+        $data['event'] = $this->placement_model->getevent_details();
+        $this->load->view('placement/popups/add_feedback', $data);
+    }
+
+    function get_feedback($event) {
+        $data['feedback'] = $this->placement_model->getevent_feedback_details($event);
+        //print_r($data['feedback']);
+        $this->load->view('placement/ajax/feedback_details', $data);
+    }
+
 }

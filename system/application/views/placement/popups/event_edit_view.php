@@ -29,7 +29,7 @@ function getcorporate() {
 }
 
 </script>
-<h2>Edit Group</h2>
+<h2>Edit Event</h2>
 <script>
 function validate()
 {

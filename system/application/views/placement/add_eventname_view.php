@@ -7,7 +7,9 @@
             <a href="<?php echo site_url('placement/placement_view') ?>">< Placement Dashboard</a>
         	<div id="actions"> 
 			<a href="<?php echo site_url('placement/popupaddevent')?>" class="thickbox button primary green popup" name="Add New Event">Add New Event</a>
-			</div>
+<a href="<?php echo site_url('placement/popupaddfeedback')?>" class="thickbox button primary green popup" name="Add New Feedback">Add Feedback</a>
+	
+                </div>
 			<!-- end page actions-->
 	    </div>
 		<div id="topOptions" class="clear">

@@ -64,6 +64,16 @@ function validate(id)
 </li>
 
 <li>
+<label for="group_id">Placement Group: </label>
+<select name="group_id" id="group_id">
+    <option value="">Select Group</option>
+    <?php foreach($group->result_array() as $row) {  ?>
+   <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+    <?php } ?>
+</select>
+</li>
+
+<li>
 <label for="activity_id">Placement Activity: </label>
 <select name="activity_id" id="activity_id">
     <option value="">Select Activity</option>

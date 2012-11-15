@@ -146,6 +146,7 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('placement/placement_view') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/add_points.png" alt="" /> <span>Placement</span></a></div>
 	<?php } ?>
+	<br /><br /><br />
 </div>
 </div>
 </div>

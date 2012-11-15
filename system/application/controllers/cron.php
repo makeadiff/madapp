@@ -293,7 +293,11 @@ class Cron extends Controller  {
 			);
 			
 			$flags = array();
-			foreach($categories as $name => $value) $flags[$name] = 'green';
+			$notes = array();
+			foreach($categories as $name => $value) {
+				$flags[$name] = 'green';
+				$notes[$name] = '';
+			}
 
 			$student_count= count($this->kids_model->getkids_details($city->id)->result());
 			$all_teachers = $this->users_model->search_users(array('user_group'=>9, 'city_id'=>$city->id, 'project_id'=>$project_id, 'user_type'=>'volunteer')); // 9 = Teacher
@@ -309,11 +313,24 @@ class Cron extends Controller  {
 				if($c->status == 'absent' or $c->status == 'attended') $categories['class_count']++;
 				if($c->status == 'absent' and $c->substitute_id == 0) $categories['absent_without_substitute_count']++;
 				if($c->status == 'attended' and $c->substitute_id) $categories['substitute_count']++;
-				if($c->status == 'projected' or $c->status == 'confirmed') $categories['madapp_volunteer_attendance_marked'] = 0;
-				if($c->lesson_id == 0) $categories['madapp_class_progress_marked'] = 0;
+				if($c->status == 'projected' or $c->status == 'confirmed') {
+					$categories['madapp_volunteer_attendance_marked'] = 0;
+					if(!$notes['madapp_volunteer_attendance_marked']) $notes['madapp_volunteer_attendance_marked'] = "Missing attendence on...\n";
+					$notes['madapp_volunteer_attendance_marked'] .= $c->class_on . "\n";
+				}
+				if($c->lesson_id == 0 and ($c->status == 'absent' or $c->status == 'attended')) {
+					$categories['madapp_class_progress_marked'] = 0;
+					if(!$notes['madapp_class_progress_marked']) $notes['madapp_class_progress_marked'] = "Missing Progress on...\n";
+					$notes['madapp_class_progress_marked'] .= $c->class_on . "\n";
+				}
 				
 				if($c->status == 'attended') {
-					if(!$this->class_model->get__kids_attendance($c->id)) $categories['madapp_student_attendance_marked'] = 0;
+					$kids_attendence = $this->class_model->get__kids_attendance($c->id);
+					if(!$kids_attendence) {
+						$categories['madapp_student_attendance_marked'] = 0;
+						if(!$notes['madapp_student_attendance_marked']) $notes['madapp_student_attendance_marked'] = "Missing Students attendence on...\n";
+						$notes['madapp_student_attendance_marked'] .= $c->class_on . "\n";
+					}
 				}
  			}
  			
@@ -495,8 +512,9 @@ class Cron extends Controller  {
 			
  			// Save status to DB...
 			foreach($categories as $name => $value) {
-				// print "$name: $value : {$city->id}\n";
-				$this->review_model->save($name, $value, $year_month.'-01', $flags[$name], $city->id);
+				if(!isset($notes[$name])) $notes[$name] = '';
+				//print "$name: $value({$notes[$name]}) : {$city->id}\n";
+				$this->review_model->save($name, $value, $year_month.'-01', $flags[$name], $city->id, $notes[$name]);
  			}
 		}
 	}

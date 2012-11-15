@@ -446,7 +446,7 @@ class Classes extends Controller {
 		$batch_id = $this->input->post('batch_id');
 		$batch = $this->batch_model->get_batch($batch_id);
 		$class_date = $this->input->post('class_date') . ' ' . $batch->class_time;
-		$user_class_id = array();
+		$user_class_id = array(); 
 		$teachers = $this->batch_model->get_batch_teachers($batch->id);
 		foreach($teachers as $teacher) {
 			// Make sure its not already inserted.

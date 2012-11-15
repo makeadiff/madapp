@@ -16,13 +16,14 @@ class Review_model extends Model {
 		return $this->db->where('name',$name)->where('review_on',$date)->delete('Review');
 	}
 	
-	function save($name, $value, $date, $flag, $city_id) {
+	function save($name, $value, $date, $flag, $city_id, $comment='') {
 		$data = array(
 			'name'		=> $name,
 			'value'		=> $value,
 			'review_on'	=> $date."-01",
 			'flag'		=> $flag,
 			'city_id'	=> $city_id,
+			'comment'	=> $comment
 		);
 		
 		$review = $this->get($name, $date, $city_id);

@@ -316,20 +316,20 @@ class Cron extends Controller  {
 				if($c->status == 'projected' or $c->status == 'confirmed') {
 					$categories['madapp_volunteer_attendance_marked'] = 0;
 					if(!$notes['madapp_volunteer_attendance_marked']) $notes['madapp_volunteer_attendance_marked'] = "Missing attendence on...\n";
-					$notes['madapp_volunteer_attendance_marked'] .= $c->class_on . "\n";
+					$notes['madapp_volunteer_attendance_marked'] .= $c->class_on . "({$c->class_id})\n";
 				}
 				if($c->lesson_id == 0 and ($c->status == 'absent' or $c->status == 'attended')) {
 					$categories['madapp_class_progress_marked'] = 0;
 					if(!$notes['madapp_class_progress_marked']) $notes['madapp_class_progress_marked'] = "Missing Progress on...\n";
-					$notes['madapp_class_progress_marked'] .= $c->class_on . "\n";
+					$notes['madapp_class_progress_marked'] .= $c->class_on . "({$c->class_id})\n";
 				}
 				
 				if($c->status == 'attended') {
-					$kids_attendence = $this->class_model->get__kids_attendance($c->id);
+					$kids_attendence = $this->class_model->get__kids_attendance($c->class_id);
 					if(!$kids_attendence) {
 						$categories['madapp_student_attendance_marked'] = 0;
 						if(!$notes['madapp_student_attendance_marked']) $notes['madapp_student_attendance_marked'] = "Missing Students attendence on...\n";
-						$notes['madapp_student_attendance_marked'] .= $c->class_on . "\n";
+						$notes['madapp_student_attendance_marked'] .= $c->class_on . "({$c->class_id})\n";
 					}
 				}
  			}
@@ -476,7 +476,7 @@ class Cron extends Controller  {
 			// VPs attending events
 			$core_team_groups = array(2,4,5,11,12,15,19);
 			$vps = $this->users_model->search_users(array('city_id'=>$city->id, 'user_group'=> $core_team_groups, 'user_type'=>'volunteer', 'get_user_groups'=>true)); //18(Library), 10(CR) and 20(FOM) Excluded
-			
+
 			$events = array();
 			$events['avm'] = reset($this->event_model->get_all('avm', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
 			$events['review_meeting'] = reset($this->event_model->get_all('monthly_review', array('from'=>$year_month."-01", 'to'=>$year_month."-31")));
@@ -487,6 +487,7 @@ class Cron extends Controller  {
 					$core_team_position = reset(array_intersect($core_team_groups, array_keys($vp->groups)));
 					$name = 'core_team_'.$event_name.'_attendance_'.$core_team_position.'_'.$vp->id;
 					
+					//dump($ev->id, $vp->id);
 					if($ev) {
 						$attendance = $this->event_model->getEventUser($ev->id, $vp->id);
 						if($attendance) {

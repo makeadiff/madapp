@@ -154,6 +154,7 @@ class Exam extends Controller  {
 		}
 		
 		$students = idNameFormat($this->exam_model->get_student_attending_exam($event_id));
+		$exam_details->center = $this->center_model->get_center_name($exam_details->center_id);
 		
 		$this->load->view('student_exam_score/view_scores', array(
 			'exam_details'	=> $exam_details,

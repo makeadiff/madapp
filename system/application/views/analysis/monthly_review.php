@@ -74,6 +74,9 @@ function inputData(name, value, month_year, ele, threshold, red_if) {
 	display:none;
 	padding:3px;
 }
+.vertical-name {
+	font-weight:bold;
+}
 </style>
 
 <div id="comment">
@@ -180,6 +183,11 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 </tr>
 -->
 
+<tr><td></td><td class="name">Pass Percentage</td>
+<?php showCells('pass_percentage', $review, $months, true, false, 70, '>'); ?>
+</tr>
+
+
 <tr><td></td><td class="name">Class Progress</td>
 <?php showCells('class_progress_percentage', $review, $months); ?>
 </tr>
@@ -218,7 +226,7 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 </tr>
 
 <tr><td></td><td class="name">Monthly Calendar Ready by 30th</td>
-<?php showCells('monthly_calendar_status', $review, $months, true, true); ?>
+<?php showCells('monthly_calendar_status', $review, $months, true, true, 1, '>'); ?>
 </tr>
 
 <tr><td></td><td class="name">Percentage of Kids participating in the activities of the month</td>

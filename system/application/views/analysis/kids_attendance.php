@@ -7,6 +7,7 @@ $this->load->view('layout/header', array('title'=>'Kids Attendance'));
 <?php
 foreach($data as $center_id => $center_info) {
 	if(empty($center_info)) continue;
+	//if($center_id != 147) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 ?>
 <?php //print_r($center_info); ?>
 <h3><?php echo $center_info['center_name'] ?></h3>

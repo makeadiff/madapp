@@ -244,12 +244,13 @@ class Cron extends Controller  {
 				'center_authority_not_visited_2_months'	=> -1,
 				// EPH
 				'periodic_assessment_updation_status'	=> -1,
+				'pass_percentage'						=> 0,
 				'class_progress'						=> 0,
 				'class_progress_percentage'				=> 0,
 				'substitute_count'						=> 0,
-				'volunteers_missing_teacher_training_1'	=> 0,
+				'volunteers_missing_teacher_training_1'=> 0,
 				'volunteers_missing_curriculum_training'=> 0,
-				'volunteers_missing_teacher_training_2'	=> 0,
+				'volunteers_missing_teacher_training_2'=> 0,
 				// HR
 				'volunteer_requirement_count'			=> 0,
 				'volunteer_requirement_percentage'		=> 0,
@@ -346,7 +347,7 @@ class Cron extends Controller  {
 				$categories['substitute_percentage'] = ceil($categories['substitute_count'] / $categories['class_count'] * 100);
 				if($categories['substitute_percentage'] > 15) $flags['substitute_percentage'] = 'red';
 				
-				$categories['classes_cancelled_percentage'] = ceil($categories['classes_cancelled_count'] / $categories['class_count'] * 100);
+				$categories['classes_cancelled_percentage'] = ceil($categories['classes_cancelled_count'] / ($categories['class_count'] + $categories['classes_cancelled_count']) * 100);
 				if($categories['classes_cancelled_percentage'] > 5) $flags['classes_cancelled_percentage'] = 'red';
 			
 				$categories['absent_without_substitute_percentage'] = ceil($categories['absent_without_substitute_count'] / $categories['class_count'] * 100);

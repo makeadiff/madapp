@@ -402,7 +402,7 @@ class Class_model extends Model {
 		$all_lessons[0] = 'None';
 		$data = array();
 		foreach($all_centers as $center) {
-			//if($center->id != 34) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+			//if($center->id != 13) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 		
 			$data[$center->id] = array(
 				'center_id'	=> $center->id,
@@ -421,7 +421,7 @@ class Class_model extends Model {
 					//if($batch_id != 1) continue; // :DEBUG: Use this to localize the issue
 					$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
 
-					//if($level->id != 71) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+					//if($level->id != 457) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 					$all_classes = $this->get_classes_by_level_and_batch($level->id, $batch_id, $year_month);
 					
 					$last_class_id = 0;
@@ -480,7 +480,7 @@ class Class_model extends Model {
     /// Return the number of cancelled classes in the given month
     function get_cancelled_class_count($year_month, $city_id=0, $project_id=1) {
 		if(!$city_id) $city_id = $this->city_id;
-		$data = $this->db->query("SELECT DISTINCT(Class.id) AS count FROM Class 
+		$data = $this->db->query("SELECT * FROM Class 
 				INNER JOIN UserClass ON Class.id=UserClass.class_id 
 				INNER JOIN Level ON Class.level_id=Level.id
 				INNER JOIN Center ON Level.center_id=Center.id

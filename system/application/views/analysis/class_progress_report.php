@@ -46,7 +46,7 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		if(!isset($center_info['class'][$level_info->id][$date_index])) {
 			?><td>&nbsp;</td><?php
 			continue;
-		} 
+		}
 		$lesson_id = $center_info['class'][$level_info->id][$date_index]->lesson_id;
 		if($lesson_id != $last_lesson_id and $lesson_id) {
 			$last_lesson_id = $lesson_id;

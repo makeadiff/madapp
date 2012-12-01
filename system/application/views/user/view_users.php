@@ -164,6 +164,8 @@ $.tablesorter.addParser({
     <?php if($this->input->post('user_type') == 'applicant') { ?>
     <th>Joined On</th>
     <th>Address</th>
+    <?php } elseif($this->input->post('user_type') == 'let_go' or $this->input->post('user_type') == 'alumni') { ?>
+    <th>Left On</th>
     <?php } else { ?>
     <th>User Groups</th>
     <th>Center</th>
@@ -195,6 +197,8 @@ foreach($all_users as $id => $user) {
 	<?php if($this->input->post('user_type') == 'applicant') { ?>
 	<td class="col-joined_on"><?php echo date('d\<\s\u\p\>S\<\/\s\u\p\> M, Y', strtotime($user->joined_on)); ?></td>
     <td class="col-address"><?php echo $user->address; ?></td>
+    <?php } elseif($this->input->post('user_type') == 'let_go' or $this->input->post('user_type') == 'alumni') { ?>
+    <td class="col-joined_on"><?php if($user->left_on != '0000-00-00') echo date('d\<\s\u\p\>S\<\/\s\u\p\> M, Y', strtotime($user->left_on)); ?></td>
 	<?php } else { ?>
     <td class="col-groups"><?php echo implode(',', $user->groups); ?></td>
     <td class="col-center"><?php if($user->batch) echo $user->batch->name; ?></td>

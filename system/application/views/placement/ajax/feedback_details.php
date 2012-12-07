@@ -1,13 +1,16 @@
 <li>
     Kids Feedback:
 </li>
-
-    <?php foreach($feedback->result_array() as $row) {  ?>
+<?php  
+   ?>
+    <?php foreach($feedback->result_array() as $row) {
+         
+if($row['id']) { ?>
     <li>
     <label for="attendence_<?php echo $row['id'] ?>"><?php echo $row['name'] ?></label>
     <input type="checkbox" id="attendence_<?php echo $row['id'] ?>" name="attendance[]"  value="<?php echo $row['id'] ?>"/>
     </li>
-    <?php } ?>
+    <?php  } } ?>
 <li>
 <label for="feedback_score">Activity Specific Score: </label>
 <input id="feedback_score" name="feedback_score" type="text" />

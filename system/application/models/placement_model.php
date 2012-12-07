@@ -306,6 +306,19 @@ class Placement_model extends Model {
         return $result;
     }
 
+    
+    
+   function getevent_student_details($event)
+   {
+       
+        $this->db->select("Placement_Eventstudent.student_id");
+        $this->db->from('Placement_Eventstudent');        
+        $this->db->where('Placement_Eventstudent.placement_event_id =', $event);
+        $result = $this->db->get();
+        return $result;
+   }
+   
+   
     /* Function to add_feeedback
      * @author:Rabeesh 
      * @param :[$data]
@@ -345,24 +358,91 @@ class Placement_model extends Model {
         $this->db->update('Placement_Event', $datas);
 
         foreach ($data['attendance'] as $attendance) {
-            
+
             $this->db->select('placement_event_id,student_id');
             $this->db->from('Placement_Eventstudent');
-            $this->db->where('placement_event_id', $data['eventid']);    
-             $this->db->where('student_id', $attendance);   
+            $this->db->where('placement_event_id', $data['eventid']);
+            $this->db->where('student_id', $attendance);
             $result = $this->db->get();
-           echo "hello". $result->num_rows();
-if($result->num_rows() ==0){
-            $attend = array(
-                'placement_event_id' => $data['eventid'],
-                'student_id' => $attendance,
-                'present' => '1',
-            );
-            $this->db->insert('Placement_Eventstudent', $attend);
-}
+            //echo "hello". $result->num_rows();
+            if ($result->num_rows() == 0) {
+                $attend = array(
+                    'placement_event_id' => $data['eventid'],
+                    'student_id' => $attendance,
+                    'present' => '1',
+                );
+                $this->db->insert('Placement_Eventstudent', $attend);
+            }
         }
 
         return ($this->db->affected_rows() > 0) ? true : false;
     }
 
+    /* Function to get event calender
+     * @author:Rabeesh 
+     * @param :[$data]
+     * @return: type: [Boolean,]
+     * */
+
+    function getcalendar_event_details() {
+        $this->db->select('started_on');
+        $this->db->from('Placement_Event');        
+        $result = $this->db->get();
+        return $result;
+        
+    }
+    
+    function list_event($data) {
+        $this->db->select('*');
+        $this->db->from('Placement_Event');    
+          $this->db->where('started_on', $data);
+        $result = $this->db->get();
+        return $result;
+        
+    }
+
+    /**
+     * Function to add_group_name
+     * @author:Rabeesh 
+     * @param :[$data]
+     * @return: type: [Boolean,]
+     * */
+    function update_calendar_event($data) {
+        $datas = array('name' => $data['eventname'],
+            'started_on' => $data['datepick'],
+            'placement_activity_id' => $data['activity_id'],
+            'corporate_partner' => $data['corpname'],
+            'corporate_volunteer_count' => $data['novol'],
+            'corporate_poc' => $data['corpoc'],
+            'cr_intern_user_id' => $data['crintrn'],
+        );
+        $this->db->where('id', $data['event_id']);
+        $this->db->update('Placement_Event', $datas);
+        
+        
+        
+        
+        foreach ($data['attendance'] as $attendance) {
+
+            $this->db->select('placement_event_id,student_id');
+            $this->db->from('Placement_Eventstudent');
+            $this->db->where('placement_event_id', $data['event_id']);
+            $this->db->where('student_id', $attendance);
+            $result = $this->db->get();
+            //echo "hello". $result->num_rows();
+            if ($result->num_rows() == 0) {
+                $attend = array(
+                    'placement_event_id' => $data['event_id'],
+                    'student_id' => $attendance,
+                    'present' => '1',
+                );
+                $this->db->insert('Placement_Eventstudent', $attend);
+            }
+        }
+        
+        return ($this->db->affected_rows() > 0) ? true : false;
+    }
+    
+    
+    
 }

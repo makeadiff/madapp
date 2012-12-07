@@ -614,8 +614,120 @@ class Placement extends Controller {
 
     function get_feedback($event) {
         $data['feedback'] = $this->placement_model->getevent_feedback_details($event);
+         $data['student'] = $this->placement_model->getevent_student_details($event);
         //print_r($data['feedback']);
         $this->load->view('placement/ajax/feedback_details', $data);
     }
+    
+    
+    /**
+     *
+     * Function to Events Calendar 
+     * @author : Rabeesh
+     * @param  : []
+     * @return : type : []
+     *
+     * */
+    function eventscalendar() {
+
+
+        $data['title'] = 'Events Calendar';
+        $data['calenderdetails'] = $this->placement_model->getcalendar_event_details();
+        $this->load->view('layout/header', $data);
+        $this->load->view('placement/eventscalendar_view',$data);
+        $this->load->view('layout/footer');
+    }
+    
+    function popuplistevents()
+    {
+        $uid = $this->uri->segment(3);
+        $data['title'] = 'Events On-'.$uid;
+       $data['list_details'] = $this->placement_model->list_event($uid);
+       $this->load->view('layout/header', $data);
+       $this->load->view('placement/popups/event_list_view', $data);
+        $this->load->view('layout/footer');
+        
+    }
+    
+    
+    /**
+     *
+     * Function to popupEditCalender_event
+     * @author : Rabeesh
+     * @param  : []
+     * @return : type : []
+     *
+     * */
+    function popupEditCalender_event() {
+
+        $uid = $this->uri->segment(3);
+        $data['details'] = $this->placement_model->edit_event($uid);
+        $data['activity'] = $this->placement_model->getactivity_details();
+        $data['feedback'] = $this->placement_model->getevent_feedback_details($uid);
+        $data['student'] = $this->placement_model->getevent_student_details($uid);
+        $this->load->view('placement/popups/calendar_event_edit_view', $data);
+    }
+    
+    /**
+     *
+     * Function to updateevent_name
+     * @author : Rabeesh
+     * @param  : []
+     * @return : type : []
+     *
+     * */
+    function update_calendenar_event_name() {
+
+        $data['event_id'] = $this->uri->segment(3);
+        $data['eventname'] = $this->input->post('eventname');
+        $data['datepick'] = $this->input->post('date-pick');
+        $data['activity_id'] = $this->input->post('activity_id');
+        $data['started_date']=$this->input->post('started_date');
+        $data['attendance'] = $this->input->post('attendance');
+        if ($this->input->post('corporate') == 1) {
+            $data['corpname'] = $this->input->post('corpname');
+            $data['novol'] = $this->input->post('novol');
+            $data['corpoc'] = $this->input->post('corpoc');
+            $data['crintrn'] = $this->input->post('crintrn');
+        } else {
+            $data['corpname'] = '';
+            $data['novol'] = '';
+            $data['corpoc'] = '';
+            $data['crintrn'] = '';
+        }
+        $returnFlag = $this->placement_model->update_calendar_event($data);
+        if ($returnFlag) {
+            $this->session->set_flashdata('success', "Successfully Updated");
+            redirect('placement/popuplistevents/'.$data['started_date']);
+        } else {
+            $this->session->set_flashdata('error', "Updation Failed");
+            redirect('placement/popuplistevents/'.$data['started_date']);
+        }
+    }
+    
+    
+    
+    
+    /**
+     *
+     * Function to ajax_calendar_deleteevent
+     * @author : Rabeesh
+     * @param  : []
+     * @return : type : []
+     *
+     * */
+    function ajax_calendar_deleteevent() {
+
+        $data['entry_id'] = $this->uri->segment(3);
+        $flag = $this->placement_model->delete_event($data);
+        if (flag) {
+            $this->session->set_flashdata('success', "Event Deleted Successfully");
+            redirect('placement/eventscalendar');
+        } else {
+            $this->session->set_flashdata('success', "Failed To Delete Event");
+            redirect('placement/eventscalendar');
+        }
+    }
+        
 
 }

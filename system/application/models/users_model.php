@@ -569,9 +569,13 @@ class Users_model extends Model {
 		}
 		
 		
-		if(!empty($data['user_type']) and $data['user_type'] == 'applicant') {
-			$this->db->orderby('User.joined_on DESC');
-		} 
+		if(!empty($data['user_type'])) {
+			if($data['user_type'] == 'applicant') {
+				$this->db->orderby('User.joined_on DESC');
+			} elseif($data['user_type'] == 'let_go') {
+				$this->db->orderby('User.left_on DESC');
+			}
+		}
 		$this->db->orderby('User.name');
 		
 		$all_users = $this->db->get()->result();

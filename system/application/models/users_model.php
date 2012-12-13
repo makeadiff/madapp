@@ -367,18 +367,22 @@ class Users_model extends Model {
 		);
 		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
 		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
+		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
+		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
+		if(isset($data['password'])) $user_array['password'] = $data['password'];
+
+		
 		if(!empty($data['type'])) {
 			$user_array['user_type'] = $data['type'];
-			if($user_array['user_type'] == 'let_go') { // Remove user from his classes when he is let go.
+			if($user_array['user_type'] == 'let_go' || $user_array['user_type'] == 'alumni') { // Remove user from his classes when he is let go.
+				if(!$user_array['left_on'] or $user_array['left_on'] == '0000-00-00') $user_array['left_on'] = date('Y-m-d');
+			
 				$this->db->delete('UserBatch', array('user_id'=>$user_id));
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'projected'));
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'confirmed'));
 			}
 			
 		}
-		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
-		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
-		if(isset($data['password'])) $user_array['password'] = $data['password'];
 			
 		$this->db->where('id', $user_id);
 		$this->db->update('User', $user_array);

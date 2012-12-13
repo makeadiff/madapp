@@ -89,16 +89,25 @@ function inputData(name, value, month_year, ele, threshold, red_if) {
 </form>
 </div>
 
-Number of Centers: <?php echo $center_count ?><br />
-Number of Children: <?php echo $student_count ?><br />
-Number of Teachers: <?php echo $teacher_count ?><br />
-Number of Volunteers: <?php echo $volunteer_count ?><br />
+<?php 
+foreach($all_cities as $city_id => $city_name) {
+	$review = $data[$city_id]['review'];
+	$attendance_matrix = $data[$city_id]['attendance_matrix'];
+	if($vertical != 'all') echo "<hr /><h2>$city_name</h2>";
+?>
+
+Number of Centers: <?php echo $data[$city_id]['center_count'] ?><br />
+Number of Children: <?php echo $data[$city_id]['student_count'] ?><br />
+Number of Teachers: <?php echo $data[$city_id]['teacher_count'] ?><br />
+Number of Volunteers: <?php echo $data[$city_id]['volunteer_count'] ?><br />
+
 
 <table class="data-table">
 <tr>
 <td></td><td></td>
 <td>April</td><td>May</td><td>June</td><td>July</td><td>August</td><td>September</td><td>October</td><td>November</td><td>December</td><td>January</td><td>February</td><td>March</td>
-<tr>
+</tr>
+
 <!--
 <tr>
 <td></td><td class="name">Number of MAD Classes</td>
@@ -111,6 +120,7 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 </tr>
 -->
 
+<?php if($vertical == 'ops' or $vertical == 'all') { ?>
 <tr><td class="vertical-name" colspan="14">Operations</td></tr>
 
 <tr><td></td><td class="name">Volunteers Absent without Substitute</td>
@@ -152,6 +162,8 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 <?php showEventAttendance(4, $attendance_matrix, $review, $months); ?>
 
 <!-- ############################################################################### -->
+<?php }
+if($vertical == 'hr' or $vertical == 'all') { ?>
 
 <tr><td class="vertical-name" colspan="14">HR</td></tr>
 
@@ -174,6 +186,8 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 <?php showEventAttendance(5, $attendance_matrix, $review, $months); ?>
 
 <!-- ############################################################### -->
+<?php }
+if($vertical == 'eph' or $vertical == 'all') { ?>
 
 <tr><td class="vertical-name" colspan="14">English Project Head</td></tr>
 
@@ -207,6 +221,9 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 <?php showEventAttendance(19, $attendance_matrix, $review, $months); ?>
 
 <!-- ################################################################### -->
+<?php }
+if($vertical == 'placements' or $vertical == 'all') { ?>
+
 <tr><td class="vertical-name" colspan="14">Placements</td></tr>
 
 <tr><td></td><td class="name">Number of child groups that did not go through an activity(monthly)</td>
@@ -236,6 +253,8 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 <?php showEventAttendance(12, $attendance_matrix, $review, $months); ?>
 
 <!-- ######################################################## -->
+<?php }
+if($vertical == 'pr' or $vertical == 'all') { ?>
 
 <tr><td class="vertical-name" colspan="14">PR</td></tr>
 
@@ -268,7 +287,10 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 </tr>
 
 <?php showEventAttendance(11, $attendance_matrix, $review, $months); ?>
+<!-- ##################################################### -->
 
+<?php }
+if($vertical == 'finance' or $vertical == 'all') { ?>
 
 <tr><td class="vertical-name" colspan="14">Finance</td></tr>
 
@@ -289,7 +311,10 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 </tr>
 
 <?php showEventAttendance(15, $attendance_matrix, $review, $months); ?>
+<!-- ############################################### -->
 
+<?php }
+if($vertical == 'president' or $vertical == 'all') { ?>
 
 <tr><td class="vertical-name" colspan="14">President</td></tr>
 
@@ -318,8 +343,10 @@ Number of Volunteers: <?php echo $volunteer_count ?><br />
 </tr>
 
 <?php showEventAttendance(2, $attendance_matrix, $review, $months); ?>
-
+<?php } ?>
 </table>
+
+<?php } ?>
 
 
 <?php

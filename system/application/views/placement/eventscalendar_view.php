@@ -84,6 +84,8 @@ if ($next_month == 13) {
     .button1 {padding:2px 5px; background-color:#333333; color:#FFFFFF; border:none; cursor:pointer; float:left; margin-right:10px; text-decoration:none;}
     .button1 a {text-decoration:none;}
     .button1:hover {background-color:#666666;}
+    .open {border-bottom: 1px dotted #441681; color:#ff2052; text-decoration: none;}
+    .closed {border-bottom: 1px dotted #441681; color:#33CCCC; text-decoration: none;}
 </style>
 <div id="head" class="clear">
     <h1><?php echo $title; ?></h1>
@@ -167,16 +169,35 @@ if ($next_month == 13) {
                                                     $bar = explode(" ", $row['started_on']);
                                                     $started_date = $bar[0];
                                                     if ($started_date == $crdt) {
-                                                        $s = 1;
+                                                        //$s = 1;
                                                         $event = $started_date;
+                                                    
+//           
+                                                    $current_dt=   strtotime(date('Y-m-d'));
+                                                    $db_dat=strtotime($row['started_on']);
+                                                    if($db_dat > $current_dt)                                         
+                                                    {
+                                                        $s = 1;
                                                     }
+ else {
+     $s=2;
+ }
+                    }                               
                                                 }
 
                                                 if ($s == 1) {
                                                     $escaped_text = HtmlSpecialChars(json_encode($event));
-                                                    echo "<td class='not_available' style='text-color:#F441;'><a href='".site_url('placement/popuplistevents/'.$event)."'  >" . ($i - $startday + 1) . "</a></td>\n";
+                                                    echo "<td class='not_available'><a class='open' href='".site_url('placement/popuplistevents/'.$event)."'  >" . ($i - $startday + 1) . "</a></td>\n";
                                                     //javascript: calldiv(" . $escaped_text . ");
-                                                } else if ($row['started_on'] != $crdt) {
+                                                }
+                                               else if ($s == 2) {
+                                                    $escaped_text = HtmlSpecialChars(json_encode($event));
+                                                    echo "<td class='not_available'><a class='closed' href='".site_url('placement/popuplistevents/'.$event)."'  >" . ($i - $startday + 1) . "</a></td>\n";
+                                                    //javascript: calldiv(" . $escaped_text . ");
+                                                }
+                                                
+                                                
+                                                else if ($row['started_on'] != $crdt) {
                                                     echo "<td class='block_link'>" . ($i - $startday + 1) . "</td>\n";
                                                 }
                                             }

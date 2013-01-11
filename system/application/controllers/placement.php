@@ -504,7 +504,7 @@ class Placement extends Controller {
         $data['feedback_volunteer_engaging_disagree'] = $this->input->post('feedback_volunteer_engaging_disagree');
         $data['feedback_volunteer_engaging_strongly_disagree'] = $this->input->post('feedback_volunteer_engaging_strongly_disagree');
         $data['feedback_volunteer_suggestion'] = $this->input->post('feedback_volunteer_suggestion');
-        
+
         $data['feedback_partner_engaging_strongly_agree'] = $this->input->post('feedback_partner_engaging_strongly_agree');
         $data['feedback_partner_engaging_agree'] = $this->input->post('feedback_partner_engaging_agree');
         $data['feedback_partner_engaging_neutral'] = $this->input->post('feedback_partner_engaging_neutral');
@@ -527,10 +527,9 @@ class Placement extends Controller {
                 $this->session->set_flashdata('error', "Not Inserted");
                 redirect('placement/manageevents');
             }
-        }
-        else {
-                $this->session->set_flashdata('error', "Not Inserted");
-                redirect('placement/manageevents');
+        } else {
+            $this->session->set_flashdata('error', "Not Inserted");
+            redirect('placement/manageevents');
         }
     }
 
@@ -614,12 +613,11 @@ class Placement extends Controller {
 
     function get_feedback($event) {
         $data['feedback'] = $this->placement_model->getevent_feedback_details($event);
-         $data['student'] = $this->placement_model->getevent_student_details($event);
+        $data['student'] = $this->placement_model->getevent_student_details($event);
         //print_r($data['feedback']);
         $this->load->view('placement/ajax/feedback_details', $data);
     }
-    
-    
+
     /**
      *
      * Function to Events Calendar 
@@ -629,27 +627,22 @@ class Placement extends Controller {
      *
      * */
     function eventscalendar() {
-
-
         $data['title'] = 'Events Calendar';
         $data['calenderdetails'] = $this->placement_model->getcalendar_event_details();
         $this->load->view('layout/header', $data);
-        $this->load->view('placement/eventscalendar_view',$data);
+        $this->load->view('placement/eventscalendar_view', $data);
         $this->load->view('layout/footer');
     }
-    
-    function popuplistevents()
-    {
+
+    function popuplistevents() {
         $uid = $this->uri->segment(3);
-        $data['title'] = 'Events On-'.$uid;
-       $data['list_details'] = $this->placement_model->list_event($uid);
-       $this->load->view('layout/header', $data);
-       $this->load->view('placement/popups/event_list_view', $data);
+        $data['title'] = 'Events On-' . $uid;
+        $data['list_details'] = $this->placement_model->list_event($uid);
+        $this->load->view('layout/header', $data);
+        $this->load->view('placement/popups/event_list_view', $data);
         $this->load->view('layout/footer');
-        
     }
-    
-    
+
     /**
      *
      * Function to popupEditCalender_event
@@ -667,7 +660,7 @@ class Placement extends Controller {
         $data['student'] = $this->placement_model->getevent_student_details($uid);
         $this->load->view('placement/popups/calendar_event_edit_view', $data);
     }
-    
+
     /**
      *
      * Function to updateevent_name
@@ -682,7 +675,7 @@ class Placement extends Controller {
         $data['eventname'] = $this->input->post('eventname');
         $data['datepick'] = $this->input->post('date-pick');
         $data['activity_id'] = $this->input->post('activity_id');
-        $data['started_date']=$this->input->post('started_date');
+        $data['started_date'] = $this->input->post('started_date');
         $data['attendance'] = $this->input->post('attendance');
         if ($this->input->post('corporate') == 1) {
             $data['corpname'] = $this->input->post('corpname');
@@ -698,16 +691,13 @@ class Placement extends Controller {
         $returnFlag = $this->placement_model->update_calendar_event($data);
         if ($returnFlag) {
             $this->session->set_flashdata('success', "Successfully Updated");
-            redirect('placement/popuplistevents/'.$data['started_date']);
+            redirect('placement/popuplistevents/' . $data['started_date']);
         } else {
             $this->session->set_flashdata('error', "Updation Failed");
-            redirect('placement/popuplistevents/'.$data['started_date']);
+            redirect('placement/popuplistevents/' . $data['started_date']);
         }
     }
-    
-    
-    
-    
+
     /**
      *
      * Function to ajax_calendar_deleteevent
@@ -728,6 +718,210 @@ class Placement extends Controller {
             redirect('placement/eventscalendar');
         }
     }
-        
 
+    /**
+     * Function to view report page
+     * @author:Siju 
+     * @param :[$data]
+     * @return: type: [Boolean,]
+     * */
+    function report() {
+        $data['title'] = 'Placement - Report';
+        $this->load->view('layout/header', $data);
+        $this->load->view('placement/report_view', $data);
+        $this->load->view('layout/footer');
+    }
+
+    /**
+     * Function to view child impact report 
+     * @author:Siju 
+     * @param :[$data]
+     * @return: type: [Boolean,]
+     * */
+    function childimpact() {
+        $data['title'] = 'Placement - child impact';
+        $data['groupdetails'] = $this->placement_model->getgroup_details();
+        $this->load->view('layout/header', $data);
+        $this->load->view('placement/childimpact_view', $data);
+        $norecord_flag = 1;
+                $shadeFlag = 0;
+                $shadeClass = '';
+                $statusIco = '';
+                $statusText = '';
+                $content = $data['groupdetails']->result_array();
+                $i = 0;
+                foreach ($content as $row) {
+                        $data['name'] = $row['name'];
+                        $data['id'] = $row['id'];
+                    $i++;
+                    $norecord_flag = 0;
+
+                    if ($shadeFlag == 0) {
+                        $data['shadeClass'] = 'even';
+                        $shadeFlag = 1;
+                    } else if ($shadeFlag == 1) {
+                        $data['shadeClass'] = 'odd';
+                        $shadeFlag = 0;
+                    }
+                    $this->load->view('placement/childimpact_view1', $data);
+                    $activitycount = $this->placement_model->activitycount_details($data['id']);
+                    $data['actcount'] = $activitycount->num_rows();
+                    $activitycount = $activitycount->result_array();
+                    
+                    foreach($activitycount as $row)
+                    {
+                        
+                        $temp = explode('-',$row['started_on']);
+                        $data['month'] = $temp[1];
+                        $data['days'] = (strtotime(date("Y-m-d")) - strtotime($row['started_on'])) / (60 * 60 * 24);
+                        
+                    }
+                    $this->load->view('placement/childimpact_view3', $data);
+                }
+                $this->load->view('placement/childimpact_view2', $data);
+        
+        
+        $this->load->view('layout/footer');
+    }
+
+    function childimpact_kids() {
+
+        $group_id = $this->uri->segment(3);
+        $data['groupdetails_kids'] = $this->placement_model->getgroup_student_details($group_id);
+        $this->load->view('placement/childimpact_kids_view', $data);
+    }
+
+    function event_days_count() {
+        $group_id = $this->uri->segment(3);
+        $data['event_days'] = $this->placement_model->event_days_count_details($group_id);
+        $this->load->view('placement/event_days_count_view', $data);
+    }
+    
+    /**
+     * Function to view intern record 
+     * @author:Siju 
+     * @param :[$data]
+     * @return: type: [Boolean,]
+     * */
+    function internrecord() {
+        $data['title'] = 'Placement - intern record';
+        $data['groupdetails'] = $this->placement_model->getstudentgroup_details();
+        $this->load->view('layout/header', $data);
+        $this->load->view('placement/internrecord_view', $data);
+         $norecord_flag = 1;
+                $shadeFlag = 0;
+                $shadeClass = '';
+                $statusIco = '';
+                $statusText = '';
+                $content = $data['groupdetails']->result_array();
+                
+                $i = 0;
+                foreach ($content as $row) {
+                        $data['name'] = $row['name'];
+                        $data['id'] = $row['id'];
+                        $interncount = $this->placement_model->getstudentgroupcount_details($data['id']);
+                        $data['interncount'] = $interncount->num_rows();
+                        
+                    $i++;
+                    $norecord_flag = 0;
+
+                    if ($shadeFlag == 0) {
+                        $data['shadeClass'] = 'even';
+                        $shadeFlag = 1;
+                    } else if ($shadeFlag == 1) {
+                        $data['shadeClass'] = 'odd';
+                        $shadeFlag = 0;
+                    }
+                   
+                    $test = $this->placement_model->getjan($data['id']);
+                     $data['jan'] = $test->num_rows();
+                    $test = $this->placement_model->getfeb($data['id']);
+                     $data['feb'] = $test->num_rows();
+                    $test = $this->placement_model->getmar($data['id']);
+                     $data['mar'] = $test->num_rows();
+                    $test = $this->placement_model->getapril($data['id']);
+                     $data['apr'] = $test->num_rows();
+                    $test = $this->placement_model->getmay($data['id']);
+                     $data['may'] = $test->num_rows();
+                    $test = $this->placement_model->getjune($data['id']);
+                     $data['jun'] = $test->num_rows();
+                    $test = $this->placement_model->getjuly($data['id']);
+                     $data['jly'] = $test->num_rows();
+                    $test = $this->placement_model->getaug($data['id']);
+                     $data['aug'] = $test->num_rows();
+                    $test = $this->placement_model->getsep($data['id']);
+                     $data['sep'] = $test->num_rows();
+                    $test = $this->placement_model->getoct($data['id']);
+                     $data['oct'] = $test->num_rows();
+                    $test = $this->placement_model->getnov($data['id']);
+                     $data['nov'] = $test->num_rows();
+                    $test = $this->placement_model->getdec($data['id']);
+                     $data['dec'] = $test->num_rows();
+                                        
+                    $this->load->view('placement/internrecord_view1', $data);
+                    
+                }
+                $this->load->view('placement/internrecord_view2', $data);
+        $this->load->view('layout/footer');
+    }
+    
+    function internrecord_activity() {
+
+        $group_id = $this->uri->segment(3);
+        $data['groupdetails_kids'] = $this->placement_model->getgroup_student_details($group_id);
+        $this->load->view('placement/childimpact_kids_view', $data);
+    }
+    
+    /**
+     * Function to view city log 
+     * @author:Siju 
+     * @param :[$data]
+     * @return: type: [Boolean,]
+     * */
+    function activitylog() {
+        $data['title'] = 'Placement - activity log';
+        $data['activitydetails'] = $this->placement_model->cityactivity_details();
+        $this->load->view('layout/header', $data);
+        
+        $this->load->view('placement/activitylog_view', $data);
+        $norecord_flag = 1;
+                $shadeFlag = 0;
+                $shadeClass = '';
+                $statusIco = '';
+                $statusText = '';
+                $content = $data['activitydetails']->result_array();
+                $i = 0;
+                foreach ($content as $row) {
+                        $data['name'] = $row['name'];
+                        $data['id'] = $row['id'];
+                    $i++;
+                    $norecord_flag = 0;
+
+                    if ($shadeFlag == 0) {
+                        $data['shadeClass'] = 'even';
+                        $shadeFlag = 1;
+                    } else if ($shadeFlag == 1) {
+                        $data['shadeClass'] = 'odd';
+                        $shadeFlag = 0;
+                    }
+                    $this->load->view('placement/activitylog_view1', $data);
+                    $activitymonthdetails = $this->placement_model->cityactivitymonth_details($data['id']);
+                     $data['activitymonthdetailsover'] = $this->placement_model->cityactivityovermonth_details($data['id']);
+                    $data['actcount'] = $activitymonthdetails->num_rows();
+                    foreach($activitymonthdetails->result_array() as $row)
+                    {
+                         
+                        $temp = explode('-',$row['started_on']);
+                        $data['month'] = $temp[1];
+                        $data['days'] = (strtotime(date("Y-m-d")) - strtotime($row['started_on'])) / (60 * 60 * 24);
+                         
+                    }
+                    $this->load->view('placement/activitylog_view3', $data);
+                    
+                }
+                $this->load->view('placement/activitylog_view2', $data);
+        
+        
+        $this->load->view('layout/footer');
+    }
 }

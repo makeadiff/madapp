@@ -18,7 +18,7 @@
 	<div class="quickLink"> <a href="<?php echo site_url('placement/eventscalendar') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/permission.jpeg" alt="" /> <span>Calender</span></a></div>
 	
-	<div class="quickLink"> <a href="#">
+	<div class="quickLink"> <a href="<?php echo site_url('placement/report') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Reports</span></a></div>
 		
 </div>

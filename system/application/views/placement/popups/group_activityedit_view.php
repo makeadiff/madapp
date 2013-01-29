@@ -36,6 +36,9 @@ foreach($details as $row) {
         $generalised =$row['generalised'];
         $specialised=$row['specialised'];
         $field_expert=$row['field_expert'];
+        $city_id=$row['created_by_city_id'];
+        $track=$row['track'];
+        $class_range=$row['class_range'];
         $file=$row['file'];
         $link=$row['link'];
 }
@@ -96,11 +99,36 @@ foreach($details as $row) {
 <label for="field_expert">Field Expert : </label>
 <input type="checkbox" value="1" id="field_expert" name="field_expert" <?php if($field_expert == '1'){ echo "checked"; } ?> />
 </li>
+
+<!-- -->
+
+<!-- -->
+   <li>
+<label for="creator">Creator : </label>
+<select name="creator" id="creator">
+ <option value="">Select City name</option>
+ <?php foreach($city->result_array() as $row): ?>
+ <option value="<?php echo $row['id']; ?>"  <?php if($row['id'] == $city_id){?>selected="selected" <?php }?>><?php echo $row['name']; ?></option>
+  <?php endforeach;?>
+</select>
+ </li>
+ 
+        <li>
+<label for="txtName">Track : </label>
+<input id="track" name="track" type="text" value="<?php echo $track; ?>"/>
+        </li>
+              <li>
+<label for="txtName">Class Range : </label>
+<input id="class-range" name="class-range" type="text" value="<?php echo $class_range; ?>"/>
+        </li>
+
+<!-- -->
         <li>
 
 <label for="file">File : </label>
 	<input name="file"  id="file" type="file"><br />
         <?php echo $file; ?>
+        <input type="hidden" value="<?php echo $file; ?>" name="previous_file" id="previous_file"/>
         </li>
         <li>
         <label for="link">Link : </label>

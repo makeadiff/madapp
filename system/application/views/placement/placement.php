@@ -10,7 +10,8 @@
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Child Group</span></a></div>
 
 	<div class="quickLink"> <a href="<?php echo site_url('placement/manageplacement_activity') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/user_groups.jpeg" alt="" /> <span>Activity</span></a></div>
+<!--                <span>Activity</span> Activity is re named as  Repository-->
+	<img src="<?php echo base_url(); ?>images/ico/user_groups.jpeg" alt="" /> <span>Repository</span></a></div>
 	
 	<div class="quickLink"> <a href="<?php echo site_url('placement/manageevents') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/group.jpeg" alt="" /> <span>Events</span></a></div>

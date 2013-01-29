@@ -81,6 +81,28 @@ function validate(id)
 <label for="field_expert">Field Expert : </label>
 <input type="checkbox" value="1" id="field_expert" name="field_expert" />
 </li>
+
+<!-- -->
+   <li>
+<label for="creator">Creator : </label>
+<select name="creator" id="creator">
+ <option value="">Select City name</option>
+ <?php foreach($city->result_array() as $row): ?>
+ <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+  <?php endforeach;?>
+</select>
+ </li>
+ 
+        <li>
+<label for="txtName">Track : </label>
+<input id="track" name="track" type="text" />
+        </li>
+              <li>
+<label for="txtName">Class Range : </label>
+<input id="class-range" name="class-range" type="text" />
+        </li>
+<!-- -->
+
         <li>
 <label for="file">File : </label>
 <input name="file"  id="file" type="file"><br />

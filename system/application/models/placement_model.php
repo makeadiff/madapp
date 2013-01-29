@@ -133,7 +133,10 @@ class Placement_model extends Model {
             'generalised' => $data['generalised'],
             'specialised' => $data['specialised'],
             'field_expert' => $data['field_expert'],
-            'created_by_city_id ' => $this->session->userdata('city_id'),
+            'created_by_city_id ' => $data['creator'],
+//            'created_by_city_id ' => $this->session->userdata('city_id'),
+            'track ' => $data['track'],
+            'class_range' => $data['class-range'],
             'file' => $data['filename'],
             'link' => $data['link'],
         );
@@ -184,7 +187,10 @@ class Placement_model extends Model {
             'generalised' => $data['generalised'],
             'specialised' => $data['specialised'],
             'field_expert' => $data['field_expert'],
-            'created_by_city_id ' => $this->session->userdata('city_id'),
+//            'created_by_city_id ' => $this->session->userdata('city_id'),
+            'created_by_city_id ' => $data['creator'],
+            'track ' => $data['track'],
+            'class_range' => $data['class-range'],
             'file' => $data['filename'],
             'link' => $data['link'],
         );
@@ -216,6 +222,7 @@ class Placement_model extends Model {
     function add_event_name($data) {
         $datas = array('name' => $data['eventname'],
             'user_id' => $data['usid'],
+            'city' => $data['city'],
             'started_on' => $data['datepick'],
             'placement_activity_id' => $data['activity_id'],
             'corporate_partner' => $data['corpname'],
@@ -353,22 +360,46 @@ class Placement_model extends Model {
         $this->db->where('id', $data['eventid']);
         $this->db->update('Placement_Event', $datas);
 
-        foreach ($data['attendance'] as $attendance) {
+//        foreach ($data['attendance'] as $attendance) {
+//
+//            $this->db->select('placement_event_id,student_id');
+//            $this->db->from('Placement_Eventstudent');
+//            $this->db->where('placement_event_id', $data['eventid']);
+//            $this->db->where('student_id', $attendance);
+//            $result = $this->db->get();
+//            //echo "hello". $result->num_rows();
+//            if ($result->num_rows() == 0) {
+//                $attend = array(
+//                    'placement_event_id' => $data['eventid'],
+//                    'student_id' => $attendance,
+//                    'present' => '1',
+//                );
+//                $this->db->insert('Placement_Eventstudent', $attend);
+//            }
+//        }
 
-            $this->db->select('placement_event_id,student_id');
-            $this->db->from('Placement_Eventstudent');
-            $this->db->where('placement_event_id', $data['eventid']);
-            $this->db->where('student_id', $attendance);
-            $result = $this->db->get();
-            //echo "hello". $result->num_rows();
-            if ($result->num_rows() == 0) {
-                $attend = array(
-                    'placement_event_id' => $data['eventid'],
-                    'student_id' => $attendance,
-                    'present' => '1',
-                );
-                $this->db->insert('Placement_Eventstudent', $attend);
-            }
+        return ($this->db->affected_rows() > 0) ? true : false;
+    }
+
+    /* Function to mark attendance
+     * @author:Siju 
+     * @param :[$data]
+     * @return: type: [Boolean,]
+     * */
+
+    function mark_attendance($data) {
+
+        $this->db->where('placement_event_id', $data['eventid']);
+        $this->db->delete('Placement_Eventstudent');
+        foreach ($data['attendance'] as $attendance) {
+//            if ($result->num_rows() == 0) {
+            $attend = array(
+                'placement_event_id' => $data['eventid'],
+                'student_id' => $attendance,
+                'present' => '1',
+            );
+            $this->db->insert('Placement_Eventstudent', $attend);
+            //}
         }
 
         return ($this->db->affected_rows() > 0) ? true : false;
@@ -465,12 +496,10 @@ class Placement_model extends Model {
         $this->db->join('Placement_Eventgroup', 'Placement_Eventgroup.placement_event_id = Placement_Event.id', 'left');
         $this->db->where('Placement_Eventgroup.placement_group_id', $group_id);
         $this->db->order_by('Placement_Eventgroup.id', 'DESC');
-       // $this->db->limit(1,0);
+        // $this->db->limit(1,0);
         return $result = $this->db->get();
-        
-               
     }
-    
+
     /**
      * Function to find event count
      * @author:Siju
@@ -486,10 +515,8 @@ class Placement_model extends Model {
         $this->db->order_by('Placement_Eventgroup.id', 'DESC');
         //$this->db->limit(1,0);
         return $result = $this->db->get();
-        
-               
     }
-    
+
     /**
      * Function to find student in groups
      * @author:Siju
@@ -503,140 +530,126 @@ class Placement_model extends Model {
         $this->db->join('Placement_Event', 'Placement_Event.user_id = User.id');
         $this->db->group_by('User.name');
         return $result = $this->db->get();
-               
     }
-    
+
     function getstudentgroupcount_details($id) {
 
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
         return $result = $this->db->get();
-       
     }
-    
-    function getjan($id)
-    {
-       
+
+    function getjan($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-01-');
+        $this->db->like('started_on', '-01-');
         return $result = $this->db->get();
     }
-    
-    function getfeb($id)
-    {
-       
+
+    function getfeb($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-02-');
+        $this->db->like('started_on', '-02-');
         return $result = $this->db->get();
     }
-    
-    function getmar($id)
-    {
-       
+
+    function getmar($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-03-');
+        $this->db->like('started_on', '-03-');
         return $result = $this->db->get();
     }
-    
-    function getapril($id)
-    {
-       
+
+    function getapril($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-04-');
+        $this->db->like('started_on', '-04-');
         return $result = $this->db->get();
     }
-    
-    function getmay($id)
-    {
-       
+
+    function getmay($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-05-');
+        $this->db->like('started_on', '-05-');
         return $result = $this->db->get();
     }
-    
-    function getjune($id)
-    {
-       
+
+    function getjune($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-06-');
+        $this->db->like('started_on', '-06-');
         return $result = $this->db->get();
     }
-    
-    function getjuly($id)
-    {
-       
+
+    function getjuly($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-07-');
+        $this->db->like('started_on', '-07-');
         return $result = $this->db->get();
     }
-    
-    function getaug($id)
-    {
-       
+
+    function getaug($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-08-');
+        $this->db->like('started_on', '-08-');
         return $result = $this->db->get();
     }
-    
-    function getsep($id)
-    {
-       
+
+    function getsep($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-09-');
+        $this->db->like('started_on', '-09-');
         return $result = $this->db->get();
     }
-    
-    function getoct($id)
-    {
-       
+
+    function getoct($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-10-');
+        $this->db->like('started_on', '-10-');
         return $result = $this->db->get();
     }
-    
-    function getnov($id)
-    {
-       
+
+    function getnov($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-11-');
+        $this->db->like('started_on', '-11-');
         return $result = $this->db->get();
     }
-    
-    function getdec($id)
-    {
-       
+
+    function getdec($id) {
+
         $this->db->select('name,started_on');
         $this->db->from('Placement_Event');
         $this->db->where('user_id', $id);
-        $this->db->like('started_on','-12-');
+        $this->db->like('started_on', '-12-');
         return $result = $this->db->get();
     }
-    
+
     /**
-     * Function to find event count
+     * Function to find city details
      * @author:Siju
      * @param :[$data]
      * @return: type: [Array()]
@@ -646,21 +659,34 @@ class Placement_model extends Model {
         $this->db->select('name,id');
         $this->db->from('City');
         return $result = $this->db->get();
-               
     }
-    
-     function cityactivitymonth_details($id) {
-         
+
+    /**
+     * Function to find volunteer details
+     * @author:Siju
+     * @param :[$data]
+     * @return: type: [Array()]
+     * */
+    function get_user_details() {
+
+        $this->db->select('name,id');
+        $this->db->from('User');
+        $this->db->where('user_type', 'volunteer');
+        $this->db->where('status', 1);
+        return $result = $this->db->get();
+    }
+
+    function cityactivitymonth_details($id) {
+
         $this->db->select('Placement_Event.started_on');
         $this->db->from('Placement_Event');
         $this->db->join('Placement_Activity', 'Placement_Activity.id = Placement_Event.placement_activity_id');
         $this->db->where('Placement_Activity.created_by_city_id', $id);
         return $result = $this->db->get();
-               
     }
-    
+
     function cityactivityovermonth_details($id) {
-         
+
         $this->db->select('Placement_Event.started_on');
         $this->db->from('Placement_Event');
         $this->db->join('Placement_Activity', 'Placement_Activity.id = Placement_Event.placement_activity_id');
@@ -668,8 +694,6 @@ class Placement_model extends Model {
         $this->db->where('Placement_Event.started_on <', date('Y-m-d'));
         $result = $this->db->get();
         return $result->num_rows();
-               
     }
-    
 
 }

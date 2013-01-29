@@ -8,6 +8,7 @@
         	<div id="actions"> 
 			<a href="<?php echo site_url('placement/popupaddevent')?>" class="thickbox button primary green popup" name="Add New Event">Add New Event</a>
 <a href="<?php echo site_url('placement/popupaddfeedback')?>" class="thickbox button primary green popup" name="Add New Feedback">Add Feedback</a>
+<a href="<?php echo site_url('placement/popupmarkattendance')?>" class="thickbox button primary green popup" name="Mark Attendance">Mark Attendance</a>
 	
                 </div>
 			<!-- end page actions-->
@@ -20,6 +21,8 @@
 	<th class="colCheck1">Id</th>
 	<th class="colName sortable">Event Name</th>
         <th class="colName sortable">Started On</th>
+         <th class="colName sortable">Intern owner</th>
+            <th class="colName sortable">City</th>
     <th class="colActions">Actions</th>
 </tr>
 </thead>
@@ -49,9 +52,20 @@ foreach($content as $row)
   	  }
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colCheck1"><?php echo $i; ?></a></td>
-    <td class="colName left"><?php echo $row['name']; ?></a></td>
-    <td class="colName left"><?php echo $row['started_on']; ?></a></td>
+    <td class="colCheck1"><?php echo $i; ?></td>
+    <td class="colName left"><?php echo $row['name']; ?></td>
+    <td class="colName left"><?php echo $row['started_on']; ?></td>
+    <td class="colName left"><?php
+    foreach($user->result_array() as $userdetails):
+    if($userdetails['id']==$row['user_id']){ echo $userdetails['name']; }    
+    endforeach;
+    ?>
+        </td>
+    <td class="colName left"><?php 
+      foreach($city->result_array() as $citydetails):
+    if($citydetails['id']==$row['city']){ echo $citydetails['name']; }    
+    endforeach;    
+    ?></td>
     <td class="colActions right"> 
     <a href="<?php echo site_url('placement/popupEdit_event/'.$row['id'])?>" class="thickbox icon popup edit">Edit</a>
     <a class="actionDelete icon delete confirm" href="<?php echo site_url('placement/ajax_deleteevent/'.$row['id']); ?>">Delete</a>

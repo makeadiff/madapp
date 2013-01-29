@@ -57,6 +57,24 @@ function validate(id)
 <label for="txtName">Event Name : </label>
 <input id="eventname" name="eventname" type="text" />
     </li>
+    <li>
+<label for="owner">Activity owner : </label>
+<select name="owner" id="owner">
+    <option value="">Select Owner</option>
+ <?php foreach($user->result_array() as $row): ?>
+ <option value="<?php echo $row['id']; ?>"  <?php if($usid == $row['id']) {?>selected="selected" <?php } ?>><?php echo $row['name']; ?></option>
+  <?php endforeach;?>
+    </select>
+    </li>
+    <li>
+        <label for="city">City : </label>
+        <select name="city" id="city">
+ <option value="">Select City name</option>
+ <?php foreach($city->result_array() as $row): ?>
+ <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+  <?php endforeach;?>
+</select>
+        </li>
     
 <li>
 <label for="txtName">Started On: </label>

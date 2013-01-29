@@ -15,6 +15,7 @@
 <tr>
 	<th class="colCheck1">Id</th>
 	<th class="colName sortable">Event Name</th>
+        <th class="colName sortable">City</th>
         <th class="colName sortable">Started On</th>
     <th class="colActions">Actions</th>
 </tr>
@@ -47,6 +48,13 @@ foreach($content as $row)
     <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colCheck1"><?php echo $i; ?></a></td>
     <td class="colName left"><?php echo $row['name']; ?></a></td>
+    <td class="colName left">
+    <?php 
+      foreach($city->result_array() as $citydetails):
+    if($citydetails['id']==$row['city']){ echo $citydetails['name']; }    
+    endforeach;    
+    ?>
+        </td>
     <td class="colName left"><?php echo $row['started_on']; ?></a></td>
     <td class="colActions right"> 
     <a href="<?php echo site_url('placement/popupEditCalender_event/'.$row['id'])?>" class="thickbox icon popup edit">Edit</a>

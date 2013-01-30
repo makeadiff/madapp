@@ -127,7 +127,8 @@ foreach($details as $row) {
 
 <label for="file">File : </label>
 	<input name="file"  id="file" type="file"><br />
-        <?php echo $file; ?>
+        <a href="<?php echo  base_url(). 'uploads/'.$file ?>" target="_blank"><?php echo $file; ?></a>
+<!--              <a href="<?=  site_url('placement/manage_downloads/'.$file)?>" target="_blank"><?php echo $file; ?></a>-->
         <input type="hidden" value="<?php echo $file; ?>" name="previous_file" id="previous_file"/>
         </li>
         <li>

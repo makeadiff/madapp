@@ -248,7 +248,7 @@ class Placement extends Controller {
         }
 
         $config['upload_path'] = dirname(BASEPATH) . '/uploads/';
-        $config['allowed_types'] = 'gif|jpg|png|xls|doc|pdf|JPG|PNG|GIF|JPEG|jpeg';
+        $config['allowed_types'] = 'gif|jpg|png|xls|doc|docx|pdf|JPG|PNG|GIF|JPEG|jpeg';
         $config['max_size'] = '100000'; //2 meg
         foreach ($_FILES as $key => $value) {
             if (!empty($key['name'])) {
@@ -338,7 +338,7 @@ class Placement extends Controller {
         $data['link'] = $_REQUEST['link'];
 
         $config['upload_path'] = dirname(BASEPATH) . '/uploads/';
-        $config['allowed_types'] = 'gif|jpg|png|xls|doc|pdf|JPG|PNG|GIF|JPEG|jpeg';
+        $config['allowed_types'] = 'gif|jpg|png|xls|doc|docx|pdf|JPG|PNG|GIF|JPEG|jpeg';
         $config['max_size'] = '100000'; //2 meg
         foreach ($_FILES as $key => $value) {
             if (!empty($key['name'])) {
@@ -371,6 +371,22 @@ class Placement extends Controller {
             $this->session->set_flashdata('error', "Updation Failed");
             redirect('placement/manageplacement_activity');
         }
+    }
+     /**
+     *
+     * Function to download afile
+     * @author : Siju
+     * @param  : []
+     * @return : type : []
+     *
+     * */
+    function manage_downloads()
+    {
+        $filename = $this->uri->segment(3);
+        $data = file_get_contents(dirname(BASEPATH) . "/uploads/".$filename); // Read the file's contents
+//$name = 'myphoto.jpg';
+
+$this->force_download($filename, $data);
     }
 
     /**
@@ -949,6 +965,7 @@ class Placement extends Controller {
         $shadeClass = '';
         $statusIco = '';
         $statusText = '';
+        $data['month']= 0;
         $content = $data['activitydetails']->result_array();
         $i = 0;
         foreach ($content as $row) {
@@ -969,8 +986,8 @@ class Placement extends Controller {
             $data['activitymonthdetailsover'] = $this->placement_model->cityactivityovermonth_details($data['id']);
             $data['actcount'] = $activitymonthdetails->num_rows();
             foreach ($activitymonthdetails->result_array() as $row) {
-
                 $temp = explode('-', $row['started_on']);
+               // print_r($temp);
                 $data['month'] = $temp[1];
                 $data['days'] = (strtotime(date("Y-m-d")) - strtotime($row['started_on'])) / (60 * 60 * 24);
             }

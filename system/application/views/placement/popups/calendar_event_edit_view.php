@@ -54,6 +54,8 @@ $details = $details->result_array();
 foreach ($details as $row) {
     $root_id = $row['id'];
     $name = $row['name'];
+    $user_id = $row['user_id'];
+    $city_id = $row['city'];
     $started_on = $row['started_on'];
     $activity_id = $row['placement_activity_id'];
     $corporate_partner = $row['corporate_partner'];
@@ -92,6 +94,26 @@ if($row['id']) { ?>
                     <input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?php echo $started_on; ?>">
                 </li>
 
+                 <li>
+                    <label for="owner">Activity owner : </label>
+                    <select name="owner" id="owner">
+                        <option value="">Select Owner</option>
+                        <?php foreach ($user->result_array() as $row): ?>
+                            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $user_id) { ?>selected="selected" <?php } ?>><?php echo $row['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </li>
+
+                <li>
+                    <label for="city">City : </label>
+                    <select name="city" id="city">
+                        <option value="">Select City name</option>
+                        <?php foreach ($city->result_array() as $row): ?>
+                            <option value="<?php echo $row['id']; ?>" <?php if ($city_id == $row['id']) { ?>selected="selected" <?php } ?>><?php echo $row['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </li>
+                
                 <li>
 
                     <label for="activity_id">Placement Activity: </label>

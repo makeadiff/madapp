@@ -354,13 +354,10 @@ class Placement extends Controller {
         }
 
         $datas = $this->upload->data();
-        if($datas['file_name'])
-        {
-        $data['filename'] = $datas['file_name'];
-        }
-        else
-        {
-         $data['filename'] = $_REQUEST['previous_file'];   
+        if ($datas['file_name']) {
+            $data['filename'] = $datas['file_name'];
+        } else {
+            $data['filename'] = $_REQUEST['previous_file'];
         }
         $returnFlag = $this->placement_model->update_activity($data);
 
@@ -372,7 +369,8 @@ class Placement extends Controller {
             redirect('placement/manageplacement_activity');
         }
     }
-     /**
+
+    /**
      *
      * Function to download afile
      * @author : Siju
@@ -380,13 +378,12 @@ class Placement extends Controller {
      * @return : type : []
      *
      * */
-    function manage_downloads()
-    {
+    function manage_downloads() {
         $filename = $this->uri->segment(3);
-        $data = file_get_contents(dirname(BASEPATH) . "/uploads/".$filename); // Read the file's contents
+        $data = file_get_contents(dirname(BASEPATH) . "/uploads/" . $filename); // Read the file's contents
 //$name = 'myphoto.jpg';
 
-$this->force_download($filename, $data);
+        $this->force_download($filename, $data);
     }
 
     /**
@@ -506,9 +503,11 @@ $this->force_download($filename, $data);
      * */
     function popupEdit_event() {
 
-        $uid = $this->uri->segment(3);
+        $uid = $this->uri->segment(3);        
         $data['details'] = $this->placement_model->edit_event($uid);
         $data['activity'] = $this->placement_model->getactivity_details();
+        $data['city'] = $this->placement_model->cityactivity_details();
+        $data['user'] = $this->placement_model->get_user_details();
         $this->load->view('placement/popups/event_edit_view', $data);
     }
 
@@ -581,6 +580,8 @@ $this->force_download($filename, $data);
 
         $data['event_id'] = $this->uri->segment(3);
         $data['eventname'] = $this->input->post('eventname');
+        $data['owner'] = $this->input->post('owner');
+        $data['city'] = $this->input->post('city');
         $data['datepick'] = $this->input->post('date-pick');
         $data['activity_id'] = $this->input->post('activity_id');
         if ($this->input->post('corporate') == 1) {
@@ -650,6 +651,7 @@ $this->force_download($filename, $data);
     function get_feedback($event) {
         $data['feedback'] = $this->placement_model->getevent_feedback_details($event);
         $data['student'] = $this->placement_model->getevent_student_details($event);
+        $data['feedback_contents'] = $this->placement_model->getevent_feedback_contents($event);
         //print_r($data['feedback']);
         $this->load->view('placement/ajax/feedback_details', $data);
     }
@@ -737,6 +739,8 @@ $this->force_download($filename, $data);
         $data['activity'] = $this->placement_model->getactivity_details();
         $data['feedback'] = $this->placement_model->getevent_feedback_details($uid);
         $data['student'] = $this->placement_model->getevent_student_details($uid);
+        $data['city'] = $this->placement_model->cityactivity_details();
+        $data['user'] = $this->placement_model->get_user_details();
         $this->load->view('placement/popups/calendar_event_edit_view', $data);
     }
 
@@ -752,6 +756,8 @@ $this->force_download($filename, $data);
 
         $data['event_id'] = $this->uri->segment(3);
         $data['eventname'] = $this->input->post('eventname');
+        $data['owner'] = $this->input->post('owner');
+        $data['city'] = $this->input->post('city');
         $data['datepick'] = $this->input->post('date-pick');
         $data['activity_id'] = $this->input->post('activity_id');
         $data['started_date'] = $this->input->post('started_date');
@@ -965,7 +971,7 @@ $this->force_download($filename, $data);
         $shadeClass = '';
         $statusIco = '';
         $statusText = '';
-        $data['month']= 0;
+        $data['month'] = 0;
         $content = $data['activitydetails']->result_array();
         $i = 0;
         foreach ($content as $row) {
@@ -987,7 +993,7 @@ $this->force_download($filename, $data);
             $data['actcount'] = $activitymonthdetails->num_rows();
             foreach ($activitymonthdetails->result_array() as $row) {
                 $temp = explode('-', $row['started_on']);
-               // print_r($temp);
+                // print_r($temp);
                 $data['month'] = $temp[1];
                 $data['days'] = (strtotime(date("Y-m-d")) - strtotime($row['started_on'])) / (60 * 60 * 24);
             }

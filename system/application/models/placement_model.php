@@ -277,6 +277,8 @@ class Placement_model extends Model {
      * */
     function update_event($data) {
         $datas = array('name' => $data['eventname'],
+            'user_id' => $data['owner'],
+            'city' => $data['city'],
             'started_on' => $data['datepick'],
             'placement_activity_id' => $data['activity_id'],
             'corporate_partner' => $data['corpname'],
@@ -309,6 +311,19 @@ class Placement_model extends Model {
         $this->db->join('Placement_Studentgroup', 'Placement_Eventgroup.placement_group_id = Placement_Studentgroup.placement_group_id', 'left');
         $this->db->join('Student', 'Student.id = Placement_Studentgroup.student_id', 'left');
         $this->db->where('Placement_Eventgroup.placement_event_id =', $event);
+        $result = $this->db->get();
+        return $result;
+    }
+     /**
+     * Function to get feed back details for an event
+     * @author:Rabeesh 
+     * @param :[$data]
+     * @return: type: [Boolean, ]
+     * */
+      function getevent_feedback_contents($event) {
+        $this->db->select("*");
+        $this->db->from('Placement_Event');       
+        $this->db->where('id =', $event);
         $result = $this->db->get();
         return $result;
     }
@@ -434,6 +449,8 @@ class Placement_model extends Model {
      * */
     function update_calendar_event($data) {
         $datas = array('name' => $data['eventname'],
+            'user_id' => $data['owner'],
+            'city' => $data['city'],
             'started_on' => $data['datepick'],
             'placement_activity_id' => $data['activity_id'],
             'corporate_partner' => $data['corpname'],

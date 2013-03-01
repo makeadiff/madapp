@@ -1,10 +1,10 @@
 <?php
 
-class SubFinder extends CI_Controller {
+class SubFinder extends Controller {
 	
-	public function __construct(){
+	function SubFinder(){
 	
-		parent::__construct();
+		parent::Controller();
 		$this->load->database();
 		$this->load->helper('string');
 		$this->load->library('sms');
@@ -12,9 +12,9 @@ class SubFinder extends CI_Controller {
 	}
 	
 			
-	public function test(){
+	function test(){
 		
-	$test = "blualasdfas";
+	$test = "Test";
 	$this->sms->send("9633977657","The request($test) has been removed from the database.");
 	echo "Done!";
 		
@@ -22,7 +22,7 @@ class SubFinder extends CI_Controller {
 	
 	
 	
-	public function main(){
+	function main(){
 		
 		if($_REQUEST['keyword'] === "SREQ")
 			$this->sreq();
@@ -36,7 +36,7 @@ class SubFinder extends CI_Controller {
 	}
 	
 	
-	public function sreq(){
+	function sreq(){
 	
 		$phonevol = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
 		$keyword = strtolower($_REQUEST['keyword']);
@@ -216,6 +216,9 @@ class SubFinder extends CI_Controller {
 			|| $vol_messaged == 250 || $vol_messaged == 300){
 			
 				$query4 = $this->db->from('request')->where('req_id',$req_id)->get();
+				if($query4->num_rows() == 0)
+					break;
+				
 				$request = $query4->row();
 				if($request->int_vol_1 != -1)
 					break;
@@ -240,7 +243,7 @@ class SubFinder extends CI_Controller {
 	}
 	
 	
-	public function sfor(){
+	function sfor(){
 		
 		$phonevol = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
 		$keyword = strtolower($_REQUEST['keyword']);
@@ -329,7 +332,7 @@ class SubFinder extends CI_Controller {
 		}	
 	}
 	
-	public function scnf(){
+	function scnf(){
 	
 		$phonevol = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
 		$keyword = strtolower($_REQUEST['keyword']);
@@ -458,7 +461,7 @@ class SubFinder extends CI_Controller {
 	}
 	
 	
-	public function sdel(){
+	function sdel(){
 		
 		$phonevol = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
 		$keyword = strtolower($_REQUEST['keyword']);

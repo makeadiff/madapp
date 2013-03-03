@@ -1,7 +1,8 @@
 <?php
 
 class SubFinder extends Controller {
-	
+
+		
 	function SubFinder(){
 	
 		parent::Controller();
@@ -9,6 +10,8 @@ class SubFinder extends Controller {
 		$this->load->helper('string');
 		$this->load->library('sms');
 		date_default_timezone_set('Asia/Calcutta');
+		
+		$this->debug = false;
 	}
 	
 			
@@ -16,7 +19,7 @@ class SubFinder extends Controller {
 		
 	$test = "Test";
 	$this->sms->send("9633977657","The request($test) has been removed from the database.");
-	echo "Done!";
+	echo "Done!<br>";
 		
 	}
 	
@@ -54,16 +57,20 @@ class SubFinder extends Controller {
 		
 		
 		//Get the details of the volunteer who has requested the substitution
-		$query = $this->db->select('user.*',FALSE)->select('batch.day,batch.class_time,batch.center_id,batch.year as batchyear',FALSE)->select('userbatch.level_id as levelid, userbatch.batch_id as batchid',false)
-		->select('city.name as cityname',FALSE)->select('center.name as centername',FALSE)->select('usergroup.group_id as groupid',FALSE)
-		->from('user')->join('userbatch','user.id = userbatch.user_id')->join('batch','userbatch.batch_id = batch.id')
-		->join('center','batch.center_id = center.id')->join('usergroup','user.id = usergroup.user_id')
-		->join('city','user.city_id = city.id')->where('phone', $phonevol)->where('batch.year',$madyear)->get();
+		$query = $this->db->select('User.*',FALSE)->select('Batch.day,Batch.class_time,Batch.center_id,Batch.year as batchyear',FALSE)->select('UserBatch.level_id as levelid, UserBatch.batch_id as batchid',false)
+		->select('City.name as cityname',FALSE)->select('Center.name as centername',FALSE)->select('UserGroup.group_id as groupid',FALSE)
+		->from('User')->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
+		->join('Center','Batch.center_id = Center.id')->join('UserGroup','User.id = UserGroup.user_id')
+		->join('City','User.city_id = City.id')->where('phone', $phonevol)->where('Batch.year',$madyear)->get();
+		
 		
 		
 		if($query->num_rows() == 0){
-			//echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
-			$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
+			
+			if($this->debug == true)
+				echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
+			else	
+				$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
 			exit();
 		}
 		
@@ -110,15 +117,20 @@ class SubFinder extends Controller {
 		$query = $this->db->from('request')->where('req_vol_id',$req_vol->id)->where('date_time',$date_time)->get();
 		
 		if($query->num_rows() > 0){
-			//echo "Message to $phonevol: Your request for $date has already been registered and is under process.<br>";
-			$this->sms->send($phonevol,"Your request for $date has already been registered and is under process.");
+			if($this->debug == true)
+				echo "Message to $phonevol: Your request for $date has already been registered and is under process.<br>";
+			else
+				$this->sms->send($phonevol,"Your request for $date has already been registered and is under process.");
 			exit();
 		}
 		
 		//Message the volunteer about the the ID number
-		//echo "Request Vol: $req_vol->name <br>";
-		//echo "Message to $phonevol: Your request for $date has been registered under the REQ ID: $req_id. <br>";
-		$this->sms->send($phonevol,"Your request for $date has been registered under the REQ ID: $req_id.");
+		if($this->debug == true){
+			echo "Request Vol: $req_vol->name <br>";
+			echo "Message to $phonevol: Your request for $date has been registered under the REQ ID: $req_id. <br>";
+		}
+		else
+			$this->sms->send($phonevol,"Your request for $date has been registered under the REQ ID: $req_id.");
 
 				
 
@@ -133,20 +145,20 @@ class SubFinder extends Controller {
 
 		$this->db->insert('request', $data); 
 		
-		sleep(20);
 		
-		$this->db->select('user.*',FALSE)->select('batch.day,batch.class_time,batch.center_id,batch.year as batchyear',FALSE)->select('city.name as cityname',FALSE)
-		->select('center.name as centername',FALSE)->select('usergroup.group_id as groupid',FALSE)->select('userbatch.level_id as levelid, userbatch.batch_id as batchid',false)
-		->from('user')->join('userbatch','user.id = userbatch.user_id')->join('batch','userbatch.batch_id = batch.id')
-		->join('center','batch.center_id = center.id')
-		->join('usergroup','user.id = usergroup.user_id')->join('city','user.city_id = city.id')
-		->where_not_in('user.id', $req_vol->id)->where('user.city_id',$req_vol->city_id)
-		->where('user.user_type','volunteer')->where('usergroup.group_id','9')->where_not_in('userbatch.batch_id',$req_vol->batchid)->where('batch.year',$madyear);
+		
+		$this->db->select('User.*',FALSE)->select('Batch.day,Batch.class_time,Batch.center_id,Batch.year as batchyear',FALSE)->select('City.name as cityname',FALSE)
+		->select('Center.name as centername',FALSE)->select('UserGroup.group_id as groupid',FALSE)->select('UserBatch.level_id as levelid, UserBatch.batch_id as batchid',false)
+		->from('User')->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
+		->join('Center','Batch.center_id = Center.id')
+		->join('UserGroup','User.id = UserGroup.user_id')->join('City','User.city_id = City.id')
+		->where_not_in('User.id', $req_vol->id)->where('User.city_id',$req_vol->city_id)
+		->where('User.user_type','volunteer')->where('UserGroup.group_id','9')->where_not_in('UserBatch.batch_id',$req_vol->batchid)->where('Batch.year',$madyear);
 		
 		$query = $this->db->get();
 		
 		list($name) = explode(" ",$req_vol->name);
-		list($center) = explode(" ",$req_vol->centername);
+		list($Center) = explode(" ",$req_vol->centername);
 		
 		
 		//Calculate the minutes till the class for which the sub was requested
@@ -165,6 +177,18 @@ class SubFinder extends Controller {
 		foreach($query->result() as $selectedvol){
 			
 			$vol_score = 0;
+			
+			
+			//Check if the selected volunteer's clash with the request volunteer's class
+			if($selectedvol->day === $req_vol->day){
+				$reqvoltime = new DateTime("$req_vol->class_time");
+				$selvoltime = new DateTime("$selectedvol->class_time");
+				$interval = $reqvoltime->diff($selvoltime);
+				
+				if($interval->format('%H') < 2)
+					continue;
+			}
+				
 			
 			if($selectedvol->credit < 0)
 				$vol_score += 1;
@@ -195,16 +219,18 @@ class SubFinder extends Controller {
 		
 		foreach($score as $selectedvol_id => $vol_score){
 			
-			$query3 = $this->db->from('user')->where('id',$selectedvol_id)->get();
+			$query3 = $this->db->from('User')->where('id',$selectedvol_id)->get();
 			$selectedvol = $query3->row();
 			
-			//echo "<br>Selected Vol: $selectedvol->name <br>";
-			//echo "Vol Score: $vol_score<br> 	";
-			/*echo "Message to $selectedvol->phone: 
-			$name requires a substitute at $center 
-			on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.<br>" ;*/
-			
-			$this->sms->send($selectedvol->phone,"$name requires a substitute at $center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
+			if($this->debug == true){
+				echo "<br>Selected Vol: $selectedvol->name <br>";
+				echo "Vol Score: $vol_score<br> 	";
+				echo "Message to $selectedvol->phone:
+				$name requires a substitute at $Center 
+				on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.<br>" ;
+			}
+			else
+				$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
 			
 			$vol_messaged++;
 			
@@ -228,13 +254,17 @@ class SubFinder extends Controller {
 			
 			
 			
-			//Wait for a certain amount of time after messaging one batch of volunteers
+			//Wait for a certain amount of time after messaging one Batch of volunteers
 			
-			if($vol_messaged == 5 || $vol_messaged == 10 || $vol_messaged == 20 || $vol_messaged == 40
-			|| $vol_messaged == 60 || $vol_messaged == 80 || $vol_messaged == 100 || $vol_messaged == 120
-			|| $vol_messaged == 140 || $vol_messaged == 160 || $vol_messaged == 180 || $vol_messaged == 200
-			|| $vol_messaged == 250 || $vol_messaged == 300)
-				sleep(($minutes*60)/50);		
+			
+			if($this->debug == false){
+			
+				if($vol_messaged == 5 || $vol_messaged == 10 || $vol_messaged == 20 || $vol_messaged == 40
+				|| $vol_messaged == 60 || $vol_messaged == 80 || $vol_messaged == 100 || $vol_messaged == 120
+				|| $vol_messaged == 140 || $vol_messaged == 160 || $vol_messaged == 180 || $vol_messaged == 200
+				|| $vol_messaged == 250 || $vol_messaged == 300)
+					sleep(($minutes*60)/50);		
+			}
 				
 			
 		}
@@ -251,11 +281,13 @@ class SubFinder extends Controller {
 		
 		
 		//Get the details of the volunteer who has send the message
-		$query = $this->db->from('user')->where('phone', $phonevol)->get();
+		$query = $this->db->from('User')->where('phone', $phonevol)->get();
 		
 		if($query->num_rows() == 0){
-			//echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
-			$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
+			if($this->debug == true)
+				echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
+			else
+				$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
 			exit();
 		}
 				
@@ -277,8 +309,10 @@ class SubFinder extends Controller {
 		$flag_int_already_reg = false;
 		
 		if($flag_req_exist == false){
-			//echo "Message to $int_vol->phone: The REQ ID that you have specified doesn't exist. Please check and resend message.<br>";
-			$this->sms->send($int_vol->phone,"The REQ ID that you have specified doesn't exist. Please check and resend message.");
+			if($this->debug == true)
+				echo "Message to $int_vol->phone: The REQ ID that you have specified doesn't exist. Please check and resend message.<br>";
+			else	
+				$this->sms->send($int_vol->phone,"The REQ ID that you have specified doesn't exist. Please check and resend message.");
 			}
 			
 		else{
@@ -288,8 +322,10 @@ class SubFinder extends Controller {
 			for($i = 1; $i<=20; $i++){
 				if($request->{$name.$i} == $int_vol->id){
 					$flag_int_already_reg = true;
-					//echo "Message to $int_vol->phone: Your response to the request($request->req_id) has already been registered. Please wait for confirmation.<br>";
-					$this->sms->send($int_vol->phone,"Your response to the request($request->req_id) has already been registered. Please wait for confirmation.");
+					if($this->debug == true)
+						echo "Message to $int_vol->phone: Your response to the request($request->req_id) has already been registered. Please wait for confirmation.<br>";
+					else
+						$this->sms->send($int_vol->phone,"Your response to the request($request->req_id) has already been registered. Please wait for confirmation.");
 					break;
 				}
 			}
@@ -301,8 +337,10 @@ class SubFinder extends Controller {
 			$query1 = $this->db->from('request')->where('req_id',$content)->get();
 			$request = $query1->row();
 			if($request->sub_vol != -1){
-				echo "Message to $int_vol->phone: We have already found a volunteer to sub for the request($request->req_id). Thank you for your response.<br>";
-				$this->sms->send($int_vol->phone,"We have already found a volunteer to sub for the request($request->req_id). Thank you for your response.");
+				if($this->debug == true)
+					echo "Message to $int_vol->phone: We have already found a volunteer to sub for the request($request->req_id). Thank you for your response.<br>";
+				else
+					$this->sms->send($int_vol->phone,"We have already found a volunteer to sub for the request($request->req_id). Thank you for your response.");
 				}
 			else{
 				$name = "int_vol_";
@@ -316,15 +354,20 @@ class SubFinder extends Controller {
 						//Insert the interested volunteers id into the 'request' table
 						$this->db->where('req_id',$content)->update('request', $data); 
 						
-						//echo "Message to $int_vol->phone: Your response to the request($request->req_id) has been registered. Please wait for confirmation.<br>";
-						$this->sms->send($int_vol->phone,"Your response to the request($request->req_id) has been registered. Please wait for confirmation.");
-						$query2 = $this->db->from('user')->where('id',$request->req_vol_id)->get();
+						if($this->debug == true)
+							echo "Message to $int_vol->phone: Your response to the request($request->req_id) has been registered. Please wait for confirmation.<br>";
+						else
+							$this->sms->send($int_vol->phone,"Your response to the request($request->req_id) has been registered. Please wait for confirmation.");
+						
+						$query2 = $this->db->from('User')->where('id',$request->req_vol_id)->get();
 						
 						//Inform the volunteer who has made the request about the interested volunteer
 						list($int_vol_name) = explode(" ",$int_vol->name);
 						$req_vol = $query2->row();
-						//echo "Message to $req_vol->phone: $int_vol_name is interested to sub for you. To confirm text 'SCNF $request->req_id $i' to 9220092200.<br>";
-						$this->sms->send($req_vol->phone,"$int_vol_name is interested to sub for you. To confirm text 'SCNF $request->req_id $i' to 9220092200.");
+						if($this->debug == true)
+							echo "Message to $req_vol->phone: $int_vol_name is interested to sub for you. To confirm text 'SCNF $request->req_id $i' to 9220092200.<br>";
+						else
+							$this->sms->send($req_vol->phone,"$int_vol_name is interested to sub for you. To confirm text 'SCNF $request->req_id $i' to 9220092200.");
 						break;
 					}
 				}
@@ -349,13 +392,15 @@ class SubFinder extends Controller {
 			$madyear = $today->format('Y');
 		
 		//Get the details of the volunteer who has made the request
-		$query = $this->db->select('user.*',FALSE)->from('user')->select('center.name as centername',FALSE)
-		->join('userbatch','user.id = userbatch.user_id')->join('batch','userbatch.batch_id = batch.id')
-		->join('center','batch.center_id = center.id')->where('phone', $phonevol)->get();
+		$query = $this->db->select('User.*',FALSE)->from('User')->select('Center.name as centername',FALSE)
+		->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
+		->join('Center','Batch.center_id = Center.id')->where('phone', $phonevol)->where('Batch.year',$madyear)->get();
 			
 		if($query->num_rows() == 0){
-			//echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
-			$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
+			if($this->debug == true)
+				echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
+			else
+				$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
 			exit();
 		}
 				
@@ -373,8 +418,10 @@ class SubFinder extends Controller {
 		if($query->num_rows() > 0)
 			$flag_req_exist = true;
 		else{
-			//echo "Message to $req_vol->phone: The REQ ID that you have specified doesn't exist. Please check and resend the message.<br>";
-			$this->sms->send($req_vol->phone,"The REQ ID that you have specified doesn't exist. Please check and resend the message.");
+			if($this->debug == true)
+				echo "Message to $req_vol->phone: The REQ ID that you have specified doesn't exist. Please check and resend the message.<br>";
+			else
+				$this->sms->send($req_vol->phone,"The REQ ID that you have specified doesn't exist. Please check and resend the message.");
 			exit();
 		}
 		
@@ -382,8 +429,10 @@ class SubFinder extends Controller {
 		//Check if the volunteer number was specified in the message
 		if($vol_no === ""){
 			
-			//echo "Message to $req_vol->phone: The Volunteer ID you have specified doesn't exist. Please check and resend the message.<br>";
-			$this->sms->send($req_vol->phone,"The Volunteer ID you have specified doesn't exist. Please check and resend the message.");
+			if($this->debug == true)
+				echo "Message to $req_vol->phone: The Volunteer ID you have specified doesn't exist. Please check and resend the message.<br>";
+			else
+				$this->sms->send($req_vol->phone,"The Volunteer ID you have specified doesn't exist. Please check and resend the message.");
 			exit();
 		
 		}
@@ -397,13 +446,15 @@ class SubFinder extends Controller {
 		$name = "int_vol_";
 		
 		//Check if the volunteer number specified exist
-		$query1 = $this->db->from('user')->where('id',$request->{$name.$vol_no})->get();
+		$query1 = $this->db->from('User')->where('id',$request->{$name.$vol_no})->get();
 		if($query1->num_rows() > 0)
 			$flag_vol_exist = true;
 		else{
 			
-			//echo "Message to $req_vol->phone: The Volunteer ID you have specified doesn't exist. Please check and resend the message.<br>";
-			$this->sms->send($req_vol->phone,"The Volunteer ID you have specified doesn't exist. Please check and resend the message.");
+			if($this->debug == true)
+				echo "Message to $req_vol->phone: The Volunteer ID you have specified doesn't exist. Please check and resend the message.<br>";
+			else
+				$this->sms->send($req_vol->phone,"The Volunteer ID you have specified doesn't exist. Please check and resend the message.");
 			exit();
 		}
 		
@@ -411,11 +462,13 @@ class SubFinder extends Controller {
 		$query2 = $this->db->from('request')->where('req_id',$req_id)->where('sub_vol !=',-1)->get();
 		if($query2->num_rows() > 0){
 			$request = $query2->row();
-			$query3 = $this->db->from('user')->where('id',$request->sub_vol)->get();
+			$query3 = $this->db->from('User')->where('id',$request->sub_vol)->get();
 			$sub_vol = $query3->row();
 			list($sub_vol_name) = explode(" ",$sub_vol->name);
-			//echo "Message to $req_vol->phone: You have already confirmed $sub_vol_name for the request($req_id).<br>";
-			$this->sms->send($req_vol->phone,"You have already confirmed $sub_vol_name for the request($req_id).");
+			if($this->debug == true)
+				echo "Message to $req_vol->phone: You have already confirmed $sub_vol_name for the request($req_id).<br>";
+			else
+				$this->sms->send($req_vol->phone,"You have already confirmed $sub_vol_name for the request($req_id).");
 			exit();
 		}
 		
@@ -435,12 +488,17 @@ class SubFinder extends Controller {
 			$date_time = new DateTime($request->date_time);
 			$date = $date_time->format('d-m-Y');
 			list($req_vol_name) = explode(" ",$req_vol->name);
-			list($center) = explode(" ",$req_vol->centername);
+			list($Center) = explode(" ",$req_vol->centername);
 			
-			//echo "Message to $sub_vol->phone: You have been confirmed to sub for $req_vol_name($req_vol->phone) at $center on $day_time($date).<br>";
-			$this->sms->send($sub_vol->phone,"You have been confirmed to sub for $req_vol_name($req_vol->phone) at $center on $day_time($date).");
-			//echo "Message to $req_vol->phone: You have confirmed $sub_vol->name($sub_vol->phone) to sub for you on $day_time($date).<br>";
-			$this->sms->send($req_vol->phone,"You have confirmed $sub_vol->name($sub_vol->phone) to sub for you on $day_time($date).");
+			if($this->debug == true)
+				echo "Message to $sub_vol->phone: You have been confirmed to sub for $req_vol_name($req_vol->phone) at $Center on $day_time($date).<br>";
+			else
+				$this->sms->send($sub_vol->phone,"You have been confirmed to sub for $req_vol_name($req_vol->phone) at $Center on $day_time($date).");
+				
+			if($this->debug == true)
+				echo "Message to $req_vol->phone: You have confirmed $sub_vol->name($sub_vol->phone) to sub for you on $day_time($date).<br>";
+			else
+				$this->sms->send($req_vol->phone,"You have confirmed $sub_vol->name($sub_vol->phone) to sub for you on $day_time($date).");
 			
 			
 			//Message the other interested volunteers about the confirmation
@@ -448,10 +506,12 @@ class SubFinder extends Controller {
 			for($i = 1; $i<=20; $i++){
 				if($request->{$name.$i} != -1 && $request->{$name.$i} != $sub_vol->id){
 					
-					$query2 = $this->db->from('user')->where('id',$request->{$name.$i})->get();
+					$query2 = $this->db->from('User')->where('id',$request->{$name.$i})->get();
 					$int_vol = $query2->row();	
-					//echo "Message to $int_vol->phone: We have found a volunteer to sub for the request($request->req_id). Thank you for your response.<br>";
-					$this->sms->send($int_vol->phone,"We have found a volunteer to sub for the request($request->req_id). Thank you for your response.");
+					if($this->debug == true)
+						echo "Message to $int_vol->phone: We have found a volunteer to sub for the request($request->req_id). Thank you for your response.<br>";
+					else
+						$this->sms->send($int_vol->phone,"We have found a volunteer to sub for the request($request->req_id). Thank you for your response.");
 					
 				}
 			}
@@ -469,11 +529,13 @@ class SubFinder extends Controller {
 		
 		
 		//Get details about the volunteer who has send the message
-		$query = $this->db->from('user')->where('phone', $phonevol)->get();
+		$query = $this->db->from('User')->where('phone', $phonevol)->get();
 			
 		if($query->num_rows() == 0){
-			//echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
-			$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
+			if($this->debug == true)
+				echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
+			else
+				$this->sms->send($phonevol,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
 			exit();
 		}
 				
@@ -487,8 +549,10 @@ class SubFinder extends Controller {
 		$query = $this->db->from('request')->where('req_id',$content)->get();
 			
 		if($query->num_rows() == 0){
-			//echo "Message to $req_vol->phone: The REQ ID that you have specified doesn't exist. Please check and resend the message.<br>";
-			$this->sms->send($req_vol->phone,"The REQ ID that you have specified doesn't exist. Please check and resend the message.");
+			if($this->debug == true)
+				echo "Message to $req_vol->phone: The REQ ID that you have specified doesn't exist. Please check and resend the message.<br>";
+			else
+				$this->sms->send($req_vol->phone,"The REQ ID that you have specified doesn't exist. Please check and resend the message.");
 			exit();
 		}
 		
@@ -497,16 +561,20 @@ class SubFinder extends Controller {
 		$request = $query->row();
 		
 		if($request->req_vol_id != $req_vol->id){
-			//echo "Message to $req_vol->phone: The request($content) has been created by another volunteer. You can only remove requests created by you.<br>";
-			$this->sms->send($req_vol->phone,"The request($content) has been created by another volunteer. You can only remove requests created by you.");
+			if($this->debug == true)
+				echo "Message to $req_vol->phone: The request($content) has been created by another volunteer. You can only remove requests created by you.<br>";
+			else
+				$this->sms->send($req_vol->phone,"The request($content) has been created by another volunteer. You can only remove requests created by you.");
 			exit();
 		}
 		
 		//Delete and inform the volunteer about the same
 		$this->db->delete('request', array('req_id' => $content)); 
 		
-		//echo "Message to $req_vol->phone: The request($content) has been removed from the database.<br>";
-		$this->sms->send($req_vol->phone,"The request($content) has been removed from the database.");
+		if($this->debug == true)
+			echo "Message to $req_vol->phone: The request($content) has been removed from the database.<br>";
+		else
+			$this->sms->send($req_vol->phone,"The request($content) has been removed from the database.");
 		
 		
 		//Inform all the volunteers who had expressed interest in subbing about the removal of the request
@@ -516,8 +584,10 @@ class SubFinder extends Controller {
 				
 				$query1 = $this->db->from('volunteer')->where('id',$request->{$name.$i})->get();
 				$int_vol = $query1->row();	
-				//echo "Message to $int_vol->phone: The request($content) has been removed and is no longer required. Thank you for your response.<br>";
-				$this->sms->send($int_vol->phone,"The request($content) has been removed and is no longer required. Thank you for your response.");
+				if($this->debug == true)
+					echo "Message to $int_vol->phone: The request($content) has been removed and is no longer required. Thank you for your response.<br>";
+				else
+					$this->sms->send($int_vol->phone,"The request($content) has been removed and is no longer required. Thank you for your response.");
 				
 			}
 		}

@@ -6,6 +6,8 @@ class SubFinder extends Controller {
 	function SubFinder(){
 	
 		parent::Controller();
+		//parent::__construct();
+		
 		$this->load->database();
 		$this->load->helper('string');
 		$this->load->library('sms');
@@ -162,13 +164,22 @@ class SubFinder extends Controller {
 		
 		
 		//Calculate the minutes till the class for which the sub was requested
-		$date_diff = $day_time->diff(new DateTime("now"),true);
+		
+		
+		
+		/*$date_diff = $day_time->diff(new DateTime("now"),true);
 		
 		$days = $date_diff->format('%a');
 		$hours = $date_diff->format('%h');
 		$minutes = $date_diff->format('%i');
 		$minutes = $minutes + ($days*24*60) + ($hours*60);
+		*/
 		
+		//Code to work with PHP 5.2
+		
+		$now = new DateTime("now");
+		
+		$minutes = round(abs($day_time->format('U') - $now->format('U')) / (60));
 		
 		//Calculate the score for each volunteer to separate them into batches for messaging
 		
@@ -183,9 +194,9 @@ class SubFinder extends Controller {
 			if($selectedvol->day === $req_vol->day){
 				$reqvoltime = new DateTime("$req_vol->class_time");
 				$selvoltime = new DateTime("$selectedvol->class_time");
-				$interval = $reqvoltime->diff($selvoltime);
+				$interval = round(abs($day_time->format('U') - $now->format('U')) / (60*60));
 				
-				if($interval->format('%H') < 2)
+				if($interval < 2)
 					continue;
 			}
 				
@@ -230,7 +241,7 @@ class SubFinder extends Controller {
 				on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.<br>" ;
 			}
 			else
-				$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
+				$this->sms->send(9633977657,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
 			
 			$vol_messaged++;
 			
@@ -594,7 +605,7 @@ class SubFinder extends Controller {
 		
 	}
 }
-//http://localhost/index.php/subfinder/main?msisdn=919633977657&keyword=SREQ&content=SREQ
+//	
 //http://localhost/index.php/subfinder/main?msisdn=919746419487&keyword=SFOR&content=SFOR+9tdn
 //http://localhost/index.php/subfinder/main?msisdn=919746419487&keyword=SCNF&content=SCNF+9tdn+2
 //http://localhost/index.php/subfinder/main?msisdn=919746419487&keyword=SDEL&content=SDEL+9tdn

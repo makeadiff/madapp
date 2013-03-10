@@ -19,9 +19,12 @@ class SubFinder extends Controller {
 			
 	function test(){
 		
-	$test = "Test";
-	$this->sms->send("9633977657","The request($test) has been removed from the database.");
-	echo "Done!<br>";
+		for($i=0;$i<20;$i++){
+			
+				$this->sms->send(9633977657,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
+				sleep(5*60);
+		}	
+	
 		
 	}
 	
@@ -241,7 +244,7 @@ class SubFinder extends Controller {
 				on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.<br>" ;
 			}
 			else
-				$this->sms->send(9633977657,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
+				$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
 			
 			$vol_messaged++;
 			
@@ -605,7 +608,7 @@ class SubFinder extends Controller {
 		
 	}
 }
-//	
+//http://localhost/index.php/subfinder/main?msisdn=919746811700&keyword=SREQ&content=SREQ	
 //http://localhost/index.php/subfinder/main?msisdn=919746419487&keyword=SFOR&content=SFOR+9tdn
 //http://localhost/index.php/subfinder/main?msisdn=919746419487&keyword=SCNF&content=SCNF+9tdn+2
 //http://localhost/index.php/subfinder/main?msisdn=919746419487&keyword=SDEL&content=SDEL+9tdn

@@ -1,0 +1,2 @@
+*/2 * * * * php /home/madiff/makeadiff.in/public_html/madapp/index.php cronmessage main >> /dev/null
+

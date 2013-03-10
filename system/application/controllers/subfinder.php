@@ -19,11 +19,7 @@ class SubFinder extends Controller {
 			
 	function test(){
 		
-		for($i=0;$i<20;$i++){
-			
-				$this->sms->send(9633977657,"Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.");
-				sleep(5*60);
-		}	
+		
 	
 		
 	}
@@ -52,7 +48,7 @@ class SubFinder extends Controller {
 		
 		$today = new DateTime("now");
 		$currentyear =  $today->format('Y');
-		$changedate = new DateTime("31st March $currentyear");
+		$changedate = new DateTime("31st April $currentyear");
 	
 		if($today <= $changedate)
 			$madyear = $today->format('Y') - 1;
@@ -134,9 +130,9 @@ class SubFinder extends Controller {
 			echo "Request Vol: $req_vol->name <br>";
 			echo "Message to $phonevol: Your request for $date has been registered under the REQ ID: $req_id. <br>";
 		}
-		else
+		else{
 			$this->sms->send($phonevol,"Your request for $date has been registered under the REQ ID: $req_id.");
-
+		}
 				
 
 		//Insert the request details into the 'request' table
@@ -182,7 +178,7 @@ class SubFinder extends Controller {
 		
 		$now = new DateTime("now");
 		
-		$minutes = round(abs($day_time->format('U') - $now->format('U')) / (60));
+		$seconds = round(abs($day_time->format('U') - $now->format('U')) );
 		
 		//Calculate the score for each volunteer to separate them into batches for messaging
 		
@@ -228,6 +224,7 @@ class SubFinder extends Controller {
 		arsort($score);
 		
 		$vol_messaged = 0;
+		$tmsg = new DateTime("now");
 		
 		//Message the volunteers about the sub request
 		
@@ -243,41 +240,42 @@ class SubFinder extends Controller {
 				$name requires a substitute at $Center 
 				on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.<br>" ;
 			}
-			else
+			else if($vol_messaged < 5){
+				
 				$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
+			}
+			else{
+			
+				$data = array(
+				   'req_id' => $req_id ,
+				   'phone' => $selectedvol->phone ,
+				   'msg' => "$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.",
+				   'msg_time' => $tmsg->format('Y-m-d H:i:s')
+				);
+				
+				$this->db->insert('Message_Queue',$data);
+				
+			}
 			
 			$vol_messaged++;
 			
 			
-			//Check if any volunteers have responded to the request. It stops messaging after the first response.
+						
+			//Increment the message time for each batch
+			
+			
+				
 			if($vol_messaged == 5 || $vol_messaged == 10 || $vol_messaged == 20 || $vol_messaged == 40
 			|| $vol_messaged == 60 || $vol_messaged == 80 || $vol_messaged == 100 || $vol_messaged == 120
 			|| $vol_messaged == 140 || $vol_messaged == 160 || $vol_messaged == 180 || $vol_messaged == 200
 			|| $vol_messaged == 250 || $vol_messaged == 300){
-			
-				$query4 = $this->db->from('request')->where('req_id',$req_id)->get();
-				if($query4->num_rows() == 0)
-					break;
 				
-				$request = $query4->row();
-				if($request->int_vol_1 != -1)
-					break;
-			
-			
-			}
-			
-			
-			
-			//Wait for a certain amount of time after messaging one Batch of volunteers
-			
-			
-			if($this->debug == false){
-			
-				if($vol_messaged == 5 || $vol_messaged == 10 || $vol_messaged == 20 || $vol_messaged == 40
-				|| $vol_messaged == 60 || $vol_messaged == 80 || $vol_messaged == 100 || $vol_messaged == 120
-				|| $vol_messaged == 140 || $vol_messaged == 160 || $vol_messaged == 180 || $vol_messaged == 200
-				|| $vol_messaged == 250 || $vol_messaged == 300)
-					sleep(($minutes*60)/50);		
+				$add_time = round($seconds/50);
+				
+				
+				$tmsg->modify("+$add_time second");
+				
+						
 			}
 				
 			
@@ -398,7 +396,7 @@ class SubFinder extends Controller {
 		
 		$today = new DateTime("now");
 		$currentyear =  $today->format('Y');
-		$changedate = new DateTime("31st March $currentyear");
+		$changedate = new DateTime("31st April $currentyear");
 	
 		if($today <= $changedate)
 			$madyear = $today->format('Y') - 1;

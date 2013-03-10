@@ -1,1 +1,1 @@
-*/2 * * * * php /home/madiff/makeadiff.in/public_html/madapp/index.php cronmessage main >> /dev/null
+*/3 * * * * wget http://makeadiff.in/madapp/index.php/cronmessage/main

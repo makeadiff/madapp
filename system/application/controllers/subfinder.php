@@ -111,6 +111,9 @@ class SubFinder extends Controller {
 		$day_time = new DateTime("Next $dow $req_vol->class_time +$extra week");
 		$date_time = $day_time->format('Y-m-d H:i:s');
 		
+		$time_now = new DateTime("now");
+		$time_now = $time_now->format('Y-m-d H:i:s');
+		
 		$time = $day_time->format('g:i A');
 		$date = $day_time->format('d-m-Y');
 		
@@ -139,7 +142,8 @@ class SubFinder extends Controller {
 		$data = array(
 		   'req_id' => $req_id ,
 		   'req_vol_id' => $req_vol->id ,
-		   'date_time' => $date_time
+		   'date_time' => $date_time,
+		   'req_on' => $time_now
 		);
 		
 		
@@ -270,10 +274,10 @@ class SubFinder extends Controller {
 			|| $vol_messaged == 140 || $vol_messaged == 160 || $vol_messaged == 180 || $vol_messaged == 200
 			|| $vol_messaged == 250 || $vol_messaged == 300){
 				
-				$add_time = round($seconds/50);
+				$kuti = round($seconds/50);
 				
 				
-				$tmsg->modify("+$add_time second");
+				$tmsg->modify("+$kuti second");
 				
 						
 			}
@@ -309,6 +313,9 @@ class SubFinder extends Controller {
 		
 		$content = str_replace('SFOR ','', $content);
 		$content = trim($content);
+		
+		$time_now = new DateTime("now");
+		$time_now = $time_now->format('Y-m-d H:i:s');
 		
 		//Check if the request id that is specified in the message exist
 		$query = $this->db->from('request')->get();
@@ -359,9 +366,20 @@ class SubFinder extends Controller {
 				for($i = 1; $i<=20; $i++){
 					if($request->{$name.$i} == -1){
 						
-						$data = array(
-						   $name.$i => $int_vol->id ,
-						);
+						
+						
+						//Insert time when the first volunteer shows interest
+						if($i == 1){
+							$data = array(
+								$name.$i => $int_vol->id ,
+								'int_on' => $time_now							
+							);
+						}
+						else{
+							$data = array(
+							   $name.$i => $int_vol->id
+							);
+						}
 						
 						//Insert the interested volunteers id into the 'request' table
 						$this->db->where('req_id',$content)->update('request', $data); 
@@ -402,6 +420,9 @@ class SubFinder extends Controller {
 			$madyear = $today->format('Y') - 1;
 		else
 			$madyear = $today->format('Y');
+			
+		$time_now = new DateTime("now");
+		$time_now = $time_now->format('Y-m-d H:i:s');
 		
 		//Get the details of the volunteer who has made the request
 		$query = $this->db->select('User.*',FALSE)->from('User')->select('Center.name as centername',FALSE)
@@ -493,7 +514,8 @@ class SubFinder extends Controller {
 			$sub_vol = $query1->row();
 			
 			$data = array(
-						   'sub_vol' => $sub_vol->id
+						   'sub_vol' => $sub_vol->id,
+						   'sub_on' => $time_now
 						);
 			$this->db->where('req_id',$req_id)->update('request', $data); 
 			

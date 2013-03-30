@@ -23,6 +23,7 @@ class CronMessage extends Controller {
 		
 		foreach($query->result() as $q_row){
 			
+			//Check if the request exist
 			$query1 = $this->db->from('request')->where('req_id',$q_row->req_id)->get();
 			if($query1->num_rows() == 0){
 			
@@ -31,8 +32,9 @@ class CronMessage extends Controller {
 			else{
 			
 				$request = $query1->row();
+				//Check if the first volunteer has replied
 				if($request->int_vol_1 != -1)
-					$this->db->where('req_id',$q_row->req_id)->delete('Message_Queue');
+					$this->db->where('req_id',$q_row->req_id)->where('send',0)->delete('Message_Queue');
 			}
 		}
 		
@@ -43,8 +45,9 @@ class CronMessage extends Controller {
 			$now = new DateTime("now");
 			$msg_time = new DateTime("$q_row->msg_time");
 			
-			if($now >= $msg_time){
+			if($now >= $msg_time && $q_row->send == 0){
 			
+					
 				if($this->debug == true){
 					echo "Message to $q_row->phone: $q_row->msg<br>";
 				}
@@ -52,7 +55,12 @@ class CronMessage extends Controller {
 					$this->sms->send($q_row->phone,$q_row->msg);
 				}
 				
-				$this->db->where('id',$q_row->id)->delete('Message_Queue');
+				$data = array(
+							'send' => 1
+						);
+					
+				$this->db->where('id',$q_row->id)->update('Message_Queue', $data); 
+				
 				
 			}
 			

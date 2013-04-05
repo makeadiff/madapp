@@ -18,6 +18,13 @@ class CronMessage extends Controller {
 	
 	
 	function main(){
+	
+		$now = new DateTime("now");
+		$today_morning = new DateTime("today 08:00");
+		$today_night = new DateTime("today 22:30");
+		
+		if($now >= $today_night || $now <=$today_morning)
+			exit();
 		
 		$query = $this->db->select('req_id')->from('Message_Queue')->distinct()->get();
 		

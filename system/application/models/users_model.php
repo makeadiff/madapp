@@ -256,8 +256,12 @@ class Users_model extends Model {
 				'address'	=> $data['address'],
 				'sex'		=> $data['sex'],
 				'city_id'	=> $data['city'],
+				'english_teacher'	=> $data['english_teacher'],
+				'dream_tee'	=> $data['dream_tee'],
+				'events'	=> $data['events'],
+				'placements'=> $data['placements'],
 				'project_id'=> $data['project'],
-				'user_type' => $data['type']
+				'user_type' => $data['type'],
 			);
 			if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
 			else $user_array['joined_on'] = date('Y-m-d H:i:s');
@@ -364,6 +368,10 @@ class Users_model extends Model {
 			'phone' => $this->_correct_phone_number($data['phone']),
 			'address'=>$data['address'],
 			'sex'	=> $data['sex'],
+			'english_teacher'	=> $data['english_teacher'],
+			'dream_tee'	=> $data['dream_tee'],
+			'events'	=> $data['events'],
+			'placements'=> $data['placements'],
 		);
 		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
 		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
@@ -652,7 +660,10 @@ class Users_model extends Model {
 										'job_status'=> $data['job_status'],
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
 										'why_mad'	=> $data['why_mad'],
-										'preferred_day'=> $data['preferred_day'],
+										'english_teacher'	=> $data['english_teacher'],
+										'dream_tee'	=> $data['dream_tee'],
+										'events'	=> $data['events'],
+										'placements'=> $data['placements'],
 										'source'	=> $data['source'],
 										);
 			$this->db->where('id', $data['user_id'])->update('User', $userdetailsArray);
@@ -677,7 +688,10 @@ class Users_model extends Model {
 										'job_status'=> $data['job_status'],
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
 										'why_mad'	=> $data['why_mad'],
-										'preferred_day'=> $data['preferred_day'],
+										'english_teacher'	=> isset($data['english_teacher']) ? 1 : 0,
+										'dream_tee'	=> isset($data['dream_tee']) ? 1 : 0,
+										'events'	=> isset($data['events']) ? 1 : 0,
+										'placements'=> isset($data['placements']) ? 1 : 0,
 										'source'	=> $data['source'],
 										'user_type'	=> 'applicant',
 										'status'	=> '1',

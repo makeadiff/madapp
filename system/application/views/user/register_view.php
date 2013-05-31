@@ -81,13 +81,30 @@ jQuery(document).ready(function () {
 				<option value="other" <?php if(isset($_POST['job_status']) and $_POST['job_status'] == 'other') echo 'selected="selected"'; ?>>Other</option>
 			</select>
             </div>
-
+            
+            <!--
             <div class="content-row-large"><span>Preferred Class Day:</span>
             <select class="dropdown" id="preferred_day" name="preferred_day">
 				<option value="flexible" <?php if(isset($_POST['preferred_day']) and $_POST['preferred_day'] == 'flexible') echo 'selected="selected"'; ?>>Flexible</option>
 				<option value="weekday" <?php if(isset($_POST['preferred_day']) and $_POST['preferred_day'] == 'weekday') echo 'selected="selected"'; ?>>Weekdays Only</option>
 				<option value="weekend" <?php if(isset($_POST['preferred_day']) and $_POST['preferred_day'] == 'weekend') echo 'selected="selected"'; ?>>Weekends Only</option>
 			</select>
+            </div>
+            -->
+            
+            <div class="content-row-large"><span>Which role would you like to apply to:<br /><br /><br /></span>
+            <input class="checkbox" type="checkbox" id="english_teacher" name="english_teacher" value="1" <?php if(isset($_POST['english_teacher'])) echo "checked='checked'"; ?> />
+            <label for="english_teacher">English Teacher</label><br />
+            
+            <input class="checkbox" type="checkbox" id="dream_tee" name="dream_tee" value="1" <?php if(isset($_POST['dream_tee'])) echo "checked='checked'"; ?> />
+            <label for="dream_tee">Dream Tee Volunteer</label><br />
+            
+            <input class="checkbox" type="checkbox" id="events" name="events" value="1" <?php if(isset($_POST['events'])) echo "checked='checked'"; ?> />
+            <label for="events">Events Volunteer</label><br />
+            
+            <input class="checkbox" type="checkbox" id="placements" name="placements" value="1" <?php if(isset($_POST['placements'])) echo "checked='checked'"; ?> />
+            <label for="placements">Placements Volunteer</label><br />
+            <p>To find out more about the profiles, visit <a href="http://striking.ly/madvol">http://striking.ly/madvol</a>.</p>
             </div>
 
             <div class="content-row-large"><span>Date of Birth:</span>

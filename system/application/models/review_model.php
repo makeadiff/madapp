@@ -33,7 +33,7 @@ class Review_model extends Model {
 
 	
 	function get_monthly_review($year_month, $city_id) {
-		return $this->db->select('name,value,flag,comment')->from('Review')->where('review_on', $year_month.'-01')->where('city_id', $city_id)->get()->result();
+		return $this->db->select('name,value,flag,comment,id')->from('Review')->where('review_on', $year_month.'-01')->where('city_id', $city_id)->get()->result();
 	}
 	
 	function set_comment($city_id, $year_month, $name, $comment) {

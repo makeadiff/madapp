@@ -22,12 +22,12 @@
 	/**
 	 * Site Title, example.com
 	 */
-	$config['site_title']		   = "maddapp.com";
+	$config['site_title']		   = "Make A Difference";
 	
 	/**
 	 * Admin Email, admin@example.com
 	 */
-	$config['admin_email']		   = "admin@maddapp.com";
+	$config['admin_email']		   = "contact@makeadiff.in";
 	
 	/**
 	 * Default group, use name
@@ -86,11 +86,12 @@
 	 * Extend the users cookies everytime they auto-login
 	 **/
 	$config['user_extend_on_login'] = false;
-/**
-* Type of email to send (HTML or text)
-* Default : html
-**/
-$config['email_type'] = 'html';
+	
+	/**
+	* Type of email to send (HTML or text)
+	* Default : html
+	**/
+	$config['email_type'] = 'html';
 	
 	/**
 	 * Folder where email templates are stored.

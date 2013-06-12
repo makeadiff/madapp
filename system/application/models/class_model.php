@@ -38,6 +38,7 @@ class Class_model extends Model {
 			$this->revert_user_class_credit($class_data['id'], $class_data);
 		}
 		$this->db->query("UPDATE UserClass SET status='cancelled' WHERE class_id=$class_id");
+		$this->db->query("UPDATE Class SET status='cancelled' WHERE id=$class_id");
 		return $this->db->affected_rows();
     }
     
@@ -70,6 +71,7 @@ class Class_model extends Model {
     /// Revert a class cancellation. The status becomes projected.
     function uncancel_class($class_id) {
 		$this->db->query("UPDATE UserClass SET status='projected' WHERE class_id=$class_id");
+		$this->db->query("UPDATE Class SET status='projected' WHERE id=$class_id");
 		return $this->db->affected_rows();
     }
     
@@ -98,7 +100,8 @@ class Class_model extends Model {
 					'batch_id'	=> $data['batch_id'],
 					'level_id'	=> $data['level_id'],
 					'project_id'=> 1,
-					'class_on'	=> $data['class_on']
+					'class_on'	=> $data['class_on'],
+					'status'	=> 'projected',
 				));
 			$class_id = $this->db->insert_id();
 		}
@@ -129,7 +132,7 @@ class Class_model extends Model {
 		$date_range = '';
 		if($year_month) $date_range = " AND DATE_FORMAT(Class.class_on, '%Y-%m')='$year_month'";
 		
-    	$classes = $this->db->query("SELECT Class.*,UserClass.user_id,UserClass.substitute_id,UserClass.status 
+    	$classes = $this->db->query("SELECT Class.*,UserClass.user_id,UserClass.substitute_id,UserClass.status AS user_status
     		FROM Class INNER JOIN UserClass ON Class.id=UserClass.class_id 
     		WHERE Class.level_id=$level_id AND Class.batch_id=$batch_id $date_range ORDER BY Class.class_on")->result();
     	return $classes;
@@ -137,7 +140,7 @@ class Class_model extends Model {
     
     /// Get both teacher information and class information together.
     function get_by_level($level_id) {
-    	$classes = $this->db->query("SELECT Class.*,UserClass.user_id,UserClass.substitute_id,UserClass.status 
+    	$classes = $this->db->query("SELECT Class.*,UserClass.user_id,UserClass.substitute_id,UserClass.status AS user_status
     		FROM Class INNER JOIN UserClass ON Class.id=UserClass.class_id 
     		WHERE Class.level_id=$level_id ORDER BY class_on")->result();
     	return $classes;
@@ -202,6 +205,10 @@ class Class_model extends Model {
     	$this->revert_user_class_credit($user_class_id, $previous_class_data);
     	
     	$this->db->update('UserClass', $data, array('id'=>$user_class_id));
+    	
+    	$status = $data['status'];
+    	if($status == 'confirmed' or $status == 'attended' or $status == 'absent') $status = 'happened';
+    	$this->db->update('Class', array('status' => $status), array('id'=>$data['class_id']));
     	$this->calculate_users_class_credit($user_class_id, $data);
 
     	return $this->db->affected_rows();
@@ -341,7 +348,8 @@ class Class_model extends Model {
 				'level_id'	=> $level_id,
 				'batch_id'	=> $batch_id,
 				'class_on'	=> $class_on,
-				'project_id'=> $this->project_id
+				'project_id'=> $this->project_id,
+				'status'	=> 'projected'
 			));
 			$class_id = $this->db->insert_id();
 		} else {

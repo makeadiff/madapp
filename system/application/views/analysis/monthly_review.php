@@ -1,7 +1,6 @@
 <?php
 $this->load->view('layout/header', array('title'=>'Monthly Review'));
 
-foreach($months as $month_year) if(isset($review[$month_year]['red_flag_count'])) $review[$month_year]['red_flag_count']->value = 0;
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/hide_sidebar.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/analysis.css">
@@ -92,6 +91,8 @@ function inputData(name, value, month_year, ele, threshold, red_if) {
 <?php 
 foreach($all_cities as $city_id => $city_name) {
 	$review = $data[$city_id]['review'];
+	foreach($months as $month_year) if(isset($review[$month_year]['red_flag_count'])) $review[$month_year]['red_flag_count']->value = -1;
+	
 	$attendance_matrix = $data[$city_id]['attendance_matrix'];
 	if($vertical != 'all') echo "<hr /><h2>$city_name</h2>";
 ?>
@@ -107,18 +108,6 @@ Number of Volunteers: <?php echo $data[$city_id]['volunteer_count'] ?><br />
 <td></td><td></td>
 <td>April</td><td>May</td><td>June</td><td>July</td><td>August</td><td>September</td><td>October</td><td>November</td><td>December</td><td>January</td><td>February</td><td>March</td>
 </tr>
-
-<!--
-<tr>
-<td></td><td class="name">Number of MAD Classes</td>
-<?php showCells('class_count', $review, $months); ?>
-</tr>
-
-<tr>
-<td></td><td class="name">Number of Fellows</td>
-<?php showCells('fellows_count', $review, $months); ?>
-</tr>
--->
 
 <?php if($vertical == 'ops' or $vertical == 'all') { ?>
 <tr><td class="vertical-name" colspan="14">Operations</td></tr>
@@ -379,7 +368,7 @@ function showCells($name, $review, $months, $input=false, $yes_no=false, $thresh
 			
 			if(strpos($name, 'percentage')) echo '%';
 			
-			if($review['user_auth']->get_permission('monthly_review_comment')) echo "<a href='#' onclick='comment(\"$name\",\"$month_year\");' class='icon edit'>Note</a>";
+			if($review['user_auth']->get_permission('monthly_review_comment')) echo "<a href='#' onclick='comment(\"$name\",\"$month_year\");' title='{$r->id}' class='icon edit'>Note</a>";
 			echo "</td>";
 			
 		} else {

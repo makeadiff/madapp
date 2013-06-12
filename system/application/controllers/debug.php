@@ -82,6 +82,20 @@ class Debug extends Controller {
 		print "Deleted $count exams.";
 	}
 	
+	
+	function copy_class_status() {
+		$all_class_status = idNameFormat($this->db->query("SELECT class_id as id,status as name FROM UserClass")->result());
+		
+		$done_class_id = array();
+		foreach($all_class_status as $class_id => $status) {
+			if(isset($done_class_id[$class_id])) continue;
+			
+			if($status == 'confirmed' or $status == 'attended' or $status == 'absent') $status = 'happened';
+			$this->db->query("UPDATE Class SET status='$status' WHERE id=$class_id");
+		
+			$done_class_id[$class_id] = true;
+		}
+	}
 }
 
 

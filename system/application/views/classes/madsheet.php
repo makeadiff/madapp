@@ -71,7 +71,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			}
 			
 			
-			print "<td class='class-{$classes->status}'>&nbsp;";
+			print "<td class='class-{$classes->user_status}'>&nbsp;";
 			if($classes->substitute_id != 0) print 'S';
 			
 			?><div class="class-info info-box"><ul>

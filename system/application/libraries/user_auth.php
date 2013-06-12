@@ -37,7 +37,7 @@ Class User_auth {
 			
 			$this->ci->session->set_userdata('city_id', $status['city_id']);
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
-			$this->ci->session->set_userdata('year', '2012');
+			$this->ci->session->set_userdata('year', '2013'); // Current year. Change every year. :HARDCODE:
 			
 			if($remember_me) {
 				setcookie('email', $status['email'], time() + 3600 * 24 * 30, '/'); // Expires in a month.

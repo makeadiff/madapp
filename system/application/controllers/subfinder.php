@@ -1,12 +1,12 @@
 <?php
 
-class SubFinder extends CI_Controller {
+class SubFinder extends Controller {
 
 		
 	function SubFinder(){
 	
-		//parent::Controller();
-		parent::__construct();
+		parent::Controller();
+		//parent::__construct();
 		
 		$this->load->database();
 		$this->load->helper('string');

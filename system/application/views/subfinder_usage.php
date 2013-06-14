@@ -22,7 +22,7 @@
 			#bg
 			{
 			
-			background-image:url("http://makeadiff.in/madadpp/images/subfinder_usage_bg.jpg");
+			background-image:url("http://makeadiff.in/madapp/images/subfinder_usage_bg.jpg");
 			background-repeat:no-repeat;
 			background-color:#ec1a47;
 			

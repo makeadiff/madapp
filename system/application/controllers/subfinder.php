@@ -48,9 +48,9 @@ class SubFinder extends Controller {
 		
 		$today = new DateTime("now");
 		$currentyear =  $today->format('Y');
-		$changedate = new DateTime("31st April $currentyear");
+		//$changedate = new DateTime("31st April $currentyear");
 		
-		//$changedate = new DateTime("31st June $currentyear");
+		$changedate = new DateTime("31st June $currentyear");
 	
 		if($today <= $changedate)
 			$madyear = $today->format('Y') - 1;

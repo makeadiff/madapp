@@ -22,7 +22,7 @@
 			#bg
 			{
 			
-			background-image:url('/images/subfinder_usage_bg.jpg');
+			background-image:url("<?php echo base_url()?>/images/subfinder_usage_bg.jpg");
 			background-repeat:no-repeat;
 			background-color:#ec1a47;
 			

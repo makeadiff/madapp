@@ -1,19 +1,19 @@
 <?php
 
-class SubFinder extends Controller {
+class SubFinder extends CI_Controller {
 
 		
 	function SubFinder(){
 	
-		parent::Controller();
-		//parent::__construct();
+		//parent::Controller();
+		parent::__construct();
 		
 		$this->load->database();
 		$this->load->helper('string');
 		$this->load->library('sms');
 		date_default_timezone_set('Asia/Calcutta');
 		
-		$this->debug = false;
+		$this->debug = true;
 	}
 	
 			
@@ -49,6 +49,8 @@ class SubFinder extends Controller {
 		$today = new DateTime("now");
 		$currentyear =  $today->format('Y');
 		$changedate = new DateTime("31st April $currentyear");
+		
+		//$changedate = new DateTime("31st June $currentyear");
 	
 		if($today <= $changedate)
 			$madyear = $today->format('Y') - 1;
@@ -166,6 +168,7 @@ class SubFinder extends Controller {
 		list($Center) = explode(" ",$req_vol->centername);
 		
 		
+		
 		//Calculate the minutes till the class for which the sub was requested
 		
 		
@@ -237,16 +240,20 @@ class SubFinder extends Controller {
 			$query3 = $this->db->from('User')->where('id',$selectedvol_id)->get();
 			$selectedvol = $query3->row();
 			
+			list($selectedvol_name) = explode(" ",$selectedvol->name);
+			
+			
+			
 			if($this->debug == true){
 				echo "<br>Selected Vol: $selectedvol->name <br>";
 				echo "Vol Score: $vol_score<br> 	";
 				echo "Message to $selectedvol->phone:
-				$name requires a substitute at $Center 
-				on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.<br>" ;
+				$selectedvol_name,<br>$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.<br><br>Your current credit is $selectedvol->credit<br>" ;
 			}
 			else if($vol_messaged < 5){
 				
 				$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
+				//$this->sms->send($selectedvol->phone,"$selectedvol_name,\0x0A$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.\0x0A\0x0AYour current credit is $selectedvol->credit");
 			}
 			else{
 			
@@ -627,6 +634,136 @@ class SubFinder extends Controller {
 		}
 		
 	}
+	
+	
+	
+	function analyze($city_selected){
+	
+		$query = $this->db->select('City.name as cityname',FALSE)->select('request.*',FALSE)->from('request')->join('User','request.req_vol_id = User.id')
+					->join('City','User.city_id = City.id')->get();
+		$total_no_request = $query->num_rows();
+		$total_no_reply = 0;
+		
+		$name = "int_vol_";
+		foreach($query->result() as $req_row){
+			
+			for($i = 1; $i <=20; $i++){
+				
+				if($req_row->{$name.$i} != -1)
+					$total_no_reply++;
+					
+			}
+		
+		}
+		
+		$city_query = $this->db->from('City')->get();
+		
+		$name_request = "_request_day_";
+		$name_reply = "_reply_day_";
+		
+		foreach($city_query->result() as $city_row){
+			
+			
+			for($d = 0; $d<=30; $d++){
+			
+				${$city_row->name.$name_request.$d} = 0;
+				${$city_row->name.$name_reply.$d} = 0;
+			}
+		}
+		
+		$time_now = new DateTime("now");
+		$time_prior = new DateTime("now - 30 days");
+		
+		foreach($query->result() as $req_row){
+		
+			list($req_on) = explode(" ",$req_row->req_on);
+			list($int_on) = explode(" ",$req_row->int_on);
+			
+			foreach($city_query->result() as $city_row){
+			
+				if($req_row->cityname == $city_row->name){
+				
+					for($d = 30; $d>=0; $d--){
+					
+					$c = new DateTime("now -$d days");
+					$r = new DateTime("$req_on");
+					
+						if($r->format('Y-m-d') == $c->format('Y-m-d')){
+							
+							${$city_row->name.$name_request.$d}++;
+							
+							for($i = 1; $i <=20; $i++){
+							
+								$c = new DateTime("now -$d days");
+								$r = new DateTime("$int_on");
+								
+								if($r->format('Y-m-d') == $c->format('Y-m-d')){
+								
+									if($req_row->{$name.$i} != -1)
+										${$city_row->name.$name_reply.$d}++;
+								}
+							}
+						}
+						$data[$city_row->name.$name_request.$d] = ${$city_row->name.$name_request.$d};
+						$data[$city_row->name.$name_reply.$d] = ${$city_row->name.$name_reply.$d};
+					}
+				}
+			}
+			
+		}
+		
+		
+		
+		$data['name_request'] = $name_request;
+		$data['name_reply'] = $name_reply;
+		$data['city_selected'] = $city_selected;
+		
+		
+		
+		$this->load->view('subfinder_charts',$data);
+		
+		/*
+		
+		echo "Total no of requests: $total_no_request<br>";
+		echo "Total no of replies: $total_no_reply<br>";
+		
+		
+		
+		foreach($city_query->result() as $city_row){
+			
+			for($d = 30; $d>=0; $d--){
+				
+				if(${$city_row->name.$name_request.$d} != 0)
+					echo "$city_row->name Requests on Day $d:" . ${$city_row->name.$name_request.$d} . "<br>";
+				if(${$city_row->name.$name_reply.$d} != 0)
+					echo "$city_row->name Replies on Day $d:" . ${$city_row->name.$name_reply.$d} . "<br>";
+			}		
+		}
+		
+		*/
+	
+	}
+	
+	
+	function usage(){
+	
+		$query = $this->db->select('City.name as cityname',FALSE)->from('City')->get();
+		
+		$city_ordered = $query->result();
+		
+		asort($city_ordered);
+		
+		$data['city_ordered'] = $city_ordered;
+		
+		$this->load->view('subfinder_usage',$data);
+	
+		
+		
+		
+			
+	
+	}
+	
 }
 //http://localhost/index.php/subfinder/main?msisdn=919746811700&keyword=SREQ&content=SREQ	
 //http://localhost/index.php/subfinder/main?msisdn=919746419487&keyword=SFOR&content=SFOR+9tdn

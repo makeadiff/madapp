@@ -36,7 +36,7 @@
 	<option value="curriculum">Curriculum Training</option> 
     <option value="teacher">Teacher Training I</option>
     <option value="teacher2">Teacher Training II</option> 
-	<option value="avm">City Circle Time</option>
+	<option value="avm">Center Circle</option>
 	<option value="coreteam_meeting">Core Team Meeting</option> 
 	<option value="admin_meeting">Admin Meeting</option>
 	<option value="monthly_review">Monthly Review</option>

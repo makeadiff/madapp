@@ -147,7 +147,7 @@ class Common extends Controller {
 		$log .= "From $phone at $time:\n";
 		if($debug) print "From $phone at $time:<br />";
 		
-		list($full_name, $email, $city) = explode(",", str_replace('IMAD ','', $content));
+		list($full_name, $email, $city) = explode(",", str_ireplace('IMAD ','', $content));
 		$name = short_name($full_name);
 		$city = strtolower(trim($city));
 		$name = short_name(trim($full_name));
@@ -178,6 +178,7 @@ class Common extends Controller {
 			elseif($city == 'tvm') $city = 'trivandrum';
 			elseif($city == 'calcutta') $city = 'kolkata';
 			elseif($city == 'cmb') $city = 'coimbatore';
+			elseif($city == 'cbe') $city = 'coimbatore';
 			elseif($city == 'ekm') $city = 'cochin';
 			elseif($city == 'poona') $city = 'pune';
 			
@@ -216,7 +217,7 @@ class Common extends Controller {
 				'source'	=> 'sms',
 				'source_other'=>'sms',
 				'dream_tee'			=> '0',
-				'english_teacher'	=> '0',
+				'english_teacher'	=> '1',
 				'placements'		=> '0',
 				'events'			=> '0',
 				'joined_on'	=> date('Y-m-d H:i:s'),

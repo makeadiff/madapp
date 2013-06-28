@@ -215,6 +215,10 @@ class Common extends Controller {
 				'user_type' => 'applicant',
 				'source'	=> 'sms',
 				'source_other'=>'sms',
+				'dream_tee'			=> '0',
+				'english_teacher'	=> '0',
+				'placements'		=> '0',
+				'events'			=> '0',
 				'joined_on'	=> date('Y-m-d H:i:s'),
 			);
 			if(!$debug) $this->users_model->db->insert('User',$user_array);

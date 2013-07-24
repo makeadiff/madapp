@@ -32,9 +32,12 @@ class Batch_model extends Model {
     	return $this->db->query("SELECT user_id AS id FROM UserBatch WHERE batch_id={$batch_id}")->result();
     }
     
-    function get_all_batches() {
+    function get_all_batches($class_starts_check=false) {
+		$start_check = '';
+		if($class_starts_check) $start_check = " AND Center.class_starts_on<CURDATE()"; // AND Center.class_starts_on!='0000-00-00'";
+		
 		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN Center ON Batch.center_id=Center.id 
-			WHERE Batch.project_id={$this->project_id} AND Batch.year={$this->year} AND Center.status='1'")->result();
+			WHERE Batch.project_id={$this->project_id} AND Batch.year={$this->year} AND Center.status='1' $start_check")->result();
     }
     
     function get_batches_in_level($level_id) {

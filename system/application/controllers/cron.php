@@ -14,7 +14,7 @@ class Cron extends Controller  {
 		$this->load->model('Batch_model','batch_model', TRUE);
 		$this->batch_model->year = 2013; // Current Year. :HARDCODE:
 		$this->batch_model->project_id = 1;
-		$all_batches = $this->batch_model->get_all_batches();
+		$all_batches = $this->batch_model->get_all_batches(true);
 		
 		if($debug) {
 			print "Debug Mode\n---------------------------\n";

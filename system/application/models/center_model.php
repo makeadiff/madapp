@@ -125,6 +125,7 @@ class Center_model extends Model
 		$data = array(
 				'name' => $data['center'] ,
 				'center_head_id' => $data['user_id'],
+				'class_starts_on'=> $data['class_starts_on'],
 				);
 		$this->db->where('id', $center_id);
 		$this->db->update('Center', $data);

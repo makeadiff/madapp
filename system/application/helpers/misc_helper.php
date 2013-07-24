@@ -120,15 +120,14 @@ function set_city_year($that) {
 			and $that->user_auth->check_permission('change_city')) {
 		$city_id = $that->input->post('city_id');
 		$that->session->set_userdata('city_id', $city_id);
-		$that->center_model->city_id = $city_id;
-		$that->user_model->city_id = $city_id;
+		if(isset($that->center_model)) $that->center_model->city_id = $city_id;
+		if(isset($that->users_model)) $that->users_model->city_id = $city_id;
 
 		$year = $that->input->post('year');
 		$that->session->set_userdata('year', $year);
-		$that->center_model->year = $year;
-		$that->batch_model->year = $year;
-		$that->level_model->year = $year;
-		if(isset($that->user_model)) $that->user_model->year = $year;
+		if(isset($that->center_model)) $that->center_model->year = $year;
+		if(isset($that->batch_model)) $that->batch_model->year = $year;
+		if(isset($that->level_model)) $that->level_model->year = $year;
 		if(isset($that->users_model)) $that->users_model->year = $year;
 	}
 }

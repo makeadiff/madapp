@@ -7,16 +7,15 @@
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <script src="<?php echo base_url();?>js/datepicker.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
-<script src="<?php echo base_url()?>js/cal.js"></script>
+<script src="<?php echo base_url()?>js/cal.js" type="text/javascript"></script>
 <?php
 $sdt=1950;
 $edt=date('Y') - 10;
 ?>
-<script>
+<script type="text/javascript">
 jQuery(document).ready(function () {
 	$('#birthday').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('1990-01-01')});
 });
-</script>
 </script>
 </head>
 <body>

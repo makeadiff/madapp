@@ -92,6 +92,7 @@ class Center_model extends Model
 			'city_id' => $data['city'],
 			'name' => $data['center'],
 			'center_head_id' => $data['user_id'],
+			'class_starts_on'=> $data['class_starts_on'],
 		);
 						  
 	    $this->db->insert('Center',$data);  

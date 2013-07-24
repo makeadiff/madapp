@@ -143,6 +143,7 @@ class Center extends Controller  {
 		$data['rootId'] = $_REQUEST['rootId'];
 		$data['user_id']= $_REQUEST['user_id'];
 		$data['center']= $_REQUEST['center'];
+		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
 		$returnFlag= $this->center_model->update_center($data);
 		
 		if($returnFlag == true) {

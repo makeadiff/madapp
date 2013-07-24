@@ -12,6 +12,11 @@
 <label for="user_id">Select Head:</label> 
 <?php echo form_dropdown('user_id', idNameFormat($all_users)); ?>
 </li>
+
+<li>
+<label for="user_id">Class Starts on: </label>
+<input type="text" id="class_starts_on" name="class_starts_on" />
+</li>
 </ul>
 <ul>
 <li>

@@ -101,6 +101,7 @@ class Center extends Controller  {
 		$data['city']= $this->session->userdata('city_id');
 		$data['user_id']=$_REQUEST['user_id'];
 		$data['center']=$_REQUEST['center'];
+		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
 		$returnFlag= $this->center_model->add_center($data);
 	
 		if($returnFlag) {

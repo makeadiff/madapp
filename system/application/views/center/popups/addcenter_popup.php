@@ -1,4 +1,17 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<script src="<?php echo base_url();?>js/datepicker.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
+<script src="<?php echo base_url()?>js/cal.js" type="text/javascript"></script>
+<?php
+$sdt=2011;
+$edt=date('Y');
+?>
+<script type="text/javascript">
+jQuery(document).ready(function () {
+	$('#class_starts_on').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date(<?php echo date('Y-m-d'); ?>)});
+});
+</script>
+
 <h2>Add Centers</h2>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/addCenter')?>" method="post" style="width:500px;" onsubmit="return validate();"  >
 <fieldset class="clear">

@@ -1,4 +1,17 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
+<script src="<?php echo base_url();?>js/datepicker.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
+<script src="<?php echo base_url()?>js/cal.js" type="text/javascript"></script>
+<?php
+$sdt=2011;
+$edt=date('Y');
+?>
+<script type="text/javascript">
+jQuery(document).ready(function () {
+	$('#class_starts_on').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date(<?php echo date('Y-m-d'); ?>)});
+});
+</script>
+
 <h2>Edit Center</h2>
 <?php
 $details=$details->result_array();
@@ -7,6 +20,7 @@ foreach($details as $row) {
 	$name=$row['name'];
 	$city_id=$row['city_id'];
 	$user_id=$row['center_head_id'];
+	$class_starts_on = $row['class_starts_on'];
 }
 
 ?>
@@ -21,6 +35,11 @@ foreach($details as $row) {
 <li>
 <label for="user_id">Select Head:</label> 
 <?php echo form_dropdown('user_id', idNameFormat($all_users), $user_id); ?>
+</li>
+
+<li>
+<label for="user_id">Class Starts on: </label>
+<input type="text" id="class_starts_on" name="class_starts_on" value="<?php echo $class_starts_on; ?>" />
 </li>
 </ul>
 

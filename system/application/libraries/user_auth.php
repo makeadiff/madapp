@@ -123,8 +123,8 @@ Class User_auth {
     *
     **/
 	function register($data) {
-		$status = $this->ci->users_model->user_registration($data);
-		
+		list($status, $message) = $this->ci->users_model->user_registration($data);
+
 		if($status) {
 			$this->ci->load->model('settings_model');
 			
@@ -156,9 +156,8 @@ Class User_auth {
 			$this->ci->email->send();
 			//echo $this->ci->email->print_debugger();
 			
-			return $status;
 		}
-		return false;
+		return array($status, $message);
 		
 	}
 	/**

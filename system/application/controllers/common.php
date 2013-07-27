@@ -53,11 +53,13 @@ class Common extends Controller {
 				$this->load->view('user/register_view', $data);
 				
 			} else {
-				$status = $this->user_auth->register($data);
+				list($status, $message) = $this->user_auth->register($data);
 				if($status)	{
 					redirect('common/thank_you');
 				
 				} else {
+					$data['error'] = $message;
+					
 					$this->load->view('user/register_view',$data);
 				}
 			}

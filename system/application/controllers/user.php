@@ -103,7 +103,11 @@ class User extends Controller  {
 		$data['joined_on'] = $_REQUEST['joined_on'];
 		$data['left_on'] = $_REQUEST['left_on'];
 		$data['type'] = $_POST['type'];
-		
+		$data['english_teacher']	= $_POST['english_teacher'];
+		$data['dream_tee']	= $_POST['dream_tee'];
+		$data['events']	= $_POST['events'];
+		$data['placements'] = $_POST['placements'];
+			
 		$data['city'] = $this->session->userdata('city_id');
 		$data['project'] = $this->session->userdata('project_id');
 		
@@ -180,12 +184,18 @@ class User extends Controller  {
 		if($this->input->post('type')) $data['type'] = $this->input->post('type');
 		$data['joined_on'] = $this->input->post('joined_on');
 		$data['left_on'] = $this->input->post('left_on');
+		$data['english_teacher'] = $this->input->post('english_teacher');
+		$data['events'] = $this->input->post('events');
+		$data['dream_tee'] = $this->input->post('dream_tee');
+		$data['placements'] = $this->input->post('placements');
+		
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
 		$data['id']=$data['rootId'];
 		$config['upload_path'] = './uploads/users/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
+        
         
 		foreach($_FILES as $key => $value) {
             if(!empty($key['name'])) {

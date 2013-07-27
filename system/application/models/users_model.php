@@ -256,10 +256,10 @@ class Users_model extends Model {
 				'address'	=> $data['address'],
 				'sex'		=> $data['sex'],
 				'city_id'	=> $data['city'],
-				'english_teacher'	=> $data['english_teacher'],
-				'dream_tee'	=> $data['dream_tee'],
-				'events'	=> $data['events'],
-				'placements'=> $data['placements'],
+				'english_teacher'	=> isset($data['english_teacher']) ? $data['english_teacher'] : 0,
+				'dream_tee'	=> isset($data['dream_tee']) ? $data['dream_tee'] : 0,
+				'events'	=> isset($data['events']) ? $data['events'] : 0,
+				'placements'=> isset($data['placements']) ? $data['placements'] : 0,
 				'project_id'=> $data['project'],
 				'user_type' => $data['type'],
 			);
@@ -452,6 +452,8 @@ class Users_model extends Model {
     }
     
     function update_credit($user_id, $change) {
+		
+    
     	if($change == 1) $change = '+1';
     	if($change == 2) $change = '+2';
 		if($change == .5) $change = '+.5';
@@ -675,8 +677,8 @@ class Users_model extends Model {
 		$debug = "";
 
 		// Make sure there is no duplication of emails - or phone...
-        $result = $this->db->query("SELECT id,email,phone FROM User WHERE email='$email' OR phone='{$data['phone']}'")->result();
-        
+        $result = $this->db->query("SELECT id,email,phone,user_type FROM User WHERE email='$email' OR phone='{$data['phone']}'")->result();
+
         $debug .= print_r($result, 1);
         if(!$result) {
 			$userdetailsArray = array(	'name'		=> $data['name'],
@@ -710,12 +712,27 @@ class Users_model extends Model {
 			return $userdetailsArray;
 		} else {
 			foreach($result as $r) {
-				if($r->email == $data['email']) $this->session->set_flashdata('error', 'Email already in database. Use another email address.');
-				else if($r->phone == $data['phone']) $this->session->set_flashdata('error', 'Phone number already in database. You have registered already.');
+				if($r->email == $data['email']) {
+					// If a user with pre existing email id or phone number tries to register again, we check what kind of user they are - and if they are well_wisher, alumni or let_go, we make them an applicant once again.
+					$more = 'You are already registered';
+					if($r->user_type == 'well_wisher' or $r->user_type == 'alumni' or $r->user_type == 'let_go') {
+						$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant'));
+						$more = 'You have been added back to the applicant list. Thank you.';
+					}
+					return array(false, 'Email already in database. ' . $more);
+					
+				} else if($r->phone == $data['phone']) {
+					$more = 'You are already registered';
+					if($r->user_type == 'well_wisher' or $r->user_type == 'alumni' or $r->user_type == 'let_go') {
+						$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant'));
+						$more = 'You have been added back to the applicant list. Thank you.';
+					}
+					return array(false, 'Phone number already in database. ' . $more);
+				}
 				break;
 			}
 			
-			return false;
+			return array(false, "");
 		}
     }
 	

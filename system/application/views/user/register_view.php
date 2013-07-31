@@ -66,13 +66,15 @@ jQuery(document).ready(function () {
 
             <div class="content-row-large"><span>City:</span>
             <select class="dropdown" id="city_id" name="city_id" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/7-expansions';">
+				<option value="">Select City</option>
 				<?php foreach($cities as $id=>$name) { ?>
 				<option value="<?php echo $id ?>" <?php 
 					if(!empty($this->validation->city_id) and $this->validation->city_id == $id) echo 'selected="selected"'; 
 				?>><?php echo $name ?></option>
 				<?php } ?>
 				<option value="0">Other</option>
-			</select>
+			</select><?php 
+				if(!empty($this->validation->city_id_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
 
             <div class="content-row-large"><span>Job Status:</span>

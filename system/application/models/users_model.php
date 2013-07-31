@@ -677,7 +677,7 @@ class Users_model extends Model {
 		$debug = "";
 
 		// Make sure there is no duplication of emails - or phone...
-        $result = $this->db->query("SELECT id,email,phone,user_type FROM User WHERE email='$email' OR phone='{$data['phone']}'")->result();
+        $result = $this->db->query("SELECT id,email,phone,user_type,status FROM User WHERE email='$email' OR phone='{$data['phone']}'")->result();
 
         $debug .= print_r($result, 1);
         if(!$result) {
@@ -713,23 +713,23 @@ class Users_model extends Model {
 		} else {
 			foreach($result as $r) {
 				if($r->email == $data['email']) {
-					// If a user with pre existing email id or phone number tries to register again, we check what kind of user they are - and if they are well_wisher, alumni or let_go, we make them an applicant once again.
-					$more = 'You are already registered';
-					if($r->user_type == 'well_wisher' or $r->user_type == 'alumni' or $r->user_type == 'let_go') {
-						$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant'));
-						$more = 'You have been added back to the applicant list. Thank you.';
-					}
-					return array(false, 'Email already in database. ' . $more);
-					
-				} else if($r->phone == $data['phone']) {
-					$more = 'You are already registered';
-					if($r->user_type == 'well_wisher' or $r->user_type == 'alumni' or $r->user_type == 'let_go') {
-						$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant'));
-						$more = 'You have been added back to the applicant list. Thank you.';
-					}
-					return array(false, 'Phone number already in database. ' . $more);
+					$current_status = 'Email already in database.';
+				} elseif($r->phone == $data['phone']) {
+					$current_status = 'Phone number already in database.';
 				}
-				break;
+				
+				// If a user with pre existing email id or phone number tries to register again, we check what kind of user they are - and if they are well_wisher, alumni or let_go, we make them an applicant once again.
+				$more = 'You are already registered';
+				if($r->user_type == 'well_wisher' or $r->user_type == 'alumni' or $r->user_type == 'let_go') {
+					$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant'));
+					$more = 'You have been added back to the applicant list. Thank you.';
+				}
+				if($r->status == '0') {
+					$this->db->where('id', $r->id)->update('User', array('status'=>'1'));
+					$more = 'You have been added back to the applicant list. Thank you.';
+				}
+					
+				return array(false, $current_status .' ' . $more);
 			}
 			
 			return array(false, "");

@@ -42,6 +42,7 @@ class Common extends Controller {
 			$rules['name']	= "required";
 			$rules['email']	= "required|valid_email";
 			$rules['phone'] = "trim|required|min_length[8]|max_length[12]";
+			$rules['city_id']="required";
 			$this->validation->set_rules($rules);
 			$fields['name'] 	= "Name";
 			$fields['email']	= "Email";

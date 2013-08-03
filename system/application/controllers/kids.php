@@ -292,7 +292,7 @@ class Kids extends Controller  {
 	/// User has made the choice - add the data into the database
 	function import_action() {
 		if($this->input->post('uploaded_file')) {
-			if(!preg_match('/^\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
+			if(!preg_match('/\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
 			
 			$handle = fopen($this->input->post('uploaded_file'),'r');
 			if(!$handle) die('Cannot open uploaded file.');

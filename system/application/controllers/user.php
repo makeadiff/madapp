@@ -455,7 +455,7 @@ class User extends Controller  {
 		ini_set("auto_detect_line_endings", "1");
 
 		if($this->input->post('uploaded_file')) {
-			if(!preg_match('/^\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
+			if(!preg_match('/\/tmp\/[^\.]+$/', $this->input->post('uploaded_file'))) die("Hack attempt"); // someone changed the value of the uploaded_file in the form.
 			$handle = fopen($this->input->post('uploaded_file'),'r');
 			if(!$handle) die('Cannot open uploaded file.');
 		

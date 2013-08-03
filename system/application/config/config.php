@@ -11,7 +11,7 @@
 |	http://example.com/
 |
 */
-$config['base_url']	= "http://localhost/Projects/Madapp/";
+$config['base_url']	= "http://makeadiff.in/madapp/";
 //$config['base_url']="http://localhost/madapp/trunk/";
 //$config['base_url']="http://maddapp.oi";
 /*

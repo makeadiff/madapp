@@ -1,7 +1,9 @@
 <?php 
 $ci = &get_instance();
-$user_id = $ci->session->userdata('id');
-if($user_id) $ci->load->view('layout/header', array('title'=>'MADApp :: Database Error'));
+if(isset($ci->session)) {
+	$user_id = $ci->session->userdata('id');
+	if($user_id) $ci->load->view('layout/header', array('title'=>'MADApp :: Database Error'));
+}
 else $ci->load->view('layout/thickbox_header');
 ?>
 

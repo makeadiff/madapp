@@ -203,11 +203,14 @@ class Event_model extends Model{
 		if($event) {
 			$event = $event[0];
 			if($event->type == 'avm') {
-				$this->ci->load->model('users_model');
-				if($status['present'] == 0) {
-					$this->ci->users_model->update_credit($user_id, -1);
-				} else {
-					$this->ci->users_model->update_credit($user_id, 1); // He was marked absent - but was marked present after that.(everone is marked present by default).
+				$event_attendence = $this->get_missing_user_attendance_for_event_type($user_id, 'avm');
+				if(count($event_attendence)) {
+					$this->ci->load->model('users_model');
+					if($status['present'] == 0) {
+						$this->ci->users_model->update_credit($user_id, -1);
+					} else {
+						$this->ci->users_model->update_credit($user_id, 1); // He was marked absent - but was marked present after that.(everone is marked present by default).
+					}
 				}
 			}
 		}

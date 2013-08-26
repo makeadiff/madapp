@@ -243,19 +243,15 @@ class Class_model extends Model {
     	extract($data);
     	if($status == 'attended') {
     		if($substitute_id) {
-				$credit_sub_gets = $credit_for_substituting;
-				
-				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
-				$substitute_levels = $this->level_model->get_user_level($substitute_id);
-				$current_class_level = $this->level_model->get_class_level($class_id);
-				if(in_array($current_class_level, $substitute_levels)) {
-					$credit_sub_gets = $credit_for_substituting_in_same_level;
-				}
-				
     			// A substitute has attended the class. Substitute gets one/two credit, Original teacher loses one credit.
-    			$this->user_model->update_credit($substitute_id, $credit_sub_gets);
+    			$current_substitute_credit = $this->user_model->get_user($substitute_id)->credit;
+    			if($current_substitute_credit >= ($current_substitute_credit + $credit_for_substituting)) { // Make sure no one gets more than upper limit. :KNOWNISSUE: When reverting, this could be a issue.
+					$this->user_model->update_credit($substitute_id, $credit_for_substituting);
+				} else {
+					$credit_for_substituting = '0 (Upper limit hit)';
+				}
     			$this->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
-    			if($debug) print "<br />Substitute attended. Sub: $credit_sub_gets and Teacher: $credit_lost_for_getting_substitute";
+    			if($debug) print "<br />Substitute attended. Sub: $credit_for_substituting and Teacher: $credit_lost_for_getting_substitute";
 				
 				if(!$zero_hour_attendance) {
 					// Sub didn't reach in time for zero hour. Loses a credit. 
@@ -336,7 +332,7 @@ class Class_model extends Model {
 			FROM Class
 			INNER JOIN Level ON Class.level_id=Level.id
 			INNER JOIN UserClass ON UserClass.class_id=Class.id
-			WHERE Class.batch_id=$data[batch_id] AND DATE(Class.class_on)='$data[from_date]'";
+			WHERE Class.batch_id=$data[batch_id] AND DATE(Class.class_on)='$data[from_date]' ORDER BY Level.name";
 		$data = $this->db->query($query)->result();
 		return $data;
     }

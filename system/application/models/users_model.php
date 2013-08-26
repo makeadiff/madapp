@@ -452,8 +452,6 @@ class Users_model extends Model {
     }
     
     function update_credit($user_id, $change) {
-		
-    
     	if($change == 1) $change = '+1';
     	if($change == 2) $change = '+2';
 		if($change == .5) $change = '+.5';
@@ -474,6 +472,7 @@ class Users_model extends Model {
 		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
 		$credit_lost_for_missing_avm = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_avm');
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
+		$credit_max_credit_threshold = $this->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
 		
 		$classes_so_far = $this->get_usercredits($user_id);
@@ -499,9 +498,14 @@ class Users_model extends Model {
 				if(in_array($current_class_level, $substitute_levels)) {
 					$credit_sub_gets = $credit_for_substituting_in_same_level;
 				}
-				$credit = $credit + $credit_sub_gets;
 				
-				if($debug) print "Credit for subbing: $credit_sub_gets<br />\n";
+				if($credit_max_credit_threshold >= ($credit + $credit_sub_gets)) {
+					$credit = $credit + $credit_sub_gets;
+					if($debug) print "Credit for subbing: $credit_sub_gets<br />\n";
+				} else {
+					if($debug) print "Credit for subbing not got - as upper limit is hit.<br />\n";
+				}
+				
 				
 				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
@@ -516,7 +520,10 @@ class Users_model extends Model {
 		}
 		
 		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
+		$avm_count = 0;
 		foreach($event_attendence as $event) {
+			$avm_count++; // You can miss one AVM without any credit loss.
+			if($avm_count > 1);
 			$credit = $credit + $credit_lost_for_missing_avm;
 		}
 		

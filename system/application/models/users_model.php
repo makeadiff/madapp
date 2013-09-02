@@ -472,7 +472,7 @@ class Users_model extends Model {
 		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
 		$credit_lost_for_missing_avm = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_avm');
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
-		$credit_max_credit_threshold = $this->settings_model->get_setting_value('max_credit_threshold');
+		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
 		
 		$classes_so_far = $this->get_usercredits($user_id);

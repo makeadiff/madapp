@@ -535,6 +535,7 @@ class User extends Controller  {
 		$credit_lost_for_missing_class = $this->settings_model->get_setting_value('credit_lost_for_missing_class');
 		$credit_lost_for_missing_avm = $this->settings_model->get_setting_value('credit_lost_for_missing_avm');
 		$credit_lost_for_missing_zero_hour = $this->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
+		$credit_max_credit_threshold = $this->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->settings_model->get_setting_value('beginning_credit');
 		
 		$credit_log = array();
@@ -553,6 +554,7 @@ class User extends Controller  {
 				$Name_of_Substitute = $this->users_model->get_name_of_Substitute($substitute_id);
 				if(sizeof($Name_of_Substitute) >0) $Name_of_Substitute = $Name_of_Substitute->name;
 				else $Name_of_Substitute ='No Name';
+				
 				$credit = $credit + $credit_lost_for_getting_substitute;
 				$data['class_on']= $row['class_on'];
 				$data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
@@ -577,11 +579,18 @@ class User extends Controller  {
 					$sub_get_credits = $credit_for_substituting_in_same_level;
 				}
 				
-				$credit = $credit + $sub_get_credits;
 				$data['class_on'] = $row['class_on'];
 				$teacher_name = $this->users_model->get_name_of_Substitute($row['user_id']);
 				$data['Substitutedby'] = "Substituted for " . $teacher_name->name;
-				$data['lost'] = "Gained $sub_get_credits credit";
+				$data['lost'] = "Gained $sub_get_credits credit.";
+
+				// Did we hit the upper limit?
+				if($credit_max_credit_threshold >= ($credit + $sub_get_credits)) {
+					$credit = $credit + $sub_get_credits;
+				} else {
+					$data['lost'] .= " Upper credit limit hit! You Rock!";
+				}
+				
 				$data['credit'] = $credit;
 				
 				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
@@ -613,14 +622,16 @@ class User extends Controller  {
 		$event_attendence = $this->event_model->get_missing_user_attendance_for_event_type($current_user_id, 'avm');
 		foreach($event_attendence as $event) {
 			$i++;
-			$data = array(
-				'i' 	=> $i,
-				'credit'=> $credit + $credit_lost_for_missing_avm,
-				'class_on'=> $event->starts_on,
-				'Substitutedby' => 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
-				'lost'	=> "Lost $credit_lost_for_missing_avm credit"
-			);
-			$credit_log[] = $data;
+			if($i > 1) {
+				$data = array(
+					'i' 	=> $i,
+					'credit'=> $credit + $credit_lost_for_missing_avm,
+					'class_on'=> $event->starts_on,
+					'Substitutedby' => 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
+					'lost'	=> "Lost $credit_lost_for_missing_avm credit"
+				);
+				$credit_log[] = $data;
+			}
 		}
 		
 		

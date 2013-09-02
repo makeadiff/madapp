@@ -24,6 +24,8 @@ class Debug extends Controller {
 		$this->load->model('project_model');
 		$this->load->model('users_model');
 		$this->load->model('city_model');
+		$this->load->model('batch_model');
+		$this->load->model('class_model');
 	}
 
 	function delete_students_in_center() {
@@ -123,6 +125,46 @@ class Debug extends Controller {
 			$this->delete_all_class_of_batch($batch_id);
 		}
 		echo "All is done.";
+	}
+	
+	/// Bulk add classes - add class to the given batch from the said date - this will add classes until we encounter a day which has classes already - or the current date is hit.
+	// Code taken from classes::add_manually_save
+	function add_class_to_batch($batch_id, $from_date) {
+		$batch = $this->batch_model->get_batch($batch_id);
+		$dt_from_date = new DateTime($from_date);
+		
+		if($batch->day != $dt_from_date->format('w')) {
+			print "Day Miss-match. Batch $batch_id's day is {$batch->day} while $from_date is ".$dt_from_date->format('w');
+			return;
+		}
+		
+		$day_count = 0;
+		echo "Making classes...<br />";
+		while(date_diff($dt_from_date, new DateTime())->format("%r%a") > 0) { // Make sure we are in the past.
+		
+			$class_date = $dt_from_date->format("Y-m-d") . ' ' . $batch->class_time;
+			$user_class_id = array(); 
+			$teachers = $this->batch_model->get_batch_teachers($batch->id);
+			foreach($teachers as $teacher) {
+				// Make sure its not already inserted.
+				if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date)) {
+					$user_class_id[] = $this->class_model->save_class(array(
+						'batch_id'	=> $batch->id,
+						'level_id'	=> $teacher->level_id,
+						'teacher_id'=> $teacher->id,
+						'substitute_id'=>0,
+						'class_on'	=> $class_date,
+						'status'	=> 'projected'
+					));
+					echo "Classes added for $class_date : " . implode(",", $user_class_id) . "<br />";
+				} else {
+					return; // Exit if we encounter a class thats made in that time period.
+				}
+			}
+			$dt_from_date->add(new DateInterval('P7D')); // Jump to next week
+			$day_count++;
+			if($day_count > 50) exit;
+		}
 	}
 }
 

@@ -96,6 +96,34 @@ class Debug extends Controller {
 			$done_class_id[$class_id] = true;
 		}
 	}
+	
+	/**
+	 * Use this to clear off entire regions of the MADSheet - use this with care. Deletes data without any hope of retrival.
+	 */
+	function delete_all_class_of_batch($batch_id) {
+		echo "Deleting all Class in Batch <strong>$batch_id</strong>: ";
+		$classes_in_batch = colFormat($this->db->query("SELECT id FROM Class WHERE batch_id='$batch_id'")->result());
+		$this->db->query("DELETE FROM Class WHERE batch_id='$batch_id'");
+		
+		foreach($classes_in_batch as $class_id) {
+			$this->db->query("DELETE FROM UserClass WHERE class_id='$class_id'");
+			$this->db->query("DELETE FROM StudentClass WHERE class_id='$class_id'");
+			echo "$class_id, ";
+		}
+		echo " - Done.<br />";
+	}
+	
+	function delete_all_class_in_center($center_id) {
+		echo "Deleting all class in center <strong>$center_id</strong>...<br />";
+		$year = $this->session->userdata('year');
+		
+		$batches_in_center = colFormat($this->db->query("SELECT id FROM Batch WHERE center_id='$center_id' AND year='$year'")->result());
+		
+		foreach($batches_in_center as $batch_id) {
+			$this->delete_all_class_of_batch($batch_id);
+		}
+		echo "All is done.";
+	}
 }
 
 

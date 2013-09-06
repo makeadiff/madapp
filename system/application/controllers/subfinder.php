@@ -13,7 +13,7 @@ class SubFinder extends Controller {
 		$this->load->library('sms');
 		date_default_timezone_set('Asia/Calcutta');
 		
-		$this->debug = true;
+		$this->debug = false;
 	}
 	
 			

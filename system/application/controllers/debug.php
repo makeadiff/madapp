@@ -147,7 +147,7 @@ class Debug extends Controller {
 			$teachers = $this->batch_model->get_batch_teachers($batch->id);
 			foreach($teachers as $teacher) {
 				// Make sure its not already inserted.
-				if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date)) {
+				if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date, $batch->id)) {
 					$user_class_id[] = $this->class_model->save_class(array(
 						'batch_id'	=> $batch->id,
 						'level_id'	=> $teacher->level_id,
@@ -166,6 +166,7 @@ class Debug extends Controller {
 			if($day_count > 50) exit;
 		}
 	}
+	
 }
 
 

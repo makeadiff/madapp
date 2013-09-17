@@ -19,7 +19,7 @@ class SubFinder extends Controller {
 			
 	function test(){
 		
-		
+		$this->sms->send("9663922988","AKHIL,\n\nSafal requires a substitute at YMCA on Thur 5:30 PM(24-09).\n\nTo sub text 'SFOR er9v' to 9220092200.\n\nYour current credit is 3.");
 	
 		
 	}
@@ -117,7 +117,7 @@ class SubFinder extends Controller {
 		$time_now = $time_now->format('Y-m-d H:i:s');
 		
 		$time = $day_time->format('g:i A');
-		$date = $day_time->format('d-m-Y');
+		$date = $day_time->format('d-m');
 		
 		//Check if the volunteer has already made a request for the same day
 		$query = $this->db->from('request')->where('req_vol_id',$req_vol->id)->where('date_time',$date_time)->get();
@@ -252,15 +252,15 @@ class SubFinder extends Controller {
 			}
 			else if($vol_messaged < 5){
 				
-				$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
-				//$this->sms->send($selectedvol->phone,"$selectedvol_name,\0x0A$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.\0x0A\0x0AYour current credit is $selectedvol->credit");
+				//$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
+				$this->sms->send($selectedvol->phone,"$selectedvol_name,\n\n$name requires a substitute at $Center on $dow $time($date).\n\nTo sub text 'SFOR $req_id' to 9220092200.\n\nYour current credit is $selectedvol->credit.");
 			}
 			else{
 			
 				$data = array(
 				   'req_id' => $req_id ,
 				   'phone' => $selectedvol->phone ,
-				   'msg' => "$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.",
+				   'msg' => "$selectedvol_name,\n\n$name requires a substitute at $Center on $dow $time($date).\n\nTo sub text 'SFOR $req_id' to 9220092200.\n\nYour current credit is $selectedvol->credit.",
 				   'msg_time' => $tmsg->format('Y-m-d H:i:s')
 				);
 				

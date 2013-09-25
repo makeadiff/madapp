@@ -685,23 +685,23 @@ class SubFinder extends Controller {
 				
 					for($d = 30; $d>=0; $d--){
 					
-					$c = new DateTime("now -$d days");
-					$r = new DateTime("$req_on");
+						$c = new DateTime("now -$d days");
+						$r = new DateTime("$req_on");
 					
 						if($r->format('Y-m-d') == $c->format('Y-m-d')){
 							
 							${$city_row->name.$name_request.$d}++;
+						}
+						
+						for($i = 1; $i <=20; $i++){
 							
-							for($i = 1; $i <=20; $i++){
+							$c = new DateTime("now -$d days");
+							$r = new DateTime("$int_on");
 							
-								$c = new DateTime("now -$d days");
-								$r = new DateTime("$int_on");
-								
-								if($r->format('Y-m-d') == $c->format('Y-m-d')){
-								
-									if($req_row->{$name.$i} != -1)
-										${$city_row->name.$name_reply.$d}++;
-								}
+							if($r->format('Y-m-d') == $c->format('Y-m-d')){
+							
+								if($req_row->{$name.$i} != -1)
+									${$city_row->name.$name_reply.$d}++;
 							}
 						}
 						$data[$city_row->name.$name_request.$d] = ${$city_row->name.$name_request.$d};

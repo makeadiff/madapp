@@ -452,6 +452,8 @@ class Users_model extends Model {
     }
     
     function update_credit($user_id, $change) {
+		//if($change == 0) return;
+		
     	if($change == 1) $change = '+1';
     	if($change == 2) $change = '+2';
 		if($change == .5) $change = '+.5';

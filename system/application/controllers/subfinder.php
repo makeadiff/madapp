@@ -66,6 +66,17 @@ class SubFinder extends Controller {
 		->join('Center','Batch.center_id = Center.id')->join('UserGroup','User.id = UserGroup.user_id')
 		->join('City','User.city_id = City.id')->where('phone', $phonevol)->where('Batch.year',$madyear)->get();
 		
+		if($query->num_rows() == 0){
+			
+			$phonevol_withzero = substr_replace($phonevol, '0', 0, 0); //In case madapp contains the phone number starting with zero
+			
+			$query = $this->db->select('User.*',FALSE)->select('Batch.day,Batch.class_time,Batch.center_id,Batch.year as batchyear',FALSE)->select('UserBatch.level_id as levelid, UserBatch.batch_id as batchid',false)
+			->select('City.name as cityname',FALSE)->select('Center.name as centername',FALSE)->select('UserGroup.group_id as groupid',FALSE)
+			->from('User')->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
+			->join('Center','Batch.center_id = Center.id')->join('UserGroup','User.id = UserGroup.user_id')
+			->join('City','User.city_id = City.id')->where('phone', $phonevol_withzero)->where('Batch.year',$madyear)->get();
+		
+		}
 		
 		
 		if($query->num_rows() == 0){
@@ -165,9 +176,16 @@ class SubFinder extends Controller {
 		$query = $this->db->get();
 		
 		list($name) = explode(" ",$req_vol->name);
-		list($Center) = explode(" ",$req_vol->centername);
+		$center_fullname = explode(" ",$req_vol->centername);
 		
+		//To display second word of center name if it exists
 		
+		if(!isset($center_fullname[1]))
+			$Center = $center_fullname[0];
+		else if(strlen($center_fullname[0])<=3)
+			$Center = $center_fullname[0] . " " . $center_fullname[1];
+		else
+			$Center = $center_fullname[0];
 		
 		//Calculate the minutes till the class for which the sub was requested
 		
@@ -307,6 +325,13 @@ class SubFinder extends Controller {
 		$query = $this->db->from('User')->where('phone', $phonevol)->get();
 		
 		if($query->num_rows() == 0){
+			
+			$phonevol_withzero = substr_replace($phonevol, '0', 0, 0); //In case madapp contains the phone number starting with zero
+			
+			$query = $this->db->from('User')->where('phone', $phonevol_withzero)->get();
+		}
+		
+		if($query->num_rows() == 0){
 			if($this->debug == true)
 				echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
 			else
@@ -435,7 +460,16 @@ class SubFinder extends Controller {
 		$query = $this->db->select('User.*',FALSE)->from('User')->select('Center.name as centername',FALSE)
 		->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
 		->join('Center','Batch.center_id = Center.id')->where('phone', $phonevol)->where('Batch.year',$madyear)->get();
+		
+		if($query->num_rows() == 0){
 			
+			$phonevol_withzero = substr_replace($phonevol, '0', 0, 0); //In case madapp contains the phone number starting with zero
+			
+			$query = $this->db->select('User.*',FALSE)->from('User')->select('Center.name as centername',FALSE)
+			->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
+			->join('Center','Batch.center_id = Center.id')->where('phone', $phonevol_withzero)->where('Batch.year',$madyear)->get();
+		}
+		
 		if($query->num_rows() == 0){
 			if($this->debug == true)
 				echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
@@ -685,23 +719,23 @@ class SubFinder extends Controller {
 				
 					for($d = 30; $d>=0; $d--){
 					
-						$c = new DateTime("now -$d days");
-						$r = new DateTime("$req_on");
+					$c = new DateTime("now -$d days");
+					$r = new DateTime("$req_on");
 					
 						if($r->format('Y-m-d') == $c->format('Y-m-d')){
 							
 							${$city_row->name.$name_request.$d}++;
-						}
-						
-						for($i = 1; $i <=20; $i++){
 							
-							$c = new DateTime("now -$d days");
-							$r = new DateTime("$int_on");
+							for($i = 1; $i <=20; $i++){
 							
-							if($r->format('Y-m-d') == $c->format('Y-m-d')){
-							
-								if($req_row->{$name.$i} != -1)
-									${$city_row->name.$name_reply.$d}++;
+								$c = new DateTime("now -$d days");
+								$r = new DateTime("$int_on");
+								
+								if($r->format('Y-m-d') == $c->format('Y-m-d')){
+								
+									if($req_row->{$name.$i} != -1)
+										${$city_row->name.$name_reply.$d}++;
+								}
 							}
 						}
 						$data[$city_row->name.$name_request.$d] = ${$city_row->name.$name_request.$d};

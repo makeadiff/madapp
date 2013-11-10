@@ -669,9 +669,15 @@ class SubFinder extends Controller {
 		
 	}
 	
+	function all_cities_usage(){
+		
+		$city_query = $this->db->from('City')->get();
+		$data['city_query'] = $city_query;
+		$this->load->view('subfinder_charts_all',$data);
 	
+	}
 	
-	function analyze($city_selected){
+	function analyze($city_selected,$all=false){
 	
 		$query = $this->db->select('City.name as cityname',FALSE)->select('request.*',FALSE)->from('request')->join('User','request.req_vol_id = User.id')
 					->join('City','User.city_id = City.id')->get();
@@ -746,15 +752,19 @@ class SubFinder extends Controller {
 			
 		}
 		
+					
+			$data['name_request'] = $name_request;
+			$data['name_reply'] = $name_reply;
+			$data['city_selected'] = $city_selected;
+			
+			//To call the smaller version of the chart if all charts are being displayed
+			
+			if($all == true)
+				$this->load->view('subfinder_charts_reducedsize',$data);
+			else
+				$this->load->view('subfinder_charts',$data);
 		
-		
-		$data['name_request'] = $name_request;
-		$data['name_reply'] = $name_reply;
-		$data['city_selected'] = $city_selected;
-		
-		
-		
-		$this->load->view('subfinder_charts',$data);
+
 		
 		/*
 		

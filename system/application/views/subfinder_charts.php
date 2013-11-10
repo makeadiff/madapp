@@ -11,11 +11,14 @@
 			  
 			  <?php
 				
-				
+				$flag = false;
 				
 				for($d = 30; $d>=0; $d--){ 
 				
 					$day = new DateTime("now -$d days");
+					
+					if(${$city_selected.$name_request.$d} != NULL || ${$city_selected.$name_reply.$d} != NULL)
+						$flag = true;
 					
 					echo "['" . $day->format('d-M') . "'," . ${$city_selected.$name_request.$d} . "," . ${$city_selected.$name_reply.$d} . "],";
 					
@@ -37,6 +40,13 @@
     </script>
   </head>
   <body>
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+	<?php 
+	if($flag == false)
+		echo '<h3 style="text-align:center">' . $city_selected. ' has not started using SubFinder<h3>';
+	else
+		echo '<h3 style="text-align:center">' . $city_selected . '<h3>';
+	?>
+	<div id="chart_div" style="width: 900px; height: 500px;"></div>
+	
   </body>
 </html>

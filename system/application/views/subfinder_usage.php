@@ -45,6 +45,7 @@
 				echo '<a id="text" href="./analyze/' . $city->cityname . '">' . $city->cityname . '</a><br>';
 					
 			}
+				echo '<a id="text" href="./all_cities_usage' . '">' . 'All' . '</a><br>'
 		?>
 		
 		

@@ -153,10 +153,14 @@ class Class_model extends Model {
     	return 0;
     }
     
-    function get_by_teacher_time($teacher_id, $time) {
-    	return $this->db->query("SELECT Class.id FROM Class 
+    function get_by_teacher_time($teacher_id, $time, $batch_id='') {
+		$batch_check = '';
+		if($batch_id) $batch_check = " AND Class.batch_id=$batch_id";
+    	$result = $this->db->query("SELECT Class.id FROM Class 
     		INNER JOIN UserClass on UserClass.class_id=Class.id 
-    		WHERE UserClass.user_id=$teacher_id AND Class.class_on='$time'")->result();
+    		WHERE UserClass.user_id=$teacher_id AND Class.class_on='$time' $batch_check")->result();
+
+    	return $result;
     }
     
     /// The the absent/present status of the kids of any perticular class.

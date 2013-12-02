@@ -43,7 +43,6 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 	$ar="";
 	$tets="";
 	foreach($center_info['days_with_classes'] as $date_index => $day) {
-		$totNumber++;
 		if(!isset($center_info['class'][$level_info->id][$date_index])) { 
 			$classdateid = 0;
 		} else {
@@ -62,6 +61,8 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		if($all_kids[$level_info->id]) {
 			$percentage = ($attendanses * 100) / $all_kids[$level_info->id];
 		}
+		
+		if($status != "cancelled" and $status != 'null' and $classdateid != 0 and $status != 'projected') $totNumber++;
 		
 		$class_type = 'good';
 		if($classdateid == 0 or $status == 'projected') $class_type = 'no-data';

@@ -13,13 +13,13 @@ class SubFinder extends Controller {
 		$this->load->library('sms');
 		date_default_timezone_set('Asia/Calcutta');
 		
-		$this->debug = true;
+		$this->debug = false;
 	}
 	
 			
 	function test(){
 		
-		
+		$this->sms->send("9663922988","AKHIL,\n\nSafal requires a substitute at YMCA on Thur 5:30 PM(24-09).\n\nTo sub text 'SFOR er9v' to 9220092200.\n\nYour current credit is 3.");
 	
 		
 	}
@@ -66,6 +66,17 @@ class SubFinder extends Controller {
 		->join('Center','Batch.center_id = Center.id')->join('UserGroup','User.id = UserGroup.user_id')
 		->join('City','User.city_id = City.id')->where('phone', $phonevol)->where('Batch.year',$madyear)->get();
 		
+		if($query->num_rows() == 0){
+			
+			$phonevol_withzero = substr_replace($phonevol, '0', 0, 0); //In case madapp contains the phone number starting with zero
+			
+			$query = $this->db->select('User.*',FALSE)->select('Batch.day,Batch.class_time,Batch.center_id,Batch.year as batchyear',FALSE)->select('UserBatch.level_id as levelid, UserBatch.batch_id as batchid',false)
+			->select('City.name as cityname',FALSE)->select('Center.name as centername',FALSE)->select('UserGroup.group_id as groupid',FALSE)
+			->from('User')->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
+			->join('Center','Batch.center_id = Center.id')->join('UserGroup','User.id = UserGroup.user_id')
+			->join('City','User.city_id = City.id')->where('phone', $phonevol_withzero)->where('Batch.year',$madyear)->get();
+		
+		}
 		
 		
 		if($query->num_rows() == 0){
@@ -117,7 +128,7 @@ class SubFinder extends Controller {
 		$time_now = $time_now->format('Y-m-d H:i:s');
 		
 		$time = $day_time->format('g:i A');
-		$date = $day_time->format('d-m-Y');
+		$date = $day_time->format('d-m');
 		
 		//Check if the volunteer has already made a request for the same day
 		$query = $this->db->from('request')->where('req_vol_id',$req_vol->id)->where('date_time',$date_time)->get();
@@ -165,9 +176,16 @@ class SubFinder extends Controller {
 		$query = $this->db->get();
 		
 		list($name) = explode(" ",$req_vol->name);
-		list($Center) = explode(" ",$req_vol->centername);
+		$center_fullname = explode(" ",$req_vol->centername);
 		
+		//To display second word of center name if it exists
 		
+		if(!isset($center_fullname[1]))
+			$Center = $center_fullname[0];
+		else if(strlen($center_fullname[0])<=3)
+			$Center = $center_fullname[0] . " " . $center_fullname[1];
+		else
+			$Center = $center_fullname[0];
 		
 		//Calculate the minutes till the class for which the sub was requested
 		
@@ -252,15 +270,15 @@ class SubFinder extends Controller {
 			}
 			else if($vol_messaged < 5){
 				
-				$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
-				//$this->sms->send($selectedvol->phone,"$selectedvol_name,\0x0A$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.\0x0A\0x0AYour current credit is $selectedvol->credit");
+				//$this->sms->send($selectedvol->phone,"$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.");
+				$this->sms->send($selectedvol->phone,"$selectedvol_name,\n\n$name requires a substitute at $Center on $dow $time($date).\n\nTo sub text 'SFOR $req_id' to 9220092200.\n\nYour current credit is $selectedvol->credit.");
 			}
 			else{
 			
 				$data = array(
 				   'req_id' => $req_id ,
 				   'phone' => $selectedvol->phone ,
-				   'msg' => "$name requires a substitute at $Center on $dow $time($date). To sub text 'SFOR $req_id' to 9220092200.",
+				   'msg' => "$selectedvol_name,\n\n$name requires a substitute at $Center on $dow $time($date).\n\nTo sub text 'SFOR $req_id' to 9220092200.\n\nYour current credit is $selectedvol->credit.",
 				   'msg_time' => $tmsg->format('Y-m-d H:i:s')
 				);
 				
@@ -305,6 +323,13 @@ class SubFinder extends Controller {
 		
 		//Get the details of the volunteer who has send the message
 		$query = $this->db->from('User')->where('phone', $phonevol)->get();
+		
+		if($query->num_rows() == 0){
+			
+			$phonevol_withzero = substr_replace($phonevol, '0', 0, 0); //In case madapp contains the phone number starting with zero
+			
+			$query = $this->db->from('User')->where('phone', $phonevol_withzero)->get();
+		}
 		
 		if($query->num_rows() == 0){
 			if($this->debug == true)
@@ -435,7 +460,16 @@ class SubFinder extends Controller {
 		$query = $this->db->select('User.*',FALSE)->from('User')->select('Center.name as centername',FALSE)
 		->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
 		->join('Center','Batch.center_id = Center.id')->where('phone', $phonevol)->where('Batch.year',$madyear)->get();
+		
+		if($query->num_rows() == 0){
 			
+			$phonevol_withzero = substr_replace($phonevol, '0', 0, 0); //In case madapp contains the phone number starting with zero
+			
+			$query = $this->db->select('User.*',FALSE)->from('User')->select('Center.name as centername',FALSE)
+			->join('UserBatch','User.id = UserBatch.user_id')->join('Batch','UserBatch.batch_id = Batch.id')
+			->join('Center','Batch.center_id = Center.id')->where('phone', $phonevol_withzero)->where('Batch.year',$madyear)->get();
+		}
+		
 		if($query->num_rows() == 0){
 			if($this->debug == true)
 				echo "Message to $phonevol: Your phone number doesn't exist on the MAD database. Please contact your Ops fellow for more details.<br>";
@@ -635,9 +669,15 @@ class SubFinder extends Controller {
 		
 	}
 	
+	function all_cities_usage(){
+		
+		$city_query = $this->db->from('City')->get();
+		$data['city_query'] = $city_query;
+		$this->load->view('subfinder_charts_all',$data);
 	
+	}
 	
-	function analyze($city_selected){
+	function analyze($city_selected,$all=false){
 	
 		$query = $this->db->select('City.name as cityname',FALSE)->select('request.*',FALSE)->from('request')->join('User','request.req_vol_id = User.id')
 					->join('City','User.city_id = City.id')->get();
@@ -712,15 +752,19 @@ class SubFinder extends Controller {
 			
 		}
 		
+					
+			$data['name_request'] = $name_request;
+			$data['name_reply'] = $name_reply;
+			$data['city_selected'] = $city_selected;
+			
+			//To call the smaller version of the chart if all charts are being displayed
+			
+			if($all == true)
+				$this->load->view('subfinder_charts_reducedsize',$data);
+			else
+				$this->load->view('subfinder_charts',$data);
 		
-		
-		$data['name_request'] = $name_request;
-		$data['name_reply'] = $name_reply;
-		$data['city_selected'] = $city_selected;
-		
-		
-		
-		$this->load->view('subfinder_charts',$data);
+
 		
 		/*
 		

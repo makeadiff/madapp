@@ -16,7 +16,7 @@ class Classes extends Controller {
 		$this->load->helper('misc');
 		
 		$this->load->library('session');
-        $this->load->library('user_auth');
+		$this->load->library('user_auth');
         
         $logged_user_id = $this->user_auth->logged_in();
 		if(!$logged_user_id) {
@@ -450,7 +450,7 @@ class Classes extends Controller {
 		$teachers = $this->batch_model->get_batch_teachers($batch->id);
 		foreach($teachers as $teacher) {
 			// Make sure its not already inserted.
-			if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date)) {
+			if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date, $batch->id)) {
 				$user_class_id[] = $this->class_model->save_class(array(
 					'batch_id'	=> $batch->id,
 					'level_id'	=> $teacher->level_id,
@@ -461,8 +461,11 @@ class Classes extends Controller {
 				));
 			}
 		}
-		
-		$this->session->set_flashdata('success', 'Added ' . count($user_class_id) . ' classes. If anything goes wrong in the MADSheet, send these numbers to Binny: ' . implode(',', $user_class_id));
+		if($user_class_id) {
+			$this->session->set_flashdata('success', 'Added ' . count($user_class_id) . ' classes. If anything goes wrong in the MADSheet, send these numbers to Binny: ' . implode(',', $user_class_id));
+		} else {
+			$this->session->set_flashdata('error', "Couldn't add the classes. Perhabs they already exist.");
+		}
 		redirect('batch/index/center/'.$this->input->post('center_id'));
 	}
 	

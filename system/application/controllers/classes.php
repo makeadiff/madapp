@@ -474,6 +474,22 @@ class Classes extends Controller {
 		$this->session->set_flashdata('success', "Created the class. Class.id: $class_id, UserClass.id: $user_class_id. Send these two numbers to Binny if anything goes wrong.");
 		redirect('classes/madsheet');
 	}
+	
+	function bulk_add_class() {
+		$this->user_auth->check_permission('debug');
+		$debug_data = array();
+		$classes = $_REQUEST['create_class'];
+		foreach($classes as $c) {
+			list($level_id, $batch_id,$class_time,$user_id) = explode("/", $c);
+			$class_on = urldecode($class_time);
+			
+			list($class_id, $user_class_id) = $this->class_model->add_class_manually($level_id, $batch_id, $class_on, $user_id);
+			$debug_data[] = "$class_id/$user_class_id";
+		}
+		
+		$this->session->set_flashdata('success', "Created the said classes. Send these two numbers to Binny if anything goes wrong.<br />". implode("<br />", $debug_data));
+		redirect('classes/madsheet');
+	}
 		
 	function other_city_teachers($flag) {
 		$data['flag'] = $flag;

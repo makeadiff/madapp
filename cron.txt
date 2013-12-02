@@ -1,1 +1,2 @@
 */3 * * * * wget http://makeadiff.in/madapp/index.php/cronmessage/main
+0	0	*	*	*	wget http://makeadiff.in/madapp/index.php/cron/schedule_classes/

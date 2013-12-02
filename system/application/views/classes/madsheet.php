@@ -14,8 +14,8 @@ $this->load->view('layout/header', array('title'=>'MAD Sheet'));
 </tr>
 </table>
 
+<form action="<?php echo site_url('classes/bulk_add_class')?>" method="post">
 <?php
-
 foreach($data as $center_id => $center_info) {
 	if(empty($center_info)) continue;
 
@@ -62,6 +62,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 					$class_on = date('Y-m-d H:i:s', strtotime($batch_info['days_with_classes'][$class_count]." ".date('Y H:i:s', $timestamp)));
 				?>
 				<div class="class-info info-box"><a href="<?php echo site_url("classes/add_class_manually/$level_id/$batch_id/".urlencode($class_on)."/$teacher[id]"); ?>">Create Class</a></div>
+				<input type="checkbox" name="create_class[]" class="create_class_checkboxes" ="<?php echo "$level_id/$batch_id/".urlencode($class_on)."/$teacher[id]" ?>" />
 				<?php 
 				}
 				else print "&nbsp;";
@@ -105,5 +106,10 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 <hr />
 <?php } // Center ?>
 
+<?php if($this->user_auth->get_permission('debug')) { ?>
+<input type="button" name="check_all" value="Check All" onclick="jQuery('.create_class_checkboxes').prop('checked', true);" />
+<input type="submit" name="action" value="Bulk Create Class" />
+</form>
+<?php } ?>
 
 <?php $this->load->view('layout/footer');

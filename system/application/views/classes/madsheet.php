@@ -62,7 +62,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 					$class_on = date('Y-m-d H:i:s', strtotime($batch_info['days_with_classes'][$class_count]." ".date('Y H:i:s', $timestamp)));
 				?>
 				<div class="class-info info-box"><a href="<?php echo site_url("classes/add_class_manually/$level_id/$batch_id/".urlencode($class_on)."/$teacher[id]"); ?>">Create Class</a></div>
-				<input type="checkbox" name="create_class[]" class="create_class_checkboxes" ="<?php echo "$level_id/$batch_id/".urlencode($class_on)."/$teacher[id]" ?>" />
+				<input type="checkbox" name="create_class[]" class="create_class_checkboxes" value="<?php echo "$level_id/$batch_id/".urlencode($class_on)."/$teacher[id]" ?>" />
 				<?php 
 				}
 				else print "&nbsp;";

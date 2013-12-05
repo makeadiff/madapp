@@ -482,6 +482,7 @@ class Classes extends Controller {
 		$this->user_auth->check_permission('debug');
 		$debug_data = array();
 		$classes = $_REQUEST['create_class'];
+
 		foreach($classes as $c) {
 			list($level_id, $batch_id,$class_time,$user_id) = explode("/", $c);
 			$class_on = urldecode($class_time);

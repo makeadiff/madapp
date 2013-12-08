@@ -11,7 +11,7 @@ function siteInit() {
 	});
 
 	$(".popup").click(function(event) {
-		var url = $(this).attr("href");
+		var url = this.href; 
 		$("#sidebar").html("<iframe src='"+url+"' width='350' height='500'></iframe>");
 		event.stopPropagation();
 		window.scrollTo(0,0);

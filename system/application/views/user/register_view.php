@@ -93,7 +93,7 @@ jQuery(document).ready(function () {
 				<option value="weekend" <?php if(isset($_POST['preferred_day']) and $_POST['preferred_day'] == 'weekend') echo 'selected="selected"'; ?>>Weekends Only</option>
 			</select>
             </div>
-            -->
+            
             
             <div class="content-row-large"><span>Which role would you like to apply to:<br /><br /><br /></span>
             <input class="checkbox" type="checkbox" id="english_teacher" name="english_teacher" value="1" <?php if(isset($_POST['english_teacher'])) echo "checked='checked'"; ?> />
@@ -108,7 +108,7 @@ jQuery(document).ready(function () {
             <input class="checkbox" type="checkbox" id="placements" name="placements" value="1" <?php if(isset($_POST['placements'])) echo "checked='checked'"; ?> />
             <label for="placements">Placements Volunteer</label><br />
             <p>To find out more about the profiles, visit <a href="http://striking.ly/madvol">http://striking.ly/madvol</a>.</p>
-            </div>
+            </div>-->
 
             <div class="content-row-large"><span>Date of Birth:</span>
             <input class="textfield" type="text" id="birthday" name="birthday" value="<?php if(isset($_POST['birthday'])) echo $_POST['birthday']; ?>" />

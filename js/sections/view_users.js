@@ -1,21 +1,24 @@
 function showFilters() {
-	$("#sms-area").hide();
-	$("#email-area").hide();
+	$(".area").hide();
 	$("#filters").show();
 	$(".col-select").hide();
 }
 
 function showEmail() {
-	$("#sms-area").hide();
+	$(".area").hide();
 	$("#email-area").show();
-	$("#filters").hide();
 	$(".col-select").show();
 }
 
 function showSms() {
+	$(".area").hide();
 	$("#sms-area").show();
-	$("#email-area").hide();
-	$("#filters").hide();
+	$(".col-select").show();
+}
+
+function showBulkEdit() {
+	$(".area").hide();
+	$("#bulk-edit-area").show();
 	$(".col-select").show();
 }
 

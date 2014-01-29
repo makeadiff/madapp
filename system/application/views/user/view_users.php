@@ -63,7 +63,7 @@ $.tablesorter.addParser({
 </div><br />
 <?php } ?>
 
-<form action="<?php echo site_url('user/view_users'); ?>" method="post" id="filters">
+<form action="<?php echo site_url('user/view_users'); ?>" method="post" id="filters" class="area">
 <table style="margin-bottom:25px;">
 <tr>
 <td style="vertical-align:top;"><div class="field clear">
@@ -129,7 +129,7 @@ $.tablesorter.addParser({
 <form action="<?php echo site_url('user/bulk_communication'); ?>" method="post" id="communications">
 <input type="hidden" name="query_string" value="<?php echo $query_string ?>" />
 <?php if($this->user_auth->get_permission('user_bulk_email')) { ?>
-<div id="email-area">
+<div id="email-area" class="area">
 <label for="email-subject">Subject</label>
 <input type="text" id="email-subject" name="email-subject" value="" /><br />
 
@@ -138,11 +138,43 @@ $.tablesorter.addParser({
 <input type="submit" name="action" value="Send Emails" />
 </div><?php } ?>
 
+
 <?php if($this->user_auth->get_permission('user_bulk_sms')) { ?>
-<div id="sms-area">
+<div id="sms-area" class="area">
 <label for="sms-content">Content</label><br />
 <textarea name="sms-content" rows="5" cols="70" style="width: 95%"></textarea><br />
 <input type="submit" name="action" value="Send SMSs" />
+</div><?php } ?>
+
+
+<?php if($this->user_auth->get_permission('user_bulk_edit')) { ?>
+<div id="bulk-edit-area" class="area form-area">
+<table><tr><td>
+<label for="user-type-bulk">User Type</label>
+<select name="user-type-bulk">
+	<option value="applicant">Applicant</option>
+	<option value="volunteer" selected="selected">Volunteer</option>
+	<option value="well_wisher">Well Wisher</option>
+	<option value="alumni">Alumni</option>
+	<option value="other">Other</option>
+	<option value="" selected="selected">Leave Unchanged</option>
+</select><br />
+
+<label for="group-bulk">Select Group</label> 
+<select id="group-bulk" name="group-bulk[]" multiple="multiple"> 
+	<?php
+	foreach($all_user_group as $id => $name) {
+		if(($id == 1 or $id == 3) and !$this->user_auth->get_permission('permissions_index')) continue; // :HARD-CODE:. To make sure that city people can't create user with very big premissions.
+	?>
+	<option value="<?php echo $id; ?>"><?php echo $name; ?></option> 
+	<?php } ?>
+</select><br />
+<a href="#" onclick="javascript:$('#group-bulk option').prop('selected', false);">Leave Group Unchanged</a><br />
+</td><td valign="top" style="padding-left:30px;">
+<?php if($this->user_auth->get_permission('user_delete')) { ?><input type="submit" name="action" value="Delete Selected Users" /><?php } ?>
+</td>
+</tr></table>
+<input type="submit" name="action" value="Update" />
 </div><?php } ?>
 <br /><br />
 
@@ -151,6 +183,7 @@ $.tablesorter.addParser({
 <?php if($this->user_auth->get_permission('user_export')) { ?><a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;<?php } ?>
 <?php if($this->user_auth->get_permission('user_bulk_email')) { ?><a class="with-icon email" href="#" onclick="showEmail();">EMail...</a> &nbsp; &nbsp;<?php } ?>
 <!-- <?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?> -->
+<?php if($this->user_auth->get_permission('user_bulk_edit')) { ?><a class="with-icon edit" href="#" onclick="showBulkEdit();">Bulk Edit Users...</a> &nbsp; &nbsp;<?php } ?>
 <br /><br />
 
 <table cellpadding="0"  cellspacing="0" class="clear data-table">

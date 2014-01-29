@@ -264,7 +264,43 @@ class User extends Controller  {
 			
 			$this->session->set_flashdata('success', "Texts sent to ".count($users)." people.");
 			redirect('user/view_users/'.$this->input->post('query_string'));
+		
+
+		} elseif($this->input->post('action') == 'Update') {
+			$this->user_auth->check_permission('user_bulk_edit');
+			$users = $this->input->post('users');
+			$group_ids = $this->input->post('group-bulk');
+			$user_type = $this->input->post('user-type-bulk');
+
+			if($group_ids) {
+				foreach ($users as $user_id) {
+					$this->users_model->adduser_to_group($user_id, $group_ids);
+				}
+			}
+
+			if($user_type) {
+				foreach ($users as $user_id) {
+					$this->users_model->db->where('id', $user_id);
+					$this->users_model->db->update('User', array('user_type' => $user_type));
+				}
+			}
+			
+			$this->session->set_flashdata('success', "Data updated for ".count($users)." people.");
+			redirect('user/view_users/'.$this->input->post('query_string'));
+
+		} elseif($this->input->post('action') == 'Delete Selected Users') {
+			$this->user_auth->check_permission('user_delete');
+
+			$users = $this->input->post('users');
+
+			foreach ($users as $user_id) {
+				$this->users_model->delete($user_id);
+			}
+
+			$this->session->set_flashdata('success', count($users)." users deleted.");
+			redirect('user/view_users/'.$this->input->post('query_string'));
 		}
+
 	}
 	
 	/// The User index is handled by this action
@@ -317,7 +353,7 @@ class User extends Controller  {
 		$data['get_user_groups'] = true;
 		$data['get_user_class'] = true;
 		$data['all_users'] = $this->users_model->search_users($data);
-		
+
 		$this->load->view('user/view_users', $data);
 	}
 	

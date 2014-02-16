@@ -203,19 +203,18 @@ class Class_model extends Model {
     	if(!$user_class_id) { // Sometimes, the UserClass.id is not provided. Then we find the unique row using UserClass.class_id and UserClass.user_id. Then cache its UserClass.id
     		$user_class_id = $this->db->where(array('class_id'=>$data['class_id'],'user_id'=>$data['user_id']))->get('UserClass')->row()->id;
     	}
-    
+		
     	// When editing the class info, make sure that the credits asigned during the last edit is removed...
     	$previous_class_data = $this->db->where(array('id'=>$user_class_id))->get('UserClass')->row_array();
     	$this->revert_user_class_credit($user_class_id, $previous_class_data);
     	
     	$this->db->update('UserClass', $data, array('id'=>$user_class_id));
-    	
     	$status = $data['status'];
     	if($status == 'confirmed' or $status == 'attended' or $status == 'absent') $status = 'happened';
     	$this->db->update('Class', array('status' => $status), array('id'=>$data['class_id']));
-    	$this->calculate_users_class_credit($user_class_id, $data);
 
-    	return $this->db->affected_rows();
+    	$this->calculate_users_class_credit($user_class_id, $data);
+		return $this->db->affected_rows();
     }
     
     /// Calculates the credit that should be given to the user for the given class.
@@ -235,7 +234,8 @@ class Class_model extends Model {
 		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
 		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
-		
+		$max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
+				
 		if($revert) { // Revert all class data - negate everything.
 			$credit_for_substituting				= -($credit_for_substituting);
 			$credit_for_substituting_in_same_level	= -($credit_for_substituting_in_same_level);
@@ -245,11 +245,13 @@ class Class_model extends Model {
 		}
     	
     	extract($data);
+    	
     	if($status == 'attended') {
     		if($substitute_id) {
     			// A substitute has attended the class. Substitute gets one/two credit, Original teacher loses one credit.
     			$current_substitute_credit = $this->user_model->get_user($substitute_id)->credit;
-    			if($current_substitute_credit >= ($current_substitute_credit + $credit_for_substituting)) { // Make sure no one gets more than upper limit. :KNOWNISSUE: When reverting, this could be a issue.
+    			
+    			if($max_credit_threshold >= ($current_substitute_credit + $credit_for_substituting)) { // Make sure no one gets more than upper limit. :KNOWNISSUE: When reverting, this could be a issue.
 					$this->user_model->update_credit($substitute_id, $credit_for_substituting);
 				} else {
 					$credit_for_substituting = '0 (Upper limit hit)';
@@ -282,6 +284,7 @@ class Class_model extends Model {
     			if($debug) print "<br />Teacher was absent. Teacher $credit_lost_for_missing_class";
     		}
     	}
+    	
     }
     
     

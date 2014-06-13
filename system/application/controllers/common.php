@@ -26,7 +26,7 @@ class Common extends Controller {
 		$this->load->model('city_model');
 	}
 	/**
-	Function to register
+	* Function to register
     * @author : rabeesh
     * @param  : []
     * @return : type : []

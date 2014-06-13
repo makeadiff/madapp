@@ -15,6 +15,7 @@ $joined_on	= $user->joined_on;
 $left_on	= $user->left_on;
 $photo		= $user->photo;
 $sex		= $user->sex;
+$reason_for_leaving = $user->reason_for_leaving;
 
 
 ?>
@@ -110,7 +111,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 </li>
 <li>
 	<label for="type">User Type : </label>
-	<select name="type">
+	<select name="type" id="user-type-selector">
 		<option value="applicant" <?php if($user_type == 'applicant') echo ' selected="selected"'; ?>>Applicant</option>
 		<option value="volunteer" <?php if($user_type == 'volunteer') echo ' selected="selected"'; ?>>Volunteer</option>
 		<option value="well_wisher" <?php if($user_type == 'well_wisher') echo ' selected="selected"'; ?>>Well Wisher</option>
@@ -118,6 +119,10 @@ if($this->user_auth->get_permission('change_city')) { ?>
 		<option value="other" <?php if($user_type == 'other') echo ' selected="selected"'; ?>>Other</option>
 		<option value="let_go" <?php if($user_type == 'let_go') echo ' selected="selected"'; ?>>Let Go</option>
 	</select>
+</li>
+<li id="exit-interview-feedback"<?php if($user_type != 'let_go') { ?> style="display:none;"<?php } ?>>
+	<label for="reason_for_leaving">Reason for Leaving: </label>
+	<textarea name="reason_for_leaving" rows="5" cols="30"><?php echo $reason_for_leaving ?></textarea>
 </li>
 </ul>
 <div class="field clear" style="width:550px;"> 
@@ -150,5 +155,6 @@ function validate()
 
 }
 </script>
+<script type="text/javascript" src="<?php echo base_url()?>js/sections/users/edit_user_view.js"></script>
 
 <?php $this->load->view('layout/thickbox_footer'); ?>

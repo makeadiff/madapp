@@ -378,7 +378,7 @@ class Users_model extends Model {
 		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
 		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
 		if(isset($data['password'])) $user_array['password'] = $data['password'];
-
+		if(!empty($data['reason_for_leaving'])) $user_array['reason_for_leaving'] = $data['reason_for_leaving'];
 		
 		if(!empty($data['type'])) {
 			$user_array['user_type'] = $data['type'];
@@ -389,7 +389,6 @@ class Users_model extends Model {
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'projected'));
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'confirmed'));
 			}
-			
 		}
 			
 		$this->db->where('id', $user_id);

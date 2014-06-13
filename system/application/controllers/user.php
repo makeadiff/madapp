@@ -188,6 +188,7 @@ class User extends Controller  {
 		$data['events'] = $this->input->post('events');
 		$data['dream_tee'] = $this->input->post('dream_tee');
 		$data['placements'] = $this->input->post('placements');
+		$data['reason_for_leaving'] = $this->input->post('reason_for_leaving');
 		
 		$flag= $this->users_model->updateuser($data);
 		$returnFlag= $this->users_model->updateuser_to_group($data);
@@ -208,7 +209,6 @@ class User extends Controller  {
                 }
              }
         }
-		
 		
 		if($flag || $returnFlag ) $this->session->set_flashdata('success', 'User Updated successfully');
 		else $this->session->set_flashdata('error', 'User Updation failed');

@@ -251,6 +251,6 @@ foreach($all_users as $id => $user) {
 
 <script type="text/javascript" src="<?php echo base_url() ?>js/libraries/tiny_mce/jquery.tinymce.js"></script>
 <script type="text/javascript">var base_url="<?php echo base_url() ?>";</script>
-<script type="text/javascript" src="<?php echo base_url()?>js/sections/view_users.js"></script>
+<script type="text/javascript" src="<?php echo base_url()?>js/sections/users/view_users.js"></script>
 <?php
 $this->load->view('layout/footer');

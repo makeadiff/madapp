@@ -15,6 +15,7 @@ $joined_on	= $user->joined_on;
 $left_on	= $user->left_on;
 $photo		= $user->photo;
 $sex		= $user->sex;
+$reason_for_leaving = $user->reason_for_leaving;
 
 
 ?>
@@ -29,7 +30,7 @@ jQuery(document).ready(function () {
 	$('input.date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
 });
 </script>
-<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
+<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:400px;" enctype="multipart/form-data" >
 <fieldset class="clear">
 <ul class="form city-form">
 <li>
@@ -110,7 +111,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 </li>
 <li>
 	<label for="type">User Type : </label>
-	<select name="type">
+	<select name="type" id="user-type-selector">
 		<option value="applicant" <?php if($user_type == 'applicant') echo ' selected="selected"'; ?>>Applicant</option>
 		<option value="volunteer" <?php if($user_type == 'volunteer') echo ' selected="selected"'; ?>>Volunteer</option>
 		<option value="well_wisher" <?php if($user_type == 'well_wisher') echo ' selected="selected"'; ?>>Well Wisher</option>
@@ -119,8 +120,12 @@ if($this->user_auth->get_permission('change_city')) { ?>
 		<option value="let_go" <?php if($user_type == 'let_go') echo ' selected="selected"'; ?>>Let Go</option>
 	</select>
 </li>
+<li id="exit-interview-feedback"<?php if($user_type != 'let_go') { ?> style="display:none;"<?php } ?>>
+	<label for="reason_for_leaving">Reason for Leaving: </label>
+	<textarea name="reason_for_leaving" rows="5" cols="30"><?php echo $reason_for_leaving ?></textarea>
+</li>
 </ul>
-<div class="field clear" style="width:550px;"> 
+<div class="field clear"> 
 		<input type="hidden" value="<?php echo $root_id; ?>" id="rootId" name="rootId" />
 		<input type="hidden" value="<?php echo $this->session->userdata('project_id'); ?>" name="project" />
 		<input  id="btnSubmit" class="button green" type="submit" value="Submit" />
@@ -150,5 +155,6 @@ function validate()
 
 }
 </script>
+<script type="text/javascript" src="<?php echo base_url()?>js/sections/users/edit_user_view.js"></script>
 
 <?php $this->load->view('layout/thickbox_footer'); ?>

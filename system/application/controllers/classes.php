@@ -494,6 +494,16 @@ class Classes extends Controller {
 		$this->session->set_flashdata('success', "Created the said classes. Send these two numbers to Binny if anything goes wrong.<br />". implode("<br />", $debug_data));
 		redirect('classes/madsheet');
 	}
+	
+	function class_attendence_mobile() {
+		$last_class = $this->class_model->get_last_class();
+				
+		$data = array(
+			'title'	=> 'Class Attendence',
+			'last_class'	=> $last_class,
+		);
+		$this->load->view('classes/mobile/class_attendence',$data);
+	}
 		
 	function other_city_teachers($flag) {
 		$data['flag'] = $flag;

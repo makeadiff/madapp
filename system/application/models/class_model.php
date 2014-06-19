@@ -321,6 +321,22 @@ class Class_model extends Model {
     				
     	return $this->db->query($query)->result();
     }
+
+    /// Return the last class of the given user
+    function get_last_class($user_id = false) {
+    	if(!$user_id) $user_id = $this->ci->session->userdata('id');
+    	
+    	$query = "SELECT Class.id, Center.name, Class.class_on, Class.level_id, Class.batch_id, Center.id, UserClass.status FROM UserClass 
+    					INNER JOIN Class ON Class.id=UserClass.class_id 
+    					INNER JOIN Level ON Class.level_id=Level.id
+    					INNER JOIN Center ON Level.center_id=Center.id
+    					WHERE UserClass.user_id=$user_id 
+    						AND Class.project_id={$this->project_id}
+    						AND Class.class_on < NOW()
+    					ORDER BY Class.class_on DESC LIMIT 0,1";
+    				
+    	return $this->db->query($query)->row();
+    }
     
     /// Returns the closest unconfirmed class. This is the class that get 'confirmed' when a user replies to a text we send.
     function get_closest_unconfirmed_class($user_id) {

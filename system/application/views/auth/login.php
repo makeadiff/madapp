@@ -25,9 +25,8 @@ if(!empty($message['success']) or !empty($message['error'])) { ?>
 <li><label for="password">Password</label><?php echo form_input($password); ?></li>
 <li><label for="remember" class="small">Remember Me</label><?php echo form_checkbox(array('name'=>'remember','id'=>'remember','value'=>'1', 'checked'=>true));?></li>
 <li><a class="small" href="<?php echo site_url('auth/forgotpassword') ?>">Forgot Password?</a><?php echo form_submit('submit', 'Login', 'class="button green"');?></li>
-<li></li>
 </ul>
-
+<input type="hidden" name='redirect_url' value="<?php if(!empty($redirect_url)) echo $redirect_url; ?>" />
 <?php echo form_close();?>
 </div>
 

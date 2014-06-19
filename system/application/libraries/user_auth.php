@@ -3,6 +3,8 @@
 Class User_auth {
 	protected $error_start_delimiter;
 	protected $error_end_delimiter;
+	protected $hash = '2o^6uU!';
+
 	private $ci;
 	function User_auth() {
 		$this->ci = &get_instance();
@@ -38,10 +40,12 @@ Class User_auth {
 			$this->ci->session->set_userdata('city_id', $status['city_id']);
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
 			$this->ci->session->set_userdata('year', '2013'); // Current year. Change every year. :HARDCODE:
+
+			$_SESSION['user_id'] = $status['id'];
 			
 			if($remember_me) {
 				setcookie('email', $status['email'], time() + 3600 * 24 * 30, '/'); // Expires in a month.
-				setcookie('password_hash', md5($password . '2o^6uU!'), time() + 3600 * 24 * 30, '/');
+				setcookie('password_hash', md5($password . $this->hash), time() + 3600 * 24 * 30, '/');
 			}
 		}
 		
@@ -58,14 +62,19 @@ Class User_auth {
 	function logged_in() {
 		if ( $this->ci->session->userdata('id') ) {
 			return $this->ci->session->userdata('id');
-		
+
+		} elseif(!empty($_SESSION['user_id'])) {
+			$user_data = $this->ci->users_model->db->query("SELECT email,password FROM User WHERE id=".$_SESSION['user_id'])->row();
+			$status = $this->login($user_data->email, $user_data->password);
+			return $status['id'];
+
 		} elseif(get_cookie('email') and get_cookie('password_hash')) {
 			//This is a User who have enabled the 'Remember me' Option - so there is a cookie in the users system
 			$email = get_cookie('email');
 			$password_hash = get_cookie('password_hash');
+
 			$user_details = $this->ci->users_model->db->query("SELECT email,password FROM User 
-				WHERE email='$email' AND MD5(CONCAT(password,'2o^6uU!'))='$password_hash'")->row();
-			
+				WHERE email='$email' AND MD5(CONCAT(password,'{$this->hash}'))='$password_hash'")->row();
 			if($user_details) {
 				$status = $this->login($user_details->email, $user_details->password);
 				return $status['id'];
@@ -98,7 +107,8 @@ Class User_auth {
 	function logout () {
 		delete_cookie('email');
 		delete_cookie('password_hash');
-		
+
+		unset($_SESSION['user_id']);
 		return $this->ci->session->unset_userdata('id');
 	}
 	

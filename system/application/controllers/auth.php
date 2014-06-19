@@ -38,7 +38,7 @@ class Auth extends Controller {
 	}
 
 	//log the user in
-	function login() {
+	function login($redirect_url = '') {
 		//validate form input
 		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required');
@@ -49,6 +49,10 @@ class Auth extends Controller {
 
 			if ($this->user_auth->login($this->input->post('email'), $this->input->post('password'), $remember)) {
 				//if the login is successful
+				if($this->input->post('redirect_url')) {
+					redirect(base64_decode($this->input->post('redirect_url')), 'refresh');
+					exit;
+				}
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', "Welcome, ".$this->session->userdata('name'));
 				redirect('dashboard/dashboard_view', 'refresh');
@@ -73,6 +77,7 @@ class Auth extends Controller {
 				'type' => 'password',
 				//'value' => $this->form_validation->set_value('password'),
 			);
+			$this->data['redirect_url'] = $redirect_url;
 
 			$this->load->view('auth/login', $this->data);
 		}

@@ -7,6 +7,7 @@ class Report extends Controller {
 		$this-> message = array('success'=>false, 'error'=>false);
 	
 		$this->load->model('Report_model', 'report_model');
+		$this->load->model('HR_user_model', 'hr_user_model');
 		
 		$this->load->library('session');
         $this->load->library('user_auth');
@@ -27,7 +28,7 @@ class Report extends Controller {
 		
 		$signs = array('more'=>'>', 'less'=>'<=');
 		$report_data = $this->report_model->get_users_with_low_credits($credit, $signs[$sign], $city_id);
-		$this->show_report($report_data, array('name'=>'Name', 'credit'=>'Credits'), 'Users With Low Credits('.$credit.' or less)');
+		$this->show_report($report_data, array('name'=>'Name', 'credit'=>'Credits'), 'Users With Low Credits('.$credit.' or less)', 'developmental_conversation_for_low_credits_count');
 	}
 	
 	function absent() {
@@ -63,9 +64,29 @@ class Report extends Controller {
 			'Admin Credits of all Interns');
 	}
 	
-	function show_report($data, $fields, $title) {
+	function show_report($data, $fields, $title, $count_field='') {
 		$this->user_auth->check_permission('report_view');
-		$this->load->view('report/report', array('data'=>$data, 'fields'=>$fields, 'title'=>$title));
+
+		$view_data = array('data'=>$data, 'fields'=>$fields,'title'=>$title);
+		
+		if($count_field) {
+			$user_ids = array();
+			foreach ($data as $user) {
+				$user_ids[] = intval($user->user_id);
+			}
+
+			$devcon_data = $this->hr_user_model->get_people_status($user_ids, $count_field);
+			$view_data += array('devcon'=>$devcon_data, "devcon_title"=>"Develomental Conversation Count");
+		}
+
+		$this->load->view('report/report', $view_data);
 	}
 
+	function ajax_update_count($user_id, $field, $count) {
+		if(!in_array($field, array('developmental_conversation_for_low_credits_count'))) die("Invalid Field");
+
+		$this->hr_user_model->set_count($user_id, $field, $count);
+
+		print '{"success": "Called"}';
+	}
 }

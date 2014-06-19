@@ -549,6 +549,20 @@ class Users_model extends Model {
 		if($users_batch) return $users_batch->batch_id;
 		else return 0;
     }
+
+    function get_fellows($city_id=0, $vertical_id=0) {
+    	$where_city = '';
+    	if($city_id) $where_city = " AND U.city_id=$city_id";
+    	$where_vertical = '';
+    	if($vertical_id) $where_vertical = " AND G.vertical_id=$vertical_id";
+
+    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title FROM User U
+    		INNER JOIN UserGroup UG ON U.id=UG.user_id
+    		INNER JOIN `Group` G ON UG.group_id=G.id
+    		WHERE G.type='fellow' AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical")->result();
+
+    	return idNameFormat($fellows);
+    }
 	
 
 	function search_users($data) {

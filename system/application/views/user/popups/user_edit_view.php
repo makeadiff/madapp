@@ -30,7 +30,7 @@ jQuery(document).ready(function () {
 	$('input.date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?>, chosendate:new Date('2010-01-01')});
 });
 </script>
-<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:500px;" enctype="multipart/form-data" >
+<form id="formEditor" class="mainForm clear" action="<?php echo site_url('user/update_user')?>" method="post" onsubmit="return validate();" style="width:400px;" enctype="multipart/form-data" >
 <fieldset class="clear">
 <ul class="form city-form">
 <li>
@@ -125,7 +125,7 @@ if($this->user_auth->get_permission('change_city')) { ?>
 	<textarea name="reason_for_leaving" rows="5" cols="30"><?php echo $reason_for_leaving ?></textarea>
 </li>
 </ul>
-<div class="field clear" style="width:550px;"> 
+<div class="field clear"> 
 		<input type="hidden" value="<?php echo $root_id; ?>" id="rootId" name="rootId" />
 		<input type="hidden" value="<?php echo $this->session->userdata('project_id'); ?>" name="project" />
 		<input  id="btnSubmit" class="button green" type="submit" value="Submit" />

@@ -1,0 +1,141 @@
+@font-face {
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Oswald Bold'), local('Oswald-Bold'), url(../fonts/Oswald-Bold.woff) format('woff');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Roboto Light'), local('Roboto-Light'), url(../fonts/Roboto-300.woff) format('woff');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Regular'), local('Roboto-Regular'), url(../fonts/Roboto-400.woff) format('woff');
+}
+
+body {
+    /*color:white;*/
+    background-color: white;
+}
+
+@media (max-width: 500px) {
+    h1.title
+    {
+        font-family: 'Oswald',sans-serif;
+        color:#ffffff;
+        text-align: center;
+        font-size: 200%;
+    }
+}
+
+@media (min-width: 500px) {
+    h1.title
+    {
+        font-family: 'Oswald',sans-serif;
+        color:#ffffff;
+        text-align: center;
+        font-size: 320%;
+    }
+}
+
+h2.title
+{
+    font-family: 'Oswald',sans-serif;
+    color:#ffffff;
+    text-align: center;
+
+}
+
+
+
+h4.title
+{
+    font-family: 'Oswald',sans-serif;
+    color:#ffffff;
+    text-align: center;
+
+}
+
+h2.sub-title
+{
+    font-family: 'Oswald',sans-serif;
+    color:#ffffff;
+
+}
+
+.transparent
+{
+    background-color: Transparent;
+}
+
+div.transparent-container
+{
+   /* background-color : rgba(255,255,255,0.1);
+*/
+}
+
+div.board
+{
+    padding : 40px;
+    margin : 10px;
+    margin-top: 30px;
+}
+
+.btn-dash
+{
+    height: 120px;
+    width : 120px;
+    text-align: center;
+    /*font-weight: bold;*/
+    margin-top: 30px;
+    background-color: Transparent;
+    border : none;
+
+}
+
+.margin-top
+{
+    margin-top : 20px;
+}
+
+div.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.js body { display: none; }
+
+body.blue-red
+{
+    background: #3f4591; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #3f4591 0%, #a5607f 69%, #db766a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#3f4591), color-stop(69%,#a5607f), color-stop(100%,#db766a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  #3f4591 0%,#a5607f 69%,#db766a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  #3f4591 0%,#a5607f 69%,#db766a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  #3f4591 0%,#a5607f 69%,#db766a 100%); /* IE10+ */
+    background: linear-gradient(135deg,  #3f4591 0%,#a5607f 69%,#db766a 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f4591', endColorstr='#db766a',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+
+}
+
+body.green
+{
+    background: #78b745; /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #78b745 0%, #66b46d 50%, #58b28c 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#78b745), color-stop(50%,#66b46d), color-stop(100%,#58b28c)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg, #78b745 0%,#66b46d 50%,#58b28c 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg, #78b745 0%,#66b46d 50%,#58b28c 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg, #78b745 0%,#66b46d 50%,#58b28c 100%); /* IE10+ */
+    background: linear-gradient(135deg, #78b745 0%,#66b46d 50%,#58b28c 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#78b745', endColorstr='#58b28c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}

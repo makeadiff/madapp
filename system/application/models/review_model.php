@@ -45,5 +45,4 @@ class Review_model extends Model {
 		$data = $this->db->select('comment')->from('Review')->where('city_id',$city_id)->where('review_on', $year_month.'-01')->where('name', $name)->get()->row();
 		return $data->comment;
 	}
-
 }

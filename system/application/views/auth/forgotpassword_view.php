@@ -2,36 +2,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
 <head>
 <title>Forgot Password</title>
-<!--<link rel="stylesheet" type="text/css" href="<?php /*echo base_url()*/?>css/camp/master.css" />-->
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/custom.css" />
-<link href='http://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/camp/master.css" />
 </head>
-<body id="pg-login" style="background-image:url(<?php echo base_url()?>images/background.jpg)">
-<div class="container">
-<div class="row">
-<div class="form-group col-md-4 col-md-offset-4 col-sm-12">
-    <br><br>
-    <h1 class="title">Forgot Password</h1><br>
-    <?php
-    $message['success'] = $this->session->flashdata('success');
-    $message['error'] = $this->session->flashdata('error');
-    if(!empty($message['success']) or !empty($message['error'])) { ?>
-    <div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
-    <div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
-    <?php } ?>
+<body id="pg-login">
 
+<div class="login-box">
+<h1>Forgot Password</h1>
+<?php
+$message['success'] = $this->session->flashdata('success');
+$message['error'] = $this->session->flashdata('error');
+if(!empty($message['success']) or !empty($message['error'])) { ?>
+<div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
+<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
+<?php } ?>
 
-    <form class="form-signin" role="form" method="post" action="<?php echo site_url('auth/forgotpassword')?>">
+<?php echo form_open("auth/forgotpassword");?>
 
-        <?php echo form_input($email); ?>
-        <br>
-        <?php echo form_submit('submit', 'Submit', 'class="btn btn-lg btn-primary btn-block"');?>
+<ul class="form login-form">
+<li><label for="email">Email</label><?php echo form_input($email); ?></li>
+<li><?php echo form_submit('submit', 'Submit', 'class="button green"');?></li>
+</ul>
 
-    </form>
-
-</div>
-</div>
+<?php echo form_close();?>
 </div>
 
 </body>

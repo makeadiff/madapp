@@ -561,7 +561,7 @@ class Users_model extends Model {
     		INNER JOIN `Group` G ON UG.group_id=G.id
     		WHERE G.type='fellow' AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical")->result();
 
-    	return idNameFormat($fellows);
+    	return $fellows;
     }
 	
 
@@ -805,6 +805,18 @@ class Users_model extends Model {
 		$result=$this->db->get();
 		return $result->row();
 	
+	}
+
+
+	function get_subordinates($user_id) {
+		$current_user_ka_groups = implode(',', array_keys($this->get_user_groups_of_user($user_id)));
+
+		$subordinates = $this->db->query("SELECT U.* FROM User U
+			INNER JOIN UserGroup UG ON UG.user_id=U.id
+			INNER JOIN GroupHierarchy GH ON GH.group_id=UG.group_id
+			WHERE GH.reports_to_group_id IN ($current_user_ka_groups)")->result();
+
+		return $subordinates;
 	}
 	
 	/// Changes the phone number format from +91976068565 to 9746068565. Remove the 91 at the starting.

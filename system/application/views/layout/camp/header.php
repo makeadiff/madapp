@@ -10,12 +10,16 @@
 <body id="pg-<?php echo $this->uri->segment(1) . '-' . $this->uri->segment(2); ?>">
 <div id="loading">loading...</div>
 <div class="wrap">
+
     <!-- HEAD BEGINS -->
     <div class="head">
      <div class="line">	
        <div class="logo left"><a href="<?php echo site_url('dashboard/dashboard_view') ?>">MADAp&#946;</a></div>
        <div class="welcome right">
-       <?php 
+       <?php
+
+       //To ensure that when city is changed, page is not redirected to dashboard
+
 		if($this->user_auth and $this->user_auth->get_permission('change_city')) {
 			$all_cities = idNameFormat($this->db->query("SELECT id, name FROM City ORDER BY name")->result());
 			$url = site_url('dashboard/dashboard_view');

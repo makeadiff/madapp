@@ -33,7 +33,7 @@ class Auth extends Controller {
 		if (!$this->user_auth->logged_in()) {
 			redirect('auth/login');
 		} else {
-			redirect('dashboard/dashboard_view');
+			redirect('common_dashboard/dashboard_view');
 		}
 	}
 
@@ -55,7 +55,7 @@ class Auth extends Controller {
 				}
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', "Welcome, ".$this->session->userdata('name'));
-				redirect('dashboard/dashboard_view', 'refresh');
+				redirect('common_dashboard/dashboard_view', 'refresh');
 			} else {
 				//if the login was un-successful
 				//redirect them back to the login page
@@ -71,10 +71,14 @@ class Auth extends Controller {
 				'id' => 'email',
 				'type' => 'text',
 				'value' => $this->form_validation->set_value('email'),
+                'class' => 'form-control',
+                'placeholder' => 'Email',
 			);
 			$this->data['password'] = array('name' => 'password',
 				'id' => 'password',
 				'type' => 'password',
+                'class' => 'form-control',
+                'placeholder' => 'Password',
 				//'value' => $this->form_validation->set_value('password'),
 			);
 			$this->data['redirect_url'] = $redirect_url;
@@ -110,7 +114,7 @@ class Auth extends Controller {
 		$this->form_validation->set_rules('email','Email Address', 'required|valid_email');
 		
 		if ($this->form_validation->run() == FALSE) { 
-			$this->data['email'] = array('name' => 'email', 'id' => 'email');
+			$this->data['email'] = array('name' => 'email', 'id' => 'email', 'class' => 'form-control','placeholder' => 'Email',);
 			if(validation_errors()) 
 				$this->session->set_flashdata('error',validation_errors());
 				

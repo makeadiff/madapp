@@ -9,7 +9,7 @@ $status = array('Todo', 'Done');
 <h3>Overdue Milestones</h3>
 <ul id="overdue">
 <?php foreach ($overdue_milestones as $milestone) { ?>
-	<li><input class="milestone" type="checkbox" value="1" name="milestone[<?php echo $milestone->id ?>]" id="milestone-<?php echo $milestone->id ?>" />
+	<li><input class="milestone" type="checkbox" value="1" name="milestone[<?php echo $milestone->id ?>]" id="milestone-<?php echo $milestone->id ?>" disabled />
 		<label class="milestone"  id="milestone-label-<?php echo $milestone->id ?>"  for="milestone-<?php echo $milestone->id ?>"><?php echo $milestone->name ?></label>
 	</li>
 <?php } ?>
@@ -22,7 +22,7 @@ if($current_milestones) { ?>
 <?php foreach ($current_milestones as $key => $milestone) { ?>
 	<li <?php if($milestone->status == '1') echo 'class="milestone-done"'; ?>>
 		<input class="milestone" type="checkbox" value="1" name="milestone[<?php echo $milestone->id ?>]" id="milestone-<?php echo $milestone->id ?>"
-			<?php if($milestone->status == '1') echo 'disabled checked'; ?> />
+			<?php if($milestone->status == '1') echo ' checked'; ?> disabled />
 		<label class="milestone"  id="milestone-label-<?php echo $milestone->id ?>" for="milestone-<?php echo $milestone->id ?>"><?php echo $milestone->name ?></label>
 	</li>
 <?php } ?>
@@ -32,8 +32,5 @@ if($current_milestones) { ?>
 <div class="error-message">No Milestones for the current timeframe...</div>
 <?php } ?>
 
-<script type="text/javascript">
-	var site_url = "<?php echo site_url() ?>";
-</script>
-<script type="text/javascript" src="<?php echo base_url() ?>js/sections/review/my_milestones.js"></script>
+
 <?php $this->load->view('layout/footer');

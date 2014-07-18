@@ -770,6 +770,16 @@ class Users_model extends Model {
 		return $this->db->where('email', $email)->get("User")->row();
 	}
 
+	function get_user_data($user_id, $name) {
+		$result = $this->db->query("SELECT * FROM UserData WHERE name LIKE '$name' AND user_id=$user_id");
+		return $result->result_array();
+	}
+
+	function save_user_data($user_id, $data) {
+    	$this->db->delete("UserData", array('user_id'=>$user_id, 'name'=>$data['name']));
+    	$this->db->insert("UserData", $data);
+	}
+
 	function get_usercredits($current_user_id) {
 		$this->db->select('UserClass.*,Class.class_on');
 		$this->db->from('UserClass');

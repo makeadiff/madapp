@@ -45,6 +45,7 @@ class Review_parameter_model extends Model {
 	function get_all_milestones($user_id, $timeframe=0) {
 		$this->db->from('Review_Milestone')->where('user_id', $user_id);
 		if($timeframe) $this->db->where('due_timeframe',$timeframe);
+		$this->db->orderby('due_on ASC');
 
 		return $this->db->get()->result();
 	}
@@ -73,5 +74,10 @@ class Review_parameter_model extends Model {
 
 	function do_milestone($milestone_id, $status = '1') {
 		$this->edit_milestone($milestone_id, array('status' => $status, 'done_on' => date('Y-m-d H:i:s')));
+	}
+
+
+	function find_timeframe($due_on) {
+		return intval(date('m'));
 	}
 }

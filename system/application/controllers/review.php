@@ -84,10 +84,11 @@ class Review extends Controller {
 		$data = array(
 			'name'			=> $this->input->post('name'),
 			'status'		=> $this->input->post('status'),
-			'due_timeframe' => $this->input->post('due_timeframe'),
+			'due_on' 		=> $this->input->post('due_on'),
 			'user_id' 		=> $this->input->post('user_id'),
 			'created_by_user_id' => $this->user_id
 		);
+		$data['due_timeframe'] = $this->review_model->find_timeframe($data['due_on']);
 
 		if($milestone_id) {
 			$this->review_model->edit_milestone($milestone_id, $data);
@@ -114,8 +115,8 @@ class Review extends Controller {
 			array('overdue_milestones' => $overdue_milestones, 'current_milestones' => $current_milestones));
 	}
 
-	function do_milestone($milestone_id) {
-		$this->review_model->do_milestone($milestone_id);
+	function do_milestone($milestone_id, $status) {
+		$this->review_model->do_milestone($milestone_id, $status);
 		print '{"success":true, "milestone_id":'.$milestone_id.',"error":false}';
 	}
 }

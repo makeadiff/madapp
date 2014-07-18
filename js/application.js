@@ -1,3 +1,25 @@
+//Framework Specific
+function showMessage(data) {
+	if(data.success) $("#success-message").html(stripSlashes(data.success)).show();
+	if(data.error) $("#error-message").html(stripSlashes(data.error)).show();
+}
+function stripSlashes(text) {
+	if(!text) return "";
+	return text.replace(/\\([\'\"])/,"$1");
+}
+
+
+function ajaxError() {
+	alert("Error communicating with server. Please try again");
+}
+function loading() {
+	$("#loading").show();
+}
+function loaded() {
+	$("#loading").hide();
+}
+
+
 function siteInit() {
 	$ = jQuery.noConflict();
 	$("body").on("click", "a.confirm", function(event) { //If a link has a confirm class, confrm the action

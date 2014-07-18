@@ -38,12 +38,12 @@ class Dashboard extends Controller  {
 		
 		set_city_year($this);
 		
-		$this->load->view('layout/header',$data);
+		$this->load->view('layout/flatui/header',$data);
 		$upcomming_classes = $this->class_model->get_upcomming_classes();
 		$current_user = $this->users_model->get_user($this->session->userdata('id'));
 		$bank_details_all = $this->users_model->get_user_data($this->session->userdata('id'), 'bank_name');
 
-		$this->load->view('dashboard/dashboard', array('upcomming_classes'=>$upcomming_classes, 'current_user'=>$current_user, 'bank_details_all'=>$bank_details_all));
-		$this->load->view('layout/footer');
+		$this->load->view('dashboard/dashboard_copy', array('upcomming_classes'=>$upcomming_classes, 'current_user'=>$current_user, 'bank_details_all'=>$bank_details_all));
+		$this->load->view('layout/flatui/footer');
     }
 }

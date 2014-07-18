@@ -8,6 +8,7 @@
 </head>
 
 <body id="pg-<?php echo $this->uri->segment(1) . '-' . $this->uri->segment(2); ?>">
+<div id="loading">loading...</div>
 <div class="wrap">
     <!-- HEAD BEGINS -->
     <div class="head">

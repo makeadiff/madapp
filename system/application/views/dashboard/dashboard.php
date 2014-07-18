@@ -15,7 +15,14 @@
 foreach($upcomming_classes as $class) { ?>
 <div class="upcomming">You have a class at <strong><?php echo $class->name ?></strong> on <?php echo date('M d\<\s\u\p\>S\<\/\s\u\p\>(D), h:i A', strtotime($class->class_on)) ?>. 
 	<a href="<?php echo site_url('classes/edit_class/'.$class->id); ?>">Substitute</a></div>
-<?php } 
+<?php }
+} ?>
+
+<?php if($this->user_auth->get_permission('user_edit_bank_details')) {
+	if(!$bank_details_all) {
+	?>
+<div class="upcomming">Please enter your <a href="<?php echo site_url('user/edit_bank_details/'); ?>" class="popup">Bank Details</a></div>
+<?php }
 } ?>
 	
 <div id="quick" class="clear">

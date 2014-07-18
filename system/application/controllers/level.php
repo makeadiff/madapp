@@ -16,7 +16,7 @@ class Level extends Controller {
 		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);
 		$this->load->model('kids_model');
-		$this->load->model('book_lesson_model');
+		$this->load->model('subject_model');
 		$this->load->model('center_model', 'center_model');
 		$this->load->helper('url');
 	}
@@ -40,13 +40,13 @@ class Level extends Controller {
 			$this->model->create(array(
 					'name'		=>	$this->input->post('name'),
 					'center_id'	=>	$this->input->post('center_id'),
-					'project_id'=>	$this->input->post('project_id'),
-					'book_id'	=>	$this->input->post('book_id'),
-					'students'	=>	$this->input->post('students')
+					'students'	=>	$this->input->post('students'),
+					'garde'		=>  $this->input->post('grade'),
+					'subjects'	=>  $this->input->post('subjects'),
 				));
 				
 			$this->session->set_flashdata('success', 'The Level has been added');
-			//$this->index('center', $this->input->post('center_id'));
+			
 			redirect('level/index/center/' . $this->input->post('center_id'));
 		
 		} else {
@@ -55,20 +55,20 @@ class Level extends Controller {
 			
 			$center_name = $this->center_model->get_center_name($center_id);
 			$kids = idNameFormat($this->kids_model->getkids_name_incenter($center_id)->result());
-			$all_books = idNameFormat($this->book_lesson_model->get_all_books());
-			
+			$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
+
 			$this->load->view('level/form.php', array(
 				'action'	=> 'New',
 				'center_id'	=> $center_id,
 				'center_name'=>$center_name,
-				'all_books'	=> $all_books,
+				'all_subjects'	=> $all_subjects,
 				'level'	=> array(
 					'id'		=> 0,
 					'name'		=> '',
 					'center_id'	=> $center_id,
 					'kids'		=> $kids,
-					'book_id'	=> 1,
-					'selected_students'=> array()
+					'selected_students'=> array(),
+					'grade'		=> 5,
 					)
 				));
 		}
@@ -81,9 +81,9 @@ class Level extends Controller {
 			$this->model->edit($level_id, array(
 				'name'		=>	$this->input->post('name'),
 				'center_id'	=>	$this->input->post('center_id'),
-				'project_id'=>	$this->input->post('project_id'),
-				'book_id'	=>	$this->input->post('book_id'),
-				'students'	=>	$this->input->post('students')
+				'students'	=>	$this->input->post('students'),
+				'subjects'	=>	$this->input->post('subjects'),
+				'grade'		=>  $this->input->post('grade')
 			));
 
 			$this->session->set_flashdata('success', 'The Level has been edited successfully');
@@ -99,7 +99,10 @@ class Level extends Controller {
 			
 			$all_kids = idNameFormat($this->kids_model->get_kids_name($center_id)->result());
 			$level['selected_students'] = array_keys($this->model->get_kids_in_level($level_id));
-			
+
+			$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
+			$level['selected_subjects'] = array_keys($this->model->get_subjects_in_level($level_id));
+
 			$level['kids'] = array();
 			foreach($level['selected_students'] as $kid_id) {
 				$level['kids'][$kid_id] = $all_kids[$kid_id];
@@ -110,14 +113,12 @@ class Level extends Controller {
 				}
 			}
 			
-			$all_books = idNameFormat($this->book_lesson_model->get_all_books());
-
 			$this->load->view('level/form.php', array(
 				'action' 	=> 'Edit',
 				'center_id'	=> $center_id,
 				'center_name'=> $center_name,
 				'level'		=> $level,
-				'all_books'	=> $all_books 
+				'all_subjects'	=> $all_subjects,
 				));
 		}
 	}

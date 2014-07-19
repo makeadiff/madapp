@@ -830,7 +830,9 @@ class Users_model extends Model {
 		$subordinates = $this->db->query("SELECT U.* FROM User U
 			INNER JOIN UserGroup UG ON UG.user_id=U.id
 			INNER JOIN GroupHierarchy GH ON GH.group_id=UG.group_id
-			WHERE GH.reports_to_group_id IN ($current_user_ka_groups)")->result();
+			WHERE GH.reports_to_group_id IN ($current_user_ka_groups)
+			AND U.status='1' AND U.user_type='volunteer'
+			ORDER BY U.city_id DESC")->result();
 
 		return $subordinates;
 	}

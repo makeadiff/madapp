@@ -59,6 +59,7 @@ class Review extends Controller {
 	
 
 	function milestone_select_people() {
+		$this->user_auth->check_permission('milestone_list');
 		$current_user = $this->user_details->id;
 		$people = $this->user_model->get_subordinates($current_user);
 
@@ -66,20 +67,28 @@ class Review extends Controller {
 	}
 
 	function list_milestones($user_id, $timeframe=0) {
+		$this->user_auth->check_permission('milestone_list');
+
 		$milestones = $this->review_model->get_all_milestones($user_id, $timeframe);
 		$this->load->view('review/list_milestones', array('milestones' => $milestones, 'user_id'=>$user_id, 'all_timeframes' => $this->all_timeframes));
 	}
 
 	function edit_milestone($milestone_id) {
+		$this->user_auth->check_permission('milestone_create');
+
 		$milestone = $this->review_model->get_milestone($milestone_id);
 		$this->load->view('review/edit_milestone', array('milestone' => $milestone, 'all_timeframes' => $this->all_timeframes));
 	}
 
 	function new_milestone($user_id) {
+		$this->user_auth->check_permission('milestone_create');
+
 		$this->load->view('review/edit_milestone', array('user_id'=>$user_id, 'all_timeframes' => $this->all_timeframes));
 	}
 
 	function save_milestone() {
+		$this->user_auth->check_permission('milestone_create');
+
 		$milestone_id = $this->input->post('milestone_id');
 		$data = array(
 			'name'			=> $this->input->post('name'),
@@ -101,6 +110,13 @@ class Review extends Controller {
 		redirect('review/list_milestones/'.$this->input->post('user_id'));
 	}
 
+	function delete_milestone($milestone_id) {
+		$user_id = $this->review_model->delete_milestone($milestone_id);
+
+		$this->session->set_flashdata('success', 'Milestone deleted.');
+		redirect('review/list_milestones/'.$user_id);	
+	}
+
 	function list_timeframes($user_id) {
 		$timeframes = $this->review_model->get_timeframes_with_milestone($user_id);
 		$this->load->view('review/list_timeframes', array('user_id'=>$user_id, 'timeframes'=>$timeframes, 'all_timeframes' => $this->all_timeframes));
@@ -108,6 +124,8 @@ class Review extends Controller {
 
 
 	function my_milestones() {
+		$this->user_auth->check_permission('milestone_my');
+
 		$overdue_milestones = $this->review_model->get_overdue_milestones($this->user_id, $this->timeframe);
 		$current_milestones = $this->review_model->get_all_milestones($this->user_id, $this->timeframe);
 
@@ -115,8 +133,10 @@ class Review extends Controller {
 			array('overdue_milestones' => $overdue_milestones, 'current_milestones' => $current_milestones));
 	}
 
-	function do_milestone($milestone_id, $status) {
-		$this->review_model->do_milestone($milestone_id, $status);
+	function do_milestone($milestone_id, $status, $done_on) {
+		$this->user_auth->check_permission('milestone_do');
+
+		$this->review_model->do_milestone($milestone_id, $status, $done_on);
 		print '{"success":true, "milestone_id":'.$milestone_id.',"error":false}';
 	}
 }

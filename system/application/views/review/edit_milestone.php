@@ -13,6 +13,7 @@ if(!empty($milestone)) {
 	$user_id = $milestone->user_id;
 }
 ?>
+
 <script type="text/javascript" src="<?php echo base_url()?>css/datetimepicker_css.js"></script>
 <h2><?php echo $name ?> Milestone</h2>
 

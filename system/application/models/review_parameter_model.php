@@ -64,6 +64,15 @@ class Review_parameter_model extends Model {
 		return $this->db->update('Review_Milestone',$data, array('id'=>$milestone_id));
 	}
 
+	function delete_milestone($milestone_id) {
+		$user_id = $this->db->select('user_id')->from("Review_Milestone")->where('id', $milestone_id)->get()->row();
+
+		$this->db->where('id',$milestone_id)->delete('Review_Milestone');
+
+		return $user_id->user_id;
+	}
+
+
 	function create_milestone($data) {
 		return $this->db->insert('Review_Milestone',$data);
 	}
@@ -72,10 +81,12 @@ class Review_parameter_model extends Model {
 		return $this->db->query("SELECT DISTINCT due_timeframe FROM Review_Milestone WHERE user_id=$user_id ORDER BY due_timeframe")->result();
 	}
 
-	function do_milestone($milestone_id, $status = '1') {
-		$this->edit_milestone($milestone_id, array('status' => $status, 'done_on' => date('Y-m-d H:i:s')));
-	}
+	function do_milestone($milestone_id, $status = '1', $done_on = 0) {
+		if(!$done_on) $done_on = date('Y-m-d H:i:s');
+		else $done_on = date('Y-m-d H:i:s'), time($done_on));
 
+		$this->edit_milestone($milestone_id, array('status' => 0, 'done_on' => $done_on));
+	}
 
 	function find_timeframe($due_on) {
 		return intval(date('m'));

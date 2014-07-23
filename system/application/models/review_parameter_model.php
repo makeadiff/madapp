@@ -83,7 +83,7 @@ class Review_parameter_model extends Model {
 
 	function do_milestone($milestone_id, $status = '1', $done_on = 0) {
 		if(!$done_on) $done_on = date('Y-m-d H:i:s');
-		else $done_on = date('Y-m-d H:i:s'), time($done_on));
+		else $done_on = date('Y-m-d H:i:s', time($done_on));
 
 		$this->edit_milestone($milestone_id, array('status' => 0, 'done_on' => $done_on));
 	}

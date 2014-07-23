@@ -85,7 +85,7 @@ class Review_parameter_model extends Model {
 		if(!$done_on) $done_on = date('Y-m-d H:i:s');
 		else $done_on = date('Y-m-d H:i:s', time($done_on));
 
-		$this->edit_milestone($milestone_id, array('status' => 0, 'done_on' => $done_on));
+		$this->edit_milestone($milestone_id, array('status' => $status, 'done_on' => $done_on));
 	}
 
 	function find_timeframe($due_on) {

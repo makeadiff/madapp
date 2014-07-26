@@ -8,50 +8,50 @@ class Review_parameter_model extends Model {
 		$this->project_id = 1;//$this->ci->session->userdata('project_id');
 	}
 
-	function get($name, $timeframe, $user_id) {
-		return $this->db->from('Review_Parameter')->where('name',$name)->where('timeframe',$timeframe)->where('user_id', $user_id)->get()->row();
+	function get($review_parameter_id, $cycle, $user_id) {
+		return $this->db->from('Review_Data')->where('review_parameter_id',$review_parameter_id)->where('cycle',$cycle)->where('user_id', $user_id)->get()->row();
 	}
 	
-	function delete($name, $timeframe) {
-		return $this->db->where('name',$name)->where('timeframe',$timeframe)->delete('Review_Parameter');
+	function delete($name, $cycle) {
+		return $this->db->where('name',$name)->where('cycle',$cycle)->delete('Review_Data');
 	}
 	
 	function save($data) {
-		$review = $this->get($data['name'], $data['timeframe'], $data['user_id']); // Check for existance
-		if($review) $this->db->update('Review_Parameter', $data, array('id'=>$review->id));
-		else $this->db->insert('Review_Parameter', $data);
+		$review = $this->get($data['review_parameter_id'], $data['cycle'], $data['user_id']); // Check for existance
+		if($review) $this->db->update('Review_Data', $data, array('id'=>$review->id));
+		else $this->db->insert('Review_Data', $data);
 	}
 	function save_value($parameter_id, $value) {
-		$this->db->update('Review_Parameter',array('value' => $value), array('id'=> $parameter_id));
+		$this->db->update('Review_Data',array('value' => $value), array('id'=> $parameter_id));
 	}
 
-	function get_reviews($user_id, $timeframe) {
-		return $this->db->from('Review_Parameter')->where('user_id',$user_id)->where('timeframe',$timeframe)->get()->result();
+	function get_reviews($user_id, $cycle) {
+		return $this->db->from('Review_Data')->where('user_id',$user_id)->where('cycle',$cycle)->get()->result();
 	}
 	
 	function set_comment($parameter_id) {
 		$comment = $this->input->post('comment');
-		$this->db->update('Review_Parameter',array('comment' => $comment), array('id'=> $parameter_id));
+		$this->db->update('Review_Data',array('comment' => $comment), array('id'=> $parameter_id));
 	}
 	
 	function get_comment($parameter_id) {
-		$data = $this->db->select('comment')->from('Review_Parameter')->where('id',$parameter_id)->get()->row();
+		$data = $this->db->select('comment')->from('Review_Data')->where('id',$parameter_id)->get()->row();
 		return $data->comment;
 	}
 
 
 	////////////////////////// Milestone stuff //////////////////
 
-	function get_all_milestones($user_id, $timeframe=0) {
+	function get_all_milestones($user_id, $cycle=0) {
 		$this->db->from('Review_Milestone')->where('user_id', $user_id);
-		if($timeframe) $this->db->where('due_timeframe',$timeframe);
+		if($cycle) $this->db->where('due_timeframe',$cycle);
 		$this->db->orderby('due_on ASC');
 
 		return $this->db->get()->result();
 	}
 
-	function get_overdue_milestones($user_id, $timeframe) {
-		$this->db->from('Review_Milestone')->where('user_id', $user_id)->where('due_timeframe < ', $timeframe)->where('status', '0');
+	function get_overdue_milestones($user_id, $cycle) {
+		$this->db->from('Review_Milestone')->where('user_id', $user_id)->where('due_timeframe < ', $cycle)->where('status', '0');
 
 		return $this->db->get()->result();
 	}

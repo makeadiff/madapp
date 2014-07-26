@@ -98,6 +98,12 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Reports</span></a></div>
 	<?php } ?>
 
+	<?php if($this->user_auth->get_permission('report_index')) { ?>
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/support/requirements.php">
+	<img src="<?php echo base_url(); ?>images/ico/hr_requirement.jpg" alt="" /> <span>Volunteer Requirements</span></a></div>
+	<?php } ?>
+	
+
 <br />
 
 	<?php if($this->user_auth->get_permission('milestone_list')) { ?>

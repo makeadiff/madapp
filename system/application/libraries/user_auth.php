@@ -39,7 +39,7 @@ Class User_auth {
 			
 			$this->ci->session->set_userdata('city_id', $status['city_id']);
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
-			$this->ci->session->set_userdata('year', '2013'); // Current year. Change every year. :HARDCODE:
+			$this->ci->session->set_userdata('year', '2014'); // Current year. Change every year. :HARDCODE:
 
 			$_SESSION['user_id'] = $status['id'];
 			

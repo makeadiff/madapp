@@ -2,6 +2,8 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends Controller  {
+	var $year = 2014; // Current Year. :HARDCODE:
+	
     function Cron() {
         parent::Controller();
         header("Content-type: text/plain");
@@ -12,7 +14,7 @@ class Cron extends Controller  {
 	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
 	function schedule_classes($debug=0) {
 		$this->load->model('Batch_model','batch_model', TRUE);
-		$this->batch_model->year = 2013; // Current Year. :HARDCODE:
+		$this->batch_model->year = $this->year;
 		$this->batch_model->project_id = 1;
 		$all_batches = $this->batch_model->get_all_batches(true);
 		
@@ -68,7 +70,7 @@ class Cron extends Controller  {
 	/// Copies all the existing credits over to the Archive table and reset credits to 3.
 	function archive_credits() {
 		$this->load->model('Users_model', 'users_model');
-		$last_year = 2012;
+		$last_year = $this->year - 1;
 		
 		$users = $this->users_model->db->query("SELECT User.id,credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id 
 				WHERE UserGroup.group_id=9 AND user_type='volunteer'")->result(); // 9 is Teacher Group
@@ -149,7 +151,7 @@ class Cron extends Controller  {
 		print "Recalculating credits of " . count($all_users) . " users.\n";
 		foreach($all_users as $user) {
 			print $user->id . ") " . $user->name;
-			$this->users_model->year = 2013; // Current year. :HARDCODE:
+			$this->users_model->year = $this->year;
 			$this->users_model->recalculate_user_credit($user->id, true, true);
 			print "\n";
 		}

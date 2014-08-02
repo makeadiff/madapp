@@ -43,6 +43,8 @@ class Users_model extends Model {
 			$memberCredentials['city_id'] = $user->city_id;
 			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
+			$all_positions = $this->get_user_groups_of_user($user->id, 'type');
+			$memberCredentials['positions'] = array_unique(array_values($all_positions));
 			
             return $memberCredentials;
         
@@ -76,7 +78,16 @@ class Users_model extends Model {
 		return $result;
 	}
 	function get_all_groups() {
-		return $this->db->from('Group')->get()->result();
+		$this->db->from('Group')->where('status','1');
+
+		// Hide the national level groups if the current user is a volunteer
+		if(	!in_array('national', $this->session->userdata('positions'))
+				and !in_array('strat', $this->session->userdata('positions'))) {
+			$this->db->where("(`type`='fellow' OR `type`='volunteer')");
+		}
+		$this->db->where('group_type','normal');
+
+		return $this->db->order_by('type','name')->get()->result();
 	}
 	
 	/**

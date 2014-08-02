@@ -36,6 +36,7 @@ Class User_auth {
 			$this->ci->session->set_userdata('name', $status['name']);
 			$this->ci->session->set_userdata('permissions', $status['permissions']);
 			$this->ci->session->set_userdata('groups', $status['groups']);
+			$this->ci->session->set_userdata('positions', $status['positions']);
 			
 			$this->ci->session->set_userdata('city_id', $status['city_id']);
 			$this->ci->session->set_userdata('project_id', $status['project_id']);

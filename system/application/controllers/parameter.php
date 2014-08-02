@@ -1,5 +1,6 @@
 <?php
 class Parameter extends Controller {
+	var $debug = true;
 	var $sql_queries = array(
 			'%total_vols_count%'	=> "SELECT COUNT(U.id) FROM User U 
 					INNER JOIN UserGroup UG ON UG.user_id=U.id 
@@ -9,7 +10,11 @@ class Parameter extends Controller {
 					INNER JOIN UserGroup UG ON UG.user_id=U.id 
 					INNER JOIN `Group` G ON UG.group_id=G.id
 					WHERE U.user_type='let_go' AND U.left_on > '%CYCLE_START_DATE%' AND U.left_on < '%CYCLE_END_DATE%'  AND U.city_id='%CITY_ID%'",
+
+
 			'%total_ed_vols_count%' => "%total_vols_count% AND G.vertical_id=3",
+			'%ed_vols_with_positive_credit_count%' => '%total_ed_vols_count% AND U.credit>=0',
+			'%ed_vols_with_negetive_credit_count%' => '%total_ed_vols_count% AND U.credit<0',
 			'%ed_vols_who_left_this_cycle_count%' => '%vols_who_left_this_cycle_count% AND G.vertical_id=3',
 
 			'%event_vols_who_left_this_cycle_count%' => '%total_vols_count% AND G.vertical_id=10',
@@ -50,16 +55,19 @@ class Parameter extends Controller {
 	function calculate_parameter($user_id, $parameter_id) {
 		$parameter = $this->db->query("SELECT * FROM Review_Parameter WHERE id=$parameter_id")->row_array();
 
+		$user_details = $this->db->query("SELECT * FROM User WHERE id=$user_id")->row_array();
+
 		$this->replace_values = array(
 				'%CYCLE_START_DATE%'=> '2014-01-01',
 				'%CYCLE_END_DATE%'	=> '2014-07-15',
-				'%CITY_ID%' 		=> 1,
+				'%CITY_ID%' 		=> $user_details['city_id'],
 			);
 
 		if($parameter['sql']) {
 			$value = $this->get_query_value($sql, $this->replace_values);
 
 		} elseif($parameter['formula']) {
+			$this->info($parameter['formula']);
 			$keys = array_keys($this->sql_queries);
 			foreach ($keys as $i => $value) {
 				$keys[$i] = '/'.str_replace('%','\%', $value) .'/';
@@ -71,6 +79,7 @@ class Parameter extends Controller {
 
 		$level = 0;
 
+		// Decide which order we use to compare the level values. From top or bottom.
 		if($parameter['start_compare'] == '1') {
 			for($i=1; $i<5; $i++) {
 				if(eval("return (( " . $value . $parameter['level_'.$i] . " ) ? true : false);")) {
@@ -92,7 +101,6 @@ class Parameter extends Controller {
 		$this->review_model->save(array(
 				'review_parameter_id'	=> $parameter['id'],
 				'value'			=> $value,
-				'flag'			=> $flags[$level],
 				'level'			=> $level,
 				'comment'		=> "Calculation:\n" . $parameter['formula'] . "\n" . $formula,
 				'input_type'	=> 'automated',
@@ -106,6 +114,7 @@ class Parameter extends Controller {
 
 	// Finds the keys that should be replaced in the formula and replace it with the query - then execute it and return the value.
 	function calculate_formula_value($match)  {
+
 		$value = $this->get_query_value($this->sql_queries[$match[0]], $this->replace_values);
 		return $value;
 	}
@@ -113,6 +122,7 @@ class Parameter extends Controller {
 	// Replace all the small elements in query like '%CITY_ID%' and return the value.
 	function get_query_value($sql, $replace_values) {
 		$sql = str_replace(array_keys($replace_values), array_values($replace_values), $sql);
+		$this->info($sql);
 		$data = $this->db->query($sql)->result_array();
 
 		// Convert data to single value.
@@ -144,5 +154,10 @@ class Parameter extends Controller {
 	}
 
 
+	function info($data) {
+		if(!$this->debug) continue;
+
+		print "<pre>".$data."</pre>";
+	}
 }
 

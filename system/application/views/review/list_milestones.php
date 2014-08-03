@@ -26,7 +26,7 @@ $status = array('Todo', 'Done');
     <input type="button" name="action" id="milestone-do-<?php echo $milestone->id ?>" class="milestone-do" value="Done" />
 </span>
 </td>
-<td><?php echo $all_timeframes[$milestone->due_timeframe] ?></td>
+<td><?php echo $all_cycles[$milestone->cycle] ?></td>
 <td><?php echo $milestone->due_on ?></td>
 <?php if($this->user_auth->get_permission('review_milestone_edit')) { ?><td><a class="with-icon edit popup" href="<?php echo site_url('review/edit_milestone/' . $milestone->id); ?>">Edit</a></td><?php } ?>
 <?php if($this->user_auth->get_permission('review_milestone_create')) { ?><td><a class="with-icon delete confirm" href="<?php echo site_url('review/delete_milestone/' . $milestone->id); ?>">Delete</a></td></tr><?php } ?>

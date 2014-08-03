@@ -72,11 +72,22 @@ function inputData(id, name, value, ele) {
 
 <div id="head" class="clear"><h1>Review Parameters for <?php echo $user->name; ?></h1></div>
 
-<table class="data-table">
-<tr><th>Parameter</th><th>Value</th><!-- <th>Data</th> --><th>Comments</th></tr>
 <?php 
-$flags = array('nothing', 'green','yellow','orange','red','black');
-foreach ($reviews as $item) { ?>
+$flags = array('nothing', 'black','red','orange','yellow','green');
+foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews) as $key => $reviews) {
+	if(!$reviews) continue;
+
+	if($key == 'pr') print "<h3>Core Parameters</h3>";
+	elseif($key == 'mr') print "<h3>Milestone</h3>";
+	?>
+	<table class="data-table">
+	<tr><th>Parameter</th><th>Value</th><!-- <th>Data</th> --><th>Comments</th></tr>
+
+	<?php
+	$level_sum = 0;
+	foreach ($reviews as $item) { 
+		$level_sum += $item->level;
+		?>
 <tr class="<?php echo $flags[$item->level]; ?>">
 	<td class="parameter-name"><?php echo format($item->name); ?></td>
 	<td class="parameter-value"><?php 
@@ -93,7 +104,15 @@ foreach ($reviews as $item) { ?>
 		<a href='#' onclick='comment(<?php echo $item->id ?>);' title='Add Comment' class='icon edit'>Comment</a>
 		<?php echo $item->comment;
 		} ?></td></tr>
+<?php }
+if($level_sum and count($reviews)) {
+$avg = intval($level_sum / count($reviews));
+?>
+<tr class="<?php echo $flags[$avg]; ?>"><td>Average Level </td><td colspan="2"><?php echo $avg ?></td></tr>
 <?php } ?>
 </table>
+
+<?php } ?>
+
 
 <?php $this->load->view('layout/footer');

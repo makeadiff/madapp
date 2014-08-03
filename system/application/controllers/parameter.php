@@ -100,6 +100,7 @@ class Parameter extends Controller {
 
 		$this->review_model->save(array(
 				'review_parameter_id'	=> $parameter['id'],
+				'type'			=> 'parameter',
 				'value'			=> $value,
 				'level'			=> $level,
 				'comment'		=> "Calculation:\n" . $parameter['formula'] . "\n" . $formula,
@@ -109,7 +110,7 @@ class Parameter extends Controller {
 				'updated_on'	=> date("Y-m-d H:i:s"),
 				'user_id'		=> $user_id
 			));
-		print "Saved $parameter[name]: $value\n";
+		print "Saved $parameter[name]: $value<br />";
 	}
 
 	// Finds the keys that should be replaced in the formula and replace it with the query - then execute it and return the value.
@@ -158,6 +159,47 @@ class Parameter extends Controller {
 		if(!$this->debug) continue;
 
 		print "<pre>".$data."</pre>";
+	}
+
+	function review_milestones($user_id) {
+		$all_milestones = $this->review_model->get_all_milestones($user_id, $this->cycle);
+
+		foreach ($all_milestones as $milestone) {
+			$level_sum += $this->calculate_review_level($milestone);
+		}
+
+
+	}
+
+	function calculate_review_level($milestone) {
+		$days_taken = -20;
+		if($milestone->status) {
+			$due_on = new DateTime($milestone->due_on);
+			$done_on = new DateTime($milestone->done_on);
+			$interval = $due_on->diff($done_on);
+			$days_taken = intval($interval->format('%R%a'));
+		}
+		$level = 5;
+		if($days_taken <= -7) $level = 1;
+		elseif($days_taken <= -2) $level = 2;
+		elseif($days_taken < 2) $level = 3;
+		elseif($days_taken >= 2 and $days_taken < 7) $level = 4;
+		elseif($days_taken >= 7) $level = 5;
+
+		$this->review_model->save(array(
+			'review_parameter_id'	=> $milestone->id,
+			'type'			=> 'milestone',
+			'value'			=> $days_taken,
+			'level'			=> $level,
+			'input_type'	=> 'automated',
+			'review_period'	=> 'cycle',
+			'cycle'			=> $this->cycle,
+			'updated_on'	=> date("Y-m-d H:i:s"),
+			'user_id'		=> $milestone->user_id
+		));
+		print "Saved '{$milestone->name}': $days_taken : $level<br />";
+
+		return $level;
 	}
 }
 

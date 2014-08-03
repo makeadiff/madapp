@@ -115,6 +115,13 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('review/my_milestones') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/review.jpg" alt="" /> <span>My Milestones</span></a></div>
 	<?php } ?>
+
+	
+	<?php if($this->user_auth->get_permission('milestone_my')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('../apps/okr/') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/checklist-icon.png" alt="" /> <span>OKR</span></a></div>
+	<?php } ?>
+
 	
 	<br />
 	

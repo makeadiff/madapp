@@ -1,7 +1,7 @@
 <?php
 class Review extends Controller {
 	private $message;
-	private $all_timeframes = array('Nothing', 'Jan', 'Feb', 'March', 'April', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
+	private $all_cycles = array('Nothing', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
 	
 	function Review() {
 		parent::Controller();
@@ -20,7 +20,7 @@ class Review extends Controller {
 			redirect('auth/login');
 		}
         $this->user_details = $this->user_auth->getUser();
-        $this->timeframe = intval(date('m')); // :TODO: Get current timeframe - this is NOT valid
+        $this->cycle = 1;
 	}
 
 	function select_people() {
@@ -31,15 +31,20 @@ class Review extends Controller {
 		$this->load->view('review/select_people', array('fellows'=>$fellows));
 	}
 
-	function review_fellow($user_id, $timeframe = 0, $review_type='monthly') {
+	function review_fellow($user_id, $cycle = 0) {
 		$this->user_auth->check_permission('review_fellows');
 		$city_id = $this->session->userdata('city_id');
+		if(!$cycle) $cycle = $this->cycle;
 		// :TODO: Check if the current user has permission to review the said fellow.
 
-		$reviews = $this->review_model->get_reviews($user_id, $this->timeframe, $review_type);
+		$parameter_reviews = $this->review_model->get_reviews($user_id, $cycle, 'parameter');
+		$milestone_reviews = $this->review_model->get_reviews($user_id, $cycle, 'milestone');
+
 		$user = $this->user_model->get_user($user_id);
-		$this->load->view('review/review_fellow', array('reviews'=>$reviews, 'user_id'=>$user_id, 'user' => $user,
-														'timeframe'=>$timeframe,'review_type'=>$review_type, 'auth'=>$this->user_auth));
+		$this->load->view('review/review_fellow', array('parameter_reviews' => $parameter_reviews, 
+														'milestone_reviews' => $milestone_reviews,
+														'user_id'=>$user_id, 'user' => $user,
+														'cycle'=>$cycle, 'auth'=>$this->user_auth));
 	}
 
 	function ajax_get_comment($parameter_id) {
@@ -66,24 +71,24 @@ class Review extends Controller {
 		$this->load->view('review/milestone_select_people', array('people'=>$people));
 	}
 
-	function list_milestones($user_id, $timeframe=0) {
+	function list_milestones($user_id, $cycle=0) {
 		$this->user_auth->check_permission('milestone_list');
 
-		$milestones = $this->review_model->get_all_milestones($user_id, $timeframe);
-		$this->load->view('review/list_milestones', array('milestones' => $milestones, 'user_id'=>$user_id, 'all_timeframes' => $this->all_timeframes));
+		$milestones = $this->review_model->get_all_milestones($user_id, $cycle);
+		$this->load->view('review/list_milestones', array('milestones' => $milestones, 'user_id'=>$user_id, 'all_cycles' => $this->all_cycles));
 	}
 
 	function edit_milestone($milestone_id) {
 		$this->user_auth->check_permission('milestone_create');
 
 		$milestone = $this->review_model->get_milestone($milestone_id);
-		$this->load->view('review/edit_milestone', array('milestone' => $milestone, 'all_timeframes' => $this->all_timeframes));
+		$this->load->view('review/edit_milestone', array('milestone' => $milestone, 'all_cycles' => $this->all_cycles));
 	}
 
 	function new_milestone($user_id) {
 		$this->user_auth->check_permission('milestone_create');
 
-		$this->load->view('review/edit_milestone', array('user_id'=>$user_id, 'all_timeframes' => $this->all_timeframes));
+		$this->load->view('review/edit_milestone', array('user_id'=>$user_id, 'all_cycles' => $this->all_cycles));
 	}
 
 	function save_milestone() {
@@ -119,15 +124,15 @@ class Review extends Controller {
 
 	function list_timeframes($user_id) {
 		$timeframes = $this->review_model->get_timeframes_with_milestone($user_id);
-		$this->load->view('review/list_timeframes', array('user_id'=>$user_id, 'timeframes'=>$timeframes, 'all_timeframes' => $this->all_timeframes));
+		$this->load->view('review/list_timeframes', array('user_id'=>$user_id, 'timeframes'=>$timeframes, 'all_cycles' => $this->all_cycles));
 	}
 
 
 	function my_milestones() {
 		$this->user_auth->check_permission('milestone_my');
 
-		$overdue_milestones = $this->review_model->get_overdue_milestones($this->user_id, $this->timeframe);
-		$current_milestones = $this->review_model->get_all_milestones($this->user_id, $this->timeframe);
+		$overdue_milestones = $this->review_model->get_overdue_milestones($this->user_id, $this->cycle);
+		$current_milestones = $this->review_model->get_all_milestones($this->user_id, $this->cycle);
 
 		$this->load->view('review/my_milestones', 
 			array('overdue_milestones' => $overdue_milestones, 'current_milestones' => $current_milestones));

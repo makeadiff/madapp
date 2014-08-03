@@ -118,7 +118,7 @@ foreach($upcomming_classes as $class) { ?>
 
 	
 	<?php if($this->user_auth->get_permission('milestone_my')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('../apps/okr/') ?>">
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/okr/">
 	<img src="<?php echo base_url(); ?>images/ico/checklist-icon.png" alt="" /> <span>OKR</span></a></div>
 	<?php } ?>
 

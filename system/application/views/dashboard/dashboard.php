@@ -98,7 +98,7 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Reports</span></a></div>
 	<?php } ?>
 
-	<?php if($this->user_auth->get_permission('report_index')) { ?>
+	<?php if($this->user_auth->get_permission('hr_requirement')) { ?>
 	<div class="quickLink"> <a href="http://makeadiff.in/apps/support/requirements.php">
 	<img src="<?php echo base_url(); ?>images/ico/hr_requirement.jpg" alt="" /> <span>Volunteer Requirements</span></a></div>
 	<?php } ?>
@@ -115,9 +115,13 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('review/my_milestones') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/review.jpg" alt="" /> <span>My Milestones</span></a></div>
 	<?php } ?>
-
 	
-	<?php if($this->user_auth->get_permission('milestone_my')) { ?>
+	<?php if($this->user_auth->get_permission('review_data_my')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('review/review_fellow/'.$current_user->id) ?>">
+	<img src="<?php echo base_url(); ?>images/ico/task-inbox.jpeg" alt="" /> <span>My Review Data</span></a></div>
+	<?php } ?>
+
+	<?php if($this->user_auth->get_permission('okr_my')) { ?>
 	<div class="quickLink"> <a href="http://makeadiff.in/apps/okr/">
 	<img src="<?php echo base_url(); ?>images/ico/checklist-icon.png" alt="" /> <span>OKR</span></a></div>
 	<?php } ?>

@@ -48,14 +48,29 @@ class Parameter extends Controller {
         $this->cycle = 1; // :TODO: Get current cycle - this is NOT valid
 	}
 
-	function calulate_review_for_user($user_id) {
+	function review_all() {
+		$all_users = $this->user_model->get_users_in_city(26); // Leadership City is 26
+
+		//$this->review_parameter_user($user_id)
+		foreach ($all_users as $user) {
+			"<h3>Review for {$user->name}</h3>\n";
+			$this->review_milestones_user($user->id);
+		}
 
 	}
 
-	function calculate_parameter($user_id, $parameter_id) {
-		$parameter = $this->db->query("SELECT * FROM Review_Parameter WHERE id=$parameter_id")->row_array();
 
+	///////////////////////////////////////////// Core Metric/Parameters Canculation //////////////////////////////
+	function review_parameter_user($user_id, $parameter_id) {
 		$user_details = $this->db->query("SELECT * FROM User WHERE id=$user_id")->row_array();
+		$all_parameters = $this->db->query("SELECT * FROM Review_Parameter WHERE id=$parameter_id")->row_array();
+		foreach ($all_parameters as $parameter) {
+			$this->calculate_parameter($parameter, $user_details);
+		}
+	}
+
+	function calculate_parameter($parameter, $user_details) {
+		$user_id = $user_details['id'];
 
 		$this->replace_values = array(
 				'%CYCLE_START_DATE%'=> '2014-01-01',
@@ -155,17 +170,13 @@ class Parameter extends Controller {
 	}
 
 
-	function info($data) {
-		if(!$this->debug) continue;
+	/////////////////////////////////////// Milestone Calculations ///////////////////////////////
 
-		print "<pre>".$data."</pre>";
-	}
-
-	function review_milestones($user_id) {
+	function review_milestones_user($user_id) {
 		$all_milestones = $this->review_model->get_all_milestones($user_id, $this->cycle);
 
 		foreach ($all_milestones as $milestone) {
-			$level_sum += $this->calculate_review_level($milestone);
+			$this->calculate_review_level($milestone);
 		}
 
 
@@ -201,5 +212,15 @@ class Parameter extends Controller {
 
 		return $level;
 	}
+
+
+	/////////////////////////////////////// Debug Stuff ////////////////////////////
+	function info($data) {
+		if(!$this->debug) continue;
+
+		print "<pre>".$data."</pre>";
+	}
+
+
 }
 

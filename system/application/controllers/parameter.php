@@ -54,9 +54,11 @@ class Parameter extends Controller {
 		//$this->review_parameter_user($user_id)
 		foreach ($all_users as $user) {
 			"<h3>Review for {$user->name}</h3>\n";
-			$this->review_milestones_user($user->id);
+			$this->review_user($user->id);
 		}
-
+	}
+	function review_user($user_id) {
+		$this->review_milestones_user($user_id);
 	}
 
 

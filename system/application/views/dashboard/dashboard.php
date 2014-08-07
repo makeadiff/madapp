@@ -102,7 +102,6 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="http://makeadiff.in/apps/support/requirements.php">
 	<img src="<?php echo base_url(); ?>images/ico/hr_requirement.jpg" alt="" /> <span>Volunteer Requirements</span></a></div>
 	<?php } ?>
-	
 
 <br />
 

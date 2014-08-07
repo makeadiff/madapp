@@ -101,7 +101,7 @@ class Review_parameter_model extends Model {
 		$this->edit_milestone($milestone_id, array('status' => $status, 'done_on' => $done_on));
 	}
 
-	function find_timeframe($due_on) {
-		return intval(date('m'));
+	function find_cycle($due_on) {
+		return 1; // :TODO:
 	}
 }

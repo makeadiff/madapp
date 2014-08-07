@@ -102,7 +102,7 @@ class Review extends Controller {
 			'user_id' 		=> $this->input->post('user_id'),
 			'created_by_user_id' => $this->user_id
 		);
-		$data['due_timeframe'] = $this->review_model->find_timeframe($data['due_on']);
+		$data['cycle'] = $this->review_model->find_cycle($data['due_on']);
 
 		if($milestone_id) {
 			$this->review_model->edit_milestone($milestone_id, $data);

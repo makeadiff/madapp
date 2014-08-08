@@ -103,6 +103,11 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/hr_requirement.jpg" alt="" /> <span>Volunteer Requirements</span></a></div>
 	<?php } ?>
 
+
+    <div class="quickLink"> <a target="_blank" href="http://makeadiff.in/apps/profile/fb.php?user_id=<?php echo $current_user->id;?>">
+            <img src="<?php echo base_url(); ?>images/ico/mad_cred.png" alt="" /> <span>MAD Cred</span></a></div>
+
+
 <br />
 
 	<?php if($this->user_auth->get_permission('milestone_list')) { ?>

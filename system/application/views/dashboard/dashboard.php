@@ -15,7 +15,14 @@
 foreach($upcomming_classes as $class) { ?>
 <div class="upcomming">You have a class at <strong><?php echo $class->name ?></strong> on <?php echo date('M d\<\s\u\p\>S\<\/\s\u\p\>(D), h:i A', strtotime($class->class_on)) ?>. 
 	<a href="<?php echo site_url('classes/edit_class/'.$class->id); ?>">Substitute</a></div>
-<?php } 
+<?php }
+} ?>
+
+<?php if($this->user_auth->get_permission('user_edit_bank_details')) {
+	if(!$bank_details_all) {
+	?>
+<div class="upcomming">Please enter your <a href="<?php echo site_url('user/edit_bank_details/'); ?>" class="popup">Bank Details</a></div>
+<?php }
 } ?>
 	
 <div id="quick" class="clear">
@@ -90,6 +97,34 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('report/') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Reports</span></a></div>
 	<?php } ?>
+
+	<?php if($this->user_auth->get_permission('hr_requirement')) { ?>
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/support/requirements.php">
+	<img src="<?php echo base_url(); ?>images/ico/hr_requirement.jpg" alt="" /> <span>Volunteer Requirements</span></a></div>
+	<?php } ?>
+
+<br />
+
+	<?php if($this->user_auth->get_permission('milestone_list')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('review/milestone_select_people/') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/milestones.png" alt="" /> <span>Assign Milestones</span></a></div>
+	<?php } ?>
+
+	<?php if($this->user_auth->get_permission('milestone_my')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('review/my_milestones') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/review.jpg" alt="" /> <span>My Milestones</span></a></div>
+	<?php } ?>
+	
+	<?php if($this->user_auth->get_permission('review_data_my')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('review/review_fellow/'.$current_user->id) ?>">
+	<img src="<?php echo base_url(); ?>images/ico/task-inbox.jpeg" alt="" /> <span>My Review Data</span></a></div>
+	<?php } ?>
+
+	<?php if($this->user_auth->get_permission('okr_my')) { ?>
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/okr/">
+	<img src="<?php echo base_url(); ?>images/ico/checklist-icon.png" alt="" /> <span>OKR</span></a></div>
+	<?php } ?>
+
 	
 	<br />
 	
@@ -133,19 +168,7 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('admincredit/index') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/credit.png" alt="" /> <span>Admin Credits</span></a></div>
 	<?php } ?><br />
-	
-	<?php if($this->user_auth->get_permission('comps_view')) { ?>
-	<div class="quickLink"> <a href="http://makeadiff.in/apps/comps/points.php?competition_id=11&amp;city_id=<?php echo $this->session->userdata('city_id'); ?>">
-	<img src="<?php echo base_url(); ?>images/ico/comps.png" alt="" /> <span>WeDoist Comps</span></a></div>
-	
-	<div class="quickLink"> <a href="http://makeadiff.in/apps/comps/?competition_id=11">
-	<img src="<?php echo base_url(); ?>images/ico/add_points.png" alt="" /> <span>WeDoist Comps Points</span></a></div>
-	<?php } ?>
-	
-	<?php if($this->user_auth->get_permission('placement_index')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('placement/placement_view') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/add_points.png" alt="" /> <span>Placement</span></a></div>
-	<?php } ?>
+
 	<br /><br /><br />
 </div>
 </div>

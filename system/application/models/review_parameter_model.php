@@ -8,49 +8,63 @@ class Review_parameter_model extends Model {
 		$this->project_id = 1;//$this->ci->session->userdata('project_id');
 	}
 
-	function get($name, $timeframe, $user_id) {
-		return $this->db->from('Review_Parameter')->where('name',$name)->where('timeframe',$timeframe)->where('user_id', $user_id)->get()->row();
+	function get($review_parameter_id, $type, $cycle, $user_id) {
+		$this->db->from('Review_Data');
+		$this->db->where('review_parameter_id',$review_parameter_id)->where('type',$type);
+		$this->db->where('cycle',$cycle)->where('user_id', $user_id);
+
+		return $this->db->get()->row();
 	}
 	
-	function delete($name, $timeframe) {
-		return $this->db->where('name',$name)->where('timeframe',$timeframe)->delete('Review_Parameter');
+	function delete($name, $cycle) {
+		return $this->db->where('name',$name)->where('cycle',$cycle)->delete('Review_Data');
 	}
 	
 	function save($data) {
-		$review = $this->get($data['name'], $data['timeframe'], $data['user_id']); // Check for existance
-		if($review) $this->db->update('Review_Parameter', $data, array('id'=>$review->id));
-		else $this->db->insert('Review_Parameter', $data);
+		if(!isset($data['type'])) $data['type'] = 'parameter';
+		
+		$review = $this->get($data['review_parameter_id'], $data['type'], $data['cycle'], $data['user_id']); // Check for existance
+		if($review) $this->db->update('Review_Data', $data, array('id'=>$review->id));
+		else $this->db->insert('Review_Data', $data);
 	}
 	function save_value($parameter_id, $value) {
-		$this->db->update('Review_Parameter',array('value' => $value), array('id'=> $parameter_id));
+		$this->db->update('Review_Data',array('value' => $value), array('id'=> $parameter_id));
 	}
 
-	function get_reviews($user_id, $timeframe) {
-		return $this->db->from('Review_Parameter')->where('user_id',$user_id)->where('timeframe',$timeframe)->get()->result();
+	function get_reviews($user_id, $cycle, $type) {
+		if($type == 'milestone') {
+			return $this->db->query("SELECT M.name,D.* FROM Review_Data D INNER JOIN Review_Milestone M ON D.review_parameter_id=M.id
+				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
+
+		} elseif($type == 'parameter') {
+			return $this->db->query("SELECT P.name,D.* FROM Review_Data D INNER JOIN Review_Parameter P ON D.review_parameter_id=P.id
+				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
+		}
 	}
 	
 	function set_comment($parameter_id) {
 		$comment = $this->input->post('comment');
-		$this->db->update('Review_Parameter',array('comment' => $comment), array('id'=> $parameter_id));
+		$this->db->update('Review_Data',array('comment' => $comment), array('id'=> $parameter_id));
 	}
 	
 	function get_comment($parameter_id) {
-		$data = $this->db->select('comment')->from('Review_Parameter')->where('id',$parameter_id)->get()->row();
+		$data = $this->db->select('comment')->from('Review_Data')->where('id',$parameter_id)->get()->row();
 		return $data->comment;
 	}
 
 
 	////////////////////////// Milestone stuff //////////////////
 
-	function get_all_milestones($user_id, $timeframe=0) {
+	function get_all_milestones($user_id, $cycle=0) {
 		$this->db->from('Review_Milestone')->where('user_id', $user_id);
-		if($timeframe) $this->db->where('due_timeframe',$timeframe);
+		if($cycle) $this->db->where('cycle',$cycle);
+		$this->db->orderby('due_on ASC');
 
 		return $this->db->get()->result();
 	}
 
-	function get_overdue_milestones($user_id, $timeframe) {
-		$this->db->from('Review_Milestone')->where('user_id', $user_id)->where('due_timeframe < ', $timeframe)->where('status', '0');
+	function get_overdue_milestones($user_id, $cycle) {
+		$this->db->from('Review_Milestone')->where('user_id', $user_id)->where('cycle < ', $cycle)->where('status', '0');
 
 		return $this->db->get()->result();
 	}
@@ -63,15 +77,31 @@ class Review_parameter_model extends Model {
 		return $this->db->update('Review_Milestone',$data, array('id'=>$milestone_id));
 	}
 
+	function delete_milestone($milestone_id) {
+		$user_id = $this->db->select('user_id')->from("Review_Milestone")->where('id', $milestone_id)->get()->row();
+
+		$this->db->where('id',$milestone_id)->delete('Review_Milestone');
+
+		return $user_id->user_id;
+	}
+
+
 	function create_milestone($data) {
 		return $this->db->insert('Review_Milestone',$data);
 	}
 
 	function get_timeframes_with_milestone($user_id) {
-		return $this->db->query("SELECT DISTINCT due_timeframe FROM Review_Milestone WHERE user_id=$user_id ORDER BY due_timeframe")->result();
+		return $this->db->query("SELECT DISTINCT cycle FROM Review_Milestone WHERE user_id=$user_id ORDER BY cycle")->result();
 	}
 
-	function do_milestone($milestone_id, $status = '1') {
-		$this->edit_milestone($milestone_id, array('status' => $status, 'done_on' => date('Y-m-d H:i:s')));
+	function do_milestone($milestone_id, $status = '1', $done_on = 0) {
+		if(!$done_on) $done_on = date('Y-m-d H:i:s');
+		else $done_on = date('Y-m-d H:i:s', strtotime($done_on));
+
+		$this->edit_milestone($milestone_id, array('status' => $status, 'done_on' => $done_on));
+	}
+
+	function find_cycle($due_on) {
+		return 1; // :TODO:
 	}
 }

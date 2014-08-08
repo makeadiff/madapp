@@ -43,6 +43,8 @@ class Users_model extends Model {
 			$memberCredentials['city_id'] = $user->city_id;
 			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
+			$all_positions = $this->get_user_groups_of_user($user->id, 'type');
+			$memberCredentials['positions'] = array_unique(array_values($all_positions));
 			
             return $memberCredentials;
         
@@ -76,7 +78,16 @@ class Users_model extends Model {
 		return $result;
 	}
 	function get_all_groups() {
-		return $this->db->from('Group')->get()->result();
+		$this->db->from('Group')->where('status','1');
+
+		// Hide the national level groups if the current user is a volunteer
+		if(	!in_array('national', $this->session->userdata('positions'))
+				and !in_array('strat', $this->session->userdata('positions'))) {
+			$this->db->where("(`type`='fellow' OR `type`='volunteer')");
+		}
+		$this->db->where('group_type','normal');
+
+		return $this->db->order_by('type','name')->get()->result();
 	}
 	
 	/**
@@ -439,7 +450,7 @@ class Users_model extends Model {
 		
 	function get_users_in_city($city_id=false) {
 		if($city_id === false) $city_id = $this->city_id;
-		return $this->db->where('city_id', $city_id)->where('project_id',$this->project_id)->where('user_type','volunteer')->where('status','1')->orderby('name')->get('User')->result();
+		return $this->db->where('city_id', $city_id)->where('user_type','volunteer')->where('status','1')->orderby('name')->get('User')->result();
 	}
 	
 	function set_user_batch_and_level($user_id, $batch_id, $level_id) {
@@ -559,7 +570,23 @@ class Users_model extends Model {
     	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title FROM User U
     		INNER JOIN UserGroup UG ON U.id=UG.user_id
     		INNER JOIN `Group` G ON UG.group_id=G.id
-    		WHERE G.type='fellow' AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical")->result();
+    		WHERE G.type='fellow' AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical
+    		GROUP BY U.id")->result();
+
+    	return $fellows;
+    }
+
+    function get_fellows_or_above($city_id=0, $vertical_id=0) {
+    	$where_city = '';
+    	if($city_id) $where_city = " AND U.city_id=$city_id";
+    	$where_vertical = '';
+    	if($vertical_id) $where_vertical = " AND G.vertical_id=$vertical_id";
+
+    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title FROM User U
+    		INNER JOIN UserGroup UG ON U.id=UG.user_id
+    		INNER JOIN `Group` G ON UG.group_id=G.id
+    		WHERE (G.type='fellow' OR G.type='strat' OR G.type='national') AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical
+    		GROUP BY U.id")->result();
 
     	return $fellows;
     }
@@ -770,6 +797,16 @@ class Users_model extends Model {
 		return $this->db->where('email', $email)->get("User")->row();
 	}
 
+	function get_user_data($user_id, $name) {
+		$result = $this->db->query("SELECT * FROM UserData WHERE name LIKE '$name' AND user_id=$user_id");
+		return $result->result_array();
+	}
+
+	function save_user_data($user_id, $data) {
+    	$this->db->delete("UserData", array('user_id'=>$user_id, 'name'=>$data['name']));
+    	$this->db->insert("UserData", $data);
+	}
+
 	function get_usercredits($current_user_id) {
 		$this->db->select('UserClass.*,Class.class_on');
 		$this->db->from('UserClass');
@@ -804,7 +841,9 @@ class Users_model extends Model {
 		$subordinates = $this->db->query("SELECT U.* FROM User U
 			INNER JOIN UserGroup UG ON UG.user_id=U.id
 			INNER JOIN GroupHierarchy GH ON GH.group_id=UG.group_id
-			WHERE GH.reports_to_group_id IN ($current_user_ka_groups)")->result();
+			WHERE GH.reports_to_group_id IN ($current_user_ka_groups)
+			AND U.status='1' AND U.user_type='volunteer'
+			ORDER BY U.city_id DESC")->result();
 
 		return $subordinates;
 	}

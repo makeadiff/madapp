@@ -33,7 +33,7 @@ class Auth extends Controller {
 		if (!$this->user_auth->logged_in()) {
 			redirect('auth/login');
 		} else {
-			redirect('common_dashboard/dashboard_view');
+			redirect('dashboard/dashboard_view');
 		}
 	}
 
@@ -55,7 +55,7 @@ class Auth extends Controller {
 				}
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', "Welcome, ".$this->session->userdata('name'));
-				redirect('common_dashboard/dashboard_view', 'refresh');
+				redirect('dashboard/dashboard_view', 'refresh');
 			} else {
 				//if the login was un-successful
 				//redirect them back to the login page
@@ -103,12 +103,6 @@ class Auth extends Controller {
 		redirect('auth/login', 'refresh');
 	}
 	
-	/**
-	Function to forgotpassword
-    * @author : rabeesh
-    * @param  : []
-    * @return : type : []
-    **/
 	function forgotpassword()
 	{
 		$this->form_validation->set_rules('email','Email Address', 'required|valid_email');

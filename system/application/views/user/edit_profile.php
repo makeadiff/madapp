@@ -49,6 +49,9 @@
 <label for="placements">Placements Volunteer </label>
 <input class="checkbox" type="checkbox" id="placements" name="placements" value="1" <?php if($user->placements) echo "checked='checked'"; ?> /><br />
 
+<?php if($this->user_auth->get_permission('user_edit_bank_details')) { ?>
+<a href="<?php echo site_url('user/edit_bank_details'); ?>" class="popup">Edit Bank Details</a>
+<?php } ?>
 
 <div class="field clear" style="width:550px;"> 
 		<input type="hidden" value="<?php echo $user->id; ?>"  id="rootId" name="rootId" />

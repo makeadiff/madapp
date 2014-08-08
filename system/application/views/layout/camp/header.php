@@ -8,6 +8,7 @@
 </head>
 
 <body id="pg-<?php echo $this->uri->segment(1) . '-' . $this->uri->segment(2); ?>">
+<div id="loading">loading...</div>
 <div class="wrap">
 
     <!-- HEAD BEGINS -->
@@ -30,7 +31,7 @@
 			
 			echo form_open($url);
 			echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id'));
-			echo form_dropdown('year', array('2011'=>'2011','2012'=>'2012','2013'=>'2013'), $this->session->userdata('year')); //:HARDCODE:
+			echo form_dropdown('year', array('2011'=>'2011','2012'=>'2012','2013'=>'2013','2014'=>'2014'), $this->session->userdata('year')); //:HARDCODE:
 			echo form_submit('action', "Change");
 			echo form_close();
 		}

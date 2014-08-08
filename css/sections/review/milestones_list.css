@@ -1,0 +1,7 @@
+.milestone-done {
+	display: none;
+}
+
+.done-milestone {
+	text-decoration: line-through;
+}

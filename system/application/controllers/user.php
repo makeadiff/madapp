@@ -215,7 +215,47 @@ class User extends Controller  {
 
 		redirect('user/view_users');
 	}
-	
+
+
+	function edit_bank_details($user_id = 0) {
+		$this->user_auth->check_permission('user_edit_bank_details');
+		if(!$user_id) $user_id = $this->session->userdata('id');
+
+		$bank_details_all = $this->users_model->get_user_data($user_id, 'bank_%');
+		$bank_details = array(
+			'bank_name' => '',
+			'bank_address' => '',
+			'bank_account_number' => '',
+			'bank_ifsc_code' => '',
+			'bank_account_type' => '',
+			'user_id' => $user_id
+		);
+
+		foreach ($bank_details_all as $detail) {
+			$bank_details[$detail['name']] = ($detail['value']) ? $detail['value'] : $detail['data'];
+		}
+		$this->load->view('user/popups/bank_details', $bank_details);
+	}
+
+	function save_bank_details() {
+		$this->user_auth->check_permission('user_edit_bank_details');
+
+		$user_id = $this->input->post('user_id');
+		$bank_details = array('bank_name', 'bank_address', 'bank_account_number', 'bank_ifsc_code', 'bank_account_type');
+
+		foreach ($bank_details as $key) {
+			$data = array(
+					'user_id'	=> $user_id,
+					'name'		=> $key,
+					'data'		=> $this->input->post($key)
+				);
+			$this->users_model->save_user_data($user_id, $data);
+		}
+
+		redirect('dashboard/dashboard_view');
+	}
+
+
 	function delete($user_id) {	
 		$this->user_auth->check_permission('user_delete');
 	

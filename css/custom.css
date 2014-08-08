@@ -98,6 +98,11 @@ div.board
 
 }
 
+table.table-custom
+{
+    color:#ffffff;
+}
+
 .margin-top
 {
     margin-top : 20px;

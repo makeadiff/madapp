@@ -62,11 +62,22 @@ class Review extends Controller {
 		print '{"success":true}';	
 	}
 	
-
 	function milestone_select_people() {
 		$this->user_auth->check_permission('milestone_list');
 		$current_user = $this->user_details->id;
 		$people = $this->user_model->get_subordinates($current_user);
+
+		if($this->input->post('action') == 'Search') {
+			$highest_group = $this->user_model->get_highest_group($current_user);
+
+			if($highest_group == 'national') $search_for_groups = array('fellow','strat');
+			elseif($highest_group == 'strat') $search_for_groups = array('fellow');
+
+			$people = $this->user_model->search_users(array(
+				'user_group_type' => $search_for_groups,
+				'city_id' => 0,
+				'name' => $this->input->post('name')));
+		}
 
 		$this->load->view('review/milestone_select_people', array('people'=>$people));
 	}

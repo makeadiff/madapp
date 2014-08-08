@@ -620,6 +620,16 @@ class Users_model extends Model {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
 			$this->db->where_in('UserGroup.group_id', $data['user_group']);
 		}
+		if(!empty($data['user_group_type'])) {
+			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
+			$this->db->join('Group', 'Group.id = UserGroup.group_id' ,'join');
+			$this->db->where_in('Group.type', $data['user_group_type']);
+		}
+		if(!empty($data['user_group_group_type'])) {
+			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
+			$this->db->join('Group', 'Group.id = UserGroup.group_id' ,'join');
+			$this->db->where_in('Group.group_type', $data['user_group_group_type']);
+		}
 		if(!empty($data['center'])) {
 			$this->db->join('UserClass', 'User.id = UserClass.user_id' ,'join');
 			$this->db->join('Class', 'Class.id = UserClass.class_id' ,'join');
@@ -681,10 +691,12 @@ class Users_model extends Model {
 	}
 	
 	/// Returns all the groups for the given user as an associative array with group id as the key.
-	function get_user_groups($user_id) {
-		$groups = $this->db->query("SELECT `Group`.id,`Group`.name FROM `Group`
+	function get_user_groups($user_id, $details = false) {
+		$groups = $this->db->query("SELECT * FROM `Group`
 			INNER JOIN `UserGroup` ON `Group`.id=`UserGroup`.group_id 
 			WHERE `UserGroup`.user_id=$user_id")->result();
+
+		if($details) return $groups;
 		
 		$all_groups = array();
 		foreach($groups as $group) {
@@ -692,6 +704,24 @@ class Users_model extends Model {
 		}
 		
 		return $all_groups;
+	}
+
+	/// Find the highest postion this person holds.
+	function get_highest_group($user_id) {
+		$groups = $this->get_user_groups($user_id, true);
+
+		$order = array('national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
+
+		$highest_group = '';
+		$highest_number = 0;
+		foreach($groups as $g) {
+			if($order[$g->type] > $highest_number) {
+				$highest_number = $order[$g->type];
+				$highest_group = $g->type;
+			}
+		}
+
+		return $highest_group;
 	}
 	
 	function user_registration($data)
@@ -768,13 +798,14 @@ class Users_model extends Model {
 				}
 				
 				// If a user with pre existing email id or phone number tries to register again, we check what kind of user they are - and if they are well_wisher, alumni or let_go, we make them an applicant once again.
-				$more = 'You are already registered';
-				if($r->user_type == 'well_wisher' or $r->user_type == 'alumni' or $r->user_type == 'let_go') {
-					$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant'));
-					$more = 'You have been added back to the applicant list. Thank you.';
+				$more = 'You are already registered. ';
+				if($r->user_type != 'volunteer') {
+					$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant', 'joined_on'=>date('Y-m-d H:i:s')));
+					$more = 'Your applicantion has been bumped up. You will be informed when there is a recuitment happening in your city. Thank you.';
+
 				}
 				if($r->status == '0') {
-					$this->db->where('id', $r->id)->update('User', array('status'=>'1'));
+					$this->db->where('id', $r->id)->update('User', array('status'=>'1', 'joined_on'=>date('Y-m-d H:i:s')));
 					$more = 'You have been added back to the applicant list. Thank you.';
 				}
 					

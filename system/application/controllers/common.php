@@ -165,8 +165,8 @@ class Common extends Controller {
 		if($user) {
 			// User exists in the database. Can't add.
 			$this->city_model->db->where('id', $user->id)->update('User', array('joined_on'=>date('Y-m-d H:i:s'), 'user_type'=>'applicant'));
-			
-			if(!$debug) $this->sms->send($phone, "$name, you are already in the MAD Database. Your applicantion has been bumped up. You will be informed when there is a recuitment happening in your city. Thank you.");
+
+			if(!$debug) $this->sms->send($phone, "$name, you are already in our Database. Your application is bumped up. You'll be informed when there is a recruitment in your city. Thank you.");
 			$log .= "User exists in Database.\n";
 			$log .= print_r($user, 1);
 			if($debug) print "User Exists...<br />" . print_r($user, 1);

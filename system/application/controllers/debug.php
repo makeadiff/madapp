@@ -166,6 +166,11 @@ class Debug extends Controller {
 			if($day_count > 50) exit;
 		}
 	}
+
+	function delete_usergroup_after_moving_members_to_other_group($usergroup_id_to_delete, $other_usergroup_id) {
+		$this->users_model->db->query("DELETE FROM `Group` WHERE id=$usergroup_id_to_delete");
+		$this->users_model->db->query("UPDATE `UserGroup` SET group_id=$other_usergroup_id WHERE group_id=$usergroup_id_to_delete");
+	}
 	
 }
 

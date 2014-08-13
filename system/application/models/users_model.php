@@ -70,12 +70,15 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Array()]
     **/
-	function getgroup_details()
+	function getgroup_details($show_hirachy_groups = false)
 	{
-		$this->db->select('*');
-		$this->db->from('Group');
-		$result=$this->db->get();
-		return $result;
+		$group_type = "";
+		if(!$show_hirachy_groups) $group_type = "WHERE group_type='normal'";
+
+		$data = $this->db->query("SELECT * FROM `Group` $group_type 
+			ORDER BY type='national' DESC,type='strat' DESC,type='fellow' DESC,type='volunteer' DESC, name");
+
+		return $data;
 	}
 	function get_all_groups() {
 		$this->db->from('Group')->where('status','1');

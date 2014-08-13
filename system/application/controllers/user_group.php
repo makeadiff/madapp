@@ -47,7 +47,9 @@
 		$this->user_auth->check_permission('user_group_index');
 		
 		$data['title'] = 'Manage User Group';
-		$data['details']= $this->users_model->getgroup_details();
+		$show_hirachy_groups = false;
+		$data['details']= $this->users_model->getgroup_details($show_hirachy_groups);
+		
 		$this->load->view('layout/header',$data);
 		$this->load->view('user_group/add_groupname_view', $data);
 		$this->load->view('layout/footer');

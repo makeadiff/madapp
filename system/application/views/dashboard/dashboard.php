@@ -148,10 +148,10 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/settings.png" alt="" /> <span>Settings</span></a></div>
 	<?php } ?>
     
-    <?php //if($this->user_auth->get_permission('national_dashboard')) { ?>
+    <?php if($this->user_auth->get_permission('national_dashboard') and 0) { // Hidden ?>
 	<div class="quickLink"> <a href="<?php echo site_url('national_dashboard/footprint_table_of_all_cities') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>National</span></a></div>
-	<?php //} ?>
+	<?php } ?>
 	
    	<br />
 

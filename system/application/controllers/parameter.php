@@ -10,6 +10,16 @@ class Parameter extends Controller {
 					INNER JOIN UserGroup UG ON UG.user_id=U.id 
 					INNER JOIN `Group` G ON UG.group_id=G.id
 					WHERE U.user_type='let_go' AND U.left_on > '%CYCLE_START_DATE%' AND U.left_on < '%CYCLE_END_DATE%'  AND U.city_id='%CITY_ID%'",
+			'%classes_count%' => "SELECT COUNT(C.id) FROM Class C 
+					INNER JOIN Level L ON C.level_id=L.id INNER JOIN Center Ctr ON Ctr.id=L.center_id 
+					WHERE Ctr.city_id='%CITY_ID%' AND L.year='%YEAR%' AND C.class_on > '%CYCLE_START_DATE%' 
+						AND C.class_on < '%CYCLE_END_DATE%'",
+			'%volunteer_class_count%' => "SELECT COUNT(UC.id) FROM UserClass UC
+					INNER JOIN Class C ON UC.class_id=C.id 
+					INNER JOIN Level L ON C.level_id=L.id INNER JOIN Center Ctr ON Ctr.id=L.center_id 
+					WHERE Ctr.city_id='%CITY_ID%' AND L.year='%YEAR%' AND C.class_on > '%CYCLE_START_DATE%' 
+						AND C.class_on < '%CYCLE_END_DATE%'",
+
 
 
 			'%total_ed_vols_count%' => "%total_vols_count% AND G.vertical_id=3",
@@ -26,8 +36,13 @@ class Parameter extends Controller {
 			'%cfr_vols_who_left_this_cycle_count%' => '%total_vols_count% AND G.vertical_id=12',
 			'%total_cfr_vols_count%' => "%total_vols_count% AND G.vertical_id=12",
 
+			'%classes_cancelled_count%' => "%classes_count% AND C.status='cancelled'",
+			'%total_classes_count%' => "%classes_count% AND C.status='happened'",
 
-			);
+			'%volunteer_class_absent_count%' => "%volunteer_class_count% AND UC.status='absent'",
+			'%volunteer_class_attended_count%' => "%volunteer_class_count% AND UC.status='attended'",
+			'%volunteer_substitution_count%' => "%volunteer_class_count% AND UC.status='attended' AND UC.substitute_id!=0",
+		);
 
 	function Parameter() {
 		parent::Controller();
@@ -65,7 +80,8 @@ class Parameter extends Controller {
 	///////////////////////////////////////////// Core Metric/Parameters Canculation //////////////////////////////
 	function review_parameter_user($user_id, $parameter_id) {
 		$user_details = $this->db->query("SELECT * FROM User WHERE id=$user_id")->row_array();
-		$all_parameters = $this->db->query("SELECT * FROM Review_Parameter WHERE id=$parameter_id")->row_array();
+		$all_parameters = $this->db->query("SELECT * FROM Review_Parameter WHERE id=$parameter_id")->result_array();
+
 		foreach ($all_parameters as $parameter) {
 			$this->calculate_parameter($parameter, $user_details);
 		}
@@ -75,13 +91,15 @@ class Parameter extends Controller {
 		$user_id = $user_details['id'];
 
 		$this->replace_values = array(
-				'%CYCLE_START_DATE%'=> '2014-01-01',
-				'%CYCLE_END_DATE%'	=> '2014-07-15',
+				'%CYCLE_START_DATE%'=> '2014-01-01', // :DEBUG: :TODO: :HARDCODE:
+				'%CYCLE_END_DATE%'	=> '2014-07-15', 
+				'%YEAR%'			=> '2014',
 				'%CITY_ID%' 		=> $user_details['city_id'],
 			);
 
+
 		if($parameter['sql']) {
-			$value = $this->get_query_value($sql, $this->replace_values);
+			$value = $this->get_query_value($parameter['sql'], $this->replace_values);
 
 		} elseif($parameter['formula']) {
 			$this->info($parameter['formula']);
@@ -90,7 +108,14 @@ class Parameter extends Controller {
 				$keys[$i] = '/'.str_replace('%','\%', $value) .'/';
 			}
 			$formula = preg_replace_callback($keys, array($this, 'calculate_formula_value'), $parameter['formula']);
-			$value = eval("return ($formula);");
+
+			try {
+				$value = @eval("return ($formula);");
+			} catch(Exception $e) {
+				throw new Exception('Error: ', 0, $e);
+			}
+
+			if($this->debug) echo "Formula: <em>$parameter[formula]</em><br />Result: <strong>$formula</strong><br />Value: <u>$value</u><br />";
 		}
 
 
@@ -132,7 +157,6 @@ class Parameter extends Controller {
 
 	// Finds the keys that should be replaced in the formula and replace it with the query - then execute it and return the value.
 	function calculate_formula_value($match)  {
-
 		$value = $this->get_query_value($this->sql_queries[$match[0]], $this->replace_values);
 		return $value;
 	}

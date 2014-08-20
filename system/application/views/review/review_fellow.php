@@ -105,8 +105,8 @@ foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews) as $key => 
 <!-- 	<td class="parameter-data"><?php echo $item->data ?></td> -->
 	<td class="parameter-comment"><?php if($auth->get_permission('review_comment')) { ?>
 		<a href='#' onclick='comment(<?php echo $item->id ?>);' title='Add Comment' class='icon edit'>Comment</a>
-		<?php echo $item->comment;
-		} ?></td></tr>
+		<?php } ?>
+	</td></tr>
 <?php }
 if($level_sum and count($reviews)) {
 $avg = intval($level_sum / count($reviews));

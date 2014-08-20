@@ -20,6 +20,7 @@ class Class_model extends Model {
     		ORDER BY Class.class_on DESC")->result();
     }
     
+    /// Get all the classes of the given batch.
     function get_all_by_batch($batch_id) {
     	return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Class.class_on
     		FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id 

@@ -41,7 +41,7 @@ class Level extends Controller {
 					'name'		=>	$this->input->post('name'),
 					'center_id'	=>	$this->input->post('center_id'),
 					'students'	=>	$this->input->post('students'),
-					'garde'		=>  $this->input->post('grade'),
+					'grade'		=>  $this->input->post('grade'),
 					'subjects'	=>  $this->input->post('subjects'),
 				));
 				

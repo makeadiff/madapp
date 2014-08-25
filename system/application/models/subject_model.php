@@ -9,10 +9,8 @@ class Subject_model extends Model {
 		$this->project_id = $this->ci->session->userdata('project_id');
 	}
 
-	function get_all_subjects($city_id = 0) {
-		if(!$city_id) $city_id = $this->city_id;
-
-		$result = $this->db->select('*')->from('Subject')->where('city_id', $city_id)->where('status','1')->get();
+	function get_all_subjects() {
+		$result = $this->db->select('*')->from('Subject')->where('status','1')->get();
 		return $result->result();
 	}
 

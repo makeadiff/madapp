@@ -22,7 +22,7 @@ class Level_model extends Model {
     }
     
 	function get_all_levels_in_center($center_id) {
-		return $this->db->where('project_id', $this->project_id)->where('center_id',$center_id)->where('year', $this->year)->get('Level')->result();
+		return $this->db->where('center_id',$center_id)->where('year', $this->year)->get('Level')->result();
 	}
 	
 	function get_level($level_id) {
@@ -62,7 +62,8 @@ class Level_model extends Model {
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
 				'grade'		=>  $data['grade'],
-				'year'		=> 	$this->year
+				'year'		=> 	$this->year,
+				'project_id'=>	$this->project_id,
 			));
 			
 		$level_id = $this->db->insert_id();

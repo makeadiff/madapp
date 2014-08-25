@@ -76,6 +76,7 @@ class Review extends Controller {
 			$people = $this->user_model->search_users(array(
 				'user_group_type' => $search_for_groups,
 				'city_id' => 0,
+				'user_type' => 'volunteer',
 				'name' => $this->input->post('name')));
 		}
 
@@ -86,7 +87,8 @@ class Review extends Controller {
 		$this->user_auth->check_permission('milestone_list');
 
 		$milestones = $this->review_model->get_all_milestones($user_id, $cycle);
-		$this->load->view('review/list_milestones', array('milestones' => $milestones, 'user_id'=>$user_id, 'all_cycles' => $this->all_cycles));
+		$user_details=$this->user_model->user_details($user_id);
+		$this->load->view('review/list_milestones', array('milestones' => $milestones,'user_details'=>$user_details, 'user_id'=>$user_id, 'all_cycles' => $this->all_cycles));
 	}
 
 	function edit_milestone($milestone_id) {

@@ -1,10 +1,10 @@
 <?php 
-$this->load->view('layout/header', array('title' => "Milestones"));
+$this->load->view('layout/header', array('title' => "Milestones For {$user_details->name}"));
 $status = array('Todo', 'Done');
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/sections/review/milestones_list.css" />
 <script type="text/javascript" src="<?php echo base_url()?>css/datetimepicker_css.js"></script>
-<div id="head" class="clear"><h1>Milestones</h1></div>
+
 <?php if($this->user_auth->get_permission('review_milestone_create')) { ?>
 <div id="actions">
     <a class="thickbox button green primary popup" name="Add Milestone" href="<?php echo site_url('review/new_milestone/'.$user_id) ?>">New Milestone</a>

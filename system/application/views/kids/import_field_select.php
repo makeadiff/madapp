@@ -8,7 +8,7 @@ $this->load->view('layout/header', array('title' => "Import Configuration..."));
 
 <table id="main">
 <?php
-$fields = array('Ignore', 'Name','Description','Birthday');
+$fields = array('Ignore', 'Name','Description','Birthday','Sex');
 
 print '<tr>';
 for($i=0; $i<count($all_rows[0]); $i++) {

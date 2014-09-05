@@ -53,10 +53,10 @@ class Kids_model extends Model {
     **/
 	function add_kids($data) {
 		$data = array('center_id' 	=> $data['center'],
-					  'name' 	 	=> $data ['name'],
-					  'birthday'	=> $data ['date'],
-					  'sex'			=> $data ['sex'],
-				  	 'description'	=> $data ['description'],
+					  'name' 	 	=> $data['name'],
+					  'birthday'	=> $data['date'],
+					  'sex'			=> $data['sex'],
+				  	 'description'	=> $data['description'],
 				  	 'status'		=> 1,
 			   );
 		$this->db->insert('Student',$data);

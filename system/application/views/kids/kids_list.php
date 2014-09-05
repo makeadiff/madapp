@@ -53,6 +53,7 @@ function get_kids_Name(center_id,pageno){
 <thead>
 <tr>
 	<th class="colName left sortable">Name</th>
+	<th class="colStatus sortable">Sex</th>
     <th class="colStatus sortable">Birth Day</th>
     <th class="colStatus">Center</th>
 	<th class="colStatus">Image</th>
@@ -73,7 +74,8 @@ foreach($content as $row) {
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colName left"><?php echo $row['name']; ?></td>
-    <td class="colCount"><?php echo $row['birthday']; ?></td> 
+    <td class="colCount"><?php $the_sexes = array('m'=>'Male','f'=>'Female'); echo $the_sexes[$row['sex']]; ?></td>
+    <td class="colCount"><?php echo $row['birthday']; ?></td>
     <td class="colStatus" style="text-align:left"><?php echo $row['center_name'];?></td>
 	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
     

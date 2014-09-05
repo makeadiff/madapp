@@ -9,8 +9,7 @@ $this->load->view('layout/header', array('title' => "Import Kids..."));
 
 <label for="center_id">Center:</label> 
 <select id="center_id" name="center_id">
-<?php 
-foreach($centers as $row) { ?>
+<?php foreach($centers as $row) { ?>
 <option value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option>
 <?php } ?>
 </select><br />

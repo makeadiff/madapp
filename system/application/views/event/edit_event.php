@@ -36,16 +36,10 @@ foreach($event as $event_row):
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Type: </label>
-<select id="type" name="type"> 
-	<option value="others"<?php if($event_row->type == 'others') { ?> selected="selected"<?php } ?>>Other</option> 
-	<option value="process"<?php if($event_row->type == 'process') { ?> selected="selected"<?php } ?>>Process Training</option> 
-	<option value="curriculum"<?php if($event_row->type == 'curriculum') { ?> selected="selected"<?php } ?>>Curriculum Training</option> 
-    <option value="teacher"<?php if($event_row->type == 'teacher') { ?> selected="selected"<?php } ?>>Teacher Training I</option>
-    <option value="teacher2"<?php if($event_row->type == 'teacher2') { ?> selected="selected"<?php } ?>>Teacher Training II</option>
-	<option value="avm"<?php if($event_row->type == 'avm') { ?> selected="selected"<?php } ?>>Center Circle</option>
-	<option value="coreteam_meeting"<?php if($event_row->type == 'coreteam_meeting') { ?> selected="selected"<?php } ?>>Core Team Meeting</option> 
-	<option value="admin_meeting"<?php if($event_row->type == 'admin_meeting') { ?> selected="selected"<?php } ?>>Admin Meeting</option> 
-	<option value="monthly_review"<?php if($event_row->type == 'monthly_review') { ?> selected="selected"<?php } ?>>Monthly Review</option>
+<select id="type" name="type">
+<?php foreach ($event_types as $key => $value) { ?>
+	<option value="<?php echo $key ?>" <?php if($event_row->type == $key) { ?> selected="selected"<?php } ?>><?php echo $value ?></option>
+<?php } ?>
 </select>
 </li>
 <?php endforeach;?>

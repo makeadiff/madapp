@@ -34,6 +34,7 @@ class Kids_model extends Model {
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
 		$this->db->where('Center.city_id', $city_id);
 		$this->db->where('Center.status', 1);
+		$this->db->where('Student.status', 1);
 		$this->db->orderby('Student.id');
 		$result=$this->db->get();
 		return $result;
@@ -54,7 +55,9 @@ class Kids_model extends Model {
 		$data = array('center_id' 	=> $data['center'],
 					  'name' 	 	=> $data ['name'],
 					  'birthday'	=> $data ['date'],
+					  'sex'			=> $data ['sex'],
 				  	 'description'	=> $data ['description'],
+				  	 'status'		=> 1,
 			   );
 		$this->db->insert('Student',$data);
 		$kid_id = $this->db->insert_id();
@@ -69,14 +72,14 @@ class Kids_model extends Model {
     * @return: type: [Boolean]
     **/
 	function delete_kids($id) {
-		 $this->db->where('id',$id);
-		 $this->db->delete('Student');
-		 $affected = $this->db->affected_rows();
+		$this->db->where('id',$id);
+		$this->db->update('Student', array('satus' => '0'));
+		$affected = $this->db->affected_rows();
 		 
-		 $this->db->where('student_id',$id);
-		 $this->db->delete('StudentLevel');
+		$this->db->where('student_id',$id);
+		$this->db->delete('StudentLevel');
 		 
-		 return ($affected) ? true: false;
+		return ($affected) ? true: false;
 	}
 	/**
     * Function to get_kids_details
@@ -89,6 +92,7 @@ class Kids_model extends Model {
 		$this->db->select('*');
 		$this->db->from('Student');
 		$this->db->where('id',$uid);
+		$this->db->where('Student.status', 1);
 		$result=$this->db->get();
 		return $result;
 	
@@ -104,6 +108,7 @@ class Kids_model extends Model {
 		$this->db->select('id,name');
 		$this->db->from('Student');
 		$this->db->where('center_id',$uid);
+		$this->db->where('Student.status', 1);
 		$this->db->orderby('name');
 		$result=$this->db->get();
 		return $result;
@@ -115,7 +120,7 @@ class Kids_model extends Model {
 		$students = $this->db->query("SELECT Student.id,Student.name
 			FROM StudentLevel INNER JOIN Level ON Level.id = StudentLevel.level_id AND Level.project_id={$this->project_id}
 			RIGHT JOIN Student ON student_id = Student.id
-			WHERE student_id IS NULL AND Student.center_id=$center_id ORDER BY Student.name");
+			WHERE student_id IS NULL AND Student.center_id=$center_id AND Student.status='1' ORDER BY Student.name");
 		return $students;
 	}
 	
@@ -131,6 +136,7 @@ class Kids_model extends Model {
 		$data = array(	'center_id'	=> $data['center'],
 						'name'		=> $data['name'],
 						'birthday'	=> $data['date'],
+						'sex'		=> $data ['sex'],
 						'description'=> $data['description'],
 					);
 		$this->db->where('id', $rootId);
@@ -160,6 +166,7 @@ class Kids_model extends Model {
 		$this->db->select('id,name');
 		$this->db->from('Student');
 		$this->db->where('center_id',$uid);
+		$this->db->where('status', 1);
 		$this->db->orderby('name');
 		$result=$this->db->get();
 		return $result;
@@ -171,9 +178,8 @@ class Kids_model extends Model {
 		$this->db->select('*');
 		$this->db->from('Student');
 		$this->db->where('center_id',$center_id);
+		$this->db->where('status', 1);
 		return $this->db->get();
 	
-	}
-	
-	
+	}	
 }

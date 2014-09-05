@@ -31,15 +31,20 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/city.jpeg" alt="" /> <span>Cities</span></a></div>
 	<?php } ?>
 	
+	<!--
 	<?php if($this->user_auth->get_permission('project_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('project/manage_project') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/Project-icon.png" alt="" /> <span>Projects</span></a></div>
 	<?php } ?>
+	-->
 	
 	<?php if($this->user_auth->get_permission('center_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('center/manageaddcenters') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/center_right.png" alt="" /> <span>Centers</span></a></div>
 	<?php } ?>
+
+    <div class="quickLink"> <a target="_blank" href="http://makeadiff.in/apps/profile/fb.php?user_id=<?php echo $current_user->id;?>">
+    <img src="<?php echo base_url(); ?>images/ico/mad_cred.png" alt="" /> <span>MAD Cred</span></a></div>
 	
 	<br />
 	
@@ -103,9 +108,10 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/hr_requirement.jpg" alt="" /> <span>Volunteer Requirements</span></a></div>
 	<?php } ?>
 
-
-    <div class="quickLink"> <a target="_blank" href="http://makeadiff.in/apps/profile/fb.php?user_id=<?php echo $current_user->id;?>">
-            <img src="<?php echo base_url(); ?>images/ico/mad_cred.png" alt="" /> <span>MAD Cred</span></a></div>
+	<?php if($this->user_auth->get_permission('hr_requirement_national')) { ?>
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/support/national_requirements.php">
+	<img src="<?php echo base_url(); ?>images/ico/hr_requirement_national.jpg" alt="" /> <span>National Requirements</span></a></div>
+	<?php } ?>
 
 
 <br />
@@ -114,6 +120,13 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('review/milestone_select_people/') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/milestones.png" alt="" /> <span>Assign Milestones</span></a></div>
 	<?php } ?>
+
+	<?php if($this->user_auth->get_permission('review_select_person')) { ?>
+	<div class="quickLink"> <a href="<?php echo site_url('review/select_people/') ?>">
+	<img src="<?php echo base_url(); ?>images/ico/reviews-icon.png" alt="" /> <span>Review People</span></a></div>
+	<?php } ?>
+
+<br />
 
 	<?php if($this->user_auth->get_permission('milestone_my')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('review/my_milestones') ?>">
@@ -133,7 +146,7 @@ foreach($upcomming_classes as $class) { ?>
 	
 	<br />
 	
-    <?php if($this->user_auth->get_permission('books_index')) { ?>
+<!--     <?php if($this->user_auth->get_permission('books_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('books/manage_books') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Books</span></a></div>
 	<?php } ?>
@@ -142,7 +155,8 @@ foreach($upcomming_classes as $class) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('books/manage_chapters') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/chapters.png" alt="" /> <span>Chapters</span></a></div>
 	<?php } ?>
-	
+	 -->
+
     <?php if($this->user_auth->get_permission('setting_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('settings/index') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/settings.png" alt="" /> <span>Settings</span></a></div>

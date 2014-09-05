@@ -13,6 +13,29 @@
  */
 
 class Event extends controller{
+	public $event_types = array(
+		'others'			=> 'Other',
+		'ca_meeting'		=> 'CA Meeting',
+		'induction_training'			=> 'Induction Training',
+		'ed_support_teacher_training'	=> 'Ed Support Teacher Training',
+		'discover_mentor_training'		=> 'Discover Mentor Training',
+		'events_training'	=> 'Events Training',
+		'cr_training'		=> 'CR Training',
+		'cfr_training'		=> 'CFR Training',
+		'center_sensitization'	=> 'Center Sensitization',
+		'core_team_Meeting'	=> 'Core Team Meeting',
+		'recruitment'		=> 'Recruitment',
+		'city_circles'		=> 'City Circles',
+		'center_circles'	=> 'Center Circles',
+		'child_engagement_Activities'		=> 'Child Engagement Activities',
+		'city_huddle'		=> 'City Huddle',
+		'intern_meeting'	=> 'Intern Meeting',
+		'mentor_training'	=> 'Mentor Training',
+		'teacher_training_Workshop'		=> 'Teacher Training Workshop',
+		'mentor_training'	=> 'Mentor Training',
+		'mentor_meeting'	=> 'Mentor Meeting',
+		'quality_circle'	=> 'Quality Circle',
+	);
 
 	/**
     * constructor 
@@ -47,7 +70,10 @@ class Event extends controller{
 	{
 		$this->user_auth->check_permission('event_index');
 		$this->load->view('layout/header',array('title'=>'Manage Event'));
-		$data['details']= $this->event_model->getevent_list();
+		$data = array(
+			'event_types' => $this->event_types,
+			'details' => $this->event_model->getevent_list()
+		);
 		$this->load->view('event/index',$data);
 		$this->load->view('layout/footer');
 	
@@ -63,7 +89,10 @@ class Event extends controller{
 	function addevent()
 	{
 		$this->user_auth->check_permission('event_add');
-		$data['center']= $this->center_model->getcity();
+		$data = array(
+			'event_types' => $this->event_types,
+			'center' => $this->center_model->getcity()
+		);
 		$this->load->view('event/add_event',$data);
 	}
 	/**
@@ -203,8 +232,11 @@ class Event extends controller{
 	{
 		$this->user_auth->check_permission('event_edit');
 		$id=$this->uri->segment(3);
+		$data = array();
+
 		$data['center']= $this->center_model->getcity();
 		$data['event']= $this->event_model->getevent($id);
+		$data['event_types']= $this->event_types;
 		$this->load->view('event/edit_event',$data);
 	}
 	/**

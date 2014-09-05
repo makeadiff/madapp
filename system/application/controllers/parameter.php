@@ -20,6 +20,21 @@ class Parameter extends Controller {
 					WHERE Ctr.city_id='%CITY_ID%' AND L.year='%YEAR%' AND C.class_on > '%CYCLE_START_DATE%' 
 						AND C.class_on < '%CYCLE_END_DATE%'",
 
+			'%expected_attendance_of_core_team_meet_total%' => "SELECT COUNT(UE.present) FROM Event E INNER JOIN UserEvent UE ON UE.event_id=E.id
+					WHERE E.type='coreteam_meeting' AND E.city_id='%CITY_ID%' AND E.starts_on > '%CYCLE_START_DATE%' 
+						AND E.starts_on < '%CYCLE_END_DATE%'",
+			'%attendance_of_core_team_meet_total%' => "%expected_attendance_of_core_team_meet_total% AND UE.present='1'",
+
+			
+			'%expected_student_attendance_for_quarter%' => "SELECT COUNT(SC.id) FROM Class C 
+					INNER JOIN Level L ON C.level_id=L.id 
+					INNER JOIN Center Ctr ON Ctr.id=L.center_id 
+					INNER JOIN StudentClass SC ON C.id=SC.class_id
+					WHERE Ctr.city_id='%CITY_ID%' AND L.year='%YEAR%' AND C.class_on > '%CYCLE_START_DATE%' 
+						AND C.class_on < '%CYCLE_END_DATE%'",
+			'%student_attendance_for_quarter%' => "%expected_student_attendance_for_quarter% AND SC.present='1'",
+
+
 
 
 			'%total_ed_vols_count%' => "%total_vols_count% AND G.vertical_id=3",

@@ -35,6 +35,13 @@ jQuery(document).ready(function () {
 	<input name="date-pick" class="date-pick" id="date-pick" type="text">
 	<p class="error clear"></p>
 </li>
+<li><label for="sex">Sex: </label>
+	<select name="sex">
+	<option value="m">Male</option>
+	<option value="f">Female</option>
+	</select>
+	<p class="error clear"></p>
+</li>
 <li><label for="date">Upload Photo: </label>
 	<input name="image"  id="image" type="file">
 	<p class="error clear"></p>

@@ -30,16 +30,10 @@
 	<p class="error clear"></p>
 </li>
 <li><label for="date">Type: </label>
-<select id="type" name="type"> 
-	<option value="others">Other</option> 
-	<option value="process">Process Training</option> 
-	<option value="curriculum">Curriculum Training</option> 
-    <option value="teacher">Teacher Training I</option>
-    <option value="teacher2">Teacher Training II</option> 
-	<option value="avm">Center Circle</option>
-	<option value="coreteam_meeting">Core Team Meeting</option> 
-	<option value="admin_meeting">Admin Meeting</option>
-	<option value="monthly_review">Monthly Review</option>
+<select id="type" name="type">
+<?php foreach ($event_types as $key => $value) { ?>
+	<option value="<?php echo $key ?>"><?php echo $value ?></option>
+<?php } ?>
 </select>
 </li>
 </ul>

@@ -144,6 +144,7 @@ class Kids extends Controller  {
 		$data['id']=$id;
 		$data['center']=$_REQUEST['center'];
 		$data['name']=$_REQUEST['name'];
+		$data['sex']=$_REQUEST['sex'];
 		
 		$date= date('Y-m-d', strtotime($_REQUEST['date-pick']));
 		$data['date'] = $date;
@@ -198,6 +199,7 @@ class Kids extends Controller  {
 		$this->user_auth->check_permission('kids_add');
 		$data['center']=$_REQUEST['center'];
 		$data['name']=$_REQUEST['name'];
+		$data['sex']=$_REQUEST['sex'];
 		
 		$data['date'] = '';
 		if(!empty($_REQUEST['date-pick'])) {

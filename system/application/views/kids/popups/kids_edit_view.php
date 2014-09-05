@@ -58,6 +58,13 @@ foreach($kids_details as $row) {
 	<input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?php echo $birthday ; ?>">
 	<p class="error clear"></p>
 </li><br />
+<li><label for="sex">Sex: </label>
+	<select name="sex">
+	<option value="m" <?php if($sex == 'm') echo 'selected="selected"'; ?>>Male</option>
+	<option value="f" <?php if($sex == 'f') echo 'selected="selected"'; ?>>Female</option>
+	</select>
+	<p class="error clear"></p>
+</li><br />
 <li><label for="date">Photo</label>
 	<?php if($photo) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$photo; ?>" style="float:left;" /><?php } ?>
 </li><br />

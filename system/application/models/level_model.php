@@ -44,17 +44,6 @@ class Level_model extends Model {
     	foreach($students as $student) $students_ids[$student->id] = $student->name;
     	return $students_ids;
     }
-
-	function get_subjects_in_level($level_id) {
-    	$students = $this->db->query("SELECT Subject.id,Subject.name FROM Subject 
-    		INNER JOIN LevelSubject ON LevelSubject.Subject_id=Subject.id 
-    		WHERE LevelSubject.level_id=$level_id ORDER BY Subject.name")->result();
-    	
-    	$students_ids = array();
-    	foreach($students as $student) $students_ids[$student->id] = $student->name;
-    	return $students_ids;
-    }
-
     
     function create($data) {
 		$this->db->insert('Level', 
@@ -77,16 +66,6 @@ class Level_model extends Model {
 				));
 			}
 		}
-
-		$selected_subjects = $data['subjects'];
-		if($selected_subjects) {
-			foreach($selected_subjects as $subject_id) {
-				$this->db->insert("LevelSubject", array(
-					'level_id'	=> $level_id,
-					'subject_id'=> $subject_id
-				));
-			}
-		}
     }
     
     function edit($level_id, $data) {
@@ -103,15 +82,6 @@ class Level_model extends Model {
 			$this->db->insert("StudentLevel", array(
 				'level_id'	=> $level_id,
 				'student_id'=> $student_id
-			));
-		}
-
-		$this->db->delete("LevelSubject", array('level_id'=>$level_id));
-		$selected_subjects = $data['subjects'];
-		foreach($selected_subjects as $subject_id) {
-			$this->db->insert("LevelSubject", array(
-				'level_id'	=> $level_id,
-				'subject_id'=> $subject_id
 			));
 		}
     }

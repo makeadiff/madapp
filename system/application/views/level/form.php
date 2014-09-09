@@ -37,17 +37,6 @@ if(!isset($level)) $level = array(
 </select>
 </li>
 
-<li>
-<label for="subjects">Subjects:</label>
-<select id="subjects" name="subjects[]" multiple>
-<?php foreach($all_subjects as $id=>$name) { ?>
-<option value="<?php echo $id; ?>" <?php 
-	if(isset($level['selected_subjects']) and in_array($id, $level['selected_subjects'])) echo 'selected'; 
-?>><?php echo $name; ?></option> 
-<?php } ?>
-</select>
-</li>
-
 <?php
 echo form_hidden('center_id', $center_id);
 echo form_hidden('project_id', 1);

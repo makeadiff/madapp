@@ -5,7 +5,9 @@
 <div id="main" class="clear">
 	<div id="head" class="clear" style="border-bottom:none;">
 	<div style="font-size:14px;background-color:#FFF89D;height:15px;padding-top:18px;padding-bottom:20px;padding-left:10px;">
-		Welcome, <a class="popup" href="<?php echo site_url('user/view/'.$current_user->id); ?>"><?php echo $this->session->userdata('name'); ?></a>. 
+		Welcome, <a class="popup" href="<?php echo site_url('user/view/'.$current_user->id); ?>"><?php echo $this->session->userdata('name'); ?></a>.
+<br /><a href="http://makeadiff.in/apps/stakeholder-survey/form.php">How you doin'?</a>
+
 			<?php if(in_array(9, array_keys($this->session->userdata('groups')))) { ?>Current Credits: <strong><?php echo $current_user->credit ?></strong>.<?php } ?>
 			<?php if(in_array(14, array_keys($this->session->userdata('groups')))) { ?>Admin Credits: <strong><?php echo $current_user->admin_credit ?></strong>.<?php } ?>
 			</div>

@@ -17,6 +17,7 @@ class Batch extends Controller {
 		$this->load->model('Center_model','center_model');
 		$this->load->model('Users_model','user_model');
 		$this->load->model('Level_model','level_model');
+		$this->load->model('subject_model');
 			
 		$this->load->helper('url');
 		$this->load->helper('misc');
@@ -125,12 +126,14 @@ class Batch extends Controller {
 		$center_ids = idNameFormat($this->center_model->get_all());
 		$batch_volunters = idNameFormat($this->user_model->get_users_in_city());
 		$center_name = $this->center_model->get_center_name($center_id);
+		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 		
 		$this->load->view('batch/form.php', array(
-			'action' => 'Create',
-			'center_ids' => $center_ids,
-			'center_name'=> $center_name,
+			'action' 		=> 'Create',
+			'center_ids' 	=> $center_ids,
+			'center_name'	=> $center_name,
 			'batch_volunters'=>$batch_volunters,
+			'all_subjects'	=> $all_subjects,
 			'batch'	=> array(
 				'id'		=> 0,
 				'center_id'	=> $center_id,
@@ -145,6 +148,7 @@ class Batch extends Controller {
 					'day'		=>	$this->input->post('day'),
 					'class_time'=>	$this->input->post('class_time'),
 					'batch_head_id' =>	$this->input->post('batch_head_id'),
+					'subjects'	=>  $this->input->post('subjects'),
 					'center_id'	=>	$this->input->post('center_id'),
 					'project_id'=>	$this->input->post('project_id'),
 				));
@@ -165,12 +169,16 @@ class Batch extends Controller {
 		$center_ids = idNameFormat($this->center_model->get_all());
 		$batch_volunters = idNameFormat($this->user_model->get_users_in_city());
 		$center_name = $this->center_model->get_center_name($batch['center_id']);
+		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
+
+		$batch['selected_subjects'] = array_keys($this->model->get_subjects_in_batch($batch_id));
 		
 		$this->load->view('batch/form.php', array(
 			'action' 	=> 'Edit',
 			'center_ids'=> $center_ids,
 			'center_name'=> $center_name,
 			'batch_volunters'=>$batch_volunters,
+			'all_subjects'	=> $all_subjects,
 			'batch'		=> $batch,
 			));
 	}
@@ -183,6 +191,7 @@ class Batch extends Controller {
 				'class_time'=>	$this->input->post('class_time'),
 				'batch_head_id' =>	$this->input->post('batch_head_id'),
 				'center_id'	=>	$this->input->post('center_id'),
+				'subjects'	=>  $this->input->post('subjects'),
 				'project_id'=>	$this->input->post('project_id'),
 			));
 

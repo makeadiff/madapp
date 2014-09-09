@@ -16,7 +16,6 @@ class Level extends Controller {
 		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);
 		$this->load->model('kids_model');
-		$this->load->model('subject_model');
 		$this->load->model('center_model', 'center_model');
 		$this->load->helper('url');
 	}
@@ -42,7 +41,6 @@ class Level extends Controller {
 					'center_id'	=>	$this->input->post('center_id'),
 					'students'	=>	$this->input->post('students'),
 					'grade'		=>  $this->input->post('grade'),
-					'subjects'	=>  $this->input->post('subjects'),
 				));
 				
 			$this->session->set_flashdata('success', 'The Level has been added');
@@ -61,7 +59,6 @@ class Level extends Controller {
 				'action'	=> 'New',
 				'center_id'	=> $center_id,
 				'center_name'=>$center_name,
-				'all_subjects'	=> $all_subjects,
 				'level'	=> array(
 					'id'		=> 0,
 					'name'		=> '',
@@ -100,9 +97,6 @@ class Level extends Controller {
 			$all_kids = idNameFormat($this->kids_model->get_kids_name($center_id)->result());
 			$level['selected_students'] = array_keys($this->model->get_kids_in_level($level_id));
 
-			$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
-			$level['selected_subjects'] = array_keys($this->model->get_subjects_in_level($level_id));
-
 			$level['kids'] = array();
 			foreach($level['selected_students'] as $kid_id) {
 				$level['kids'][$kid_id] = $all_kids[$kid_id];
@@ -118,7 +112,6 @@ class Level extends Controller {
 				'center_id'	=> $center_id,
 				'center_name'=> $center_name,
 				'level'		=> $level,
-				'all_subjects'	=> $all_subjects,
 				));
 		}
 	}

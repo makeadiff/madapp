@@ -66,6 +66,18 @@ class Batch_model extends Model {
 	function get_center_of_batch($batch_id) {
 		return $this->db->where('id',$batch_id)->get('Batch')->row()->center_id;
 	}
+
+
+    function get_subjects_in_batch($batch_id) {
+        $students = $this->db->query("SELECT Subject.id,Subject.name FROM Subject 
+            INNER JOIN BatchSubject ON BatchSubject.Subject_id=Subject.id 
+            WHERE BatchSubject.batch_id=$batch_id ORDER BY Subject.name")->result();
+        
+        $students_ids = array();
+        foreach($students as $student) $students_ids[$student->id] = $student->name;
+        return $students_ids;
+    }
+
     
     /// Get the details about the batch head of a given batch.
     function get_batch_head($batch_id) {
@@ -95,7 +107,19 @@ class Batch_model extends Model {
     function create($data) {
     	$data['project_id'] = $this->project_id;
     	$data['year'] = $this->year;
-    	$this->db->insert("Batch", $data);
+        $selected_subjects = $data['subjects'];
+
+        unset($data['subjects']);
+    	$batch_id = $this->db->insert("Batch", $data);
+
+        if($selected_subjects) {
+            foreach($selected_subjects as $subject_id) {
+                $this->db->insert("BatchSubject", array(
+                    'batch_id'  => $batch_id,
+                    'subject_id'=> $subject_id
+                ));
+            }
+        }
     	
     	if($data['batch_head_id'] > 0) {
 			$this->load->model('users_model');
@@ -105,16 +129,29 @@ class Batch_model extends Model {
     
     function edit($batch_id, $data) {
 		$old_batch_head = $this->get_batch_head($batch_id);
+
+        $selected_subjects = $data['subjects'];
+        unset($data['subjects']);
+
 		$this->db->where('id', $batch_id)->update('Batch',$data);
 		if($data['batch_head_id'] > 0) {
 			$this->load->model('users_model');
 			$this->users_model->remove_user_from_group($old_batch_head->id,8);// Remove old batch head from Batch Head Group.
 			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
 		}
+
+        $this->db->delete("BatchSubject", array('batch_id'=>$batch_id));
+        foreach($selected_subjects as $subject_id) {
+            $this->db->insert("BatchSubject", array(
+                'batch_id'  => $batch_id,
+                'subject_id'=> $subject_id
+            ));
+        }
     }
     
     function delete($batch_id) {
     	$this->db->delete('Batch', array('id'=>$batch_id));
     	$this->db->delete('UserBatch', array('batch_id'=>$batch_id));
+        $this->db->delete('BatchSubject', array('batch_id'=>$batch_id));
     }
 }

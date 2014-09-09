@@ -45,8 +45,8 @@ Class User_auth {
 			$_SESSION['user_id'] = $status['id'];
 			
 			if($remember_me) {
-				setcookie('email', $status['email'], time() + 3600 * 24 * 30, '/'); // Expires in a month.
-				setcookie('password_hash', md5($password . $this->hash), time() + 3600 * 24 * 30, '/');
+				setcookie('email', $status['email'], time() + (3600 * 24 * 30 * 12), '/'); // Expires in a month.
+				setcookie('password_hash', md5($password . $this->hash), time() + (3600 * 24 * 30 * 12), '/');
 			}
 		}
 		

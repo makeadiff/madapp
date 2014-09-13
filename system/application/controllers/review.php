@@ -37,12 +37,14 @@ class Review extends Controller {
 		if(!$cycle) $cycle = $this->cycle;
 		// :TODO: Check if the current user has permission to review the said fellow.
 
-		$parameter_reviews = $this->review_model->get_reviews($user_id, $cycle, 'parameter');
-		$milestone_reviews = $this->review_model->get_reviews($user_id, $cycle, 'milestone');
+		$parameter_reviews	= $this->review_model->get_reviews($user_id, $cycle, 'parameter');
+		$milestone_reviews	= $this->review_model->get_reviews($user_id, $cycle, 'milestone');
+		$survey_reviews		= $this->review_model->get_reviews($user_id, $cycle, 'survey');
 
 		$user = $this->user_model->get_user($user_id);
 		$this->load->view('review/review_fellow', array('parameter_reviews' => $parameter_reviews, 
 														'milestone_reviews' => $milestone_reviews,
+														'survey_reviews'	=> $survey_reviews,
 														'user_id'=>$user_id, 'user' => $user,
 														'cycle'=>$cycle, 'auth'=>$this->user_auth));
 	}

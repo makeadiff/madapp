@@ -76,11 +76,12 @@ function inputData(id, name, value, ele) {
 
 <?php 
 $flags = array('nothing', 'black','red','orange','yellow','green');
-foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews) as $key => $reviews) {
+foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews, 'sur' => $survey_reviews) as $key => $reviews) {
 	if(!$reviews) continue;
 
 	if($key == 'pr') print "<h3>Core Parameters</h3>";
-	elseif($key == 'mr') print "<h3>Milestone</h3>";
+	elseif($key == 'mr') print "<br /><h3>Milestone</h3>";
+	elseif($key == 'sur') print "<br /><h3>Happiness Index</h3>";
 	?>
 	<table class="data-table">
 	<tr><th>Parameter</th><th>Level</th><th>Value</th><!-- <th>Data</th> --><th>Comments</th></tr>
@@ -109,7 +110,7 @@ foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews) as $key => 
 	</td></tr>
 <?php }
 if($level_sum and count($reviews)) {
-$avg = intval($level_sum / count($reviews));
+$avg = round($level_sum / count($reviews));
 ?>
 <tr class="<?php echo $flags[$avg]; ?>"><td>Average Level </td><td colspan="3"><?php echo $avg ?></td></tr>
 <?php } ?>

@@ -279,7 +279,9 @@ class Parameter extends Controller {
 
 		$replaces = array(
 			'%user_city_id%'	=> $user->city_id,
+			'%user_center_id%'	=> isset($user->centers[0]) ? $user->centers[0] : 0,
 		);
+
 		$conditions = str_replace(array_keys($replaces), array_values($replaces), $parameter->conditions);
 
 		$data = $this->db->query("SELECT UA.question_id, UA.answer FROM SS_UserAnswer UA INNER JOIN User U ON U.id=UA.user_id " . implode(" ", $joins) . " WHERE {$conditions}")->result();
@@ -306,7 +308,7 @@ class Parameter extends Controller {
 			}
 			$level = round($aggregate / $total_answer_count);
 
-			foreach ($values as $question_id => $answer_count) {
+			foreach ($values as $answer_value => $answer_count) {
 				$this->review_model->save(array(
 					'review_parameter_id'	=> $question_id,
 					'type'			=> 'survey',
@@ -314,6 +316,7 @@ class Parameter extends Controller {
 					'level'			=> $level,
 					'input_type'	=> 'automated',
 					'review_period'	=> 'cycle',
+					'comment'		=> "Level 1: $values[1], Level 3: $values[3], Level 5: $values[5]",
 					'cycle'			=> $this->cycle,
 					'updated_on'	=> date("Y-m-d H:i:s"),
 					'user_id'		=> $user_id

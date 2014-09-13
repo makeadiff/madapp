@@ -39,6 +39,10 @@ class Review_parameter_model extends Model {
 		} elseif($type == 'parameter') {
 			return $this->db->query("SELECT P.name,D.* FROM Review_Data D INNER JOIN Review_Parameter P ON D.review_parameter_id=P.id
 				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
+		
+		} elseif($type == 'survey') {
+			return $this->db->query("SELECT Q.question AS name,D.* FROM Review_Data D INNER JOIN SS_Question Q ON D.review_parameter_id=Q.id
+				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
 		}
 	}
 	

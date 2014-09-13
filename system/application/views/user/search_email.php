@@ -17,6 +17,7 @@
 <li><a href="<?php echo site_url('user/view/'.$row->id) ?>"><?php echo $row->name ?></a></li>
 <?php } ?>
 </ul>
-<? } ?>
+<?php } ?>
 
-<?php $this->load->view('layout/footer'); ?>
+<?php $this->load->view('layout/footer');
+

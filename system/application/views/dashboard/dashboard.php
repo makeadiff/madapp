@@ -186,8 +186,8 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/task.png" alt="" /> <span>Task</span></a></div>
 	<?php } ?>
     <?php if($this->user_auth->get_permission('admincredit_index')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('admincredit/index') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/credit.png" alt="" /> <span>Admin Credits</span></a></div>
+	<div class="quickLink"> <a href="http://makeadiff.in/apps/support/intern_credits.php">
+	<img src="<?php echo base_url(); ?>images/ico/credit.png" alt="" /> <span>Intern Credits</span></a></div>
 	<?php } ?><br />
 
 	<br /><br /><br />

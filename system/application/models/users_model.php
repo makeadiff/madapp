@@ -367,6 +367,27 @@ class Users_model extends Model {
 		
 		return $result;
 	}
+
+	/// Returns most necessary info about the user - the entire user table + Vertical, Groups, Centers.
+	function get_info($user_id) {
+		$this->db->from('User');
+		$this->db->where('User.id',$user_id);
+		$user = $this->db->get()->row();
+
+		$group_info = idNameFormat($this->db->query("SELECT G.id, G.vertical_id AS name FROM `Group` G INNER JOIN UserGroup UG ON G.id=UG.group_id WHERE UG.user_id=$user_id")->result());
+
+		$user->groups = array_keys($group_info);
+		$user->verticals = array_unique(array_values($group_info));
+
+		$teacher_info = idNameFormat($this->db->query("SELECT Batch.id, Batch.center_id AS name
+					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
+					WHERE UserBatch.user_id={$user_id}")->result());
+
+		$user->batches = array_keys($teacher_info);
+		$user->centers = array_unique(array_values($teacher_info));
+
+		return $user;
+	}
 	
 	/**
     * Function to updateuser

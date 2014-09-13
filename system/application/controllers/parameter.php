@@ -254,6 +254,74 @@ class Parameter extends Controller {
 		return $level;
 	}
 
+	/////////////////////////////////////// Stakeholder Calculations ////////////////////////////
+	function stakeholder_calculate_parameters() {
+		/*
+		$rules = 'SELECT * FROM Review_SS_Parameter'
+
+		foreach($rules as $rule) {
+			$person = 'SELECT * FROM User WHERE vertical=$rule['vertical']'
+
+			$value = $this->stakeholder_calculate_value($rule[formula], $vertical, $person['city_id'], $person['region_id'])
+
+		}
+		*/
+	}
+
+	function stakeholder_calulate_value($ss_parameter_id, $user_id) {
+		$parameter = $this->db->query("SELECT * FROM Review_SS_Parameter WHERE id=$ss_parameter_id")->row();
+		$user = $this->user_model->get_info($user_id);
+
+		$joins = array();
+		// Join the tables only if the conditions calls for it.
+		if(strpos($parameter->conditions, 'vertical_id')) $joins[] = " INNER JOIN `Group` G ON G.id=UG.group_id INNER JOIN UserGroup UG ON UG.user_id=U.id ";
+		if(strpos($parameter->conditions, 'center_id')) $joins[] = "INNER JOIN Batch B ON B.id=UG.batch_id INNER JOIN UserBatch UB ON UB.user_id=U.id " ;
+
+		$replaces = array(
+			'%user_city_id%'	=> $user->city_id,
+		);
+		$conditions = str_replace(array_keys($replaces), array_values($replaces), $parameter->conditions);
+
+		$data = $this->db->query("SELECT UA.question_id, UA.answer FROM SS_UserAnswer UA INNER JOIN User U ON U.id=UA.user_id " . implode(" ", $joins) . " WHERE {$conditions}")->result();
+		$answers = array();
+
+		foreach ($data as $ans) {
+			// If not defined, define the defaults
+			if(!isset($answers[$ans->question_id])) $answers[$ans->question_id] = array(1=>0,3=>0,5=>0);
+
+			$answers[$ans->question_id][$ans->answer]++;
+		}
+
+		// Save values to Database
+		foreach ($answers as $question_id => $values) {
+			// Find level by aggregating the total and averaging.
+			// If there are 5 answers - 1 x Level 1, 2 x Level 3 and 2 x Level 5, we aggregate it - (1 x 1) + (2 x 3) + (2 x 5) = 17
+			//	Then we divide by total count : 17/5 = 3.4. Rounds to 3. Thats the level.
+			$aggregate = 0;
+			$total_answer_count = 0;
+
+			foreach(array(1,3,5) as $answer_value) {
+				$aggregate += $answer_value * $values[$answer_value];
+				$total_answer_count += $values[$answer_value];
+			}
+			$level = round($aggregate / $total_answer_count);
+
+			foreach ($values as $question_id => $answer_count) {
+				$this->review_model->save(array(
+					'review_parameter_id'	=> $question_id,
+					'type'			=> 'survey',
+					'value'			=> $answer_count,
+					'level'			=> $level,
+					'input_type'	=> 'automated',
+					'review_period'	=> 'cycle',
+					'cycle'			=> $this->cycle,
+					'updated_on'	=> date("Y-m-d H:i:s"),
+					'user_id'		=> $user_id
+				));
+			}
+		}
+	}
+
 
 	/////////////////////////////////////// Debug Stuff ////////////////////////////
 	function info($data) {

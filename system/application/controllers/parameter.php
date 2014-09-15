@@ -26,6 +26,9 @@ class Parameter extends Controller {
 			'%ed_vols_with_positive_credit_count%' => '%total_ed_vols_count% AND U.credit>=0',
 			'%ed_vols_with_negetive_credit_count%' => '%total_ed_vols_count% AND U.credit<0',
 
+			'%total_vol_requierement_count%' => "SELECT SUM(U.requirement_count) FROM HR_Volunteer_Request U
+						WHERE added_on > '%CYCLE_START_DATE%' AND added_on < '%CYCLE_END_DATE%' %CITY_CONDITION_USING_USER%",
+
 			/// Class info
 			'%classes_count%' => "SELECT COUNT(C.id) FROM Class C 
 					INNER JOIN Level L ON C.level_id=L.id INNER JOIN Center Ctr ON Ctr.id=L.center_id
@@ -69,12 +72,12 @@ class Parameter extends Controller {
 			'%amount_raised_in_this_cycle%' => "SELECT SUM(actual_amount) FROM Target_Data T 
 					INNER JOIN User U ON U.id=T.user_id 
 					INNER JOIN UserGroup UG ON UG.user_id=U.id 
-					INNER JOIN Group G ON UG.group_id=G.id
+					INNER JOIN `Group` G ON UG.group_id=G.id
 					WHERE T.cycle=%CYCLE% %CITY_CONDITION_USING_USER%",
 			'%target_for_this_cycle%' => "SELECT SUM(target_amount) FROM Target_Data T 
 					INNER JOIN User U ON U.id=T.user_id 
 					INNER JOIN UserGroup UG ON UG.user_id=U.id 
-					INNER JOIN Group G ON UG.group_id=G.id
+					INNER JOIN `Group` G ON UG.group_id=G.id
 					WHERE T.cycle=%CYCLE% %CITY_CONDITION_USING_USER%",
 			'%amount_raised_in_this_cycle_by_events%'	=> "%amount_raised_in_this_cycle% AND G.vertical_id=10",
 			'%amount_raised_in_this_cycle_by_cfr%'	=> "%amount_raised_in_this_cycle% AND G.vertical_id=12",
@@ -137,13 +140,13 @@ class Parameter extends Controller {
 		$all_users = $this->user_model->get_fellows_or_above($city_id);
 
 		foreach ($all_users as $user) {
-			$this->review_user($user);
+			$this->review_user($user->id);
 		}
 	}
 
 	function review_user($user) {
 		list($user_id, $user) = $this->get_user_format($user);
-		$this->info("<h3>Review for {$user->name}</h3>\n");
+		$this->info("<hr /><h2>Review for {$user->name}({$user->id})</h2>\n");
 
 		$this->review_milestone_parameters($user);
 		$this->review_core_parameters($user);
@@ -151,16 +154,15 @@ class Parameter extends Controller {
 	}
 
 
-	///////////////////////////////////////////// Core Metric/Parameters Canculation //////////////////////////////
+	///////////////////////////////////////////// Core Metric/Parameters Calculation //////////////////////////////
 	function review_core_parameters($user_id) {
-		$this->info("<h5>Calculating Core Metrics...</h5>");
+		$this->info("<h4>Calculating Core Metrics...</h4>");
 		list($user_id, $user_details) = $this->get_user_format($user_id);
 
 		if(!isset($this->parameters[$user_details->vertical_id])) return;
 
 		$all_parameters = $this->parameters[$user_details->vertical_id];
 
-		
 		foreach ($all_parameters as $parameter) {
 		 	$this->calculate_parameter($parameter, $user_details);
 		}
@@ -171,8 +173,8 @@ class Parameter extends Controller {
 		$user_id = $user_details->id;
 
 		$this->replace_values = array(
-				'%CYCLE_START_DATE%'=> '2014-04-01', // :DEBUG: :TODO: :HARDCODE:
-				'%CYCLE_END_DATE%'	=> '2014-07-15', 
+				'%CYCLE_START_DATE%'=> '2014-07-01', // :DEBUG: :TODO: :HARDCODE:
+				'%CYCLE_END_DATE%'	=> '2014-09-15', 
 				'%YEAR%'			=> $this->year,
 				'%CYCLE%'			=> $this->cycle,
 				'%CITY_ID%' 		=> $user_details->city_id,
@@ -219,7 +221,6 @@ class Parameter extends Controller {
 
 		$this->info("Formula: <em>{$parameter->formula}</em><br />Result: <strong>$formula</strong><br />Value: <u>$value</u><br />");
 
-
 		$level = 0;
 		$levels = array(0,
 			$parameter->level_1,
@@ -228,17 +229,24 @@ class Parameter extends Controller {
 			$parameter->level_4,
 			$parameter->level_5);
 
+
 		// Decide which order we use to compare the level values. From top or bottom.
 		if($parameter->start_compare == '1') {
-			for($i=1; $i<5; $i++) {
-				if(eval("return (( " . $value . $levels[$i] . " ) ? true : false);")) {
+			for($i=1; $i<=5; $i++) {
+				$calc = $this->sanitize($value . $levels[$i]);
+
+				if(eval("return (( " . $calc . " ) ? true : false);")) {
 					$level = $i;
 					break;
 				}
+				
 			}
+
 		} elseif($parameter->start_compare == '5') {
-			for($i=5; $i<0; $i++) {
-				if(eval("return (( " . $value . $levels[$i] . " ) ? true : false);")) {
+			for($i=5; $i<=0; $i++) {
+				$calc = $this->sanitize($value . $levels[$i]);
+
+				if(eval("return (( " . $calc . " ) ? true : false);")) {
 					$level = $i;
 					break;
 				}
@@ -271,6 +279,7 @@ class Parameter extends Controller {
 	// Replace all the small elements in query like '%CITY_ID%' and return the value.
 	function get_query_value($sql, $replace_values) {
 		$sql = str_replace(array_keys($replace_values), array_values($replace_values), $sql);
+
 		$data = $this->db->query($sql)->result_array();
 
 		// Convert data to single value.
@@ -304,7 +313,7 @@ class Parameter extends Controller {
 
 	/////////////////////////////////////// Milestone Calculations ///////////////////////////////
 	function review_milestone_parameters($user_id) {
-		$this->info("<h5>Calculating Milestones...</h5>");
+		$this->info("<h4>Calculating Milestones...</h4>");
 
 		list($user_id, $user) = $this->get_user_format($user_id);
 
@@ -344,14 +353,14 @@ class Parameter extends Controller {
 			'updated_on'	=> date("Y-m-d H:i:s"),
 			'user_id'		=> $milestone->user_id
 		));
-		$this->info("Saved '{$milestone->name}': $days_taken : $level<br /><br />");
+		$this->info("Saved '{$milestone->name}': Days taken: $days_taken | Level: $level<br /><br />");
 
 		return $level;
 	}
 
 	/////////////////////////////////////// Stakeholder Calculations ////////////////////////////
 	function review_ss_parameters($user_id) {
-		$this->info("<h5>Calculating Survey Parameters...</h5>");
+		$this->info("<h4>Calculating Survey Parameters...</h4>");
 
 		list($user_id, $user) = $this->get_user_format($user_id);
 
@@ -377,7 +386,7 @@ class Parameter extends Controller {
 
 		$replaces = array(
 			'%user_city_id%'	=> $user->city_id,
-			'%user_region_id%'	=> $city['region_id'],
+			'%user_region_id%'	=> isset($city['region_id']) ? $city['region_id'] : 0,
 			'%user_center_id%'	=> isset($user->centers[0]) ? $user->centers[0] : 0,
 		);
 
@@ -454,6 +463,13 @@ class Parameter extends Controller {
 		}
 
 		return array($user_id, $user_details);
+	}
+
+	// Encase numbers within () so that the values come out right
+	function sanitize($expression) {
+		$exp = preg_replace(array('/([\d\.]+)/'),array("($1)"), $expression);
+
+		return $exp;
 	}
 
 

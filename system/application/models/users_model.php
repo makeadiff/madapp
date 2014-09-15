@@ -595,7 +595,7 @@ class Users_model extends Model {
     	$where_vertical = '';
     	if($vertical_id) $where_vertical = " AND G.vertical_id=$vertical_id";
 
-    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title,G.vertical_id,G.type AS group_type
+    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title,G.vertical_id,G.type AS group_type,U.city_id
     		FROM User U
     		INNER JOIN UserGroup UG ON U.id=UG.user_id
     		INNER JOIN `Group` G ON UG.group_id=G.id
@@ -723,7 +723,7 @@ class Users_model extends Model {
 	/// Find the highest postion this person holds.
 	function get_highest_group($user_id, $groups = false, $return_info = true) {
 		if(!$groups) $groups = $this->get_user_groups($user_id, true);
-
+		
 		$order = array('national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
 
 		$highest_group = '';
@@ -738,6 +738,7 @@ class Users_model extends Model {
 				$highest_group_info = $g;
 			}
 		}
+
 		// No vertical info. National someone, possibly.
 		if(!$highest_group_info) {
 			$highest_group_info = $groups[0];

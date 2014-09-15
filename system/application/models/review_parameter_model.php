@@ -24,7 +24,7 @@ class Review_parameter_model extends Model {
 	function save($data) {
 		if(!isset($data['type'])) $data['type'] = 'parameter';
 		
-		$review = $this->get($data['review_parameter_id'], $data['type'], $data['cycle'], $data['user_id'], $data['name']); // Check for existance
+		$review = $this->get($data['review_parameter_id'], $data['type'], $data['cycle'], $data['user_id'], (isset($data['name']) ? $data['name'] : '')); // Check for existance
 		if($review) $this->db->update('Review_Data', $data, array('id'=>$review->id));
 		else $this->db->insert('Review_Data', $data);
 	}
@@ -34,11 +34,11 @@ class Review_parameter_model extends Model {
 
 	function get_reviews($user_id, $cycle, $type) {
 		if($type == 'milestone') {
-			return $this->db->query("SELECT M.name,D.* FROM Review_Data D INNER JOIN Review_Milestone M ON D.review_parameter_id=M.id
+			return $this->db->query("SELECT D.*,M.name,D.name AS description FROM Review_Data D INNER JOIN Review_Milestone M ON D.review_parameter_id=M.id
 				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
 
 		} elseif($type == 'parameter') {
-			return $this->db->query("SELECT P.name,D.* FROM Review_Data D INNER JOIN Review_Parameter P ON D.review_parameter_id=P.id
+			return $this->db->query("SELECT D.*,P.name,D.name AS description FROM Review_Data D INNER JOIN Review_Parameter P ON D.review_parameter_id=P.id
 				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
 		
 		} elseif($type == 'survey') {

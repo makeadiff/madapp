@@ -31,7 +31,7 @@ class Review extends Controller {
 		$this->load->view('review/select_people', array('fellows'=>$fellows));
 	}
 
-	function review_fellow($user_id, $cycle = 0) {
+	function review_fellow($user_id, $cycle = 0, $option='') {
 		$this->user_auth->check_permission('review_fellows');
 		$city_id = $this->session->userdata('city_id');
 		if(!$cycle) $cycle = $this->cycle;
@@ -43,6 +43,7 @@ class Review extends Controller {
 
         $topics = $this->review_model->get_topics();
         $scores = $this->review_model->get_scores($user_id);
+        if($option == 'no360') $scores = false; //Turn off 360 View
 
 		$user = $this->user_model->get_user($user_id);
 		$this->load->view('review/review_fellow', array('parameter_reviews' => $parameter_reviews, 

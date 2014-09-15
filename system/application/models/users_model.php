@@ -727,14 +727,23 @@ class Users_model extends Model {
 		$order = array('national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
 
 		$highest_group = '';
+		$highest_group_info = false;
 		$highest_number = 0;
 		foreach($groups as $g) {
+			if($g->vertical_id == 0) continue;
+
 			if($order[$g->type] > $highest_number) {
 				$highest_number = $order[$g->type];
 				$highest_group = $g->type;
 				$highest_group_info = $g;
 			}
 		}
+		// No vertical info. National someone, possibly.
+		if(!$highest_group_info) {
+			$highest_group_info = $groups[0];
+			$highest_group = $highest_group_info->type;
+		}
+
 		if($return_info) return $highest_group_info;
 
 		return $highest_group;

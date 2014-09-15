@@ -80,9 +80,9 @@ $last_grouping = '';
 foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews, 'sur' => $survey_reviews) as $key => $reviews) {
 	if(!$reviews) continue;
 
-	if($key == 'pr') print "<h3>Core Parameters</h3>";
-	elseif($key == 'mr') print "<br /><h3>Milestone</h3>";
-	elseif($key == 'sur') print "<br /><h3>Happiness Index</h3>";
+	if($key == 'pr') print "<h2>Core Parameters</h2>";
+	elseif($key == 'mr') print "<br /><br /><br /><hr /><h2>Milestone</h2>";
+	elseif($key == 'sur') print "<br /><br /><br /><hr /><h2>Happiness Index</h2>";
 
 	?>
 	<table class="data-table">
@@ -90,15 +90,23 @@ foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews, 'sur' => $s
 
 	<?php
 	$level_sum = 0;
-	foreach ($reviews as $item) { 
-		$level_sum += $item->level;
+	$filled_milestones_count = 0;
+	foreach ($reviews as $item) {
+		$level = $item->level;
+		if($item->value == -20) {
+			$level = 0;
+		} else {
+			$level_sum += $item->level;
+			$filled_milestones_count++;
+		}
+		$level_round = round($level);
 
 		if($key == 'sur' and $last_grouping != $item->description) {
 			$last_grouping = $item->description;
 			?>
 		<tr class="header"><td colspan="4"><?php echo $item->description ?></td></tr>
 		<?php } ?>
-<tr class="<?php echo $flags[$item->level]; ?>">
+<tr class="<?php echo $flags[$level_round]; ?>">
 	<td class="parameter-name"><?php echo format($item->name); ?></td>
 	<td class="parameter-level"><?php echo format($item->level); ?></td>
 	<td class="parameter-value"><?php 
@@ -116,8 +124,8 @@ foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews, 'sur' => $s
 		<?php } ?>
 	</td></tr>
 <?php }
-if($level_sum and count($reviews)) {
-$avg = round($level_sum / count($reviews));
+if($level_sum and $filled_milestones_count) {
+$avg = round($level_sum / $filled_milestones_count);
 ?>
 <tr class="<?php echo $flags[$avg]; ?>"><td>Average Level </td><td colspan="3"><?php echo $avg ?></td></tr>
 <?php } ?>
@@ -129,22 +137,17 @@ $avg = round($level_sum / count($reviews));
 
 <?php
 if(!empty($scores)){
-
-    echo "<h3>MAD 360 </h3>";
+    echo "<br /><br /><hr /><h2>MAD 360 </h2>";
     $sum = 0;
     $count = 0;
     foreach($scores as $score) {
-        echo $score->question . ' : Level ' . $score->level . "<br>" . $score->answer . '<br><br>';
+        echo $score->question . ' : <strong>Level ' . $score->level . "</strong><br>" . $score->answer . '<br><br>';
         $sum += $score->level;
         $count++;
-
     }
 
     echo "Average : " . $sum/$count;
-
 }
-
-
 ?>
 
 <script type="text/javascript">

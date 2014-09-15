@@ -142,6 +142,7 @@ class Parameter extends Controller {
 	}
 
 	function review_user($user) {
+		list($user_id, $user) = $this->get_user_format($user);
 		$this->info("<h3>Review for {$user->name}</h3>\n");
 
 		$this->review_milestone_parameters($user);
@@ -156,8 +157,9 @@ class Parameter extends Controller {
 		list($user_id, $user_details) = $this->get_user_format($user_id);
 
 		if(!isset($this->parameters[$user_details->vertical_id])) return;
-		
+
 		$all_parameters = $this->parameters[$user_details->vertical_id];
+
 		
 		foreach ($all_parameters as $parameter) {
 		 	$this->calculate_parameter($parameter, $user_details);
@@ -407,7 +409,7 @@ class Parameter extends Controller {
 				$aggregate += $answer_value * $values[$answer_value];
 				$total_answer_count += $values[$answer_value];
 			}
-			$level = round($aggregate / $total_answer_count);
+			$level = round($aggregate / $total_answer_count, 2);
 
 			$this->review_model->save(array(
 				'review_parameter_id'	=> $question_id,
@@ -422,7 +424,7 @@ class Parameter extends Controller {
 				'updated_on'	=> date("Y-m-d H:i:s"),
 				'user_id'		=> $user_id
 			));
-			$this->info("Q $question_id) Level 1: $values[1], Level 3: $values[3], Level 5: $values[5]<br />");
+			$this->info("Q $question_id) Level: $level. Data: Level 1: $values[1], Level 3: $values[3], Level 5: $values[5]<br />");
 		}
 		$this->info("<br />");
 	}
@@ -437,7 +439,7 @@ class Parameter extends Controller {
 
 	function get_user_format($user_id) {
 		// User info can be passed as a ID or as an Array. Do appropriate things to it.
-		if(!is_array($user_id)) {
+		if(is_numeric($user_id)) {
 			$user_details = $this->user_model->get_info($user_id);
 		
 		} else { // Its an array!

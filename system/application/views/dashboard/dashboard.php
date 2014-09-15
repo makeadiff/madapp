@@ -125,7 +125,7 @@ foreach($upcomming_classes as $class) { ?>
 
 	<?php if($this->user_auth->get_permission('review_select_person')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('review/select_people/') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/reviews-icon.png" alt="" /> <span>Review People</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/reviews-icon.png" alt="" /> <span>View Review Sheets</span></a></div>
 	<?php } ?>
 
 <br />
@@ -137,7 +137,7 @@ foreach($upcomming_classes as $class) { ?>
 	
 	<?php if($this->user_auth->get_permission('review_data_my')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('review/review_fellow/'.$current_user->id) ?>">
-	<img src="<?php echo base_url(); ?>images/ico/task-inbox.jpeg" alt="" /> <span>My Review Data</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/task-inbox.jpeg" alt="" /> <span>My Review Sheet</span></a></div>
 	<?php } ?>
 
 	<?php if($this->user_auth->get_permission('okr_my')) { ?>

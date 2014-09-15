@@ -118,6 +118,28 @@ $avg = round($level_sum / count($reviews));
 
 <?php } ?>
 
+<br><br>
+
+<?php
+if(!empty($scores)){
+
+    echo "<h3>MAD 360 </h3>";
+    $sum = 0;
+    $count = 0;
+    foreach($scores as $score) {
+        echo $score->question . ' : Level ' . $score->level . "<br>" . $score->answer . '<br><br>';
+        $sum += $score->level;
+        $count++;
+
+    }
+
+    echo "Average : " . $sum/$count;
+
+}
+
+
+?>
+
 <script type="text/javascript">
 	var site_url = "<?php echo site_url() ?>";
 	var user_id = <?php echo $user->id ?>;

@@ -142,7 +142,7 @@ class Review extends Controller {
 		$this->load->view('review/list_timeframes', array('user_id'=>$user_id, 'timeframes'=>$timeframes, 'all_cycles' => $this->all_cycles));
 	}
 
-
+	/// Shows the milestones of the current user. No edit possible.
 	function my_milestones() {
 		$this->user_auth->check_permission('milestone_my');
 
@@ -153,6 +153,7 @@ class Review extends Controller {
 			array('overdue_milestones' => $overdue_milestones, 'current_milestones' => $current_milestones));
 	}
 
+	/// Mark a milestone as done.
 	function do_milestone($milestone_id, $status, $done_on) {
 		$this->user_auth->check_permission('milestone_do');
 

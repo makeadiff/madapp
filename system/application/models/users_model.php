@@ -374,10 +374,11 @@ class Users_model extends Model {
 		$this->db->where('User.id',$user_id);
 		$user = $this->db->get()->row();
 
-		$group_info = idNameFormat($this->db->query("SELECT G.id, G.vertical_id AS name FROM `Group` G INNER JOIN UserGroup UG ON G.id=UG.group_id WHERE UG.user_id=$user_id")->result());
+		$user->groups = $this->get_user_groups($user_id, true);
+		$highest_group = $this->get_highest_group($user_id, $user->groups, true);
 
-		$user->groups = array_keys($group_info);
-		$user->verticals = array_unique(array_values($group_info));
+		$user->vertical_id = $highest_group->vertical_id;
+		$user->group_type = $highest_group->type;
 
 		$teacher_info = idNameFormat($this->db->query("SELECT Batch.id, Batch.center_id AS name
 					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
@@ -388,13 +389,7 @@ class Users_model extends Model {
 
 		return $user;
 	}
-	
-	/**
-    * Function to updateuser
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
+
 	function updateuser($data) {
 		$user_id = $data['rootId'];
 		$user_array=array(
@@ -431,12 +426,6 @@ class Users_model extends Model {
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
 	
-	/**
-    * Function to updateuser_to_group
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean]
-    **/
 	function updateuser_to_group($data)
 	{	
 		$rootId=$data['rootId'];
@@ -591,7 +580,7 @@ class Users_model extends Model {
     	$where_vertical = '';
     	if($vertical_id) $where_vertical = " AND G.vertical_id=$vertical_id";
 
-    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title FROM User U
+    	$fellows = $this->db->query("SELECT DISTINCT U.id,U.name, G.name AS title,G.vertical_id AS title FROM User U
     		INNER JOIN UserGroup UG ON U.id=UG.user_id
     		INNER JOIN `Group` G ON UG.group_id=G.id
     		WHERE G.type='fellow' AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical
@@ -606,7 +595,8 @@ class Users_model extends Model {
     	$where_vertical = '';
     	if($vertical_id) $where_vertical = " AND G.vertical_id=$vertical_id";
 
-    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title FROM User U
+    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title,G.vertical_id,G.type AS group_type
+    		FROM User U
     		INNER JOIN UserGroup UG ON U.id=UG.user_id
     		INNER JOIN `Group` G ON UG.group_id=G.id
     		WHERE (G.type='fellow' OR G.type='strat' OR G.type='national') AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical
@@ -731,8 +721,8 @@ class Users_model extends Model {
 	}
 
 	/// Find the highest postion this person holds.
-	function get_highest_group($user_id) {
-		$groups = $this->get_user_groups($user_id, true);
+	function get_highest_group($user_id, $groups = false, $return_info = true) {
+		if(!$groups) $groups = $this->get_user_groups($user_id, true);
 
 		$order = array('national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
 
@@ -742,8 +732,10 @@ class Users_model extends Model {
 			if($order[$g->type] > $highest_number) {
 				$highest_number = $order[$g->type];
 				$highest_group = $g->type;
+				$highest_group_info = $g;
 			}
 		}
+		if($return_info) return $highest_group_info;
 
 		return $highest_group;
 	}

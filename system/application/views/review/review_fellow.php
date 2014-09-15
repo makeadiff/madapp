@@ -76,12 +76,14 @@ function inputData(id, name, value, ele) {
 
 <?php 
 $flags = array('nothing', 'black','red','orange','yellow','green');
+$last_grouping = '';
 foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews, 'sur' => $survey_reviews) as $key => $reviews) {
 	if(!$reviews) continue;
 
 	if($key == 'pr') print "<h3>Core Parameters</h3>";
 	elseif($key == 'mr') print "<br /><h3>Milestone</h3>";
 	elseif($key == 'sur') print "<br /><h3>Happiness Index</h3>";
+
 	?>
 	<table class="data-table">
 	<tr><th>Parameter</th><th>Level</th><th>Value</th><!-- <th>Data</th> --><th>Comments</th></tr>
@@ -90,7 +92,12 @@ foreach (array('pr'=>$parameter_reviews, 'mr' => $milestone_reviews, 'sur' => $s
 	$level_sum = 0;
 	foreach ($reviews as $item) { 
 		$level_sum += $item->level;
-		?>
+
+		if($key == 'sur' and $last_grouping != $item->description) {
+			$last_grouping = $item->description;
+			?>
+		<tr class="header"><td colspan="4"><?php echo $item->description ?></td></tr>
+		<?php } ?>
 <tr class="<?php echo $flags[$item->level]; ?>">
 	<td class="parameter-name"><?php echo format($item->name); ?></td>
 	<td class="parameter-level"><?php echo format($item->level); ?></td>

@@ -8,10 +8,11 @@ class Review_parameter_model extends Model {
 		$this->project_id = 1;//$this->ci->session->userdata('project_id');
 	}
 
-	function get($review_parameter_id, $type, $cycle, $user_id) {
+	function get($review_parameter_id, $type, $cycle, $user_id, $name='') {
 		$this->db->from('Review_Data');
 		$this->db->where('review_parameter_id',$review_parameter_id)->where('type',$type);
 		$this->db->where('cycle',$cycle)->where('user_id', $user_id);
+		if($name) $this->db->where('name',$name);
 
 		return $this->db->get()->row();
 	}
@@ -23,7 +24,7 @@ class Review_parameter_model extends Model {
 	function save($data) {
 		if(!isset($data['type'])) $data['type'] = 'parameter';
 		
-		$review = $this->get($data['review_parameter_id'], $data['type'], $data['cycle'], $data['user_id']); // Check for existance
+		$review = $this->get($data['review_parameter_id'], $data['type'], $data['cycle'], $data['user_id'], $data['name']); // Check for existance
 		if($review) $this->db->update('Review_Data', $data, array('id'=>$review->id));
 		else $this->db->insert('Review_Data', $data);
 	}
@@ -41,8 +42,8 @@ class Review_parameter_model extends Model {
 				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
 		
 		} elseif($type == 'survey') {
-			return $this->db->query("SELECT Q.question AS name,D.* FROM Review_Data D INNER JOIN SS_Question Q ON D.review_parameter_id=Q.id
-				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type'")->result();
+			return $this->db->query("SELECT D.*, Q.question AS name,D.name AS description FROM Review_Data D INNER JOIN SS_Question Q ON D.review_parameter_id=Q.id
+				WHERE D.user_id=$user_id AND D.cycle=$cycle AND D.type='$type' ORDER BY description")->result();
 		}
 	}
 	
@@ -54,6 +55,31 @@ class Review_parameter_model extends Model {
 	function get_comment($parameter_id) {
 		$data = $this->db->select('comment')->from('Review_Data')->where('id',$parameter_id)->get()->row();
 		return $data->comment;
+	}
+
+
+	/////////////////////////// Parameters //////////////////////
+	function get_all_review_parameters($vertical_id=0) {
+		$where = array();
+		if($vertical_id) $where['vertical_id'] = $vertical_id;
+
+		$this->db->from("Review_Parameter");
+		if($where) $this->db->where($where);
+		$parameters = $this->db->get()->result();
+
+		return $parameters;
+	}
+
+	/////////////////////// Stakeholder Survey /////////////////
+	function get_all_ss_parameters($vertical_id = 0) {
+		$where = array();
+		if($vertical_id) $where['vertical_id'] = $vertical_id;
+
+		$this->db->from("Review_SS_Parameter");
+		if($where) $this->db->where($where);
+		$parameters = $this->db->get()->result();
+
+		return $parameters;	
 	}
 
 

@@ -134,4 +134,23 @@ class Review_parameter_model extends Model {
 	function find_cycle($due_on) {
 		return 1; // :TODO:
 	}
+
+    function get_topics(){
+
+        $data = $this->db->query('SELECT id,subject FROM prism_topics')->result();
+        return $data;
+    }
+
+    function get_scores($user_id) {
+
+        $data = $this->db->query("SELECT prism_questions.subject as question, prism_answers.level as level, prism_answers.subject as answer
+                                    FROM prism_answers
+                                    INNER JOIN prism_answer_user
+                                    ON prism_answer_user.answer_id = prism_answers.id
+                                    INNER JOIN prism_questions
+                                    ON prism_answers.question_id = prism_questions.id
+                                    WHERE prism_answer_user.user_id = $user_id
+                                    GROUP BY prism_questions.id")->result();
+        return $data;
+    }
 }

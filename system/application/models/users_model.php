@@ -703,7 +703,7 @@ class Users_model extends Model {
 	function get_highest_group($user_id, $groups = false, $return_info = true) {
 		if(!$groups) $groups = $this->get_user_groups($user_id, true);
 		
-		$order = array('national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
+		$order = array('executive'=>15,'national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
 
 		$highest_group = '';
 		$highest_group_info = false;
@@ -870,7 +870,7 @@ class Users_model extends Model {
 	
 	}
 
-	/// Return all the people under you - regardless of vertical or region.
+	/// Return all the people under you - till fellow level
 	function get_all_below($level='fellow', $vertical_id = 0, $region_id = 0) {
 		$allowed = array(
 			'executive'	=> "'national','strat','fellow'",
@@ -891,7 +891,7 @@ class Users_model extends Model {
 			WHERE G.type IN (".$allowed[$level].")
 			AND U.status='1' AND U.user_type='volunteer' "
 			. (($where) ? " AND " : "") . implode(" AND ", $where) 
-			. " ORDER BY City.region_id, City.name")->result();
+			. " GROUP BY UG.user_id ORDER BY City.region_id, City.name")->result();
 
 		return $subordinates;		
 	}

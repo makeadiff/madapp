@@ -30,6 +30,7 @@ class Review extends Controller {
 		$current_user = $this->user_model->get_info($this->user_id);
 		$all_verticals = $this->city_model->get_all_verticals();
 		$all_regions = $this->city_model->get_all_regions();
+		$all_verticals[0] = 'None';
 
 		//$fellows = $this->user_model->get_fellows_or_above($city_id);
 		//$fellows = $this->user_model->get_subordinates($this->user_id);

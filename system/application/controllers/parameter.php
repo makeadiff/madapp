@@ -385,15 +385,14 @@ class Parameter extends Controller {
 
 		$joins = array();
 		// Join the tables only if the conditions calls for it.
-		if(strpos($parameter->conditions, 'vertical_id')) $joins[] = "INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id";
-		if(strpos($parameter->conditions, 'center_id')) $joins[] = "INNER JOIN Batch B ON B.id=UG.batch_id INNER JOIN UserBatch UB ON UB.user_id=U.id " ;
-		if(strpos($parameter->conditions, 'region_id')) $joins[] = "INNER JOIN City C ON C.id=U.city_id " ;
-
-		$city = $this->city_model->getCity($user->city_id);
+		if((strpos($parameter->conditions, 'vertical_id') !== false)
+			or (strpos($parameter->conditions, 'G.type') !== false)) $joins[] = "INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id";
+		if(strpos($parameter->conditions, 'center_id') !== false) $joins[] = "INNER JOIN UserBatch UB ON UB.user_id=U.id INNER JOIN Batch B ON B.id=UB.batch_id" ;
+		if(strpos($parameter->conditions, 'region_id') !== false) $joins[] = "INNER JOIN City C ON C.id=U.city_id " ;
 
 		$replaces = array(
 			'%user_city_id%'	=> $user->city_id,
-			'%user_region_id%'	=> isset($city['region_id']) ? $city['region_id'] : 0,
+			'%user_region_id%'	=> $user->region_id,
 			'%user_center_id%'	=> isset($user->centers[0]) ? $user->centers[0] : 0,
 		);
 

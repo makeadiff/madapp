@@ -136,7 +136,7 @@ foreach($upcomming_classes as $class) { ?>
 	<?php } ?>
 	
 	<?php if($this->user_auth->get_permission('review_data_my')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('review/review_fellow/'.$current_user->id) ?>">
+	<div class="quickLink"> <a href="<?php echo site_url('review/review_fellow/'.base64_encode($current_user->id)); ?>">
 	<img src="<?php echo base_url(); ?>images/ico/task-inbox.jpeg" alt="" /> <span>My Review Sheet</span></a></div>
 	<?php } ?>
 

@@ -895,7 +895,7 @@ class Users_model extends Model {
 	function get_subordinates($user_id) {
 		$current_user_ka_groups = implode(',', array_keys($this->get_user_groups_of_user($user_id)));
 
-		$subordinates = $this->db->query("SELECT U.* FROM User U
+		$subordinates = $this->db->query("SELECT DISTINCT U.id,U.* FROM User U
 			INNER JOIN UserGroup UG ON UG.user_id=U.id
 			INNER JOIN GroupHierarchy GH ON GH.group_id=UG.group_id
 			WHERE GH.reports_to_group_id IN ($current_user_ka_groups)

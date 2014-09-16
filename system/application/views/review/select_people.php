@@ -1,9 +1,9 @@
 <?php 
-$this->load->view('layout/header', array('title' => "Select Fellows..."));
+$this->load->view('layout/header', array('title' => "Review Sheet: Select Person..."));
 ?>
-<div id="head" class="clear"><h1>Select Fellows...</h1></div>
+<div id="head" class="clear"><h1>Review Sheet: Select Person...</h1></div>
 
-<p>All fellows in city...</p>
+<h3>Select Person...</h3>
 <!--
 <form action="<?php echo site_url('review/review_fellows'); ?>" method="post">
 <select name="fellow_list" multiple="multiple" style="height:300px;">
@@ -18,7 +18,7 @@ $this->load->view('layout/header', array('title' => "Select Fellows..."));
 
 <ul>
 <?php foreach ($fellows as $person) { ?>
-<li><a href="<?php echo site_url('review/review_fellow/'.$person->id); ?>"><?php echo $person->name ?></a></li>
+<li><a href="<?php echo site_url('review/review_fellow/'.base64_encode($person->id).'/1/no360'); ?>"><?php echo $person->name ?></a></li>
 <?php } ?>
 </ul>
 

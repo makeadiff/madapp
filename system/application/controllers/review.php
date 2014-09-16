@@ -27,7 +27,8 @@ class Review extends Controller {
 		$this->user_auth->check_permission('review_fellows');
 		$city_id = $this->session->userdata('city_id');
 
-		$fellows = $this->user_model->get_fellows_or_above($city_id);
+		//$fellows = $this->user_model->get_fellows_or_above($city_id);
+		$fellows = $this->user_model->get_subordinates($this->user_id);
 		$this->load->view('review/select_people', array('fellows'=>$fellows));
 	}
 
@@ -35,6 +36,7 @@ class Review extends Controller {
 		$this->user_auth->check_permission('review_fellows');
 		$city_id = $this->session->userdata('city_id');
 		if(!$cycle) $cycle = $this->cycle;
+		if(!is_numeric($user_id)) $user_id = base64_decode($user_id);
 		// :TODO: Check if the current user has permission to review the said fellow.
 
 		$parameter_reviews	= $this->review_model->get_reviews($user_id, $cycle, 'parameter');

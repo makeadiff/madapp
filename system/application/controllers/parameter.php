@@ -329,11 +329,18 @@ class Parameter extends Controller {
 		$this->info("Calculating <strong>'{$milestone->name}'</strong><br \>\n");
 
 		$days_taken = -20;
+		$due_on = new DateTime($milestone->due_on);
 		if($milestone->status) {
-			$due_on = new DateTime($milestone->due_on);
 			$done_on = new DateTime($milestone->done_on);
 			$interval = $due_on->diff($done_on);
 			$days_taken = intval($interval->format('%R%a'));
+		
+		} else {
+			// If the due date is in the past and still work is not done, level it.
+			$today = new DateTime();
+			$interval = $due_on->diff($today);
+			$days_taken = intval($interval->format('%R%a'));
+			if($days_taken > 0) $days_taken = -20; // If due date has not arrived yet, don't level.
 		}
 		$level = 5;
 		if($days_taken <= -7) $level = 1;

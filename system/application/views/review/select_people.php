@@ -16,8 +16,8 @@ $this->load->view('layout/header', array('title' => "Review Sheet: Select Person
 <tr>
 <td><a href="<?php echo site_url('review/review_fellow/'.base64_encode($person->id).'/1/no360'); ?>"><?php echo $person->name ?></a></td>
 <td><?php echo $person->city_name ?></td>
-<td><?php echo $person->region_id ?></td>
-<td><?php echo $person->vertical_id ?></td>
+<td><?php echo $all_regions[$person->region_id] ?></td>
+<td><?php echo $all_verticals[$person->vertical_id] ?></td>
 <td><?php echo $person->group_name ?></td>
 </tr>
 <?php } ?>

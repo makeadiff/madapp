@@ -106,4 +106,11 @@ class City_model extends Model {
 		}
 		return $cities;
 	}
+
+	function get_all_verticals() {
+		return idNameFormat($this->db->query("SELECT id,name FROM Vertical")->result());
+	}
+	function get_all_regions() {
+		return idNameFormat($this->db->query("SELECT id,name FROM Region")->result());
+	}
 }

@@ -915,7 +915,6 @@ class Users_model extends Model {
 		if($user->id == 18269)	$user->region_id = 4;	// Shilpa
 		if($user->id == 17383)	$user->region_id = 3;	// Vrishi
 
-
 		$teacher_info = idNameFormat($this->db->query("SELECT Batch.id, Batch.center_id AS name
 					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
 					WHERE UserBatch.user_id={$user_id}")->result());

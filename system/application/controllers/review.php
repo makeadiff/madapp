@@ -28,17 +28,13 @@ class Review extends Controller {
 		$city_id = $this->session->userdata('city_id');
 
 		$current_user = $this->user_model->get_info($this->user_id);
-
-		if(!empty($_REQUEST['action'])) {
-			$name = $_REQUEST['name'];
-
-			dump($current_user);
-		}
+		$all_verticals = $this->city_model->get_all_verticals();
+		$all_regions = $this->city_model->get_all_regions();
 
 		//$fellows = $this->user_model->get_fellows_or_above($city_id);
 		//$fellows = $this->user_model->get_subordinates($this->user_id);
 		$fellows = $this->user_model->get_all_below($current_user->group_type, $current_user->vertical_id, $current_user->region_id);
-		$this->load->view('review/select_people', array('fellows'=>$fellows));
+		$this->load->view('review/select_people', array('fellows'=>$fellows, 'all_regions'=> $all_regions, 'all_verticals'=>$all_verticals));
 	}
 
 	function review_fellow($user_id, $cycle = 0, $option='') {

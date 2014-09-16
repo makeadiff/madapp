@@ -19,6 +19,7 @@ class Users_model extends Model {
         $this->city_id = $this->ci->session->userdata('city_id');
         $this->project_id = $this->ci->session->userdata('project_id');
         $this->year = $this->ci->session->userdata('year');
+
     }
     
     /**
@@ -366,28 +367,6 @@ class Users_model extends Model {
 					INNER JOIN Center ON Batch.center_id=Center.id WHERE UserBatch.user_id={$user_id}")->row();
 		
 		return $result;
-	}
-
-	/// Returns most necessary info about the user - the entire user table + Vertical, Groups, Centers.
-	function get_info($user_id) {
-		$this->db->from('User');
-		$this->db->where('User.id',$user_id);
-		$user = $this->db->get()->row();
-
-		$user->groups = $this->get_user_groups($user_id, true);
-		$highest_group = $this->get_highest_group($user_id, $user->groups, true);
-
-		$user->vertical_id = $highest_group->vertical_id;
-		$user->group_type = $highest_group->type;
-
-		$teacher_info = idNameFormat($this->db->query("SELECT Batch.id, Batch.center_id AS name
-					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
-					WHERE UserBatch.user_id={$user_id}")->result());
-
-		$user->batches = array_keys($teacher_info);
-		$user->centers = array_unique(array_values($teacher_info));
-
-		return $user;
 	}
 
 	function updateuser($data) {
@@ -890,6 +869,63 @@ class Users_model extends Model {
 		return $result->row();
 	
 	}
+
+	/// Return all the people under you - regardless of vertical or region.
+	function get_all_below($level='fellow', $vertical_id = 0, $region_id = 0) {
+		$allowed = array(
+			'executive'	=> "'national','strat','fellow'",
+			'national'	=> "'strat','fellow'",
+			'strat'		=> "'fellow'",
+			'fellow'	=> '',
+		);
+
+		if($level == 'fellow') return array(); // Nothing under fellow as volunteers not returned.
+		$where = array();
+		if($vertical_id) $where[] = "G.vertical_id=$vertical_id";
+		if($region_id) $where[] = "City.region_id=$region_id";
+
+		$subordinates = $this->db->query("SELECT DISTINCT U.id,U.*,City.name AS city_name,City.region_id,G.vertical_id,G.name AS group_name FROM User U
+			INNER JOIN UserGroup UG ON UG.user_id=U.id
+			INNER JOIN `Group` G ON G.id=UG.group_id
+			INNER JOIN City ON U.city_id=City.id
+			WHERE G.type IN (".$allowed[$level].")
+			AND U.status='1' AND U.user_type='volunteer' "
+			. (($where) ? " AND " : "") . implode(" AND ", $where) 
+			. " ORDER BY City.region_id, City.name")->result();
+
+		return $subordinates;		
+	}
+
+
+	/// Returns most necessary info about the user - the entire user table + Vertical, Groups, Centers.
+	function get_info($user_id) {
+		$user = $this->db->query('SELECT U.*,City.region_id FROM User U INNER JOIN City ON City.id=U.city_id WHERE U.id='.$user_id)->row();
+
+		$user->groups = $this->get_user_groups($user_id, true);
+		$highest_group = $this->get_highest_group($user_id, $user->groups, true);
+
+		$user->vertical_id = $highest_group->vertical_id;
+		$user->group_type = $highest_group->type;
+
+		// Some special case for region
+		if($user->region_id == 5) $user->region_id = 0; // National Region is 0.
+		// :HARDCODE:
+		if($user->id == 42117)	$user->region_id = 1;	// Aswin
+		if($user->id == 538)	$user->region_id = 2;	// Kaus
+		if($user->id == 18269)	$user->region_id = 4;	// Shilpa
+		if($user->id == 17383)	$user->region_id = 3;	// Vrishi
+
+
+		$teacher_info = idNameFormat($this->db->query("SELECT Batch.id, Batch.center_id AS name
+					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
+					WHERE UserBatch.user_id={$user_id}")->result());
+
+		$user->batches = array_keys($teacher_info);
+		$user->centers = array_unique(array_values($teacher_info));
+
+		return $user;
+	}
+
 
 
 	function get_subordinates($user_id) {

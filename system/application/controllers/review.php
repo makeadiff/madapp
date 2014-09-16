@@ -27,8 +27,17 @@ class Review extends Controller {
 		$this->user_auth->check_permission('review_fellows');
 		$city_id = $this->session->userdata('city_id');
 
+		$current_user = $this->user_model->get_info($this->user_id);
+
+		if(!empty($_REQUEST['action'])) {
+			$name = $_REQUEST['name'];
+
+			dump($current_user);
+		}
+
 		//$fellows = $this->user_model->get_fellows_or_above($city_id);
-		$fellows = $this->user_model->get_subordinates($this->user_id);
+		//$fellows = $this->user_model->get_subordinates($this->user_id);
+		$fellows = $this->user_model->get_all_below($current_user->group_type, $current_user->vertical_id, $current_user->region_id);
 		$this->load->view('review/select_people', array('fellows'=>$fellows));
 	}
 

@@ -146,7 +146,7 @@ if(!empty($scores)){
         $count++;
     }
 
-    echo "Average : " . $sum/$count;
+    echo "Average : " . round($sum/$count,1);
 }
 ?>
 

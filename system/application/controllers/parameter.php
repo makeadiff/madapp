@@ -464,7 +464,7 @@ class Parameter extends Controller {
 			// Is a strat? Get region too.
 			if($user_details->group_type == 'strat') {
 				$city_info = $this->city_model->getCity($user_details->city_id);
-				$user_details->region_id = $city_info->region_id;
+				$user_details->region_id = $city_info['region_id'];
 			}
 		}
 

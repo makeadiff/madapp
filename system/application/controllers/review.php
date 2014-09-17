@@ -35,6 +35,7 @@ class Review extends Controller {
 		//$fellows = $this->user_model->get_fellows_or_above($city_id);
 		//$fellows = $this->user_model->get_subordinates($this->user_id);
 		$fellows = $this->user_model->get_all_below($current_user->group_type, $current_user->vertical_id, $current_user->region_id);
+
 		$this->load->view('review/select_people', array('fellows'=>$fellows, 'all_regions'=> $all_regions, 'all_verticals'=>$all_verticals));
 	}
 
@@ -174,6 +175,87 @@ class Review extends Controller {
 
 		$this->review_model->do_milestone($milestone_id, $status, $done_on);
 		print '{"success":true, "milestone_id":'.$milestone_id.',"error":false}';
+	}
+
+
+	///////////////////////////////////////////////////////////////////// Aggrigator ///////////////////////////////////////////
+	function aggregate() {
+		$region_id = 0;
+		$city_id = 0;
+		$vertical_id = 0;
+		$group_type = 'all';
+
+		$wheres = array('1=1');
+		if($region_id) $wheres[] = "C.region_id=$region_id";
+		if($vertical_id) $wheres[] = "G.vertical_id=$vertical_id";
+		if($city_id) $wheres[] = "U.city_id=$city_id";
+		if($group_type != 'all') $wheres[] = "G.type='$group_type'";
+
+		$raw_data = $this->db->query("SELECT UA.question_id, UA.answer FROM SS_UserAnswer UA 
+			INNER JOIN User U ON U.id=UA.user_id 
+			INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
+			INNER JOIN City C ON C.id=U.city_id 
+			WHERE ". implode(" AND ", $wheres))->result();
+
+		// Lifted from controllers/parameter.php:ss_calulate()
+		foreach ($raw_data as $ans) {
+			// If not defined, define the defaults
+			if(!isset($answers[$ans->question_id])) $answers[$ans->question_id] = array(1=>0,3=>0,5=>0);
+
+			$answers[$ans->question_id][$ans->answer]++;
+		}
+
+		$data = array();
+
+		// Save values to Database
+		foreach ($answers as $question_id => $values) {
+			// Find level by aggregating the total and averaging.
+			// If there are 5 answers - 1 x Level 1, 2 x Level 3 and 2 x Level 5, we aggregate it - (1 x 1) + (2 x 3) + (2 x 5) = 17
+			//	Then we divide by total count : 17/5 = 3.4. Rounds to 3. Thats the level.
+			$aggregate = 0;
+			$total_answer_count = 0;
+			$data[$question_id] = array();
+
+			$total_answer_count = $values[1] + $values[3] + $values[5];
+
+			foreach(array(1,3,5) as $answer_value) {
+				$aggregate += $answer_value * $values[$answer_value];
+				
+
+				$data[$question_id]['level'][$answer_value] = $values[$answer_value];
+				$data[$question_id]['level_percentage'][$answer_value] = round((($values[$answer_value] / $total_answer_count) * 100), 2);
+			}
+			$level = round($aggregate / $total_answer_count, 2);
+
+			$data[$question_id]['aggregate_level'] = $level;
+			$data[$question_id]['total_answer_count'] = $total_answer_count;
+
+	
+			// $this->review_model->save(array(
+			// 	'review_parameter_id'	=> $question_id,
+			// 	'type'			=> 'survey',
+			// 	'value'			=> $total_answer_count,
+			// 	'level'			=> $level,
+			// 	'name'			=> $parameter->name,
+			// 	'input_type'	=> 'automated',
+			// 	'review_period'	=> 'cycle',
+			// 	'comment'		=> "Level 1: $values[1], Level 3: $values[3], Level 5: $values[5]",
+			// 	'cycle'			=> $this->cycle,
+			// 	'updated_on'	=> date("Y-m-d H:i:s"),
+			// 	'user_id'		=> $user_id
+			// ));
+		}
+		//dump($data);
+
+
+		$all_verticals = $this->city_model->get_all_verticals();
+		$all_regions = $this->city_model->get_all_regions();
+		$all_verticals[0] = 'None';
+
+
+		$this->load->view('review/aggregate', array(
+			'data'=>$data, 
+			'all_questions'=>$all_questions,'all_verticals'=>$all_verticals,'all_types'=>$all_types));
 	}
 }
 

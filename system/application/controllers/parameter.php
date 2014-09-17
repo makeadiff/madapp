@@ -405,6 +405,8 @@ class Parameter extends Controller {
 			INNER JOIN User U ON U.id=UA.user_id " . implode(" ", $joins) . $where)->result();
 		$answers = array();
 
+		// This code is replicated in review.php:aggregate() too. 
+		
 		foreach ($data as $ans) {
 			// If not defined, define the defaults
 			if(!isset($answers[$ans->question_id])) $answers[$ans->question_id] = array(1=>0,3=>0,5=>0);

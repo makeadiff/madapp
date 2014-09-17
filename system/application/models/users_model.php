@@ -702,14 +702,17 @@ class Users_model extends Model {
 	/// Find the highest postion this person holds.
 	function get_highest_group($user_id, $groups = false, $return_info = true) {
 		if(!$groups) $groups = $this->get_user_groups($user_id, true);
+
+
 		
 		$order = array('executive'=>15,'national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
 
 		$highest_group = '';
 		$highest_group_info = false;
 		$highest_number = 0;
+
 		foreach($groups as $g) {
-			if($g->vertical_id == 0) continue;
+			if($g->vertical_id == 0) continue; // We need the highest in the vertical.
 
 			if($order[$g->type] > $highest_number) {
 				$highest_number = $order[$g->type];
@@ -718,10 +721,15 @@ class Users_model extends Model {
 			}
 		}
 
-		// No vertical info. National someone, possibly.
+		// No vertical info. National someone, possibly. Check again without the NON Vertical Check.
 		if(!$highest_group_info) {
-			$highest_group_info = $groups[0];
-			$highest_group = $highest_group_info->type;
+			foreach($groups as $g) {
+				if($order[$g->type] > $highest_number) {
+					$highest_number = $order[$g->type];
+					$highest_group = $g->type;
+					$highest_group_info = $g;
+				}
+			}
 		}
 
 		if($return_info) return $highest_group_info;
@@ -873,7 +881,7 @@ class Users_model extends Model {
 	/// Return all the people under you - till fellow level
 	function get_all_below($level='fellow', $vertical_id = 0, $region_id = 0) {
 		$allowed = array(
-			'executive'	=> "'national','strat','fellow'",
+			'executive'	=> "'executive', 'national','strat','fellow'",
 			'national'	=> "'strat','fellow'",
 			'strat'		=> "'fellow'",
 			'fellow'	=> '',

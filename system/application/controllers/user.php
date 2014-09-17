@@ -388,7 +388,7 @@ class User extends Controller  {
 		}
 		
 		// Some data needed for rendering the page.
-		$data['all_cities'] = $this->city_model->get_all();
+		$data['all_cities'] = $this->city_model->getCities();
 		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
 		$data['get_user_groups'] = true;
 		$data['get_user_class'] = true;

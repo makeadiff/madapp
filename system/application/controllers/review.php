@@ -34,7 +34,7 @@ class Review extends Controller {
 
 		//$fellows = $this->user_model->get_fellows_or_above($city_id);
 		//$fellows = $this->user_model->get_subordinates($this->user_id);
-		$fellows = $this->user_model->get_all_below($current_user->group_type, $current_user->vertical_id, $current_user->region_id);
+		$fellows = $this->user_model->get_all_below($current_user->group_type, $current_user->vertical_id, $current_user->region_id, $city_id);
 
 		$this->load->view('review/select_people', array('fellows'=>$fellows, 'all_regions'=> $all_regions, 'all_verticals'=>$all_verticals));
 	}

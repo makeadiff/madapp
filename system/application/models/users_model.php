@@ -879,18 +879,19 @@ class Users_model extends Model {
 	}
 
 	/// Return all the people under you - till fellow level
-	function get_all_below($level='fellow', $vertical_id = 0, $region_id = 0) {
+	function get_all_below($level='fellow', $vertical_id = 0, $region_id = 0, $city_id = 0) {
 		$allowed = array(
 			'executive'	=> "'executive', 'national','strat','fellow'",
 			'national'	=> "'strat','fellow'",
 			'strat'		=> "'fellow'",
-			'fellow'	=> '',
+			'fellow'	=> "'fellow'",
 		);
 
-		if($level == 'fellow') return array(); // Nothing under fellow as volunteers not returned.
+		if($level == 'fellow' and $vertical_id != 1) return array(); // Nothing under fellow(if not CTL) as volunteers not returned.
 		$where = array();
-		if($vertical_id) $where[] = "G.vertical_id=$vertical_id";
+		if($vertical_id and $vertical_id != 1) $where[] = "G.vertical_id=$vertical_id";
 		if($region_id) $where[] = "City.region_id=$region_id";
+		if($vertical_id == 1) $where[] = "U.city_id=$city_id AND G.type='fellow'";
 
 		$subordinates = $this->db->query("SELECT DISTINCT U.id,U.*,City.name AS city_name,City.region_id,G.vertical_id,G.name AS group_name FROM User U
 			INNER JOIN UserGroup UG ON UG.user_id=U.id

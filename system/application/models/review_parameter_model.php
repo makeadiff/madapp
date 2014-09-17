@@ -82,6 +82,11 @@ class Review_parameter_model extends Model {
 		return $parameters;	
 	}
 
+	function get_all_ss_questions() {
+		return idNameFormat($this->db->from("SS_Question")->get()->result(), array('id','question'));
+
+	}
+
 
 	////////////////////////// Milestone stuff //////////////////
 

@@ -93,7 +93,7 @@ class City_model extends Model {
     
     
 	function get_all() {
-		return $this->db->order_by('name')->get('City')->result();
+		return idNameFormat($this->db->order_by('name')->where('classes_happening',1)->get('City')->result());
 	}
 	
 	function get_unique_cities() {

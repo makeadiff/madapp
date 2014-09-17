@@ -180,10 +180,11 @@ class Review extends Controller {
 
 	///////////////////////////////////////////////////////////////////// Aggrigator ///////////////////////////////////////////
 	function aggregate() {
-		$region_id = 0;
-		$city_id = 0;
-		$vertical_id = 0;
-		$group_type = 'all';
+		$region_id 	= i($_REQUEST, 'region_id', 0);
+		$city_id	= i($_REQUEST, 'city_id', 0);
+		$vertical_id= i($_REQUEST, 'vertical_id', 0);
+		$group_type = i($_REQUEST, 'group_type', 'all');
+		$data 		= array();
 
 		$wheres = array('1=1');
 		if($region_id) $wheres[] = "C.region_id=$region_id";
@@ -197,6 +198,8 @@ class Review extends Controller {
 			INNER JOIN City C ON C.id=U.city_id 
 			WHERE ". implode(" AND ", $wheres))->result();
 
+		$answers = array();
+
 		// Lifted from controllers/parameter.php:ss_calulate()
 		foreach ($raw_data as $ans) {
 			// If not defined, define the defaults
@@ -205,9 +208,6 @@ class Review extends Controller {
 			$answers[$ans->question_id][$ans->answer]++;
 		}
 
-		$data = array();
-
-		// Save values to Database
 		foreach ($answers as $question_id => $values) {
 			// Find level by aggregating the total and averaging.
 			// If there are 5 answers - 1 x Level 1, 2 x Level 3 and 2 x Level 5, we aggregate it - (1 x 1) + (2 x 3) + (2 x 5) = 17
@@ -229,33 +229,22 @@ class Review extends Controller {
 
 			$data[$question_id]['aggregate_level'] = $level;
 			$data[$question_id]['total_answer_count'] = $total_answer_count;
-
-	
-			// $this->review_model->save(array(
-			// 	'review_parameter_id'	=> $question_id,
-			// 	'type'			=> 'survey',
-			// 	'value'			=> $total_answer_count,
-			// 	'level'			=> $level,
-			// 	'name'			=> $parameter->name,
-			// 	'input_type'	=> 'automated',
-			// 	'review_period'	=> 'cycle',
-			// 	'comment'		=> "Level 1: $values[1], Level 3: $values[3], Level 5: $values[5]",
-			// 	'cycle'			=> $this->cycle,
-			// 	'updated_on'	=> date("Y-m-d H:i:s"),
-			// 	'user_id'		=> $user_id
-			// ));
 		}
-		//dump($data);
 
 
-		$all_verticals = $this->city_model->get_all_verticals();
-		$all_regions = $this->city_model->get_all_regions();
-		$all_verticals[0] = 'None';
+		$all_cities = $this->city_model->get_all(); $all_cities[0] = 'Any';
+		$all_verticals = $this->city_model->get_all_verticals(); $all_verticals[0] = 'Any';
+		$all_regions = $this->city_model->get_all_regions(); $all_regions[0] = 'Any';
+		$all_types = array('all' => 'All', 'executive' => 'Executive', 'national' => 'National', 'strat' => 'Strat', 'fellow' => 'Fellow','volunteer' => 'Volunteer');
+		$all_questions = $this->review_model->get_all_ss_questions();
 
 
 		$this->load->view('review/aggregate', array(
-			'data'=>$data, 
-			'all_questions'=>$all_questions,'all_verticals'=>$all_verticals,'all_types'=>$all_types));
+			'data' => $data, 
+			'all_questions' => $all_questions, 'all_verticals'=>$all_verticals, 'all_types'=>$all_types, 'all_regions'=> $all_regions, 'all_cities' => $all_cities,
+			'region_id' => $region_id, 'vertical_id' => $vertical_id, 'group_type' => $group_type, 'city_id' => $city_id,
+			'total_answer_count' => $total_answer_count,
+ 			));
 	}
 }
 

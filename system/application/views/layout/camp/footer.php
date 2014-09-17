@@ -12,7 +12,7 @@
      <div class="line"></div>
     </div>
 </div>
-<a id="fdbk_tab" class="fdbk_tab_bottom" style="background-color:#222" href="https://getsatisfaction.com/mad/topics/new">FEEDBACK</a>
+<!--<a id="fdbk_tab" class="fdbk_tab_bottom" style="background-color:#222" href="https://getsatisfaction.com/mad/topics/new">FEEDBACK</a>-->
 
 <?php 
 $url = site_url(); 

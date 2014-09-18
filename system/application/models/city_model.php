@@ -14,9 +14,9 @@ class City_model extends Model {
     	
     	// Highlight the errors in the center - if any.
 		for($i=0; $i<count($cities); $i++) {
-			$center_id = $cities[$i]->id;
+			$city_id = $cities[$i]->id;
 			
-			list($information, $problem_count) = $this->find_issuse($center_id);
+			list($information, $problem_count) = $this->find_issuse($city_id);
 			$cities[$i]->problem_count = $problem_count;
 			$cities[$i]->information = $information;
 		}
@@ -92,12 +92,16 @@ class City_model extends Model {
     }
     
     
-	function get_all() {
-		return idNameFormat($this->db->order_by('name')->where('classes_happening',1)->get('City')->result());
+	function get_all($happenning = 1) {
+		if($happenning) $this->db->where('classes_happening',1);
+
+		$data = idNameFormat($this->db->order_by('name')->get('City')->result());
+
+		return $data;
 	}
 	
 	function get_unique_cities() {
-		$cities = idNameFormat($this->get_all());
+		$cities = $this->get_all();
 		foreach($cities as $id => $name) {
 			if(preg_match('/^(.+) (\d+)$/', $name, $matches)) {
 				if($matches[2] == '1') $cities[$id] = $matches[1];

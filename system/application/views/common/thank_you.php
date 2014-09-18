@@ -37,7 +37,7 @@ h3 {
 <div id="container">
 <h3>Thank you for choosing to Make a Difference</h3>
 
-<p id="main">600 new MADsters will join us this year.<br />
+<p id="main">1200 new MADsters will join us this year.<br />
 And yours is the <?php echo ordinal($reg_count) ?> registration.</p>
 
 <p id="info">We recruit only twice a year.<br />

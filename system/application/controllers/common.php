@@ -64,8 +64,8 @@ class Common extends Controller {
 					$this->load->view('user/register_view',$data);
 				}
 			}
-          }
-        else {
+
+        } else {
 			if($user_id_encoded) {
 				$user_id_text = base64_decode($user_id_encoded);
 				$user_id = reset(explode(":", $user_id_text));

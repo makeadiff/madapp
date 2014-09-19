@@ -9,6 +9,7 @@
     <script type="text/javascript" src="<?php echo base_url()?>js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url()?>js/jquery-1.9.0.js"></script>
     <script type="text/javascript" src="<?php echo base_url()?>js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url()?>js/uservoice.js"></script>
 
     <script>document.documentElement.className = document.documentElement.className.replace('no-js','js');</script>
 

@@ -371,6 +371,7 @@ class Users_model extends Model {
 
 	function updateuser($data) {
 		$user_id = $data['rootId'];
+
 		$user_array=array(
 			'name'  => $data['name'],
 			'email' => $data['email'],
@@ -391,6 +392,15 @@ class Users_model extends Model {
 		
 		if(!empty($data['type'])) {
 			$user_array['user_type'] = $data['type'];
+
+			if($data['type'] == 'volunteer') {
+				$old_user_data = $this->get_user($data['rootId']);
+				if($old_user_data->user_type == 'applicant') { // If the volunteer was just added to the volunteer list, set the joined on date.
+					 $user_array['joined_on'] = date("Y-m-d H:i:s");
+				}
+			}
+
+
 			if($user_array['user_type'] == 'let_go' || $user_array['user_type'] == 'alumni') { // Remove user from his classes when he is let go.
 				if(!$user_array['left_on'] or $user_array['left_on'] == '0000-00-00') $user_array['left_on'] = date('Y-m-d');
 			

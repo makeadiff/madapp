@@ -39,8 +39,8 @@ class Review extends Controller {
 		$this->load->view('review/select_people', array('fellows'=>$fellows, 'all_regions'=> $all_regions, 'all_verticals'=>$all_verticals));
 	}
 
-	function review_fellow($user_id, $cycle = 0, $option='') {
-		$this->user_auth->check_permission('review_fellows');
+	function review_fellow($user_id, $cycle = 0, $option='', $check_permission = true) {
+		if($check_permission) $this->user_auth->check_permission('review_fellows');
 		$city_id = $this->session->userdata('city_id');
 		if(!$cycle) $cycle = $this->cycle;
 		if(!is_numeric($user_id)) $user_id = base64_decode($user_id);
@@ -63,6 +63,12 @@ class Review extends Controller {
 														'cycle'=>$cycle, 'auth'=>$this->user_auth,
                                                         'topics' => $topics,
                                                         'scores' => $scores));
+	}
+
+	function my_reivew_sheet() {
+		$this->user_auth->check_permission('review_data_my');
+		$user_id = $this->session->userdata('user_id');
+		$this->review_fellow(base64_encode($user_id), 0, '', false);
 	}
 
 	function ajax_get_comment($parameter_id) {

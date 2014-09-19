@@ -42,7 +42,7 @@ class User extends Controller  {
     /// View all the important details about the user in one convinent location.
     function view($user_id) {
 		$this->user_auth->check_permission('user_view');
-		$data['all_cities']= idNameFormat($this->city_model->get_all());
+		$data['all_cities']= $this->city_model->get_all(0);
 		$data['all_cities'][0] = 'None';
 		$data['user'] = $this->users_model->user_details($user_id);
 	
@@ -155,7 +155,7 @@ class User extends Controller  {
 	function popupEditusers($user_id)
 	{	
 		$this->user_auth->check_permission('user_edit');
-		$data['all_cities']= idNameFormat($this->city_model->get_all());
+		$data['all_cities']= $this->city_model->get_all(0);
 		$data['all_cities'][0] = 'None';
 		$data['user'] = $this->users_model->user_details($user_id);
 	

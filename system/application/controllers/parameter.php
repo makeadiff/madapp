@@ -71,13 +71,13 @@ class Parameter extends Controller {
 			/// Fundraising
 			'%amount_raised_in_this_cycle%' => "SELECT SUM(actual_amount) FROM Target_Data T 
 					INNER JOIN User U ON U.id=T.user_id 
-					INNER JOIN City C ON C.id=U.city_id 
+					INNER JOIN City ON City.id=U.city_id 
 					INNER JOIN UserGroup UG ON UG.user_id=U.id 
 					INNER JOIN `Group` G ON UG.group_id=G.id
 					WHERE T.cycle=%CYCLE% %CITY_CONDITION_USING_USER%",
 			'%target_for_this_cycle%' => "SELECT SUM(target_amount) FROM Target_Data T 
 					INNER JOIN User U ON U.id=T.user_id 
-					INNER JOIN City C ON C.id=U.city_id 
+					INNER JOIN City ON City.id=U.city_id 
 					INNER JOIN UserGroup UG ON UG.user_id=U.id 
 					INNER JOIN `Group` G ON UG.group_id=G.id
 					WHERE T.cycle=%CYCLE% %CITY_CONDITION_USING_USER%",

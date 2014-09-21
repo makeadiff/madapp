@@ -900,7 +900,7 @@ class Users_model extends Model {
 		if($level == 'fellow' and $vertical_id != 1) return array(); // Nothing under fellow(if not CTL) as volunteers not returned.
 		$where = array();
 		if($vertical_id and $vertical_id != 1) $where[] = "G.vertical_id=$vertical_id";
-		if($region_id) $where[] = "City.region_id=$region_id";
+		//if($region_id) $where[] = "City.region_id=$region_id"; // Apparently they want all the fellows to show up. Not just their region ka strat.
 		if($vertical_id == 1) $where[] = "U.city_id=$city_id AND G.type='fellow'";
 
 		$subordinates = $this->db->query("SELECT DISTINCT U.id,U.*,City.name AS city_name,City.region_id,G.vertical_id,G.name AS group_name FROM User U

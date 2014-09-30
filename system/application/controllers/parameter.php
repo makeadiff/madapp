@@ -334,13 +334,13 @@ class Parameter extends Controller {
 		$due_on = new DateTime($milestone->due_on);
 		if($milestone->status) {
 			$done_on = new DateTime($milestone->done_on);
-			$interval = $due_on->diff($done_on);
+			$interval = $done_on->diff($due_on);
 			$days_taken = intval($interval->format('%R%a'));
 		
 		} else {
 			// If the due date is in the past and still work is not done, level it.
 			$today = new DateTime();
-			$interval = $due_on->diff($today);
+			$interval = $today->diff($due_on);
 			$days_taken = intval($interval->format('%R%a'));
 			if($days_taken > 0) $days_taken = -20; // If due date has not arrived yet, don't level.
 		}

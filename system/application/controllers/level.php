@@ -35,7 +35,7 @@ class Level extends Controller {
 	function create($holder, $center_id = 0) { 
 		$this->user_auth->check_permission('level_create');
 		
-		if($this->input->post('action') == 'New') {
+		if($this->input->post('action') == 'Create') {
 			$this->model->create(array(
 					'name'		=>	$this->input->post('name'),
 					'center_id'	=>	$this->input->post('center_id'),
@@ -53,10 +53,9 @@ class Level extends Controller {
 			
 			$center_name = $this->center_model->get_center_name($center_id);
 			$kids = idNameFormat($this->kids_model->getkids_name_incenter($center_id)->result());
-			$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 
 			$this->load->view('level/form.php', array(
-				'action'	=> 'New',
+				'action'	=> 'Create',
 				'center_id'	=> $center_id,
 				'center_name'=>$center_name,
 				'level'	=> array(

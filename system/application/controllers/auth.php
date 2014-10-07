@@ -39,6 +39,12 @@ class Auth extends Controller {
 
 	//log the user in
 	function login($redirect_url = '') {
+		if($this->user_auth->logged_in()) {
+			if($redirect_url) redirect($redirect_url);
+			else redirect('dashboard/dashboard_view');
+			exit;
+		}
+		
 		//validate form input
 		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required');

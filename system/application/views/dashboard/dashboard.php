@@ -145,6 +145,11 @@ foreach($upcomming_classes as $class) { ?>
 	<img src="<?php echo base_url(); ?>images/ico/checklist-icon.png" alt="" /> <span>OKR</span></a></div>
 	<?php } ?>
 
+    <?php if($this->user_auth->get_permission('reimbursement')) { ?>
+        <div class="quickLink"> <a href="http://makeadiff.in/apps/reimbursement/public">
+                <img src="<?php echo base_url()?>/images/flat_ui/reimbursement.png" alt="" /> <span>Reimbursement</span></a></div>
+    <?php } ?>
+
 	
 	<br />
 	

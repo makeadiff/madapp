@@ -24,7 +24,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 
 
 <table class="data-table" id="main">
-<tr><th>Batch</th><th>Volunteers</th><?php if($this->user_auth->get_permission('classes_batch_view')) { ?><th>Batch View</th><?php } ?>
+<tr><th>Batch</th><th>Volunteers</th><?php if($this->user_auth->get_permission('classes_batch_view')) { ?><th>Mentor View</th><?php } ?>
 <?php if($this->user_auth->get_permission('debug')) { ?><th>Add Class Manually</th><?php } ?><th>Batch Head</th>
 <th colspan="2">Action</th></tr>
 <?php 
@@ -38,7 +38,7 @@ foreach($all_batches as $batch) {
 <td><?php echo $batch_name ?></td>
 
 <td><a href="<?php echo site_url('batch/add_volunteers/'.$batch->id) ?>" class="with-icon add">Add Volunteers to this Batch</a></td>
-<?php if($this->user_auth->get_permission('classes_batch_view')) { ?><td><a href="<?php echo site_url('classes/batch_view/'.$batch->id) ?>" class="with-icon calendar">Batch View</a></td><?php } ?>
+<?php if($this->user_auth->get_permission('classes_batch_view')) { ?><td><a href="<?php echo site_url('classes/batch_view/'.$batch->id) ?>" class="with-icon calendar">Mentor View</a></td><?php } ?>
 <?php if($this->user_auth->get_permission('debug')) { ?><td><a href="<?php echo site_url('classes/add_manually/'.$batch->id.'/'.$center_id) ?>" class="popup with-icon add">Add Class Manually</a></td><?php } ?>
 <td><?php echo $all_users[$batch->batch_head_id] ?></td>
 <td><a href="<?php echo site_url('batch/edit/'.$batch->id); ?>" class="thickbox edit with-icon primary popup"  class="edit with-icon">Edit</a></td>

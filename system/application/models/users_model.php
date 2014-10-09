@@ -372,16 +372,12 @@ class Users_model extends Model {
 	function updateuser($data) {
 		$user_id = $data['rootId'];
 
-		$user_array=array(
-			'name'  => $data['name'],
-			'email' => $data['email'],
-			'phone' => $this->_correct_phone_number($data['phone']),
-			'address'=>$data['address'],
-			'sex'	=> $data['sex'],
-			'english_teacher'	=> $data['english_teacher'],
-			'dream_tee'	=> $data['dream_tee'],
-			'events'	=> $data['events'],
-			'placements'=> $data['placements'],
+		$user_array = array(
+			'name'  			=> $data['name'],
+			'email' 			=> $data['email'],
+			'phone' 			=> $this->_correct_phone_number($data['phone']),
+			'address'			=> $data['address'],
+			'sex'				=> $data['sex'],
 		);
 		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
 		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
@@ -400,7 +396,6 @@ class Users_model extends Model {
 				}
 			}
 
-
 			if($user_array['user_type'] == 'let_go' || $user_array['user_type'] == 'alumni') { // Remove user from his classes when he is let go.
 				if(!$user_array['left_on'] or $user_array['left_on'] == '0000-00-00') $user_array['left_on'] = date('Y-m-d');
 			
@@ -412,8 +407,10 @@ class Users_model extends Model {
 			
 		$this->db->where('id', $user_id);
 		$this->db->update('User', $user_array);
-		return ($this->db->affected_rows() > 0) ? true: false ;
+
+		return $this->db->affected_rows();
 	}
+
 	
 	function updateuser_to_group($data)
 	{	
@@ -713,8 +710,6 @@ class Users_model extends Model {
 	function get_highest_group($user_id, $groups = false, $return_info = true) {
 		if(!$groups) $groups = $this->get_user_groups($user_id, true);
 
-
-		
 		$order = array('executive'=>15,'national'=>10,'strat'=>8,'fellow'=>5,'volunteer'=>3);
 
 		$highest_group = '';
@@ -732,7 +727,8 @@ class Users_model extends Model {
 		}
 
 		// No vertical info. National someone, possibly. Check again without the NON Vertical Check.
-		if(!$highest_group_info) {
+		if(!$highest_group_info 
+				or (count($groups) > 1 and $highest_group == 'volunteer')) { // A peorson without a vertical who is a teacher. 
 			foreach($groups as $g) {
 				if($order[$g->type] > $highest_number) {
 					$highest_number = $order[$g->type];

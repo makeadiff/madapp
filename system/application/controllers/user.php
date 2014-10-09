@@ -75,12 +75,12 @@ class User extends Controller  {
 	function popupAdduser()
 	{
 		$this->user_auth->check_permission('user_add');
-		$data['all_cities']= idNameFormat($this->city_model->get_all());
+		$data['all_cities']= $this->city_model->get_all();
 		$data['all_cities'][0] = 'None';
 		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
 		$data['this_city_id'] = $this->session->userdata('city_id');
 		$data['this_project_id'] = $this->session->userdata('project_id');
-		
+	
 		$this->load->view('user/popups/add_user',$data);
 	}
 	
@@ -467,6 +467,7 @@ class User extends Controller  {
 		$data['email'] = $this->input->post('email');
 		$data['phone'] = $this->input->post('phone');
 		$data['address'] = $this->input->post('address');
+		$data['sex'] = $this->input->post('sex');
 		
 		if($this->input->post('password')) $data['password'] = $this->input->post('password');
 		
@@ -476,13 +477,16 @@ class User extends Controller  {
 		$config['upload_path'] = dirname(BASEPATH) . '/uploads/users/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
-		foreach($_FILES as $key => $value) {
-            if( ! empty($key['name'])) {
-                $this->upload->initialize($config);
-                if (!$this->upload->do_upload($key)) $errors[] = $this->upload->display_errors();
-                else $this->users_model->process_pic($data);
-             }
-        }
+		$errors = array();
+
+        if( ! empty($_FILES['image']['name'])) {
+			$this->upload->initialize($config);
+			if (!$this->upload->do_upload('image')) $errors[] = $this->upload->display_errors();
+			else {
+				$this->users_model->process_pic($data);
+				$flag = 1;
+			}
+		}
 		
 		if($flag) {
 			$this->session->set_flashdata('success', "Profile edited successfully.");

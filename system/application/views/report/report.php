@@ -42,4 +42,4 @@ if(isset($devcon)) { ?>
 
 <a href="<?php echo site_url('report') ?>">Back</a>
 <script type="text/javascript" src="<?php echo base_url()?>js/libraries/ajaxify.js"></script>
-<?php $this->load->view('layout/footer'); ?>
+<?php $this->load->view('layout/footer');

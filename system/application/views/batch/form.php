@@ -25,13 +25,13 @@ if(!$batch['id']) $batch = array(
 <input type="text" name="class_time" value="<?php echo set_value('class_time', $batch['class_time']); ?>" /><br />
 </li>
 <li>
-<label for='batch_head_id'>Batch Head</label>
+<label for='batch_head_id'>Mentor</label>
 <?php echo form_dropdown('batch_head_id', $batch_volunters, $batch['batch_head_id']); ?><br />
 </li>
 
 <li>
 <label for="subjects">Subjects:</label>
-<select id="subjects" name="subjects[]" multiple>
+<select id="subjects" name="subjects[]">
 <?php foreach($all_subjects as $id=>$name) { ?>
 <option value="<?php echo $id; ?>" <?php 
 	if(isset($batch['selected_subjects']) and in_array($id, $batch['selected_subjects'])) echo 'selected'; 

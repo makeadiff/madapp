@@ -62,7 +62,7 @@ foreach($upcomming_classes as $class) { ?>
 	
 	<?php if($this->user_auth->get_permission('classes_batch_view')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('classes/batch_view') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Batch View</span></a></div>
+	<img src="<?php echo base_url(); ?>images/ico/reports.png" alt="" /> <span>Mentor View</span></a></div>
 	<?php } ?>
 	
 	<br />

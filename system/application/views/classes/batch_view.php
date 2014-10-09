@@ -1,5 +1,5 @@
 <?php
-$this->load->view('layout/flatui/header', array('title'=>'Batch View'));
+$this->load->view('layout/flatui/header', array('title'=>'Mentor View'));
 ?>
 
 
@@ -68,7 +68,7 @@ $this->load->view('layout/flatui/header', array('title'=>'Batch View'));
 
     <div class="row">
         <div class="col-md-4 col-md-offset-4 col-sm-12">
-            <h2 class="title">Batch View</h2><br>
+            <h2 class="title">Mentor View</h2><br>
             <h4 class="title"><?php echo $center_name; ?></h4>
             <h4 class="title"><?php echo $batch_name ?></h4>
             <h4 class="title"><a href="<?php echo site_url('classes/batch_view/'.$batch_id.'/'.$prev_week) ?>">&lt;- </a><?php echo date('d<\s\u\p>S</\s\u\p> M, Y', strtotime($from_date)); if($to_date) echo ' to ' . date('dS M, Y', strtotime($to_date)); ?><a href="<?php echo site_url('classes/batch_view/'.$batch_id.'/'.$next_week) ?>"> -&gt;</a></h4>

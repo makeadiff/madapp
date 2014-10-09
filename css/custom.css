@@ -22,6 +22,12 @@ body {
     /*color:white;*/
     background-color: white;
 }
+a {
+  color:wheat;
+}
+a:hover {
+  color:white;
+}
 
 @media (max-width: 500px) {
     h1.title

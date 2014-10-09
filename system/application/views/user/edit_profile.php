@@ -37,18 +37,6 @@
 <p class="error clear"></p>
 <br />
 
-<label for="english_teacher">English Teacher </label>
-<input class="checkbox" type="checkbox" id="english_teacher" name="english_teacher" value="1" <?php if($user->english_teacher) echo "checked='checked'"; ?> /><br />
-
-<label for="dream_tee">Dream Tee Volunteer </label>
-<input class="checkbox" type="checkbox" id="dream_tee" name="dream_tee" value="1" <?php if($user->dream_tee) echo "checked='checked'"; ?> /><br />
-
-<label for="events">Events Volunteer </label>
-<input class="checkbox" type="checkbox" id="events" name="events" value="1" <?php if($user->events) echo "checked='checked'"; ?> /><br />
-
-<label for="placements">Placements Volunteer </label>
-<input class="checkbox" type="checkbox" id="placements" name="placements" value="1" <?php if($user->placements) echo "checked='checked'"; ?> /><br />
-
 <?php if($this->user_auth->get_permission('user_edit_bank_details')) { ?>
 <a href="<?php echo site_url('user/edit_bank_details'); ?>" class="popup">Edit Bank Details</a>
 <?php } ?>

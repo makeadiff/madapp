@@ -16,7 +16,7 @@ $status = array('Todo', 'Done');
 <?php } else { ?>
 
 <table class="data-table">
-<tr><th>Milestone</th><th>Status</th><th>Timeframe</th><th>Due On</th><th colspan="2">Action</th></tr>
+<tr><th>Milestone</th><th>Status</th><th>Timeframe</th><th>Due On</th><th>Done On</th><th colspan="2">Action</th></tr>
 <?php foreach ($milestones as $milestone) { ?>
 <tr><td><?php echo $milestone->name ?></td>
 <td><input class="milestone" type="checkbox" value="1" id="milestone-<?php echo $milestone->id ?>" <?php if($milestone->status == '1') echo ' checked'; ?> />
@@ -28,6 +28,7 @@ $status = array('Todo', 'Done');
 </td>
 <td><?php echo $all_cycles[$milestone->cycle] ?></td>
 <td><?php echo $milestone->due_on ?></td>
+<td><?php echo date('Y-m-d',strtotime($milestone->done_on))?></td>
 <?php if($this->user_auth->get_permission('review_milestone_edit')) { ?><td><a class="with-icon edit popup" href="<?php echo site_url('review/edit_milestone/' . $milestone->id); ?>">Edit</a></td><?php } ?>
 <?php if($this->user_auth->get_permission('review_milestone_create')) { ?><td><a class="with-icon delete confirm" href="<?php echo site_url('review/delete_milestone/' . $milestone->id); ?>">Delete</a></td></tr><?php } ?>
 <?php } ?>

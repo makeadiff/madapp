@@ -1,10 +1,10 @@
-<?php $this->load->view('layout/header', array('title'=>'Levels in ' . $center_name)); ?>
+<?php $this->load->view('layout/header', array('title'=>'Class Sections in ' . $center_name)); ?>
 
 <div id="head" class="clear">
-<h1>Levels in <?php echo $center_name ?></h1>
+<h1>Class Sections in <?php echo $center_name ?></h1>
 
 <div id="actions">
-<a  id="example" class="thickbox button green primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Level</a>
+<a  id="example" class="thickbox button green primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Class Section</a>
 </div><br class="clear" />
 
 <div id="train-nav">
@@ -21,7 +21,7 @@
 </div>
 
 <table class="data-table" id="main">
-<tr><th>Level Name</th><th colspan="2">Action</th></tr>
+<tr><th>Class Section Name</th><th colspan="2">Action</th></tr>
 <?php foreach($all_levels as $level) { ?>
 <tr>
 <td><?php echo $level->name ?></td>

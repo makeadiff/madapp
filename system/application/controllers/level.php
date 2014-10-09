@@ -13,7 +13,6 @@ class Level extends Controller {
 			redirect('auth/login');
 		}
 	
-		$this->load->scaffolding('Level');
 		$this->load->model('Level_model','model', TRUE);
 		$this->load->model('kids_model');
 		$this->load->model('center_model', 'center_model');
@@ -43,7 +42,7 @@ class Level extends Controller {
 					'grade'		=>  $this->input->post('grade'),
 				));
 				
-			$this->session->set_flashdata('success', 'The Level has been added');
+			$this->session->set_flashdata('success', 'The Class Section has been added');
 			
 			redirect('level/index/center/' . $this->input->post('center_id'));
 		
@@ -58,6 +57,7 @@ class Level extends Controller {
 				'action'	=> 'Create',
 				'center_id'	=> $center_id,
 				'center_name'=>$center_name,
+				'title'		=> 'Class Section',
 				'level'	=> array(
 					'id'		=> 0,
 					'name'		=> '',
@@ -82,7 +82,7 @@ class Level extends Controller {
 				'grade'		=>  $this->input->post('grade')
 			));
 
-			$this->session->set_flashdata('success', 'The Level has been edited successfully');
+			$this->session->set_flashdata('success', 'The Class Section has been edited successfully');
 			redirect('level/index/center/' . $this->input->post('center_id'));
 		} else {
 		
@@ -108,6 +108,7 @@ class Level extends Controller {
 			
 			$this->load->view('level/form.php', array(
 				'action' 	=> 'Edit',
+				'title'		=> 'Class Section',
 				'center_id'	=> $center_id,
 				'center_name'=> $center_name,
 				'level'		=> $level,
@@ -121,13 +122,13 @@ class Level extends Controller {
 		//Make sure the level don't have any batches under it.
 		$batches = $this->db->where('level_id', $level_id)->get('UserBatch')->result();
 		if($batches) {
-			show_error("This level has batches under it. You can only delete levels that have no batches");
+			show_error("This class section has batches under it. You can only delete class sections that have no batches");
 		}
 		$level_center = $this->db->select('center_id')->where('id', $level_id)->get('Level')->row();
 		
  		$this->db->delete('Level', array('id'=>$level_id));
  		$this->db->delete('StudentLevel', array('level_id'=>$level_id));
-		$this->session->set_flashdata('success', 'The Level has been deleted successfully !!');
+		$this->session->set_flashdata('success', 'The class section has been deleted successfully');
 		redirect('level/index/center/' . $this->input->post('center_id'));
 	}
 	
@@ -143,12 +144,12 @@ class Level extends Controller {
 		$agents = $_REQUEST['agents'];
 		$agents = str_replace("on,","",$agents);
 		$agents = substr($agents,0,strlen($agents)-1);
-			$explode_agents_array = explode(",",trim($agents));
-			for($i=0;$i<sizeof($explode_agents_array);$i++)
-			   {
-					$agent_id = $explode_agents_array[$i];				
-					$this->kids_model->kids_level_update($agent_id,$level);
-			   }
+		$explode_agents_array = explode(",",trim($agents));
+		for($i=0;$i<sizeof($explode_agents_array);$i++)
+		   {
+				$agent_id = $explode_agents_array[$i];				
+				$this->kids_model->kids_level_update($agent_id,$level);
+		   }
 	
 	}
 

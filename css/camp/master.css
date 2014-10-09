@@ -97,18 +97,18 @@ h3 { font-size:17px; margin-bottom:10px;margin-top:10px; font-family:Arial, Helv
 
 /*********************** [Common Elements] **********************/
 
-.button { display: inline-block; outline: none;	cursor: pointer;	text-align: left;	text-decoration: none;	font: 17px/100% Arial, Helvetica, sans-serif;	padding: .5em 2em .55em 1.5em;	text-shadow: 0 1px 1px rgba(0,0,0,.3);	-webkit-border-radius: 2em; 	-moz-border-radius: 2em;	border-radius: 2em;	-webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);	-moz-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);	box-shadow:0px 1px 3px rgba(0, 0, 0, 0.3));	border: solid 2px #fff;
+.button { display: inline-block; outline: none;	cursor: pointer;	text-align: left;	text-decoration: none;	font: 17px/100% Arial, Helvetica, sans-serif; font-weight: bold;  padding: .5em 2em .55em 1.5em;	text-shadow: 0 1px 1px rgba(0,0,0,.3);	-webkit-border-radius: 2em; 	-moz-border-radius: 2em;	border-radius: 2em;	-webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);	-moz-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);	box-shadow:0px 1px 3px rgba(0, 0, 0, 0.3));	border: solid 2px #fff;
 }
 input.button  { padding: .32em 2em .32em 1.5em;}
 .button:hover { text-decoration: none;	border: solid 2px #fff;}
 .button:active { position: relative;	top: 1px; }
 
 
-.green{ 	color: #fef4e9;		background: #8ECD1B;	background: -webkit-gradient(linear, left top, left bottom, from(#AFE901), to(#f06015));
-	background: -moz-linear-gradient(top,  #AFE901,  #44A615);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#AFE901', endColorstr='#44A615');}
-.green:hover  {background: #8ECD1B;	background: -webkit-gradient(linear, left top, left bottom, from(#BFFE01), to(#44A615));
-	background: -moz-linear-gradient(top,  #BFFE01, #44A615);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#BFFE01', endColorstr='#44A615');
-}.green:active {	background: -webkit-gradient(linear, left top, left bottom, from(#44A615), to(#AFE901));	background: -moz-linear-gradient(top,  #44A615,  #AFE901);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#44A615', endColorstr='#AFE901'); }
+.green{ 	color: #fff;		background: #795483;	background: -webkit-gradient(linear, left top, left bottom, from(#795483), to(#402a6a));
+	background: -moz-linear-gradient(top,  #795483,  #402a6a);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#795483', endColorstr='#402a6a');}
+.green:hover  {background: #8ECD1B;	background: -webkit-gradient(linear, left top, left bottom, from(#82738f), to(#402a6a));
+	background: -moz-linear-gradient(top,  #82738f, #402a6a);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#82738f', endColorstr='#402a6a');
+}.green:active {	background: -webkit-gradient(linear, left top, left bottom, from(#402a6a), to(#82738f));	background: -moz-linear-gradient(top,  #402a6a,  #82738f);	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='purple', endColorstr='#AFE901'); }
 
 
 .yellow { 	color: #fef4e9;	background: #f7ff00;	background: -webkit-gradient(linear, left top, left bottom, from(#f7ff00), to(#868b00));
@@ -166,7 +166,7 @@ input.button  { padding: .32em 2em .32em 1.5em;}
 .data-table  { width:100%;float: left;}
 .data-table td,
 .data-table th  { border:1px solid #999; padding:5px; }
-.data-table th  { background-color:#AAA; }
+.data-table th  { background-color:#AAA; font-weight: bold; }
 .data-table .left,
 .data-table .right { float:none; }
 

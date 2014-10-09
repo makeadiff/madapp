@@ -47,8 +47,8 @@ function showMessage($count, $message, $type='') {
 
 <?php if($this->user_auth->get_permission('level_index')) { ?>
 <tr><td>4</td>	
-<td><a href="<?php echo site_url('level/index/center/'.$center_id); ?>">Manage Levels</a></td>
-<td><?php showMessage($details['level_count'], $details['level_count'] . " Levels"); ?></td></tr><?php } ?>
+<td><a href="<?php echo site_url('level/index/center/'.$center_id); ?>">Manage Class Sections</a></td>
+<td><?php showMessage($details['level_count'], $details['level_count'] . " Class Sections"); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { ?>
 <tr><td>5</td>	

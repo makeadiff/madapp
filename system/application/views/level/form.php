@@ -13,7 +13,7 @@ if(!isset($level)) $level = array(
 <form action="" method="post" class="form-area">
 <ul class="form city-form">
 <li>
-<label for='name'>Level Name: </label>
+<label for='name'>Name: </label>
 <input type="text" width="400" id="level" name="name" value="<?php echo set_value('name', $level['name']); ?>" /><br />
 </li>
 
@@ -26,6 +26,10 @@ if(!isset($level)) $level = array(
 ?>><?php echo $name; ?></option> 
 <?php } ?>
 </select>
+</li>
+<li>
+	<label>&nbsp;</label>
+	<input id="students-filter" type="text" value="" placeholder="Filter..." />
 </li>
 
 <li>

@@ -1,5 +1,5 @@
 <?php
-$this->load->view('layout/header', array('title'=>'Batch View'));
+$this->load->view('layout/header', array('title'=>'Mentor View'));
 ?>
 <link href="<?php echo base_url(); ?>/css/sections/classes/batch_view.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">

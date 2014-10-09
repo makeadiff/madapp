@@ -4,8 +4,10 @@ $(function() {
 		var target = $(this).attr("target-field");
 
 		$("#"+target+" > option").each(function(){ 
-			if(this.text.toLowerCase().search(filter) == -1) $(this).hide();
-			else $(this).show();
+			if(!this.selected) { // Make sure the selected ones are shown at all times.
+				if(this.text.toLowerCase().search(filter) == -1) $(this).hide();
+				else $(this).show();
+			}
 		});
 	});
 }) 

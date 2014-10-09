@@ -57,7 +57,7 @@ if($level_count % 4 == 0) print "</tr><tr>";
 
 <?php 
 echo form_hidden('batch_id', $batch->id);
-echo '<label for="action">&nbsp;</label>';echo form_submit('action', "Save");
+echo '<label for="action">&nbsp;</label>';echo form_submit('action', "Save", 'class="green button primary"');
 ?>
 </form><br />
 

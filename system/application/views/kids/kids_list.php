@@ -74,8 +74,8 @@ foreach($content as $row) {
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colName left"><?php echo $row['name']; ?></td>
-    <td class="colCount"><?php $the_sexes = array('m'=>'Male','f'=>'Female'); echo $the_sexes[$row['sex']]; ?></td>
-    <td class="colCount"><?php echo $row['birthday']; ?></td>
+    <td class="colCount"><?php $the_sexes = array('m'=>'Male','f'=>'Female'); if($row['sex']) echo $the_sexes[$row['sex']]; ?></td>
+    <td class="colCount"><?php echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
     <td class="colStatus" style="text-align:left"><?php echo $row['center_name'];?></td>
 	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
     
@@ -85,7 +85,7 @@ foreach($content as $row) {
     </td>
 </tr>
 
-<?php  }?>
+<?php } ?>
 </tbody>
 </table>
 </div>

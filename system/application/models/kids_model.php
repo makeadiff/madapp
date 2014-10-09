@@ -73,7 +73,7 @@ class Kids_model extends Model {
     **/
 	function delete_kids($id) {
 		$this->db->where('id',$id);
-		$this->db->update('Student', array('satus' => '0'));
+		$this->db->update('Student', array('status' => '0'));
 		$affected = $this->db->affected_rows();
 		 
 		$this->db->where('student_id',$id);

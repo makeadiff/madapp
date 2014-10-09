@@ -379,6 +379,11 @@ class Users_model extends Model {
 			'address'			=> $data['address'],
 			'sex'				=> $data['sex'],
 		);
+		
+		if(!$user_array['name'] or !$user_array['email'] or !$user_array['phone']) {
+			return 0;
+		}
+
 		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
 		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
 		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];

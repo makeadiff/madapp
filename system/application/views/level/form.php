@@ -1,4 +1,3 @@
-<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 <?php $this->load->view('layout/thickbox_header'); ?>
 <?php
 if(!isset($level)) $level = array(
@@ -29,7 +28,7 @@ if(!isset($level)) $level = array(
 </li>
 <li>
 	<label>&nbsp;</label>
-	<input id="students-filter" type="text" value="" placeholder="Filter..." />
+	<input id="students-filter" class="filter-multiselect" type="text" value="" target-field="students" placeholder="Filter..." />
 </li>
 
 <li>
@@ -49,4 +48,6 @@ echo '<label for="action">&nbsp;</label>';echo form_submit('action', $action);
 ?>
 </ul>
 </form><br />
+<script type="text/javascript" src="<?php echo base_url()?>js/libraries/filter-multiselect.js"></script>
 
+<?php $this->load->view('layout/thickbox_footer');

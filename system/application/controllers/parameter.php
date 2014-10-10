@@ -198,7 +198,7 @@ class Parameter extends Controller {
 			$this->replace_values['%CITY_CONNECTION_WITH_CENTER%']	= 'INNER JOIN City ON City.id=Ctr.center_id';
 			$this->replace_values['%CITY_CONNECTION_WITH_USER%']	= 'INNER JOIN City ON City.id=U.city_id';
 			$this->replace_values['%CITY_CONDITION_USING_USER%']	= ' AND City.region_id='.$user_details->region_id; 
-			$this->replace_values['%CITY_CONNECTION_WITH_CENTER%']	= ' AND City.region_id='.$user_details->region_id;
+			$this->replace_values['%CITY_CONDITION_USING_CENTER%']	= ' AND City.region_id='.$user_details->region_id;
 		}
 
 

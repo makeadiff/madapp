@@ -23,6 +23,7 @@ class Api extends Controller {
 			'user_id'	=> $status['id'],
 			'key'		=> $this->key,
 			'name'		=> $status['name'],
+			'groups'	=> array_values($status['groups']),
 		));
 	}
 
@@ -64,6 +65,19 @@ class Api extends Controller {
 		$batch_id = $this->user_model->get_users_batch($user_id);
 
 		$this->send(array('batch_id'=>$batch_id));
+	}
+
+	function class_get_students() {
+		$this->check_key();
+		$class_id = $this->input->post('class_id');
+		
+		$class_info = $this->class_model->get_class($class_id);
+		$level_id = $class_info['level_id'];
+		
+		$students = $this->level_model->get_kids_in_level($level_id);
+		$attendence = $this->class_model->get_attendence($class_id);
+
+		$this->show(array('students'=>$students, 'attendence'=>$attendence, 'class_info'=>$class_info));
 	}
 
 	

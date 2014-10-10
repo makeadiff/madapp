@@ -327,7 +327,7 @@ class Class_model extends Model {
     function get_last_class($user_id = false) {
     	if(!$user_id) $user_id = $this->ci->session->userdata('id');
     	
-    	$query = "SELECT Class.id, Center.name, Class.class_on, Class.level_id, Class.batch_id, Center.id, UserClass.status FROM UserClass 
+    	$query = "SELECT Class.id, Center.name, Class.class_on, Class.level_id, Class.batch_id, Center.id AS center_id, UserClass.status FROM UserClass 
     					INNER JOIN Class ON Class.id=UserClass.class_id 
     					INNER JOIN Level ON Class.level_id=Level.id
     					INNER JOIN Center ON Level.center_id=Center.id

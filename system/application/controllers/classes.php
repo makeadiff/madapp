@@ -388,7 +388,7 @@ class Classes extends Controller {
 		$teachers = idNameFormat($this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false)));
 		$substitutes = $teachers;
 		$substitutes[0] = 'No Substitute';
-		$substitutes[-1] = 'Other City';
+		//$substitutes[-1] = 'Other City';
 		$all_lessons = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_details->book_id));
 		
 		$statuses = array(

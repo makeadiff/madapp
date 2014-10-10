@@ -155,6 +155,21 @@ function i($array, $index=false, $default_value=false) {
 	return $array[$index];
 }
 
+function get_cycle($date = false) {
+	if(!$date) $date = date('Y-m-d');
+	else $date = date('Y-m-d', strtotime($date));
+
+	$cycle = 0;
+
+	if($date <= '2014-09-14') $cycle = 1;
+	elseif($date >= '2014-09-15' and $date <= '2014-10-26') $cycle = 2;
+	elseif($date >= '2014-10-27' and $date <= '2014-12-07') $cycle = 3;
+	elseif($date >= '2014-12-08' and $date <= '2015-01-18') $cycle = 4;
+	elseif($date >= '2015-01-19') $cycle = 5;
+
+	return $cycle;
+}
+
 /**
  * Workaround for PHP < 5.3.0
  */

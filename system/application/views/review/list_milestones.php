@@ -19,16 +19,16 @@ $status = array('Todo', 'Done');
 <tr><th>Milestone</th><th>Status</th><th>Timeframe</th><th>Due On</th><th>Done On</th><th colspan="2">Action</th></tr>
 <?php foreach ($milestones as $milestone) { ?>
 <tr><td><?php echo $milestone->name ?></td>
-<td><input class="milestone" type="checkbox" value="1" id="milestone-<?php echo $milestone->id ?>" <?php if($milestone->status == '1') echo ' checked'; ?> />
+<td width="200"><input class="milestone" type="checkbox" value="1" id="milestone-<?php echo $milestone->id ?>" <?php if($milestone->status == '1') echo ' checked'; ?> />
 <span id="milestone-done-<?php echo $milestone->id ?>" class="milestone-done">
-	<input name="done_on" class="date-pick" id="done_on_<?php echo $milestone->id ?>" type="text" value="<?php echo ($milestone->done_on != '0000-00-00 00:00:00') ? $milestone->done_on : date('Y-m-d'); ?>" size="5"> 
+	<input name="done_on" class="date-pick" id="done_on_<?php echo $milestone->id ?>" type="text" value="<?php echo ($milestone->done_on != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($milestone->done_on)) : date('Y-m-d'); ?>" size="5"> 
     <img src="<?php echo base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('done_on_<?php echo $milestone->id ?>','yyyyMMdd','arrow')" style="cursor:pointer"/>
     <input type="button" name="action" id="milestone-do-<?php echo $milestone->id ?>" class="milestone-do" value="Done" />
 </span>
 </td>
 <td><?php echo $all_cycles[$milestone->cycle] ?></td>
 <td><?php echo $milestone->due_on ?></td>
-<td><?php echo date('Y-m-d',strtotime($milestone->done_on))?></td>
+<td><?php if($milestone->done_on != '0000-00-00 00:00:00') echo date('Y-m-d',strtotime($milestone->done_on))?></td>
 <?php if($this->user_auth->get_permission('review_milestone_edit')) { ?><td><a class="with-icon edit popup" href="<?php echo site_url('review/edit_milestone/' . $milestone->id); ?>">Edit</a></td><?php } ?>
 <?php if($this->user_auth->get_permission('review_milestone_create')) { ?><td><a class="with-icon delete confirm" href="<?php echo site_url('review/delete_milestone/' . $milestone->id); ?>">Delete</a></td></tr><?php } ?>
 <?php } ?>

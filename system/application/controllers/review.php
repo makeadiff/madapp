@@ -181,7 +181,7 @@ class Review extends Controller {
 	function do_milestone($milestone_id, $status, $done_on) {
 		$this->user_auth->check_permission('milestone_do');
 
-		$this->review_model->do_milestone($milestone_id, $status, $done_on);
+		$this->review_model->do_milestone($milestone_id, $status, date('Y-m-d', strtotime($done_on)));
 		print '{"success":true, "milestone_id":'.$milestone_id.',"error":false}';
 	}
 

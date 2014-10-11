@@ -196,7 +196,7 @@ class Api extends Controller {
 	function class_get_batch($batch_id = 0) {
 		$this->check_key();
 		// Lifted off classes.php:batch_view
-		if($batch_id) $batch_id = $this->get_input('batch_id');
+		if(!$batch_id) $batch_id = $this->get_input('batch_id');
 
 		if(!$batch_id) return $this->send(array('error' => "User doesn't have a batch"));
 

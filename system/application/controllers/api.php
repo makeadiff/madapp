@@ -10,6 +10,8 @@ class Api extends Controller {
 		$this->load->model('batch_model');
 		$this->load->model('level_model');
 		$this->load->model('center_model');
+
+		header("Content-type: application/json");
 	}
 
 	/**
@@ -231,12 +233,17 @@ class Api extends Controller {
 		$this->send(array('success' => "Class un-cancelled."));
 	}
 
-
-
 	///////////////////////////////////////// Internal ////////////////////////////////
 	function get_input($name) {
-		return $_REQUEST[$name];
+		$return = '';
+
+		$return = $this->input->post($name);
+		if(!$return) $this->input->get($name);
+		if(!$return) $return = $_REQUEST[$name];
+
+		return $return;
 	}
+
 	function check_key() {
 		return true;
 

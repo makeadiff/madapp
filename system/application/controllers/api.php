@@ -330,7 +330,7 @@ class Api extends Controller {
 		// Lifted off classes.php:batch_view
 		if(!$batch_id) $batch_id = $this->get_input('batch_id');
 
-		if(!$batch_id) return $this->send(array('error' => "User doesn't have a batch"));
+		if(!$batch_id) return $this->error("User doesn't have a batch");
 
 		$last_class = $this->class_model->get_last_class_in_batch($batch_id);
 		if(!$last_class) return $this->send(array('error' => "This batch does not have any past batches"));

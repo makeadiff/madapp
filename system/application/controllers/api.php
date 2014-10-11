@@ -23,16 +23,16 @@ class Api extends Controller {
 	 */
 	function user_login() {
 		$data = array(
-			'username' => $_REQUEST['email'],
-			'password' => $_REQUEST['password']
+			'username' => $this->get_input('email'),
+			'password' => $this->get_input('password')
 		);
 		if(!$data['username'] or !$data['password']) {
-			return $this->send(array('error' => "Username or password not provided."));
+			return $this->error("Username or password not provided.");
 		}
 
 		$status = $this->user_model->login($data);
 		if(!$status) {
-			return $this->send(array('error' => "Invalid Username or password."));
+			return $this->error("Invalid Username or password.");
 		}
 
 		$this->send(array(
@@ -73,7 +73,7 @@ class Api extends Controller {
 
 		$class_details = $this->class_model->get_class($class_id);
 
-		if(!$class_details) return $this->send(array('error'=>"Invalid Class ID"));
+		if(!$class_details) return $this->error("Invalid Class ID");
 		$this->send($class_details);
 	}
 
@@ -233,17 +233,28 @@ class Api extends Controller {
 
 
 
+	///////////////////////////////////////// Internal ////////////////////////////////
+	function get_input($name) {
+		return $_REQUEST[$name];
+	}
 	function check_key() {
 		return true;
 
 		$key = $this->input->get_post('key');
 		if($key != $this->key) {
-			$this->send(array('error' => "Invalid Key"));
+			$this->error("Invalid Key");
 			exit;
 		}
 	}
 
+
+	function error($text) {
+		return $this->send(array('error' => $text, 'status' => 0));
+	}
+
 	function send($data) {
+		if(!isset($data['status'])) $data['status'] = 1;
+
 		print json_encode($data);
 		return true;
 	}

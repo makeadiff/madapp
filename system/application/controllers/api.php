@@ -54,7 +54,7 @@ class Api extends Controller {
 	function class_get_last() {
 		$this->check_key();
 
-		$user_id = $this->input->get_post('user_id');
+		$user_id = $this->get_input('user_id');
 
 		$class_info = $this->class_model->get_last_class($user_id);
 		$class_details = $this->class_model->get_class($class_info->id);
@@ -71,7 +71,7 @@ class Api extends Controller {
 	function class_get() {
 		$this->check_key();
 
-		$class_id = $this->input->get_post('class_id');
+		$class_id = $this->get_input('class_id');
 
 		$class_details = $this->class_model->get_class($class_id);
 
@@ -82,13 +82,16 @@ class Api extends Controller {
 	/**
 	 * Returns a list of all the teachers in the given city in the format {"user_id":"name", "user_id":"name"}. This can be used to populate the Substitute dropdown.
 	 * Arguments: $city_id - The ID of the city of which teachers you want.
-	 * Returns : A list of all the teachers in the city in ID => Name format(Associative Array).
+	 * Returns : A list of all the teachers in the city
 	 */
 	function user_get_teachers() {
 		$this->check_key();
-		$city_id = $this->input->get_post('city_id');
+		$city_id = $this->get_input('city_id');
+		if(!$city_id) return $this->error("Invalid City ID");
 
 		$teachers = $this->user_model->search_users(array('user_type'=>'volunteer', 'user_group'=>9, 'city_id'=>$city_id));
+		if(!$teachers) return $this->error("No Data from server");
+
 		$return = array();
 		foreach ($teachers as $t) {
 			$return[] = array(
@@ -101,16 +104,70 @@ class Api extends Controller {
 	}
 
 	/**
+	 * Returns a list of all the volunteers in the given city.
+	 * Arguments: $city_id - The ID of the city of which volunteer you want.
+	 * Returns : A list of all the volunteer in the city
+	 */
+	function user_get_all() {
+		$this->check_key();
+		$city_id = $this->get_input('city_id');
+		if(!$city_id) return $this->error("Invalid City ID");
+
+		$volunteers = $this->user_model->search_users(array('user_type'=>'volunteer', 'city_id'=>$city_id));
+		if(!$volunteers) return $this->error("No Data from server");
+		$return = array();
+		foreach ($volunteers as $t) {
+			$return[] = array(
+					'id'	=> $t->id,
+					'name'	=> $t->name,
+					'email'	=> $t->email,
+					'phone'	=> $t->phone,
+				);
+		}
+
+		$this->send(array('data'=>$return));
+	}
+
+	/**
+	 * Search the Database of a city with the given name. Returns all the volunteers who matches the name.
+	 * Arguments:	$city_id - The ID of the city in which the search should be done.
+	 * 				$name - The name that should be searched for. Part of the name is good enough.
+	 * Returns: JSON data of all the results from that name.
+	 */
+	function user_search_name() {
+		$this->check_key();
+		$city_id = $this->get_input('city_id');
+		if(!$city_id) return $this->error("Invalid City ID");
+
+		$name = $this->get_input('name');
+		if(!$city_id) return $this->error("Provide name to search for.");
+
+		$volunteers = $this->user_model->search_users(array('user_type'=>'volunteer', 'city_id'=>$city_id, 'name' => $name));
+		if(!$volunteers) return $this->error("No one found by the name '$name'");
+		$return = array();
+		foreach ($volunteers as $t) {
+			$return[] = array(
+					'id'	=> $t->id,
+					'name'	=> $t->name,
+					'email'	=> $t->email,
+					'phone'	=> $t->phone,
+				);
+		}
+
+		$this->send(array('data'=>$return));
+	}
+
+	/**
 	 * Returns the last batch of the given user. 
 	 * Arguments :	$user_id - ID of the user who's batch must be found.
-	 * Returns : 	$batch_id - the last batch that happened for the given user
+	 * Returns : 	the last batch that happened for the given user
 	 */
-	function class_get_last_batch_id() {
+	function class_get_last_batch() {
 		$this->check_key();
-		$user_id = $this->input->get_post('user_id');
+		$user_id = $this->get_input('user_id');
 		$batch_id = $this->user_model->get_users_batch($user_id);
 
-		$this->send(array('batch_id'=>$batch_id));
+		$this->class_get_batch($batch_id);
 	}
 
 	/**
@@ -120,7 +177,7 @@ class Api extends Controller {
 	 */
 	function class_get_students() {
 		$this->check_key();
-		$class_id = $this->input->get_post('class_id');
+		$class_id = $this->get_input('class_id');
 		
 		$class_info = $this->class_model->get_class($class_id);
 		$level_id = $class_info['level_id'];
@@ -139,7 +196,7 @@ class Api extends Controller {
 	function class_get_batch() {
 		$this->check_key();
 		// Lifted off classes.php:batch_view
-		$batch_id = $this->input->get_post('batch_id');
+		$batch_id = $this->get_input('batch_id');
 
 		if(!$batch_id) return $this->send(array('error' => "User doesn't have a batch"));
 
@@ -214,7 +271,7 @@ class Api extends Controller {
 	 */
 	function class_cancel() {
 		$this->check_key();
-		$class_id = $this->input->get_post('class_id');
+		$class_id = $this->get_input('class_id');
 
 		$this->class_model->cancel_class($class_id);
 		$this->send(array('success' => "Class cancelled."));
@@ -227,7 +284,7 @@ class Api extends Controller {
 	 */
 	function class_uncancel() {
 		$this->check_key();
-		$class_id = $this->input->get_post('class_id');
+		$class_id = $this->get_input('class_id');
 
 		$this->class_model->uncancel_class($class_id);
 		$this->send(array('success' => "Class un-cancelled."));
@@ -247,7 +304,7 @@ class Api extends Controller {
 	function check_key() {
 		return true;
 
-		$key = $this->input->get_post('key');
+		$key = $this->get_input('key');
 		if($key != $this->key) {
 			$this->error("Invalid Key");
 			exit;

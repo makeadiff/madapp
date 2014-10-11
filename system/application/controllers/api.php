@@ -25,7 +25,8 @@ class Api extends Controller {
 	 * Returns :$user_id - The ID of the user. Use this to make more user level calls.
 	 *			$city_id - The ID of the city the user belongs to.
 	 *			$key - The Auth Key. Include this with every call you make or else you will get a error.
-	 *			$groups - All the 
+	 *			$groups - All the Groups this user is a part of.
+	 * Example: http://makeadiff.in/madapp/index.php/api/user_login?email=cto@makeadiff.in&password=pass
 	 */
 	function user_login() {
 		$data = array(
@@ -41,11 +42,15 @@ class Api extends Controller {
 			return $this->error("Invalid Username or password.");
 		}
 
+		$mentor = 0;
+		if(in_array('Mentors', array_values($status['groups']))) $mentor = 1;
+
 		$this->send(array(
 			'user_id'	=> $status['id'],
 			'key'		=> $this->key,
 			'name'		=> $status['name'],
 			'city_id'	=> $status['city_id'],
+			'mentor'	=> $mentor,
 			'groups'	=> array_values($status['groups']),
 		));
 	}
@@ -54,6 +59,7 @@ class Api extends Controller {
 	 * Returns the ID of the last class of the given user.
 	 * Arguments :	$user_id
 	 * Returns : 	Class Details.
+	 * Example : http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
 	 */
 	function class_get_last() {
 		$this->check_key();
@@ -72,6 +78,7 @@ class Api extends Controller {
 	 * Gets the class details of the class who's ID is given
 	 * Arguments :	$class_id
 	 * Returns : 	Class Details
+	 * Example : http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
 	 */
 	function class_get() {
 		$this->check_key();
@@ -89,6 +96,7 @@ class Api extends Controller {
 	 * Returns a list of all the teachers in the given city in the format {"user_id":"name", "user_id":"name"}. This can be used to populate the Substitute dropdown.
 	 * Arguments: $city_id - The ID of the city of which teachers you want.
 	 * Returns : A list of all the teachers in the city
+	 * http://makeadiff.in/madapp/index.php/api/user_get_teachers?city_id=10&key=am3omo32hom4lnv32vO
 	 */
 	function user_get_teachers() {
 		$this->check_key();
@@ -113,6 +121,7 @@ class Api extends Controller {
 	 * Returns a list of all the volunteers in the given city.
 	 * Arguments: $city_id - The ID of the city of which volunteer you want.
 	 * Returns : A list of all the volunteer in the city
+	 * Example : http://makeadiff.in/madapp/index.php/api/user_get_all?city_id=10&key=am3omo32hom4lnv32vO
 	 */
 	function user_get_all() {
 		$this->check_key();
@@ -139,6 +148,7 @@ class Api extends Controller {
 	 * Arguments:	$city_id - The ID of the city in which the search should be done.
 	 * 				$name - The name that should be searched for. Part of the name is good enough.
 	 * Returns: JSON data of all the results from that name.
+	 * Example : http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
 	 */
 	function user_search_name() {
 		$this->check_key();
@@ -167,6 +177,7 @@ class Api extends Controller {
 	 * Returns the last batch of the given user. 
 	 * Arguments :	$user_id - ID of the user who's batch must be found.
 	 * Returns : 	the last batch that happened for the given user
+	 * Example : http://makeadiff.in/madapp/index.php/api/class_get_last_batch?user_id=1&key=am3omo32hom4lnv32vO
 	 */
 	function class_get_last_batch() {
 		$this->check_key();
@@ -182,6 +193,7 @@ class Api extends Controller {
 	 * Returns the list of all the students who are part of the given class
 	 * Arguments :	$class_id
 	 * Returns : 	List of all the students in the class with attendance data.
+	 * Example : http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
 	 */
 	function class_get_students() {
 		$this->check_key();
@@ -198,8 +210,9 @@ class Api extends Controller {
 
 	/**
 	 * Get the enter Mentor view data in one call - just specify which Batch ID should be shown
-	 * Arguments :	$batch_id
-	 * Returns : 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
+	 * Arguments:	$batch_id
+	 * Returns 	: 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
+	 * Example	: 	http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
 	 */	
 	function class_get_batch($batch_id = 0) {
 		$this->check_key();
@@ -272,10 +285,17 @@ class Api extends Controller {
 		$this->send(array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name));
 	}
 
+	function class_save_batch() {
+		$this->check_key();
+
+
+	}
+
 	/**
 	 * Use this to cancel a class. Just pass the ID of the class to cancel.
 	 * Arguments :	$class_id
 	 * Returns : 	Success/Fail
+	 * Example : http://makeadiff.in/madapp/index.php/api/class_cancel?class_id=129404&key=am3omo32hom4lnv32vO
 	 */
 	function class_cancel() {
 		$this->check_key();
@@ -289,6 +309,7 @@ class Api extends Controller {
 	 * Use this to un-cancel a class thats already cancelled.
 	 * Arguments :	$class_id
 	 * Returns : 	
+	 * Example : http://makeadiff.in/madapp/index.php/api/class_uncancel?class_id=129404&key=am3omo32hom4lnv32vO
 	 */
 	function class_uncancel() {
 		$this->check_key();
@@ -310,8 +331,6 @@ class Api extends Controller {
 	}
 
 	function check_key() {
-		return true;
-
 		$key = $this->get_input('key');
 		if($key != $this->key) {
 			$this->error("Invalid Key");

@@ -183,7 +183,9 @@ class Api extends Controller {
 		$user_id = $this->get_input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
-		$history = array("data" => array(
+		$history = array(
+			"data" => array(
+				array(
 					'center' 	=> 'MAD Center',
 					'level'		=> '5A - Kannada',
 					'time'		=> 'Oct 05th(Sun), 04:00 PM',
@@ -207,7 +209,8 @@ class Api extends Controller {
 					'substitute'=> '',
 					'status'	=> 'Attended',
 				),
-			);
+			)
+		);
 		$this->send($history);
 	}
 
@@ -221,7 +224,9 @@ class Api extends Controller {
 		$user_id = $this->get_input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
-		$history = array("data" => array(
+		$history = array(
+			"data" => array(
+				array(
 					'class_status'	=> 'Start',
 					'class_time'	=> 'Sept 28th(Sun), 04:00 PM',
 					'credit_change'	=> '0',
@@ -244,8 +249,9 @@ class Api extends Controller {
 					'class_time'	=> 'Oct 19th(Sun), 04:00 PM',
 					'credit_change'	=> '-2',
 					'Credit'		=> '-1',
-				),
-			);
+				)
+			),
+		);
 		$this->send($history);
 	}
 

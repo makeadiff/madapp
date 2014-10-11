@@ -276,8 +276,9 @@ class Api extends Controller {
 			foreach($attendence as $id=>$status) if($status == 1) $present_count++;
 			$attendence_count = $present_count . '/' . $total_kids_in_level;
 			
+			$index = 0;
 			if(!isset($classes[$row->id])) { // First time we are encounting such a class.
-				$classes[$row->id] = array(
+				$classes[$index] = array(
 					'id'			=> $row->id,
 					'level_id'		=> $row->level_id,
 					'level_name'	=> $row->name,
@@ -294,8 +295,9 @@ class Api extends Controller {
 						'zero_hour_attendance'	=> $row->zero_hour_attendance
 					)),
 				);
+				$index++;
 			} else { // We got another class with same id. Which means more than one teachers in the same class. Add the teacher to the class.
-				$classes[$row->id]['teachers'][] = array(
+				$classes[$index]['teachers'][] = array(
 					'id'	=> $row->user_id,
 					'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
 					'status'=> $row->status,
@@ -309,12 +311,6 @@ class Api extends Controller {
 		}
 
 		$this->send(array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name));
-	}
-
-	function class_save_batch() {
-		$this->check_key();
-
-
 	}
 
 	/**

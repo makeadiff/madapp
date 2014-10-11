@@ -297,10 +297,10 @@ class Api extends Controller {
 			// Each level must have only the units in the book given to that level.
 			if(empty($all_lessons[$level_id])) {
 				$all_lessons[$level_id] = array();
-				$all_lessons[$level_id][0] = "None";
-				for($i=1; $i<=20; $i++) $all_lessons[$level_id][$i] = "$i";
-				$all_lessons[$level_id][-1] = "Revision";
-				$all_lessons[$level_id][-2] = "Test";
+				$all_lessons[$level_id][] = array('unit_name' => "None", 'unit_id' => "0");
+				for($i=1; $i<=20; $i++) $all_lessons[$level_id][] = array('unit_name' => "Unit $i", 'unit_id' => "$i");
+				$all_lessons[$level_id][] = array('unit_name' => "Revision", 'unit_id' => "-1");
+				$all_lessons[$level_id][] = array('unit_name' => "Test", 'unit_id' => "-2");
 			}
 			
 			$present_count = 0;
@@ -316,6 +316,7 @@ class Api extends Controller {
 					'level_name'	=> $row->name,
 					'lesson_id'		=> $row->lesson_id,
 					'all_lessons'	=> $all_lessons[$level_id],
+					'max_lesson'	=> 20,
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,

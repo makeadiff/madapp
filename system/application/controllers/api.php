@@ -173,9 +173,17 @@ class Api extends Controller {
 		$this->send(array('data'=>$return));
 	}
 
+	/**
+	 * Returns the entire history of the given user. 
+	 * Example: /api/user_class_history?user_id=1&key=am3omo32hom4lnv32vO
+	 */
 	function user_class_history() {
-		$history = array(
-				array(
+		$this->check_key();
+
+		$user_id = $this->get_input('user_id');
+		if(!$user_id) $this->error("User ID is empty");
+
+		$history = array("data" => array(
 					'center' 	=> 'MAD Center',
 					'level'		=> '5A - Kannada',
 					'time'		=> 'Oct 05th(Sun), 04:00 PM',
@@ -204,6 +212,45 @@ class Api extends Controller {
 	}
 
 	/**
+	 * Returns the entire credit history of the given user. 
+	 * Example: /api/user_credit_history?user_id=1&key=am3omo32hom4lnv32vO
+	 */
+	function user_credit_history() {
+		$this->check_key();
+
+		$user_id = $this->get_input('user_id');
+		if(!$user_id) $this->error("User ID is empty");
+
+		$history = array("data" => array(
+					'class_status'	=> 'Start',
+					'class_time'	=> 'Sept 28th(Sun), 04:00 PM',
+					'credit_change'	=> '0',
+					'Credit'		=> '3',
+				),
+				array(
+					'class_status'	=> 'Absent',
+					'class_time'	=> 'Oct 05th(Sun), 04:00 PM',
+					'credit_change'	=> '-2',
+					'Credit'		=> '1',
+				),
+				array(
+					'class_status'	=> 'Sustitued For Aravind',
+					'class_time'	=> 'Oct 12th(Sun), 04:00 PM',
+					'credit_change'	=> '+1',
+					'Credit'		=> '2',
+				),
+				array(
+					'class_status'	=> 'Absent',
+					'class_time'	=> 'Oct 19th(Sun), 04:00 PM',
+					'credit_change'	=> '-2',
+					'Credit'		=> '-1',
+				),
+			);
+		$this->send($history);
+	}
+
+
+	/**
 	 * Returns the last batch of the given user. 
 	 * Arguments :	$user_id - ID of the user who's batch must be found.
 	 * Returns : 	the last batch that happened for the given user
@@ -221,7 +268,9 @@ class Api extends Controller {
 
 	function class_save_level() {
 		$this->check_key();
-		$user_id = $this->get_input('user_id');
+		// $batch_id = $this->get_input('batch_id');
+		// $level_id = $this->get_input('level_id');
+		// $date = $this->get_input('date');
 
 		$class_id = $this->get_input('class_id');
 		$lesson_id = $this->get_input('lesson_id');
@@ -308,6 +357,8 @@ class Api extends Controller {
 			foreach($attendence as $id=>$status) if($status == 1) $present_count++;
 			$attendence_count = $present_count . '/' . $total_kids_in_level;
 
+			//dump($row);
+
 			if(!isset($class_done[$row->id])) { // First time we are encounting such a class.
 				$class_done[$row->id] = $index;
 				$classes[$index] = array(
@@ -317,6 +368,7 @@ class Api extends Controller {
 					'lesson_id'		=> $row->lesson_id,
 					'all_lessons'	=> $all_lessons[$level_id],
 					'max_lesson'	=> 20,
+					'class_status'	=> 'active',
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,

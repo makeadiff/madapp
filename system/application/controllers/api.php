@@ -42,8 +42,8 @@ class Api extends Controller {
 			return $this->error("Invalid Username or password.");
 		}
 
-		$mentor = 0;
-		if(in_array('Mentors', array_values($status['groups']))) $mentor = 1;
+		$mentor = "0";
+		if(in_array('Mentors', array_values($status['groups']))) $mentor = "1";
 
 		$this->send(array(
 			'user_id'	=> $status['id'],
@@ -187,6 +187,32 @@ class Api extends Controller {
 		$batch_id = $this->user_model->get_users_batch($user_id);
 
 		$this->class_get_batch($batch_id);
+	}
+
+	function class_save_level() {
+		$this->check_key();
+		$user_id = $this->get_input('user_id');
+
+		$class_id = $this->get_input('class_id');
+		$lesson_id = $this->get_input('lesson_id');
+
+		// Can be mupltiple
+		$teachers = $this->get_input('teacher_id');
+		$substitutes = $this->get_input('substitute_id');
+		$status = $this->get_input('status');
+		$zero_hour_attendance = $this->get_input('zero_hour_attendance');
+
+		// Figure out things...
+		$this->class_model->save_class_lesson($class_id, $lesson_id);
+		foreach($teachers as $key => $teacher_id) {
+			$this->class_model->save_class_teachers(0, array(
+				'user_id'	=> $teacher_id,
+				'class_id'	=> $class_id,
+				'substitute_id'=>$substitutes[$key],
+				'status'	=> $status[$key],
+				'zero_hour_attendance'	=> $zero_hour_attendance[$key],
+			));
+		}
 	}
 
 	/**
@@ -340,11 +366,11 @@ class Api extends Controller {
 
 
 	function error($text) {
-		return $this->send(array('error' => $text, 'status' => 0));
+		return $this->send(array('error' => $text, 'status' => "0"));
 	}
 
 	function send($data) {
-		if(!isset($data['status'])) $data['status'] = 1;
+		if(!isset($data['status'])) $data['status'] = "1";
 
 		print json_encode($data);
 		return true;

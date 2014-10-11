@@ -315,7 +315,7 @@ class Api extends Controller {
 					'level_id'		=> $row->level_id,
 					'level_name'	=> $row->name,
 					'lesson_id'		=> $row->lesson_id,
-					'all_lessons'	=> $all_lessons,
+					'all_lessons'	=> $all_lessons[$level_id],
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,

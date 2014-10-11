@@ -23,8 +23,8 @@ class Api extends Controller {
 	 */
 	function user_login() {
 		$data = array(
-			'username' => $this->input->post('email'),
-			'password' => $this->input->post('password')
+			'username' => $this->input->get_post('email'),
+			'password' => $this->input->get_post('password')
 		);
 		if(!$data['username'] or $data['password']) {
 			return $this->send(array('error' => "Username or password not provided."));
@@ -52,7 +52,7 @@ class Api extends Controller {
 	function class_get_last() {
 		$this->check_key();
 
-		$user_id = $this->input->post('user_id');
+		$user_id = $this->input->get_post('user_id');
 
 		$class_info = $this->class_model->get_last_class($user_id);
 		$class_details = $this->class_model->get_class($class_info->id);
@@ -69,7 +69,7 @@ class Api extends Controller {
 	function class_get() {
 		$this->check_key();
 
-		$class_id = $this->input->post('class_id');
+		$class_id = $this->input->get_post('class_id');
 
 		$class_details = $this->class_model->get_class($class_id);
 
@@ -84,7 +84,7 @@ class Api extends Controller {
 	 */
 	function user_get_teachers() {
 		$this->check_key();
-		$city_id = $this->input->post('city_id');
+		$city_id = $this->input->get_post('city_id');
 
 		$teachers = $this->user_model->search_users(array('user_type'=>'volunteer', 'user_group'=>9, 'city_id'=>$city_id));
 		$return = array();
@@ -105,7 +105,7 @@ class Api extends Controller {
 	 */
 	function class_get_last_batch_id() {
 		$this->check_key();
-		$user_id = $this->input->post('user_id');
+		$user_id = $this->input->get_post('user_id');
 		$batch_id = $this->user_model->get_users_batch($user_id);
 
 		$this->send(array('batch_id'=>$batch_id));
@@ -118,7 +118,7 @@ class Api extends Controller {
 	 */
 	function class_get_students() {
 		$this->check_key();
-		$class_id = $this->input->post('class_id');
+		$class_id = $this->input->get_post('class_id');
 		
 		$class_info = $this->class_model->get_class($class_id);
 		$level_id = $class_info['level_id'];
@@ -137,7 +137,7 @@ class Api extends Controller {
 	function class_get_batch() {
 		$this->check_key();
 		// Lifted off classes.php:batch_view
-		$batch_id = $this->input->post('batch_id');
+		$batch_id = $this->input->get_post('batch_id');
 
 		if(!$batch_id) return $this->send(array('error' => "User doesn't have a batch"));
 
@@ -212,7 +212,7 @@ class Api extends Controller {
 	 */
 	function class_cancel() {
 		$this->check_key();
-		$class_id = $this->input->post('class_id');
+		$class_id = $this->input->get_post('class_id');
 
 		$this->class_model->cancel_class($class_id);
 		$this->send(array('success' => "Class cancelled."));
@@ -225,7 +225,7 @@ class Api extends Controller {
 	 */
 	function class_uncancel() {
 		$this->check_key();
-		$class_id = $this->input->post('class_id');
+		$class_id = $this->input->get_post('class_id');
 
 		$this->class_model->uncancel_class($class_id);
 		$this->send(array('success' => "Class un-cancelled."));
@@ -236,7 +236,7 @@ class Api extends Controller {
 	function check_key() {
 		return true;
 
-		$key = $this->input->post('key');
+		$key = $this->input->get_post('key');
 		if($key != $this->key) {
 			$this->send(array('error' => "Invalid Key"));
 			exit;

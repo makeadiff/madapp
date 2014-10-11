@@ -23,10 +23,10 @@ class Api extends Controller {
 	 */
 	function user_login() {
 		$data = array(
-			'username' => $this->input->get_post('email'),
-			'password' => $this->input->get_post('password')
+			'username' => $_REQUEST['email'],
+			'password' => $_REQUEST['password']
 		);
-		if(!$data['username'] or $data['password']) {
+		if(!$data['username'] or !$data['password']) {
 			return $this->send(array('error' => "Username or password not provided."));
 		}
 

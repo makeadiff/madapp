@@ -173,6 +173,36 @@ class Api extends Controller {
 		$this->send(array('data'=>$return));
 	}
 
+	function user_class_history() {
+		$history = array(
+				array(
+					'center' 	=> 'MAD Center',
+					'level'		=> '5A - Kannada',
+					'time'		=> 'Oct 05th(Sun), 04:00 PM',
+					'teacher'	=> 'Binny V A',
+					'substitute'=> '',
+					'status'	=> 'Projected',
+				),
+				array(
+					'center' 	=> 'MAD Center',
+					'level'		=> '5A - Kannada',
+					'time'		=> 'Sept 28th(Sun), 04:00 PM',
+					'teacher'	=> 'Binny V A',
+					'substitute'=> 'Nivi',
+					'status'	=> 'Attended',
+				),
+				array(
+					'center' 	=> 'MAD Center',
+					'level'		=> '5A - Kannada',
+					'time'		=> 'Sept 21th(Sun), 04:00 PM',
+					'teacher'	=> 'Binny V A',
+					'substitute'=> '',
+					'status'	=> 'Attended',
+				),
+			);
+		$this->send($history);
+	}
+
 	/**
 	 * Returns the last batch of the given user. 
 	 * Arguments :	$user_id - ID of the user who's batch must be found.
@@ -256,8 +286,10 @@ class Api extends Controller {
 		$center_name = $this->center_model->get_center_name($center_id);
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date));
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9));
-		
+
 		$classes = array();
+		$class_done = array();
+		$index = 0;
 		foreach($data as $row) {
 			$attendence = $this->class_model->get_attendence($row->id);
 			$level_id = $row->level_id;
@@ -275,9 +307,9 @@ class Api extends Controller {
 			$total_kids_in_level = count($this->level_model->get_kids_in_level($level_id));
 			foreach($attendence as $id=>$status) if($status == 1) $present_count++;
 			$attendence_count = $present_count . '/' . $total_kids_in_level;
-			
-			$index = 0;
-			if(!isset($classes[$row->id])) { // First time we are encounting such a class.
+
+			if(!isset($class_done[$row->id])) { // First time we are encounting such a class.
+				$class_done[$row->id] = $index;
 				$classes[$index] = array(
 					'id'			=> $row->id,
 					'level_id'		=> $row->level_id,
@@ -296,8 +328,9 @@ class Api extends Controller {
 					)),
 				);
 				$index++;
+
 			} else { // We got another class with same id. Which means more than one teachers in the same class. Add the teacher to the class.
-				$classes[$index]['teachers'][] = array(
+				$classes[$class_done[$row->id]]['teachers'][] = array(
 					'id'	=> $row->user_id,
 					'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
 					'status'=> $row->status,

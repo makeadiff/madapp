@@ -298,7 +298,7 @@ class Api extends Controller {
 			if(empty($all_lessons[$level_id])) {
 				$all_lessons[$level_id] = array();
 				$all_lessons[$level_id][0] = "None";
-				for($i=1; $i<=20; $i++) $all_lessons[$level_id][$i] = $i;
+				for($i=1; $i<=20; $i++) $all_lessons[$level_id][$i] = "$i";
 				$all_lessons[$level_id][-1] = "Revision";
 				$all_lessons[$level_id][-2] = "Test";
 			}
@@ -315,6 +315,7 @@ class Api extends Controller {
 					'level_id'		=> $row->level_id,
 					'level_name'	=> $row->name,
 					'lesson_id'		=> $row->lesson_id,
+					'all_lessons'	=> $all_lessons,
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,

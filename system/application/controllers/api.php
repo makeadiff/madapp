@@ -357,8 +357,6 @@ class Api extends Controller {
 			foreach($attendence as $id=>$status) if($status == 1) $present_count++;
 			$attendence_count = $present_count . '/' . $total_kids_in_level;
 
-			//dump($row);
-
 			if(!isset($class_done[$row->id])) { // First time we are encounting such a class.
 				$class_done[$row->id] = $index;
 				$classes[$index] = array(
@@ -368,7 +366,7 @@ class Api extends Controller {
 					'lesson_id'		=> $row->lesson_id,
 					'all_lessons'	=> $all_lessons[$level_id],
 					'max_lesson'	=> 20,
-					'class_status'	=> 'active',
+					'class_status'	=> ($row->status == 'cancelled') ? '0' : '1',
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,

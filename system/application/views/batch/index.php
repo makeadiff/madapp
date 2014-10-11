@@ -25,7 +25,7 @@ $this->load->view('layout/header', array('title'=>$title)); ?>
 
 <table class="data-table" id="main">
 <tr><th>Batch</th><th>Volunteers</th><?php if($this->user_auth->get_permission('classes_batch_view')) { ?><th>Mentor View</th><?php } ?>
-<?php if($this->user_auth->get_permission('debug')) { ?><th>Add Class Manually</th><?php } ?><th>Batch Head</th>
+<?php if($this->user_auth->get_permission('debug')) { ?><th>Add Class Manually</th><?php } ?><th>Mentor</th>
 <th colspan="2">Action</th></tr>
 <?php 
 $day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
@@ -45,6 +45,10 @@ foreach($all_batches as $batch) {
 <td><a href="<?php echo site_url('batch/delete/'.$batch->id); ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($batch_name) ?>">Delete</a></td>
 </tr>
 <?php } ?>
+
+
+    
+
 </table>
 
 <?php

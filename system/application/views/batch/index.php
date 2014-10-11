@@ -47,7 +47,7 @@ foreach($all_batches as $batch) {
 <?php } ?>
 
 
-    
+
 
 </table>
 

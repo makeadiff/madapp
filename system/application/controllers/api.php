@@ -10,6 +10,10 @@ class Api extends Controller {
 		$this->load->model('batch_model');
 		$this->load->model('level_model');
 		$this->load->model('center_model');
+		$this->user_model->year = 2014;
+		$this->class_model->year = 2014;
+		$this->level_model->year = 2014;
+		$this->batch_model->year = 2014;
 
 		header("Content-type: application/json");
 	}
@@ -55,6 +59,7 @@ class Api extends Controller {
 		$this->check_key();
 
 		$user_id = $this->get_input('user_id');
+		if(!$user_id) $this->error("User ID is empty");
 
 		$class_info = $this->class_model->get_last_class($user_id);
 		$class_details = $this->class_model->get_class($class_info->id);
@@ -72,6 +77,7 @@ class Api extends Controller {
 		$this->check_key();
 
 		$class_id = $this->get_input('class_id');
+		if(!$class_id) $this->error("Class ID is empty");
 
 		$class_details = $this->class_model->get_class($class_id);
 
@@ -165,6 +171,8 @@ class Api extends Controller {
 	function class_get_last_batch() {
 		$this->check_key();
 		$user_id = $this->get_input('user_id');
+		if(!$user_id) $this->error("User ID is empty");
+
 		$batch_id = $this->user_model->get_users_batch($user_id);
 
 		$this->class_get_batch($batch_id);
@@ -296,7 +304,7 @@ class Api extends Controller {
 
 		$return = $this->input->post($name);
 		if(!$return) $this->input->get($name);
-		if(!$return) $return = $_REQUEST[$name];
+		if(!$return and isset($_REQUEST[$name])) $return = $_REQUEST[$name];
 
 		return $return;
 	}

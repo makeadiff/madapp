@@ -23,6 +23,7 @@ class Api extends Controller {
 			'user_id'	=> $status['id'],
 			'key'		=> $this->key,
 			'name'		=> $status['name'],
+			'city_id'	=> $status['city_id'],
 			'groups'	=> array_values($status['groups']),
 		));
 	}

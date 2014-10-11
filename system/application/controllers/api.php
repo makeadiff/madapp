@@ -12,12 +12,28 @@ class Api extends Controller {
 		$this->load->model('center_model');
 	}
 
+	/**
+	 * This will login the user into the system. 
+	 * Arguments : 	email - The username of the user to be logged in
+	 * 				password - Don't make me explain this :-P
+	 * Returns :$user_id - The ID of the user. Use this to make more user level calls.
+	 *			$city_id - The ID of the city the user belongs to.
+	 *			$key - The Auth Key. Include this with every call you make or else you will get a error.
+	 *			$groups - All the 
+	 */
 	function user_login() {
 		$data = array(
 			'username' => $this->input->post('email'),
 			'password' => $this->input->post('password')
 		);
+		if(!$data['username'] or $data['password']) {
+			return $this->send(array('error' => "Username or password not provided."));
+		}
+
 		$status = $this->user_model->login($data);
+		if(!$status) {
+			return $this->send(array('error' => "Invalid Username or password."));
+		}
 
 		$this->send(array(
 			'user_id'	=> $status['id'],
@@ -28,6 +44,11 @@ class Api extends Controller {
 		));
 	}
 
+	/**
+	 * Returns the ID of the last class of the given user.
+	 * Arguments :	$user_id
+	 * Returns : 	Class Details.
+	 */
 	function class_get_last() {
 		$this->check_key();
 
@@ -39,27 +60,49 @@ class Api extends Controller {
 
 		$this->send($class_details);
 	}
+
+	/**
+	 * Gets the class details of the class who's ID is given
+	 * Arguments :	$class_id
+	 * Returns : 	Class Details
+	 */
 	function class_get() {
 		$this->check_key();
 
 		$class_id = $this->input->post('class_id');
 
 		$class_details = $this->class_model->get_class($class_id);
+
+		if(!$class_details) return $this->send(array('error'=>"Invalid Class ID"));
 		$this->send($class_details);
 	}
 
-	/** Returns a list of all the teachers in the given city in the format {"user_id":"name", "user_id":"name"}. This can be used to populate the Substitute dropdown.
+	/**
+	 * Returns a list of all the teachers in the given city in the format {"user_id":"name", "user_id":"name"}. This can be used to populate the Substitute dropdown.
 	 * Arguments: $city_id - The ID of the city of which teachers you want.
+	 * Returns : A list of all the teachers in the city in ID => Name format(Associative Array).
 	 */
 	function user_get_teachers() {
 		$this->check_key();
 		$city_id = $this->input->post('city_id');
 
-		$teachers = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'user_group'=>9, 'city_id'=>$city_id)));
+		$teachers = $this->user_model->search_users(array('user_type'=>'volunteer', 'user_group'=>9, 'city_id'=>$city_id));
+		$return = array();
+		foreach ($teachers as $t) {
+			$return[] = array(
+					'id'	=> $t->id,
+					'name'	=> $t->name
+				);
+		}
 
-		$this->send($teachers);
+		$this->send($return);
 	}
 
+	/**
+	 * Returns the last batch of the given user. 
+	 * Arguments :	$user_id - ID of the user who's batch must be found.
+	 * Returns : 	$batch_id - the last batch that happened for the given user
+	 */
 	function class_get_last_batch_id() {
 		$this->check_key();
 		$user_id = $this->input->post('user_id');
@@ -68,6 +111,11 @@ class Api extends Controller {
 		$this->send(array('batch_id'=>$batch_id));
 	}
 
+	/**
+	 * Returns the list of all the students who are part of the given class
+	 * Arguments :	$class_id
+	 * Returns : 	List of all the students in the class with attendance data.
+	 */
 	function class_get_students() {
 		$this->check_key();
 		$class_id = $this->input->post('class_id');
@@ -81,7 +129,11 @@ class Api extends Controller {
 		$this->show(array('students'=>$students, 'attendence'=>$attendence, 'class_info'=>$class_info));
 	}
 
-	
+	/**
+	 * Get the enter Mentor view data in one call - just specify which Batch ID should be shown
+	 * Arguments :	$batch_id
+	 * Returns : 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
+	 */	
 	function class_get_batch() {
 		$this->check_key();
 		// Lifted off classes.php:batch_view
@@ -153,7 +205,11 @@ class Api extends Controller {
 		$this->send(array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name));
 	}
 
-
+	/**
+	 * Use this to cancel a class. Just pass the ID of the class to cancel.
+	 * Arguments :	$class_id
+	 * Returns : 	Success/Fail
+	 */
 	function class_cancel() {
 		$this->check_key();
 		$class_id = $this->input->post('class_id');
@@ -161,6 +217,12 @@ class Api extends Controller {
 		$this->class_model->cancel_class($class_id);
 		$this->send(array('success' => "Class cancelled."));
 	}
+
+	/**
+	 * Use this to un-cancel a class thats already cancelled.
+	 * Arguments :	$class_id
+	 * Returns : 	
+	 */
 	function class_uncancel() {
 		$this->check_key();
 		$class_id = $this->input->post('class_id');

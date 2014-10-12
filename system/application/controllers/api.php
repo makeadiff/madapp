@@ -262,7 +262,59 @@ class Api extends Controller {
 	 * Argument : $city_id
 	 * Example: /api/user_credit_leaderboard?city_id=1&key=am3omo32hom4lnv32vO
 	 */
-	function user_credit_leaderboard() {
+	function report_credit_leaderboard() {
+		$this->check_key();
+
+		$city_id = $this->get_input('city_id');
+		if(!$city_id) $this->error("City ID is empty");
+
+		$data = array(
+				array(
+					'name'	=> "Jithin",
+					'credit'=> 7,
+				),
+				array(
+					'name'	=> "Paul",
+					'credit'=> 6,
+				),
+				array(
+					'name'	=> "Sanjay",
+					'credit'=> 5,
+				),
+				array(
+					'name'	=> "Aswin",
+					'credit'=> 4.5,
+				),
+				array(
+					'name'	=> "Nivi",
+					'credit'=> 4,
+				),
+				array(
+					'name'	=> "Shilpa",
+					'credit'=> 3,
+				),
+				array(
+					'name'	=> "Cathy",
+					'credit'=> 2,
+				),
+				array(
+					'name'	=> "Rijuta",
+					'credit'=> 1,
+				),
+				array(
+					'name'	=> "Megha",
+					'credit'=> 0.5,
+				),
+			);
+
+		$this->send(array('data' => $data));
+	}
+
+	function report_low_credit_user() {
+		$this->user_credit_leaderboard();
+	}
+
+	function report_absent_user() {
 		$this->check_key();
 
 		$city_id = $this->get_input('city_id');

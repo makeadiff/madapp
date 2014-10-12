@@ -114,7 +114,7 @@ class Api extends Controller {
 				);
 		}
 
-		$this->send($return);
+		$this->send(array('teachers'=>$return));
 	}
 
 	/**
@@ -310,10 +310,20 @@ class Api extends Controller {
 		$this->send(array('data' => $data));
 	}
 
+	/**
+	 * Returns a list of volunteers with low credits.
+ 	 * Argument : $city_id
+	 * Example: /api/report_low_credit_user?city_id=1&key=am3omo32hom4lnv32vO
+	 */
 	function report_low_credit_user() {
-		$this->user_credit_leaderboard();
+		$this->report_credit_leaderboard();
 	}
 
+	/**
+	 * Returns the list of volunteers who were absent without substitutes.
+	 * Argument : $city_id
+	 * Example: /api/report_absent_user?city_id=1&key=am3omo32hom4lnv32vO
+	 */
 	function report_absent_user() {
 		$this->check_key();
 
@@ -323,39 +333,18 @@ class Api extends Controller {
 		$data = array(
 				array(
 					'name'	=> "Jithin",
-					'credit'=> 7,
+					'center_name'=> "Arya Bhavan",
+					'class_nime' => 'Sept 07, 2014, 4:00 PM',
 				),
 				array(
-					'name'	=> "Paul",
-					'credit'=> 6,
+					'name'	=> "Binny",
+					'center_name'=> "Sneha Bhavan",
+					'class_nime' => 'Sept 01, 2014, 4:00 PM',
 				),
 				array(
 					'name'	=> "Sanjay",
-					'credit'=> 5,
-				),
-				array(
-					'name'	=> "Aswin",
-					'credit'=> 4.5,
-				),
-				array(
-					'name'	=> "Nivi",
-					'credit'=> 4,
-				),
-				array(
-					'name'	=> "Shilpa",
-					'credit'=> 3,
-				),
-				array(
-					'name'	=> "Cathy",
-					'credit'=> 2,
-				),
-				array(
-					'name'	=> "Rijuta",
-					'credit'=> 1,
-				),
-				array(
-					'name'	=> "Megha",
-					'credit'=> 0.5,
+					'center_name'=> "Valsalya Bhavan",
+					'class_nime' => 'Sept 03, 2014, 4:00 PM',
 				),
 			);
 
@@ -550,7 +539,6 @@ class Api extends Controller {
 	/**
 	 * Use this to un-cancel a class thats already cancelled.
 	 * Arguments :	$class_id
-	 * Returns : 	
 	 * Example : http://makeadiff.in/madapp/index.php/api/class_uncancel?class_id=129404&key=am3omo32hom4lnv32vO
 	 */
 	function class_uncancel() {

@@ -93,7 +93,7 @@ class Api extends Controller {
 	}
 
 	/**
-	 * Returns a list of all the teachers in the given city in the format {"user_id":"name", "user_id":"name"}. This can be used to populate the Substitute dropdown.
+	 * Returns a list of all the teachers in the given city. This can be used to populate the Substitute dropdown.
 	 * Arguments: $city_id - The ID of the city of which teachers you want.
 	 * Returns : A list of all the teachers in the city
 	 * http://makeadiff.in/madapp/index.php/api/user_get_teachers?city_id=10&key=am3omo32hom4lnv32vO
@@ -175,6 +175,7 @@ class Api extends Controller {
 
 	/**
 	 * Returns the entire history of the given user. 
+	 * Argument: $user_id
 	 * Example: /api/user_class_history?user_id=1&key=am3omo32hom4lnv32vO
 	 */
 	function user_class_history() {
@@ -188,7 +189,7 @@ class Api extends Controller {
 				array(
 					'center' 	=> 'MAD Center',
 					'level'		=> '5A - Kannada',
-					'time'		=> 'Oct 05th(Sun), 04:00 PM',
+					'time'		=> '05 Oct, 2014',
 					'teacher'	=> 'Binny V A',
 					'substitute'=> '',
 					'status'	=> 'Projected',
@@ -196,7 +197,7 @@ class Api extends Controller {
 				array(
 					'center' 	=> 'MAD Center',
 					'level'		=> '5A - Kannada',
-					'time'		=> 'Sept 28th(Sun), 04:00 PM',
+					'time'		=> '28 Sept, 2014',
 					'teacher'	=> 'Binny V A',
 					'substitute'=> 'Nivi',
 					'status'	=> 'Attended',
@@ -204,7 +205,7 @@ class Api extends Controller {
 				array(
 					'center' 	=> 'MAD Center',
 					'level'		=> '5A - Kannada',
-					'time'		=> 'Sept 21th(Sun), 04:00 PM',
+					'time'		=> '21 Sept, 2014',
 					'teacher'	=> 'Binny V A',
 					'substitute'=> '',
 					'status'	=> 'Attended',
@@ -216,6 +217,7 @@ class Api extends Controller {
 
 	/**
 	 * Returns the entire credit history of the given user. 
+	 * Argument : $user_id
 	 * Example: /api/user_credit_history?user_id=1&key=am3omo32hom4lnv32vO
 	 */
 	function user_credit_history() {
@@ -228,31 +230,84 @@ class Api extends Controller {
 			"data" => array(
 				array(
 					'class_status'	=> 'Start',
-					'class_time'	=> 'Sept 28th(Sun), 04:00 PM',
+					'class_time'	=> '28 Sept, 2014',
 					'credit_change'	=> '0',
 					'Credit'		=> '3',
 				),
 				array(
 					'class_status'	=> 'Absent',
-					'class_time'	=> 'Oct 05th(Sun), 04:00 PM',
+					'class_time'	=> '05 Oct, 2014',
 					'credit_change'	=> '-2',
 					'Credit'		=> '1',
 				),
 				array(
-					'class_status'	=> 'Sustitued For Aravind',
-					'class_time'	=> 'Oct 12th(Sun), 04:00 PM',
+					'class_status'	=> 'Substitued For Aravind',
+					'class_time'	=> '12 Oct, 2014',
 					'credit_change'	=> '+1',
 					'Credit'		=> '2',
 				),
 				array(
 					'class_status'	=> 'Absent',
-					'class_time'	=> 'Oct 19th(Sun), 04:00 PM',
+					'class_time'	=> '19 Oct, 2014',
 					'credit_change'	=> '-2',
 					'Credit'		=> '-1',
 				)
 			),
 		);
 		$this->send($history);
+	}
+
+	/**
+	 * Returns the credit leaderboard of the current city
+	 * Argument : $city_id
+	 * Example: /api/user_credit_leaderboard?city_id=1&key=am3omo32hom4lnv32vO
+	 */
+	function user_credit_leaderboard() {
+		$this->check_key();
+
+		$city_id = $this->get_input('city_id');
+		if(!$city_id) $this->error("City ID is empty");
+
+		$data = array(
+				array(
+					'name'	=> "Jithin",
+					'credit'=> 7,
+				),
+				array(
+					'name'	=> "Paul",
+					'credit'=> 6,
+				),
+				array(
+					'name'	=> "Sanjay",
+					'credit'=> 5,
+				),
+				array(
+					'name'	=> "Aswin",
+					'credit'=> 4.5,
+				),
+				array(
+					'name'	=> "Nivi",
+					'credit'=> 4,
+				),
+				array(
+					'name'	=> "Shilpa",
+					'credit'=> 3,
+				),
+				array(
+					'name'	=> "Cathy",
+					'credit'=> 2,
+				),
+				array(
+					'name'	=> "Rijuta",
+					'credit'=> 1,
+				),
+				array(
+					'name'	=> "Megha",
+					'credit'=> 0.5,
+				),
+			);
+
+		$this->send(array('data' => $data));
 	}
 
 
@@ -264,6 +319,7 @@ class Api extends Controller {
 	 */
 	function class_get_last_batch() {
 		$this->check_key();
+
 		$user_id = $this->get_input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
@@ -272,6 +328,20 @@ class Api extends Controller {
 		$this->class_get_batch($batch_id);
 	}
 
+	/*
+	class_save_level
+		class_id=129404
+		lesson_id=7
+		teacher_id[0]=43880
+		substitute_id[0]=0
+		status[0]='attended'
+		zero_hour_attendance[0]=1
+		teacher_id[1]=35382
+		substitute_id[1]=1
+		status[1]='absent'
+		zero_hour_attendance[1]=0
+
+	*/
 	function class_save_level() {
 		$this->check_key();
 		// $batch_id = $this->get_input('batch_id');
@@ -298,6 +368,8 @@ class Api extends Controller {
 				'zero_hour_attendance'	=> $zero_hour_attendance[$key],
 			));
 		}
+
+		$this->send(array('success' => "Class Attendance Updated", 'status'=>'1'));
 	}
 
 	/**
@@ -349,6 +421,10 @@ class Api extends Controller {
 			$attendence = $this->class_model->get_attendence($row->id);
 			$level_id = $row->level_id;
 			
+			$lesson_name = 'None';
+			if($row->lesson_id > 0) $lesson_name = "Unit " .$row->lesson_id;
+			elseif($row->lesson_id == -1) $lesson_name = 'Revision';
+			elseif($row->lesson_id == -2) $lesson_name = 'Test';
 			// Each level must have only the units in the book given to that level.
 			if(empty($all_lessons[$level_id])) {
 				$all_lessons[$level_id] = array();
@@ -370,6 +446,7 @@ class Api extends Controller {
 					'level_id'		=> $row->level_id,
 					'level_name'	=> $row->name,
 					'lesson_id'		=> $row->lesson_id,
+					'lesson_name'	=> $lesson_name,
 					'all_lessons'	=> $all_lessons[$level_id],
 					'max_lesson'	=> 20,
 					'class_status'	=> ($row->status == 'cancelled') ? '0' : '1',

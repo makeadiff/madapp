@@ -184,9 +184,45 @@ class Review extends Controller {
 		$this->review_model->do_milestone($milestone_id, $status, date('Y-m-d', strtotime($done_on)));
 		print '{"success":true, "milestone_id":'.$milestone_id.',"error":false}';
 	}
-
-
 	///////////////////////////////////////////////////////////////////// Aggrigator ///////////////////////////////////////////
+
+
+	function aggregate_milestones() {
+		$region_id 	= i($_REQUEST, 'region_id', 0);
+		$city_id	= i($_REQUEST, 'city_id', 0);
+		$vertical_id= i($_REQUEST, 'vertical_id', 0);
+		$group_type = i($_REQUEST, 'group_type', 'all');
+		$status 	= i($_REQUEST, 'status', '-1');
+		$data 		= array();
+
+		$wheres = array('1=1');
+		if($region_id) $wheres[] = "C.region_id=$region_id";
+		if($vertical_id) $wheres[] = "G.vertical_id=$vertical_id";
+		if($city_id) $wheres[] = "U.city_id=$city_id";
+		if($group_type != 'all') $wheres[] = "G.type='$group_type'";
+		if($status != '-1') $wheres[] = "M.status='$status'";
+
+		$data = $this->db->query("SELECT M.id,M.name as milestone,M.status,U.name,C.name AS city_name FROM Review_Milestone M
+			INNER JOIN User U ON U.id=M.user_id 
+			INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
+			INNER JOIN City C ON C.id=U.city_id 
+			WHERE ". implode(" AND ", $wheres))->result();
+
+
+		$all_cities = $this->city_model->get_all(); $all_cities[0] = 'Any';
+		$all_verticals = $this->city_model->get_all_verticals(); $all_verticals[0] = 'Any';
+		$all_regions = $this->city_model->get_all_regions(); $all_regions[0] = 'Any';
+		$all_types = array('all' => 'All', 'executive' => 'Executive', 'national' => 'National', 'strat' => 'Strat', 'fellow' => 'Fellow','volunteer' => 'Volunteer');
+		$all_status = array('1' => "Completed", '0' => "Pending", '-1' => "Any");
+		
+		$this->load->view('review/aggregate_milestones',array('data' => $data,
+			'all_verticals'=>$all_verticals, 'all_types'=>$all_types, 'all_regions'=> $all_regions, 'all_cities' => $all_cities, 'all_status' => $all_status,
+			'region_id' => $region_id, 'vertical_id' => $vertical_id, 'group_type' => $group_type, 'city_id' => $city_id, 'status' => $status,
+		));
+	}
+
+
+	
 	function aggregate() {
 		$region_id 	= i($_REQUEST, 'region_id', 0);
 		$city_id	= i($_REQUEST, 'city_id', 0);

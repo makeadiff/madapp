@@ -26,8 +26,8 @@ class Parameter extends Controller {
 			'%ed_vols_with_positive_credit_count%' => '%total_ed_vols_count% AND U.credit>=0',
 			'%ed_vols_with_negetive_credit_count%' => '%total_ed_vols_count% AND U.credit<0',
 
-			'%total_vol_requierement_count%' => "SELECT SUM(U.requirement_count) FROM HR_Volunteer_Request U
-						WHERE added_on > '%CYCLE_START_DATE%' AND added_on < '%CYCLE_END_DATE%' %CITY_CONDITION_USING_USER%",
+			'%total_vol_requierement_count%' => "SELECT SUM(U.requirement_count) FROM HR_Volunteer_Request U  %CITY_CONNECTION_WITH_USER%
+						WHERE U.added_on > '%CYCLE_START_DATE%' AND U.added_on < '%CYCLE_END_DATE%' %CITY_CONDITION_USING_USER%",
 
 			/// Class info
 			'%classes_count%' => "SELECT COUNT(C.id) FROM Class C 

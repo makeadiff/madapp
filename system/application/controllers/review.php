@@ -193,7 +193,8 @@ class Review extends Controller {
 		$vertical_id= i($_REQUEST, 'vertical_id', 0);
 		$group_type = i($_REQUEST, 'group_type', 'all');
 		$status 	= i($_REQUEST, 'status', '-1');
-		$data 		= array();
+	
+		$data = array();
 
 		$wheres = array('1=1');
 		if($region_id) $wheres[] = "C.region_id=$region_id";
@@ -201,9 +202,10 @@ class Review extends Controller {
 		if($city_id) $wheres[] = "U.city_id=$city_id";
 		if($group_type != 'all') $wheres[] = "G.type='$group_type'";
 		if($group_type == 'all') $wheres[] = "G.type!='volunteer'";
-		if($status != '-1') $wheres[] = "M.status='$status'";
+		if($status == '0') $wheres[] = 'M.status="0" and due_on>=now()';
+		if($status == '1') $wheres[] = 'M.status="1"';
+		if($status == '2') $wheres[] = 'M.status="0" and due_on<=now()';
 
-		
 		$data = array();
 		if(isset($_REQUEST['action'])) {
 			$data = $this->db->query("SELECT DISTINCT M.id,M.name as milestone,M.status,U.name,due_on,done_on,C.name AS city_name, U.id AS user_id FROM Review_Milestone M
@@ -218,7 +220,7 @@ class Review extends Controller {
 		$all_verticals = $this->city_model->get_all_verticals(); $all_verticals[0] = 'Any';
 		$all_regions = $this->city_model->get_all_regions(); $all_regions[0] = 'Any';
 		$all_types = array('all' => 'All', 'executive' => 'Executive', 'national' => 'National', 'strat' => 'Strat', 'fellow' => 'Fellow','volunteer' => 'Volunteer');
-		$all_status = array('1' => "Completed", '0' => "Pending", '-1' => "Any");
+		$all_status = array('2' => "Not Completed", '1' => "Completed", '0' => "Pending", '-1' => "Any");
 		
 		$this->load->view('review/aggregate_milestones',array('data' => $data,
 			'all_verticals'=>$all_verticals, 'all_types'=>$all_types, 'all_regions'=> $all_regions, 'all_cities' => $all_cities, 'all_status' => $all_status,

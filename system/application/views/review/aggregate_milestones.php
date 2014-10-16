@@ -39,7 +39,8 @@ $flags = array('nothing', 'black','red','orange','yellow','green');
 
 ?>
 <table class="data-table">
-<tr><th>Count</th><th>Name</th><th>City</th><th>Milestones</th><th>Date Due</th><th>Date Completed</th><th>Status</th></tr>
+<tr><th>Count</th><th>Name</th><th>City</th><th>Milestones</th><th>Date Due</th><th>Date Completed</th><th>Status</th>
+<?php if($this->user_auth->get_permission('review_milestone_edit')) { ?><th>Edit</th> <?php } ?> </tr>
 <?php 
 $count = 0;
 foreach ($data as $row) { $count++; ?>
@@ -50,7 +51,9 @@ foreach ($data as $row) { $count++; ?>
 <td><?php echo $row->milestone ?></td>
 <td><?php echo $row->due_on ?></td>
 <td><?php if($row->done_on != '0000-00-00 00:00:00') echo date('Y-m-d',strtotime($row->done_on))?></td>
-<td><?php echo $all_status[$row->status] ?></td>
+<td><?php if($row->status == '0'  and  $row->due_on <= date('Y-m-d')) echo "Not completed";
+			else echo $all_status[$row->status]; ?></td>
+<?php if($this->user_auth->get_permission('review_milestone_edit')) { ?><td><a class="with-icon edit popup" href="<?php echo site_url('review/edit_milestone/' . $row->id); ?>">Edit</a></td><?php } ?>
 </tr>
 <?php } ?>
 </table>

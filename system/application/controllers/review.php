@@ -200,11 +200,13 @@ class Review extends Controller {
 		if($vertical_id) $wheres[] = "G.vertical_id=$vertical_id";
 		if($city_id) $wheres[] = "U.city_id=$city_id";
 		if($group_type != 'all') $wheres[] = "G.type='$group_type'";
+		if($group_type == 'all') $wheres[] = "G.type!='volunteer'";
 		if($status != '-1') $wheres[] = "M.status='$status'";
 
+		
 		$data = array();
 		if(isset($_REQUEST['action'])) {
-			$data = $this->db->query("SELECT DISTINCT M.id,M.name as milestone,M.status,U.name,C.name AS city_name FROM Review_Milestone M
+			$data = $this->db->query("SELECT DISTINCT M.id,M.name as milestone,M.status,U.name,due_on,done_on,C.name AS city_name, U.id AS user_id FROM Review_Milestone M
 				INNER JOIN User U ON U.id=M.user_id 
 				INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
 				INNER JOIN City C ON C.id=U.city_id 

@@ -39,7 +39,7 @@ $flags = array('nothing', 'black','red','orange','yellow','green');
 
 ?>
 <table class="data-table">
-<tr><th>Count</th><th>Name</th><th>City</th><th>Milestones</th><th>Status</th></tr>
+<tr><th>Count</th><th>Name</th><th>City</th><th>Milestones</th><th>Date Due</th><th>Date Completed</th><th>Status</th></tr>
 <?php 
 $count = 0;
 foreach ($data as $row) { $count++; ?>
@@ -48,6 +48,8 @@ foreach ($data as $row) { $count++; ?>
 <td><?php echo $row->name ?></td>
 <td><?php echo $row->city_name ?></td>
 <td><?php echo $row->milestone ?></td>
+<td><?php echo $row->due_on ?></td>
+<td><?php if($row->done_on != '0000-00-00 00:00:00') echo date('Y-m-d',strtotime($row->done_on))?></td>
 <td><?php echo $all_status[$row->status] ?></td>
 </tr>
 <?php } ?>

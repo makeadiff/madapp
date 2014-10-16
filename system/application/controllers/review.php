@@ -202,11 +202,14 @@ class Review extends Controller {
 		if($group_type != 'all') $wheres[] = "G.type='$group_type'";
 		if($status != '-1') $wheres[] = "M.status='$status'";
 
-		$data = $this->db->query("SELECT M.id,M.name as milestone,M.status,U.name,C.name AS city_name FROM Review_Milestone M
-			INNER JOIN User U ON U.id=M.user_id 
-			INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
-			INNER JOIN City C ON C.id=U.city_id 
-			WHERE ". implode(" AND ", $wheres))->result();
+		$data = array();
+		if(isset($_REQUEST['action'])) {
+			$data = $this->db->query("SELECT DISTINCT M.id,M.name as milestone,M.status,U.name,C.name AS city_name FROM Review_Milestone M
+				INNER JOIN User U ON U.id=M.user_id 
+				INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
+				INNER JOIN City C ON C.id=U.city_id 
+				WHERE ". implode(" AND ", $wheres))->result();
+		}
 
 
 		$all_cities = $this->city_model->get_all(); $all_cities[0] = 'Any';

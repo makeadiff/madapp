@@ -30,7 +30,7 @@ $this->load->view('layout/header', array('title' => "Aggregate Milestones"));
 </select><br />
 
 
-<label>&nbsp;</label><input type="submit" value="Aggregate Milestones" class="button" />
+<label>&nbsp;</label><input type="submit" name="action" value="Aggregate Milestones" class="button" />
 </form><br />
 
 <?php 

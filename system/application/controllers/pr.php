@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class pr extends Controller  {
+class Pr extends Controller  {
     function pr() {
         parent::Controller();
         $this->load->library('session');
@@ -15,6 +15,11 @@ class pr extends Controller  {
 
 
     function dashboard_view() {
+
+        $data['title'] = 'PR';
+
+        $this->load->view('layout/flatui/header',$data);
         $this->load->view('pr/pr_dashboard');
+        $this->load->view('layout/flatui/footer',$data);
     }
 }

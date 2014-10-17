@@ -28,7 +28,7 @@
             <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" href="<?php echo site_url('common_dashboard/dashboard_view') ?>">MADApp</a>
+        <a class="navbar-brand" href="<?php echo site_url('dashboard/dashboard_view') ?>">MADApp</a>
 
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
@@ -40,7 +40,7 @@
 
                 if($this->user_auth and $this->user_auth->get_permission('change_city')) {
                     $all_cities = idNameFormat($this->db->query("SELECT id, name FROM City ORDER BY name")->result());
-                    $url = site_url('dashboard/dashboard_view');
+                    $url = site_url('edsupport/dashboard_view');
 
                     if($this->uri->segment(1) == 'kids') $url = site_url('kids/manageaddkids');
                     if($this->uri->segment(1) == 'centers') $url = site_url('center/manageaddcenters');

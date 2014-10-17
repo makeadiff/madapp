@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Common_dashboard extends Controller  {
-    function Common_dashboard() {
+class Fundraising extends Controller  {
+    function fundraising() {
         parent::Controller();
         $this->load->library('session');
         $this->load->library('user_auth');
@@ -15,6 +15,11 @@ class Common_dashboard extends Controller  {
 
 
     function dashboard_view() {
-           $this->load->view('common_dashboard/common_dashboard');
+
+        $data['title'] = 'Fundraising';
+
+        $this->load->view('layout/flatui/header',$data);
+        $this->load->view('fundraising/fundraising_dashboard');
+        $this->load->view('layout/flatui/footer',$data);
     }
 }

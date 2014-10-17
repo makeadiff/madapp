@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Hr extends Controller  {
-    function hr() {
+class Finance extends Controller  {
+    function finance() {
         parent::Controller();
         $this->load->library('session');
         $this->load->library('user_auth');
@@ -16,10 +16,10 @@ class Hr extends Controller  {
 
     function dashboard_view() {
 
-        $data['title'] = 'HR';
+        $data['title'] = 'Finance';
 
         $this->load->view('layout/flatui/header',$data);
-        $this->load->view('hr/hr_dashboard');
+        $this->load->view('finance/finance_dashboard');
         $this->load->view('layout/flatui/footer',$data);
     }
 }

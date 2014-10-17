@@ -7,11 +7,11 @@
 
 
                 <div class="col-md-6 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' target="_blank" href="https://sites.google.com/a/makeadiff.in/one-big-hq/">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/hq.png" alt="" /> <br>MAD HQ</a></div>
+                        <img src="<?php echo base_url(); ?>images/flat_ui/hq.png" alt="" /> <br>One Big<br>HQ</a></div>
 
 
 
-                <div class="col-md-6 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' target="_blank" href="http://makeadiff.in/blog/">
+                <div class="col-md-6 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' target="_blank" href="http://makeadiff.in/onebigblog/">
                         <img src="<?php echo base_url()?>/images/flat_ui/blog.png" alt="" /><br>One Big<br>Blog</a></div>
 
 

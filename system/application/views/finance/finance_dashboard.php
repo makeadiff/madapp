@@ -12,7 +12,7 @@
 
             <?php if($this->user_auth->get_permission('reimbursement')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/reimbursement/public">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/kids.png" alt="" /><br></a></div>
+                        <img src="<?php echo base_url(); ?>images/flat_ui/reimbursement.png" alt="" /><br>Reimbursement</a></div>
             <?php } ?>
 
             <?php if($this->user_auth->get_permission('event_index')) { ?>

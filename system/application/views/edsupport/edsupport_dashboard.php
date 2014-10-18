@@ -21,12 +21,12 @@ foreach($upcomming_classes as $class) { ?>
 <?php } 
 } 
 
-if($this->user_auth->get_permission('user_edit_bank_details')) {
+/*if($this->user_auth->get_permission('user_edit_bank_details')) {
     if(!$bank_details_all) {
-    ?>
-<div class="upcomming">Please enter your <a href="<?php echo site_url('user/edit_bank_details/'); ?>" class="popup">Bank Details</a></div>
-<?php }
-} ?>
+    */?><!--
+<div class="upcomming">Please enter your <a href="<?php /*echo site_url('user/edit_bank_details/'); */?>" class="popup">Bank Details</a></div>
+--><?php /*}
+} */?>
 	
 <div id="quick">
 
@@ -39,18 +39,23 @@ if($this->user_auth->get_permission('user_edit_bank_details')) {
 
 
         <?php if($this->user_auth->get_permission('user_credithistory')) { ?>
-            <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('edsupport/attendance_management_view') ?>">
+            <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('edsupport/attendance_management_view') ?>">
                     <img src="<?php echo base_url(); ?>images/flat_ui/attendance.png" alt="" /> <br>Attendance<br>Management</a></div>
         <?php } ?>
 
+        <?php if($this->user_auth->get_permission('center_index')) { ?>
+            <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('center/manageaddcenters') ?>">
+                    <img src="<?php echo base_url(); ?>images/flat_ui/centers.png" alt="" /> <br>Center<br>Management</a></div>
+        <?php } ?>
+
         <?php if($this->user_auth->get_permission('report_index')) { ?>
-            <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('report/') ?>">
+            <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('report/') ?>">
                     <img src="<?php echo base_url(); ?>images/flat_ui/reports.png" alt="" /> <br>Reports</a></div>
         <?php } ?>
 
 
         <?php if($this->user_auth->get_permission('event_index')) { ?>
-            <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('event/event') ?>">
+            <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('event/event') ?>">
                     <img src="<?php echo base_url(); ?>images/flat_ui/events.png" alt="" /> <br>Event</a></div>
         <?php } ?>
 

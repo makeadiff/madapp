@@ -16,7 +16,7 @@ class dashboard extends Controller  {
 
     function dashboard_view() {
 
-        $data['title'] = 'HR';
+        $data['title'] = 'MADApp';
 
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('common_dashboard/common_dashboard');

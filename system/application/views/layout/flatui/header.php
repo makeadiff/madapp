@@ -20,6 +20,7 @@
 
 <body id="pg-<?php echo $this->uri->segment(1) . '-' . $this->uri->segment(2); ?>" class="blue-red">
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
             <span class="sr-only">Toggle navigation</span>
@@ -70,6 +71,7 @@
 
         </ul>
 
+    </div>
     </div>
 </nav>
 

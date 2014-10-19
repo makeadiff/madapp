@@ -138,6 +138,7 @@ class Review extends Controller {
 			'name'			=> $this->input->post('name'),
 			'status'		=> $this->input->post('status'),
 			'due_on' 		=> $this->input->post('due_on'),
+			'done_on' 		=> $this->input->post('done_on'),
 			'user_id' 		=> $this->input->post('user_id'),
 			'created_by_user_id' => $this->user_id
 		);
@@ -151,7 +152,7 @@ class Review extends Controller {
 			$this->session->set_flashdata('success', 'Milestone created.');
 		}
 
-		redirect('review/list_milestones/'.$this->input->post('user_id'));
+		redirect('review/edit_milestone/'.$milestone_id);
 	}
 
 	function delete_milestone($milestone_id) {

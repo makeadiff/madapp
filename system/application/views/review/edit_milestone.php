@@ -10,6 +10,7 @@ if(!empty($milestone)) {
 	$name = $milestone->name;
 	$status = $milestone->status;
 	$due_on = $milestone->due_on;
+	$done_on = $milestone->done_on;
 	$user_id = $milestone->user_id;
 }
 ?>
@@ -17,7 +18,7 @@ if(!empty($milestone)) {
 <script type="text/javascript" src="<?php echo base_url()?>css/datetimepicker_css.js"></script>
 <h2><?php echo $name ?> Milestone</h2>
 
-<form id="formEditor" action="<?php echo site_url('review/save_milestone'); ?>" class="mainForm" method="post">
+<form id="formEditor" action="<?php echo site_url('review/save_milestone'); ?>" class="mainForm self" method="post">
 <ul class="form">
 <li><label for="name">Name</label>
 <input type="text" name="name" value="<?php echo $name ?>" /></li>
@@ -32,10 +33,17 @@ if(!empty($milestone)) {
 	<input name="due_on" class="date-pick" id="due_on" type="text" value="<?php echo $due_on ?>"> 
     <img src="<?php echo base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('due_on','yyyyMMdd','arrow')" style="cursor:pointer"/>	
 </li>
+<li><label for="name">Done on</label>
+	<input name="done_on" class="date-pick" id="done_on" type="text" value="<?php echo $done_on ?>"> 
+    <img src="<?php echo base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('done_on','yyyyMMdd','arrow')" style="cursor:pointer"/>	
+</li>
 </ul>
 <input type="hidden" name="milestone_id" value="<?php echo $milestone_id ?>" />
 <input type="hidden" name="user_id" value="<?php echo $user_id ?>" />
 <input id="btnSubmit" class="button green" type="submit" value="Save"></input>
 </form>
+<br /><br />
+
+<p class="info with-icon">To see the changes you made reflected in the listing, you'll have to refresh the page.</p>
 
 <?php $this->load->view('layout/thickbox_footer'); ?>

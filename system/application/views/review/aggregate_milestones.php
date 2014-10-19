@@ -49,8 +49,8 @@ foreach ($data as $row) { $count++; ?>
 <td><?php echo $row->name ?></td>
 <td><?php echo $row->city_name ?></td>
 <td><?php echo $row->milestone ?></td>
-<td><?php echo $row->due_on ?></td>
-<td><?php if($row->done_on != '0000-00-00 00:00:00') echo date('Y-m-d',strtotime($row->done_on))?></td>
+<td><?php echo date('j-M ',strtotime($row->due_on))?></td> 
+<td><?php if($row->done_on != '0000-00-00 00:00:00') echo date('j-M ',strtotime($row->done_on))?></td>
 <td><?php if($row->status == '0'  and  $row->due_on <= date('Y-m-d')) echo "Not completed";
 			else echo $all_status[$row->status]; ?></td>
 <?php if($this->user_auth->get_permission('review_milestone_edit')) { ?><td><a class="with-icon edit popup" href="<?php echo site_url('review/edit_milestone/' . $row->id); ?>">Edit</a></td><?php } ?>

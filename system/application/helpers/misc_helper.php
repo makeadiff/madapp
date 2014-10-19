@@ -90,6 +90,31 @@ function oneFormat($data) {
 	return current($data);
 }
 
+
+
+/**
+ * The index function - Created this to avoid the extra isset() check. This will return false 
+ *		if the specified index of the specified function is not set. If it there,
+ *		this function will return that element.
+ * Arguments:	$array - The array in which the item must be checked for
+ *				$index - The index to be seached.
+ *				$default_value - The value that must be returned if the item is not set
+ * Example:
+ *	if(i($_REQUEST, 'item')) {
+ *		instead of 
+ *	if(isset($_REQUEST['item']) and $_REQUEST['item']) {
+ */
+function i($array, $index=false, $default_value=false) {
+	if($index === false) {
+		if(isset($array)) return $array;
+		return $default_value;
+	}
+	
+	if(!isset($array[$index])) return $default_value;
+	
+	return $array[$index];
+}
+
 /// Returns just the first name of the person.
 function short_name($name) {
 	return reset(explode(' ', $name));
@@ -132,42 +157,30 @@ function set_city_year($that) {
 	}
 }
 
-/**
- * The index function - Created this to avoid the extra isset() check. This will return false 
- *		if the specified index of the specified function is not set. If it there,
- *		this function will return that element.
- * Arguments:	$array - The array in which the item must be checked for
- *				$index - The index to be seached.
- *				$default_value - The value that must be returned if the item is not set
- * Example:
- *	if(i($_REQUEST, 'item')) {
- *		instead of 
- *	if(isset($_REQUEST['item']) and $_REQUEST['item']) {
- */
-function i($array, $index=false, $default_value=false) {
-	if($index === false) {
-		if(isset($array)) return $array;
-		return $default_value;
-	}
-	
-	if(!isset($array[$index])) return $default_value;
-	
-	return $array[$index];
+function get_all_cycles() {
+	$year = date('Y', strtotime(get_mad_year_starting_date()));
+	return array(
+		array(),
+		array('start' => "$year-04-01", 'end' => "$year-09-14"),
+		array('start' => "$year-09-15", 'end' => "$year-10-26"),
+		array('start' => "$year-10-27", 'end' => "$year-12-07"),
+		array('start' => "$year-12-08", 'end' => ($year+1) . "-01-18"),
+		array('start' => ($year+1) . "-01-18", 'end' => ($year+1) . "-03-31")
+	);
 }
 
 function get_cycle($date = false) {
 	if(!$date) $date = date('Y-m-d');
 	else $date = date('Y-m-d', strtotime($date));
 
-	$cycle = 0;
+	$all_cycles = get_all_cycles();
+	foreach($all_cycles as $cycle => $cycle_data) {
+		if(isset($cycle_data['start'])) {
+			if($date >= $cycle_data['start'] and $date <= $cycle_data['end']) return $cycle;
+		}
+	}
 
-	if($date <= '2014-09-14') $cycle = 1;
-	elseif($date >= '2014-09-15' and $date <= '2014-10-26') $cycle = 2;
-	elseif($date >= '2014-10-27' and $date <= '2014-12-07') $cycle = 3;
-	elseif($date >= '2014-12-08' and $date <= '2015-01-18') $cycle = 4;
-	elseif($date >= '2015-01-19') $cycle = 5;
-
-	return $cycle;
+	return 0;
 }
 
 /**

@@ -12,7 +12,7 @@
 
 
 </head>
-<body id="pg-login" style="background-image:url(<?php echo base_url()?>images/background.jpg)">
+<body id="pg-login" class="blue-red">
 <div class="container">
 <div class="row">
 <div class="form-group col-md-4 col-md-offset-4 col-sm-12">

@@ -18,6 +18,8 @@ class Pr extends Controller  {
 
         $data['title'] = 'PR';
 
+        set_city_year($this);
+
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('pr/pr_dashboard');
         $this->load->view('layout/flatui/footer',$data);

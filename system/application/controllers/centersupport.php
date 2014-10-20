@@ -18,6 +18,8 @@ class CenterSupport extends Controller  {
 
         $data['title'] = 'Center Support';
 
+        set_city_year($this);
+
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('center_support/center_support_dashboard');
         $this->load->view('layout/flatui/footer',$data);

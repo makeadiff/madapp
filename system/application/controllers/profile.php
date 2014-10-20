@@ -18,6 +18,8 @@ class Profile extends Controller  {
 
         $data['title'] = 'Profile';
 
+        set_city_year($this);
+
         $current_user = $this->users_model->get_user($this->session->userdata('id'));
 
         $this->load->view('layout/flatui/header',$data);

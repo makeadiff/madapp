@@ -18,6 +18,8 @@ class Setting extends Controller  {
 
         $data['title'] = 'Settings';
 
+        set_city_year($this);
+
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('setting/setting_dashboard');
         $this->load->view('layout/flatui/footer',$data);

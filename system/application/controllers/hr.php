@@ -18,6 +18,8 @@ class Hr extends Controller  {
 
         $data['title'] = 'HR';
 
+        set_city_year($this);
+
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('hr/hr_dashboard');
         $this->load->view('layout/flatui/footer',$data);

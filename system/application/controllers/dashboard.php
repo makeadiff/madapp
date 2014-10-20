@@ -18,6 +18,8 @@ class dashboard extends Controller  {
 
         $data['title'] = 'MADApp';
 
+        set_city_year($this);
+
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('common_dashboard/common_dashboard');
         $this->load->view('layout/flatui/footer',$data);

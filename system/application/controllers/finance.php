@@ -18,6 +18,8 @@ class Finance extends Controller  {
 
         $data['title'] = 'Finance';
 
+        set_city_year($this);
+
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('finance/finance_dashboard');
         $this->load->view('layout/flatui/footer',$data);

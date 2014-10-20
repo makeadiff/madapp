@@ -18,6 +18,8 @@ class Discover extends Controller  {
 
         $data['title'] = 'Discover';
 
+        set_city_year($this);
+
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('discover/discover_dashboard');
         $this->load->view('layout/flatui/footer',$data);

@@ -137,7 +137,7 @@ class Review_parameter_model extends Model {
 	}
 
 	function find_cycle($due_on) {
-		return 1; // :TODO:
+		return get_cycle($due_on);
 	}
 
     function get_topics(){

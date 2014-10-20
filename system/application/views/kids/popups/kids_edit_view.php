@@ -1,11 +1,7 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
 <h2>Edit Kids</h2>
-<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/calender.css" />
-<script src="<?php echo base_url()?>js/cal.js"></script>
-<?php
-$edt=date('Y')-2;
-$sdt=date('Y')-20;
-?>
+<script type="text/javascript" src="<?php echo base_url()?>css/datetimepicker_css.js"></script>
+
 <style>
 .fields{
 float:left;
@@ -14,11 +10,6 @@ padding-bottom:5px;
 padding-top:5px;
 }
 </style>
-<script>
-jQuery(document).ready(function () {
-	$('input#date-pick').simpleDatepicker({ startdate: <?php echo $sdt; ?>, enddate: <?php echo $edt; ?> });
-});
-</script>
 <?php
 $kids_details=$kids_details->result_array();
 foreach($kids_details as $row) {
@@ -57,6 +48,7 @@ foreach($kids_details as $row) {
 </li>
 <li><label for="date">Date of Birth</label>
 	<input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?php echo $birthday ; ?>">
+    <img src="<?php echo base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick','yyyyMMdd','arrow')" style="cursor:pointer"/>
 	<p class="error clear"></p>
 </li><br />
 <li><label for="sex">Sex: </label>
@@ -86,6 +78,8 @@ foreach($kids_details as $row) {
 	<a href="<?=site_url('kids/manageaddkids')?>" class="sec-action">Cancel</a>
 </li>
 </form>
+<p class="info with-icon">Use date format 'YYYY-MM-DD' if you wish to enter the date manually.</p>
+
 <script> 
 function validate() {
 	if(document.getElementById("center").value == '-1')
@@ -100,3 +94,4 @@ function validate() {
 		}
 }
 </script>
+<?php $this->load->view('layout/thickbox_footer'); ?>

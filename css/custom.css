@@ -104,6 +104,11 @@ div.board
 
 }
 
+img.dash{
+    height: 64px;
+    width : 64px;
+}
+
 table.table-custom
 {
     color:#ffffff;

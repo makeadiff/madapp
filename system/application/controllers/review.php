@@ -51,18 +51,16 @@ class Review extends Controller {
 		$milestone_reviews	= $this->review_model->get_reviews($user_id, $cycle, 'milestone');
 		$survey_reviews		= $this->review_model->get_reviews($user_id, $cycle, 'survey');
 
-        $topics = $this->review_model->get_topics();
-        $scores = $this->review_model->get_scores($user_id);
-        if($option == 'no360') $scores = false; //Turn off 360 View
+        // $topics = $this->review_model->get_topics();
+        // $scores = $this->review_model->get_scores($user_id);
+        // if($option == 'no360') $scores = false; //Turn off 360 View
 
 		$user = $this->user_model->get_user($user_id);
 		$this->load->view('review/review_fellow', array('parameter_reviews' => $parameter_reviews, 
 														'milestone_reviews' => $milestone_reviews,
 														'survey_reviews'	=> $survey_reviews,
 														'user_id'=>$user_id, 'user' => $user,
-														'cycle'=>$cycle, 'auth'=>$this->user_auth,
-                                                        'topics' => $topics,
-                                                        'scores' => $scores));
+														'cycle'=>$cycle, 'auth'=>$this->user_auth));
 	}
 
 	function my_reivew_sheet() {

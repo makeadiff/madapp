@@ -83,3 +83,4 @@ if(document.getElementById("type").value == '-1')
 }
 </script>
 
+<?php $this->load->view('layout/thickbox_footer'); ?>

@@ -31,7 +31,7 @@ class Event_model extends Model{
 	**/
 	function getevent_list()
 	{
-		return $this->db->query("SELECT * FROM Event WHERE city_id=".$this->city_id ." ORDER BY starts_on DESC")->result();
+		return $this->db->query("SELECT * FROM Event WHERE city_id=".$this->city_id ." AND starts_on>'{$this->year}-04-01' ORDER BY starts_on DESC")->result();
 	}
 	/**
 	* Function to add_event

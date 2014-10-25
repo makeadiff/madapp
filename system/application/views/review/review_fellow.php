@@ -136,6 +136,7 @@ $avg = round($level_sum / $filled_milestones_count);
 <br><br>
 
 <?php
+/*
 if(!empty($scores)){
     echo "<br /><br /><hr /><h2>MAD 360 </h2>";
     $sum = 0;
@@ -148,6 +149,7 @@ if(!empty($scores)){
 
     echo "Average : " . round($sum/$count,1);
 }
+*/
 ?>
 
 <script type="text/javascript">

@@ -28,7 +28,7 @@ $status = array('Todo', 'Done');
 </td>
 <td><?php echo $milestone->cycle ?></td>
 <td><?php echo $milestone->due_on ?></td>
-<td><?php if($milestone->done_on != '0000-00-00 00:00:00') echo date('Y-m-d',strtotime($milestone->done_on))?></td>
+<td><?php if($milestone->status) echo date('Y-m-d',strtotime($milestone->done_on)); ?></td>
 <?php if($this->user_auth->get_permission('review_milestone_edit')) { ?><td><a class="with-icon edit popup" href="<?php echo site_url('review/edit_milestone/' . $milestone->id); ?>">Edit</a></td><?php } ?>
 <?php if($this->user_auth->get_permission('review_milestone_create')) { ?><td><a class="with-icon delete confirm" href="<?php echo site_url('review/delete_milestone/' . $milestone->id); ?>">Delete</a></td></tr><?php } ?>
 <?php } ?>

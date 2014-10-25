@@ -12,10 +12,6 @@
     <script type="text/javascript" src="<?php echo base_url()?>js/uservoice.js"></script>
 
     <script>document.documentElement.className = document.documentElement.className.replace('no-js','js');</script>
-
-
-
-
 </head>
 
 <body id="pg-<?php echo $this->uri->segment(1) . '-' . $this->uri->segment(2); ?>" class="blue-red">
@@ -82,6 +78,4 @@ if(!empty($message['success']) or !empty($message['error'])) { ?>
     <div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
     <div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
 <?php } ?>
-
-
 

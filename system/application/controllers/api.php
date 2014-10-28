@@ -16,6 +16,7 @@ class Api extends Controller {
 		$this->batch_model->year = 2014;
 
 		header("Content-type: application/json");
+		header('Access-Control-Allow-Origin: *');
 	}
 
 	/**
@@ -570,11 +571,14 @@ class Api extends Controller {
 
 
 	function error($text) {
-		return $this->send(array('error' => $text, 'status' => "0"));
+		return $this->send(array('error' => $text, 'status' => "0", "success" => false));
 	}
 
 	function send($data) {
-		if(!isset($data['status'])) $data['status'] = "1";
+		if(!isset($data['status'])) {
+			$data['status'] = "1";
+			$data['success'] = "1";
+		}
 
 		print json_encode($data);
 		return true;

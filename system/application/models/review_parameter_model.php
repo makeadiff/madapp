@@ -84,7 +84,13 @@ class Review_parameter_model extends Model {
 
 	function get_all_ss_questions() {
 		return idNameFormat($this->db->from("SS_Question")->get()->result(), array('id','question'));
+	}
 
+	function get_happiness_index_data_entry_status($user_id) {
+		$cycle = get_cycle();
+		$survey_count = $this->db->query("SELECT COUNT(id) AS count FROM SS_UserAnswer WHERE survey_event_id='$cycle' AND user_id=$user_id")->row();
+
+		return $survey_count->count;	
 	}
 
 

@@ -128,7 +128,8 @@ class Review_parameter_model extends Model {
 
 
 	function create_milestone($data) {
-		return $this->db->insert('Review_Milestone',$data);
+		$this->db->insert('Review_Milestone',$data);
+		return $this->db->insert_id();
 	}
 
 	function get_timeframes_with_milestone($user_id) {

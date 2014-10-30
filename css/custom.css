@@ -108,6 +108,10 @@ img.dash{
     height: 64px;
     width : 64px;
 }
+img.white {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
 
 table.table-custom
 {

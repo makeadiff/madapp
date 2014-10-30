@@ -146,7 +146,7 @@ class Review extends Controller {
 			$this->review_model->edit_milestone($milestone_id, $data);
 			$this->session->set_flashdata('success', 'Milestone edited.');
 		} else {
-			$this->review_model->create_milestone($data);
+			$milestone_id = $this->review_model->create_milestone($data);
 			$this->session->set_flashdata('success', 'Milestone created.');
 		}
 
@@ -211,9 +211,8 @@ class Review extends Controller {
 				INNER JOIN User U ON U.id=M.user_id 
 				INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
 				INNER JOIN City C ON C.id=U.city_id 
-				WHERE ". implode(" AND ", $wheres))->result();
+				WHERE U.user_type='volunteer' AND ". implode(" AND ", $wheres))->result();
 		}
-
 
 		$all_cities = $this->city_model->get_all(); $all_cities[0] = 'Any';
 		$all_verticals = $this->city_model->get_all_verticals(); $all_verticals[0] = 'Any';

@@ -3,7 +3,8 @@ $months = array('nothing', 'Jan', 'Feb', 'March', 'Apr', 'May', 'June', 'July', 
 $milestone_id = 0;
 $name = '';
 $status = 0;
-$due_on = 0;
+$due_on = '';
+$done_on = '';
 
 if(!empty($milestone)) {
 	$milestone_id = $milestone->id;

@@ -1,7 +1,7 @@
 
 <div class="container-fluid">
     <div class="board transparent-container">
-        <h1 class="title">Review & Milestone</h1>
+        <h1 class="title">Review &amp; Milestone</h1>
         <br>
         <div class="row">
 
@@ -33,6 +33,21 @@
             <?php if($this->user_auth->get_permission('reimbursement')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/prism/public/">
                         <img class="dash" src="<?php echo base_url()?>/images/flat_ui/360.png" alt="" /><br>MAD 360</a></div>
+            <?php } ?>
+
+            <?php if($this->user_auth->get_permission('milestone_aggregator')) { ?>
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/madapp/index.php/review/aggregate_milestones">
+                        <img class="dash white" src="<?php echo base_url(); ?>images/flat_ui/milestone_aggregator.png" alt="" /><br /> Milestone<br /> Aggregator</a></div>
+            <?php } ?>
+
+            <?php if($this->user_auth->get_permission('happiness_index_aggregator')) { ?>
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/stakeholder-survey/admin/aggregates.php">
+                        <img class="dash white" src="<?php echo base_url(); ?>images/flat_ui/happiness_index_response.png" alt="" /><br /> Happiness Index<br />Response<br />Aggregate</a></div>
+            <?php } ?>
+
+            <?php if($this->user_auth->get_permission('review_aggregator')) { ?>
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/madapp/index.php/review/aggregate">
+                        <img class="dash white" src="<?php echo base_url(); ?>images/flat_ui/aggregator.png" alt="" /> <br>Review<br /> Aggregator</a></div>
             <?php } ?>
 
             <?php /*if($this->user_auth->get_permission('happiness_index')) { */?>

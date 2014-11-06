@@ -175,7 +175,19 @@ class Center_model extends Model
 		$center = $this->db->where('id', $center_id)->get('Center')->row();
 		return $center->name;
 	}
+
+	function get_center_head_id($center_id) {
+		$center = $this->db->where('id', $center_id)->get('Center')->row();
+		if($center) return $center->center_head_id;
+		return 0;
+	}
 	
+	function get_center_of_head_id($user_id) {
+		$center = $this->db->where('center_head_id', $user_id)->get('Center')->row();
+		if($center) return $center->id;
+		return 0;
+	}
+
 	// Get all the centers in the current city
 	function get_all($city_id=0) {
 		if(!$city_id) $city_id = $this->city_id;

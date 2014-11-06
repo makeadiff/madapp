@@ -14,17 +14,42 @@ class Parameter extends Controller {
 					%CITY_CONNECTION_WITH_USER%
 					WHERE U.user_type='let_go' AND U.left_on > '%CYCLE_START_DATE%' AND U.left_on < '%CYCLE_END_DATE%'
 						%CITY_CONDITION_USING_USER%",
+
+			'%fr_vols_who_left_this_cycle_count%' => '%vols_who_left_this_cycle_count% AND (G.vertical_id=12 OR G.vertical_id=13 OR G.vertical_id=10 OR G.vertical_id=11)',
+			'%total_fr_vols_count%' => "%total_vols_count% AND (G.vertical_id=12 OR G.vertical_id=13 OR G.vertical_id=10 OR G.vertical_id=11)",
+
 			'%cr_vols_who_left_this_cycle_count%' => '%vols_who_left_this_cycle_count% AND G.vertical_id=13',
 			'%total_cr_vols_count%' => "%total_vols_count% AND G.vertical_id=13",
 
 			'%cfr_vols_who_left_this_cycle_count%' => '%vols_who_left_this_cycle_count% AND G.vertical_id=12',
 			'%total_cfr_vols_count%' => "%total_vols_count% AND G.vertical_id=12",
 
+			'%pr_vols_who_left_this_cycle_count%' => '%vols_who_left_this_cycle_count% AND G.vertical_id=7',
+
 			'%total_ed_vols_count%' => "%total_vols_count% AND G.vertical_id=3",
 			'%ed_vols_who_left_this_cycle_count%' => '%vols_who_left_this_cycle_count% AND G.vertical_id=3',
 
 			'%ed_vols_with_positive_credit_count%' => '%total_ed_vols_count% AND U.credit>=0',
 			'%ed_vols_with_negetive_credit_count%' => '%total_ed_vols_count% AND U.credit<0',
+
+			'%ed_vol_who_attended_training%'	=> "SELECT COUNT(DISTINCT U.id) FROM User U 
+					INNER JOIN UserEvent UE ON U.id=UE.user_id
+					INNER JOIN Event E ON E.id=UE.event_id 
+					INNER JOIN UserGroup UG ON UG.user_id=U.id 
+					INNER JOIN `Group` G ON UG.group_id=G.id
+					%CITY_CONNECTION_WITH_USER%
+					WHERE U.user_type='volunteer' AND G.type='volunteer' AND G.vertical_id='3' AND U.status='1' AND E.type='ed_support_teacher_training' AND UE.present='1'
+					%CITY_CONDITION_USING_USER%",
+
+			// '%vols_not_inducted_for_2_weeks%' => "SELECT COUNT(DISTINCT U.id) FROM User U 
+			// 		INNER JOIN UserEvent UE ON U.id=UE.user_id
+			// 		INNER JOIN Event E ON E.id=UE.event_id 
+			// 		INNER JOIN UserGroup UG ON UG.user_id=U.id 
+			// 		INNER JOIN `Group` G ON UG.group_id=G.id
+			// 		%CITY_CONNECTION_WITH_USER%
+			// 		WHERE U.user_type='volunteer' AND G.type='volunteer' AND G.vertical_id='3' AND U.status='1' AND E.type='induction_training' AND UE.present='1' 
+			// 			AND U.join_on < ".date('Y-m-d', strtotime('-2 week'))."
+			// 		%CITY_CONDITION_USING_USER%",
 
 			'%total_vol_requierement_count%' => "SELECT SUM(U.requirement_count) FROM HR_Volunteer_Request U  %CITY_CONNECTION_WITH_USER%
 						WHERE U.added_on > '%CYCLE_START_DATE%' AND U.added_on < '%CYCLE_END_DATE%' %CITY_CONDITION_USING_USER%",
@@ -49,6 +74,52 @@ class Parameter extends Controller {
 			'%volunteer_class_absent_count%' => "%volunteer_class_count% AND UC.status='absent'",
 			'%volunteer_class_attended_count%' => "%volunteer_class_count% AND UC.status='attended'",
 			'%volunteer_substitution_count%' => "%volunteer_class_count% AND UC.status='attended' AND UC.substitute_id!=0",
+
+
+			// Center counts
+			'%all_center_vols_count%' => "SELECT COUNT(DISTINCT U.id) FROM User U
+					INNER JOIN UserBatch UB ON UB.user_id=U.id
+					INNER JOIN Batch B ON B.id=UB.batch_id
+					INNER JOIN Center Ctr ON Ctr.id=B.center_id 
+					%CITY_CONNECTION_WITH_CENTER%
+					WHERE U.status='1' AND Ctr.id=%CENTER_ID%
+						%CITY_CONDITION_USING_CENTER%",
+			'%center_vols_count%' => "%all_center_vols_count% AND U.user_type='volunteer'",
+
+			'%center_vols_who_left_this_cycle_count%' => "%all_center_vols_count% AND U.user_type='let_go' AND U.left_on > '%CYCLE_START_DATE%' AND U.left_on < '%CYCLE_END_DATE%'",
+			'%center_vols_with_negetive_credit_count%' => "%center_vols_count% AND U.credit < 0",
+
+			'%center_classes_count%' => '%classes_count% AND Ctr.id=%CENTER_ID%',
+			'%center_classes_cancelled_count%' => "%classes_cancelled_count% AND Ctr.id=%CENTER_ID%",
+
+			'%center_volunteer_class_count%' => '%volunteer_class_count% AND Ctr.id=%CENTER_ID%',
+			'%center_volunteer_class_absent_count%' => '%volunteer_class_absent_count% AND Ctr.id=%CENTER_ID%',
+			'%center_volunteer_class_attended_count%' => '%volunteer_class_attended_count% AND Ctr.id=%CENTER_ID%',
+			'%center_volunteer_substitution_count%' => '%volunteer_substitution_count% AND Ctr.id=%CENTER_ID%',
+
+			'%center_vols_who_attended_training%'	=> "SELECT COUNT(DISTINCT U.id) FROM User U 
+					INNER JOIN UserEvent UE ON U.id=UE.user_id
+					INNER JOIN Event E ON E.id=UE.event_id 
+					INNER JOIN UserBatch UB ON UB.user_id=U.id
+					INNER JOIN Batch B ON B.id=UB.batch_id
+					INNER JOIN Center Ctr ON Ctr.id=B.center_id
+					%CITY_CONNECTION_WITH_USER%
+					WHERE Ctr.id=%CENTER_ID% AND U.user_type='volunteer' AND U.status='1' AND E.type='ed_support_teacher_training' AND UE.present='1'
+					%CITY_CONDITION_USING_USER%",
+
+			'%center_vols_who_attended_center_circle%'	=> "SELECT COUNT(DISTINCT U.id) FROM User U 
+					INNER JOIN UserEvent UE ON U.id=UE.user_id
+					INNER JOIN Event E ON E.id=UE.event_id 
+					INNER JOIN UserBatch UB ON UB.user_id=U.id
+					INNER JOIN Batch B ON B.id=UB.batch_id
+					INNER JOIN Center Ctr ON Ctr.id=B.center_id
+					%CITY_CONNECTION_WITH_USER%
+					WHERE Ctr.id=%CENTER_ID% AND U.user_type='volunteer' AND U.status='1' AND E.type='center_circles' AND UE.present='1'
+					%CITY_CONDITION_USING_USER%",
+			
+			'%center_expected_student_attendance_for_quarter%' => '%expected_student_attendance_for_quarter% AND Ctr.id=%CENTER_ID%',
+			'%center_student_attendance_for_quarter%' => '%student_attendance_for_quarter% AND Ctr.id=%CENTER_ID%',
+
 
 			/// Events
 			'%expected_attendance_of_core_team_meet_total%' => "SELECT COUNT(UE.present) FROM Event E INNER JOIN UserEvent UE ON UE.event_id=E.id
@@ -84,9 +155,12 @@ class Parameter extends Controller {
 			'%amount_raised_in_this_cycle_by_events%'	=> "%amount_raised_in_this_cycle% AND G.vertical_id=10",
 			'%amount_raised_in_this_cycle_by_cfr%'	=> "%amount_raised_in_this_cycle% AND G.vertical_id=12",
 			'%amount_raised_in_this_cycle_by_cr%'	=> "%amount_raised_in_this_cycle% AND G.vertical_id=13",
+			'%amount_raised_in_this_cycle_by_fr%'	=> "%amount_raised_in_this_cycle% AND (G.vertical_id=10 OR G.vertical_id=11 OR G.vertical_id=12 OR G.vertical_id=13)",
+
 			'%target_for_this_cycle_for_events%'	=> "%target_for_this_cycle% AND G.vertical_id=10",
 			'%target_for_this_cycle_for_cfr%'	=> "%target_for_this_cycle% AND G.vertical_id=12",
 			'%target_for_this_cycle_for_cr%'	=> "%target_for_this_cycle% AND G.vertical_id=13",
+			'%target_for_this_cycle_for_fr%'	=> "%target_for_this_cycle% AND (G.vertical_id=10 OR G.vertical_id=11 OR G.vertical_id=12 OR G.vertical_id=13)",
 
 			/// Intern Credits
 			'%discover_interns_count%' => "%total_vols_count% AND G.vertical_id=6",
@@ -94,13 +168,14 @@ class Parameter extends Controller {
 			'%events_interns_count%' => "%total_vols_count% AND G.vertical_id=10",
 			'%cfr_interns_count%' => "%total_vols_count% AND G.vertical_id=12",
 			'%cr_interns_count%' => "%total_vols_count% AND G.vertical_id=13",
+			'%fr_interns_count%' => "%total_vols_count% AND (G.vertical_id=10 OR G.vertical_id=11 OR G.vertical_id=12 OR G.vertical_id=13)",
 
 			'%discover_interns_with_positive_credit_count%' => "%discover_interns_count% AND U.admin_credit > 0",
 			'%pr_interns_with_positive_credit_count%' => "%pr_interns_count% AND U.admin_credit > 0",
 			'%events_interns_with_positive_credit_count%' => "%events_interns_count% AND U.admin_credit > 0",
 			'%cfr_interns_with_positive_credit_count%' => "%cfr_interns_count% AND U.admin_credit > 0",
 			'%cr_interns_with_positive_credit_count%' => "%cr_interns_count% AND U.admin_credit > 0",
-
+			'%fr_interns_with_positive_credit_count%' => "%fr_interns_count% AND U.admin_credit > 0",
 
 		);
 
@@ -108,6 +183,7 @@ class Parameter extends Controller {
 		parent::Controller();
 		$this->load->model('Users_model','user_model');
 		$this->load->model('city_model');
+		$this->load->model('center_model');
 		$this->load->model('Review_Parameter_model','review_model');
 		
 		$this->load->helper('url');
@@ -121,7 +197,8 @@ class Parameter extends Controller {
 			}
 		}
 		
-        $this->cycle = 1; // :TODO: Get current cycle - this is NOT valid
+        if($this->input->post('cycle')) $this->cycle = $this->input->post('cycle');
+        else $this->cycle = get_cycle();
 
    		// Cache all the parameters.
 		$this->parameters = array();
@@ -173,13 +250,17 @@ class Parameter extends Controller {
 	function calculate_parameter($parameter, $user_details) {
 		$this->info("Calculating <strong>'{$parameter->name}'</strong><br \>\n");
 		$user_id = $user_details->id;
+		$all_cycles = get_all_cycles();
+
+		$center_id = $this->center_model->get_center_of_head_id($user_id);
 
 		$this->replace_values = array(
-				'%CYCLE_START_DATE%'=> '2014-07-01', // :DEBUG: :TODO: :HARDCODE:
-				'%CYCLE_END_DATE%'	=> '2014-09-15', 
+				'%CYCLE_START_DATE%'=> $all_cycles[$this->cycle]['start'],
+				'%CYCLE_END_DATE%'	=> $all_cycles[$this->cycle]['end'],
 				'%YEAR%'			=> $this->year,
 				'%CYCLE%'			=> $this->cycle,
 				'%CITY_ID%' 		=> $user_details->city_id,
+				'%CENTER_ID%'		=> $center_id,
 				'%CITY_CONNECTION_WITH_CENTER%'	=> '',
 				'%CITY_CONNECTION_WITH_USER%'	=> '',
 				'%CITY_CONDITION_USING_CENTER%'	=> '',

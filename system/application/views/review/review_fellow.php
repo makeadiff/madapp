@@ -1,51 +1,6 @@
 <?php 
 $this->load->view('layout/header', array('title' => "Review Parameters for " . $user->name));
 ?>
-<script type="text/javascript">
-function comment(id) {
-	jQuery.ajax({
-				"url": "<?php echo site_url('review/ajax_get_comment'); ?>/" + id,
-				"success": function(data) {
-					jQuery("#comment-area").show();
-					jQuery("#comment").val(data);
-					jQuery("#parameter_id").val(id);
-				}
-			});
-	
-}
-
-function cancelComment() {
-	jQuery("#comment-area").hide();
-}
-
-function saveComment() {
-	var id = jQuery("#parameter_id").val();
-	jQuery.ajax({
-			"url": "<?php echo site_url('review/ajax_save_comment'); ?>/" + id,
-			"data": {"comment": jQuery("#comment").val()},
-			"type": "POST",
-			"success": function(data) {
-				jQuery("#comment-area").hide();
-			}
-		});
-}
-
-function inputData(id, name, value, ele) {
-	var title = name.replace(/_/g," ");
-	var input_value = prompt(title, value);
-	if(input_value == undefined || input_value == null) return;
-	input_value = Number(input_value);
-
-	ele.innerHTML = input_value;
-	
-	jQuery.ajax({
-			"url": "<?php echo site_url('review/ajax_save_value'); ?>/"+id+"/"+input_value,
-			"success": function(data) {
-				//alert(data);
-			}
-		});
-}
-</script>
 <style type="text/css">
 #comment-area {
 	position:absolute;
@@ -71,6 +26,15 @@ function inputData(id, name, value, ele) {
 </div>
 
 <div id="head" class="clear"><h1>Review Parameters for <?php echo $user->name; ?></h1></div>
+
+<form action="" method="post">
+<select name="cycle">
+<?php foreach($all_cycles as $key => $cycle_name) { ?>
+<option <?php if($key == $cycle) echo "selected"; ?> value="<?php echo $key ?>"><?php echo $cycle_name ?></option>
+<?php } ?>
+</select>
+<input type="submit" name="action" value="Change" />
+</form>
 
 <?php if($this->user_auth->get_permission('parameter_calculate')) { ?><a class="btn-primary btn-md" href="#" id="recalculate-parameters">Recalculate</a><?php } ?>
 
@@ -155,6 +119,7 @@ if(!empty($scores)){
 <script type="text/javascript">
 	var site_url = "<?php echo site_url() ?>";
 	var user_id = <?php echo $user->id ?>;
+	var cycle = <?php echo $cycle ?>;
 </script>
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/review/review_fellow.js"></script>
 

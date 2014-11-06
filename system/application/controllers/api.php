@@ -201,7 +201,7 @@ class Api extends Controller {
 					'time'		=> '28 Sept, 2014',
 					'teacher'	=> 'Binny V A',
 					'substitute'=> 'Nivi',
-					'status'	=> 'Attended',
+					'status'	=> 'Substitued by',
 				),
 				array(
 					'center' 	=> 'MAD Center',
@@ -228,30 +228,36 @@ class Api extends Controller {
 		if(!$user_id) $this->error("User ID is empty");
 
 		$history = array(
+			"title" => array(
+					'class_status'	=> 'Class Status',
+					'class_time'	=> 'Class Time',
+					'credit_change'	=> 'Credit Change',
+					'credit'		=> 'Credit',
+				),
 			"data" => array(
 				array(
 					'class_status'	=> 'Start',
 					'class_time'	=> '28 Sept, 2014',
 					'credit_change'	=> '0',
-					'Credit'		=> '3',
+					'credit'		=> '3',
 				),
 				array(
 					'class_status'	=> 'Absent',
 					'class_time'	=> '05 Oct, 2014',
 					'credit_change'	=> '-2',
-					'Credit'		=> '1',
+					'credit'		=> '1',
 				),
 				array(
 					'class_status'	=> 'Substitued For Aravind',
 					'class_time'	=> '12 Oct, 2014',
 					'credit_change'	=> '+1',
-					'Credit'		=> '2',
+					'credit'		=> '2',
 				),
 				array(
 					'class_status'	=> 'Absent',
 					'class_time'	=> '19 Oct, 2014',
 					'credit_change'	=> '-2',
-					'Credit'		=> '-1',
+					'credit'		=> '-1',
 				)
 			),
 		);
@@ -335,17 +341,17 @@ class Api extends Controller {
 				array(
 					'name'	=> "Jithin",
 					'center_name'=> "Arya Bhavan",
-					'class_nime' => 'Sept 07, 2014, 4:00 PM',
+					'class_time' => 'Sept 07, 2014, 4:00 PM',
 				),
 				array(
 					'name'	=> "Binny",
 					'center_name'=> "Sneha Bhavan",
-					'class_nime' => 'Sept 01, 2014, 4:00 PM',
+					'class_time' => 'Sept 01, 2014, 4:00 PM',
 				),
 				array(
 					'name'	=> "Sanjay",
 					'center_name'=> "Valsalya Bhavan",
-					'class_nime' => 'Sept 03, 2014, 4:00 PM',
+					'class_time' => 'Sept 03, 2014, 4:00 PM',
 				),
 			);
 
@@ -571,7 +577,8 @@ class Api extends Controller {
 
 
 	function error($text) {
-		return $this->send(array('error' => $text, 'status' => "0", "success" => false));
+		$this->send(array('error' => $text, 'status' => "0", "success" => false));
+		exit;
 	}
 
 	function send($data) {

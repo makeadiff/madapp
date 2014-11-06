@@ -1,7 +1,7 @@
 <?php
 class Review extends Controller {
 	private $message;
-	private $all_cycles = array('Nothing', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
+	private $all_cycles = array('Select...', 'Cycle 1', 'Cycle 2', 'Cycle 3', 'Cycle 4', 'Cycle 5');
 	
 	function Review() {
 		parent::Controller();
@@ -20,7 +20,7 @@ class Review extends Controller {
 			redirect('auth/login');
 		}
         $this->user_details = $this->user_auth->getUser();
-        $this->cycle = 1;
+        $this->cycle = get_cycle();
 	}
 
 	function select_people() {
@@ -41,7 +41,10 @@ class Review extends Controller {
 
 	function review_fellow($user_id, $cycle = 0, $option='', $check_permission = true) {
 		if($check_permission) $this->user_auth->check_permission('review_fellows');
+		if($this->input->post('cycle')) $this->cycle = $this->input->post('cycle');
+
 		$city_id = $this->session->userdata('city_id');
+
 		if(!$cycle) $cycle = $this->cycle;
 		if(!is_numeric($user_id)) $user_id = base64_decode($user_id);
 		else die("Error: Contact Administrator. ");
@@ -60,7 +63,7 @@ class Review extends Controller {
 														'milestone_reviews' => $milestone_reviews,
 														'survey_reviews'	=> $survey_reviews,
 														'user_id'=>$user_id, 'user' => $user,
-														'cycle'=>$cycle, 'auth'=>$this->user_auth));
+														'cycle'=>$cycle,	'all_cycles'=>$this->all_cycles, 'auth'=>$this->user_auth));
 	}
 
 	function my_reivew_sheet() {
@@ -252,7 +255,7 @@ class Review extends Controller {
 		// Lifted from controllers/parameter.php:ss_calulate()
 		foreach ($raw_data as $ans) {
 			// If not defined, define the defaults
-			if(!isset($answers[$ans->question_id])) $answers[$ans->question_id] = array(1=>0,3=>0,5=>0);
+			if(!isset($answers[$ans->question_id])) $answers[$ans->question_id] = array(0=>0, 1=>0, 3=>0, 5=>0);
 
 			$answers[$ans->question_id][$ans->answer]++;
 		}
@@ -272,9 +275,12 @@ class Review extends Controller {
 				
 
 				$data[$question_id]['level'][$answer_value] = $values[$answer_value];
-				$data[$question_id]['level_percentage'][$answer_value] = round((($values[$answer_value] / $total_answer_count) * 100), 2);
+				if($total_answer_count) 
+					$data[$question_id]['level_percentage'][$answer_value] = round((($values[$answer_value] / $total_answer_count) * 100), 2);
+				else $data[$question_id]['level_percentage'][$answer_value] = 0;
 			}
-			$level = round($aggregate / $total_answer_count, 2);
+			if($total_answer_count) $level = round($aggregate / $total_answer_count, 2);
+			else $level = 0;
 
 			$data[$question_id]['aggregate_level'] = $level;
 			$data[$question_id]['total_answer_count'] = $total_answer_count;

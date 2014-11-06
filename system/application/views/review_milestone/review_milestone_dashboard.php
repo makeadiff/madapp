@@ -36,7 +36,7 @@
             <?php } ?>
 
             <?php if($this->user_auth->get_permission('milestone_aggregator')) { ?>
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/madapp/index.php/review/aggregate_milestones">
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('review/aggregate_milestones'); ?>">
                         <img class="dash white" src="<?php echo base_url(); ?>images/flat_ui/milestone_aggregator.png" alt="" /><br /> Milestone<br /> Aggregator</a></div>
             <?php } ?>
 
@@ -46,7 +46,7 @@
             <?php } ?>
 
             <?php if($this->user_auth->get_permission('review_aggregator')) { ?>
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/madapp/index.php/review/aggregate">
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('review/aggregate'); ?>">
                         <img class="dash white" src="<?php echo base_url(); ?>images/flat_ui/aggregator.png" alt="" /> <br>Review<br /> Aggregator</a></div>
             <?php } ?>
 

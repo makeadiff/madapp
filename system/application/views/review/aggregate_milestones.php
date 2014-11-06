@@ -46,7 +46,7 @@ $count = 0;
 foreach ($data as $row) { $count++; ?>
 <tr>
 <td><?php echo $count ?></td>
-<td><?php echo $row->name ?></td>
+<td><a href="<?php echo site_url('user/popupEditusers/'.$row->user_id); ?>"><?php echo $row->name ?></a></td>
 <td><?php echo $row->city_name ?></td>
 <td><?php echo $row->milestone ?></td>
 <td><?php echo date('j-M ',strtotime($row->due_on))?></td> 

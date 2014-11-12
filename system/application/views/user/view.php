@@ -45,7 +45,7 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <p>Preferred Class Days: <strong><?php echo ucfirst($user->preferred_day); ?></strong></p>
 <?php if($user->why_mad) { ?><p>Why MAD: <strong><?php echo nl2br($user->why_mad); ?></strong></p><?php } ?>
 
-<?php if($this->user_auth->get_permission('user_edit')) { ?><br /><br />
+<?php if($this->user_auth->get_permission('user_edit') or $user->id == $_SESSION['user_id']) { ?><br /><br />
 <a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="with-icon edit popup">Edit <?php echo $user->name ?></a>
 <?php } ?>
 

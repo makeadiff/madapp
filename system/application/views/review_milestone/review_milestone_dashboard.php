@@ -47,12 +47,12 @@
 
             <?php if($this->user_auth->get_permission('review_aggregator')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('review/aggregate'); ?>">
-                        <img class="dash white" src="<?php echo base_url(); ?>images/flat_ui/aggregator.png" alt="" /> <br>Review<br /> Aggregator</a></div>
+                        <img class="dash white" src="<?php echo base_url(); ?>images/flat_ui/aggregator.png" alt="" /> <br>Happiness Index<br /> Aggregator</a></div>
             <?php } ?>
 
             <?php /*if($this->user_auth->get_permission('happiness_index')) { */?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/stakeholder-survey/status.php">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/happiness_index.png" alt="" /> <br>Happiness<br>Index Status</a></div>
+                        <img src="<?php echo base_url(); ?>images/flat_ui/happiness_index.png" alt="" /> <br>Happiness<br />Index Status</a></div>
             <?php /*} */?>
 
 

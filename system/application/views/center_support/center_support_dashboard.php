@@ -15,6 +15,11 @@
                         <img src="<?php echo base_url(); ?>images/flat_ui/kids.png" alt="" /> <br>Child<br>Management</a></div>
             <?php } ?>
 
+            <?php if($this->user_auth->get_permission('reimbursement')) { ?>
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' target="_blank" href="https://drive.google.com/a/makeadiff.in/?tab=mo#folders/0B8bB5ID9NRHQUl94TDB0VkhsSkU">
+                        <img class="dash" src="<?php echo base_url(); ?>images/flat_ui/meeting.png" alt="" /> <br>CA Planning &<br>Review Meeting</a></div>
+            <?php } ?>
+
 
 
             <?php if($this->user_auth->get_permission('event_index')) { ?>

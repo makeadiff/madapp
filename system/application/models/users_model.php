@@ -20,6 +20,8 @@ class Users_model extends Model {
         $this->project_id = $this->ci->session->userdata('project_id');
         $this->year = $this->ci->session->userdata('year');
 
+        $this->load->model('Class_model','class_model');
+
     }
     
     /**
@@ -555,6 +557,59 @@ class Users_model extends Model {
 		}
 		
 		return $credit;
+    }
+
+    /*
+	 * How it Works: There is two fields in the User Table - credit and consecutive_credit. Credit holds the total credit of the volunteer. consecutive_credit holds the credit they got by doing consecutive classes. 
+	 *	credit field is other type of credit + consecutive_credit. What the function does is basically get the list of all volunteers, go thru each one, find how many consecutive credits they deserve, then if there 
+	 *	is ANY change(credits should be more that what it is currently - or should be less than what it is), then the script updates the table with the accurate number.
+	 *	The rest of MADApp just have to worry about the credit field as it holds the full credit. Only the script that deals with consecutive credit will use the other field.
+	 */
+    function recalculate_user_consecutive_class_credit($user_id) {
+    	// Get all class of this user with status.
+		$all_classes = $this->class_model->get_all($user_id);
+		$all_classes = array_reverse($all_classes);
+
+		$atteneded_class_count_for_credit_reward = 5;
+		$credit_reward = 1;
+
+		$attended_count = 0;
+		$consecutive_credit = 0;
+    	// Go thru them one by one incrementing a variable untill an absent/substituted class comes up...
+    	foreach ($all_classes as $class) {
+    		if($class->status == 'attended' and $class->substitute_id == 0) {
+    			$attended_count++;
+    		}
+    		// If absent/substituted, reset counter.
+    		if($class->status == 'absent' or $class->substitute_id != 0) {
+    			$attended_count = 0;
+    		}
+
+    		// I didn't use else because I don't want to give/take points for projected, cancelled classes.
+
+    		// If we reach X before a absent/subbed class, increment credit counter.
+    		if($attended_count == $atteneded_class_count_for_credit_reward) {
+    			dump($attended_count);
+    			$consecutive_credit += $credit_reward;
+    			$attended_count = 0;
+    		}
+    	}
+
+    	// Does the consecutive credit counter have the same value as the DB field consecutive_credit? If so, let it be.
+    	$user_data = $this->users_model->get_user($user_id);
+    	if($user_data->consecutive_credit == $consecutive_credit) return $consecutive_credit;
+
+    	// Else, first decrease the preset credit from the 'credit' field: credit = credit  - consecutive_credit. Then set the consecutive_credit with the new value. Then, increment user credit 
+    	//		with the new consecutive_credit: credit = credit + consecutive_credit
+    	$credit_info = array();
+    	$user_data->credit = $user_data->credit - $user_data->consecutive_credit;
+    	$credit_info['credit'] = $user_data->credit + $consecutive_credit;
+    	$credit_info['consecutive_credit'] = $consecutive_credit;
+
+    	// Save to database.
+    	$this->db->where('id',$user_id)->update("User", $credit_info);
+
+    	return $consecutive_credit;
     }
     
     function get_users_batch($user_id) {

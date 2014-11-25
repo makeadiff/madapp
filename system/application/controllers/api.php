@@ -436,7 +436,21 @@ class Api extends Controller {
 		$students = $this->level_model->get_kids_in_level($level_id);
 		$attendence = $this->class_model->get_attendence($class_id);
 
-		$this->show(array('students'=>$students, 'attendence'=>$attendence, 'class_info'=>$class_info));
+		$this->send(array('students'=>$students, 'attendance'=>$attendence, 'class_info'=>$class_info));
+	}
+
+	function class_save_student_attendance() {
+		$this->check_key();
+		$class_id = $this->get_input('class_id');
+		$attendance = $this->get_input('attendance');
+
+		$class_info = $this->class_model->get_class($class_id);
+		$level_id = $class_info['level_id'];
+
+		$all_students = $this->level_model->get_kids_in_level($level_id);
+		$this->class_model->save_attendence($class_id, $all_students, $attendance);
+
+		$this->send(array('success' => "Attendance Marked"));
 	}
 
 	/**
@@ -476,10 +490,10 @@ class Api extends Controller {
 			// Each level must have only the units in the book given to that level.
 			if(empty($all_lessons[$level_id])) {
 				$all_lessons[$level_id] = array();
-				$all_lessons[$level_id][] = array('unit_name' => "None", 'unit_id' => "0");
-				for($i=1; $i<=20; $i++) $all_lessons[$level_id][] = array('unit_name' => "Unit $i", 'unit_id' => "$i");
-				$all_lessons[$level_id][] = array('unit_name' => "Revision", 'unit_id' => "-1");
-				$all_lessons[$level_id][] = array('unit_name' => "Test", 'unit_id' => "-2");
+				$all_lessons[$level_id][] = array('lesson_name' => "None", 'lesson_id' => "0");
+				for($i=1; $i<=20; $i++) $all_lessons[$level_id][] = array('lesson_name' => "Unit $i", 'lesson_id' => "$i");
+				$all_lessons[$level_id][] = array('lesson_name' => "Revision", 'lesson_id' => "-1");
+				$all_lessons[$level_id][] = array('lesson_name' => "Test", 'lesson_id' => "-2");
 			}
 			
 			$present_count = 0;
@@ -498,7 +512,7 @@ class Api extends Controller {
 					'all_lessons'	=> $all_lessons[$level_id],
 					'max_lesson'	=> 20,
 					'class_status'	=> ($row->status == 'cancelled') ? '0' : '1',
-					'student_attendence'	=> $attendence_count,
+					'student_attendance'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,
 						'name'		=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',

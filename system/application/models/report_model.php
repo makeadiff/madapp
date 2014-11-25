@@ -46,6 +46,45 @@ class Report_model extends Model {
     		AND Level.year={$this->year}
     		GROUP BY Level.center_id")->result();
     }
+
+    function get_volunteer_count() {
+        $vc_data = $this->db->query('SELECT City.name as city_name, City.id as city_id, COUNT( User.id ) as volunteer_count,  `Group`.name as group_name, `Group`.id as group_id
+                            FROM User
+                            INNER JOIN City ON City.id = User.city_id
+                            INNER JOIN UserGroup ON UserGroup.user_id = User.id
+                            INNER JOIN  `Group` ON  `Group`.id = UserGroup.group_id
+                            WHERE User.status =1
+                            AND User.user_type =  "volunteer"
+                            GROUP BY  `Group`.id, City.id
+                            ORDER BY City.name, Group.name')->result();
+
+        $cities = $this->db->query('SELECT id,name FROM City ORDER BY name')->result();
+        $groups = $this->db->query('SELECT id,name FROM `Group` WHERE `type` <> "national" AND `type` <> "strat" AND group_type = "normal" ORDER BY name')->result();
+
+
+
+
+
+        foreach($cities as $city) {
+            $data[$city->id] = new stdClass();
+            $data[$city->id]->city_name = $city->name;
+            foreach($groups as $group) {
+                foreach($vc_data as $vc) {
+                    if($vc->city_id == $city->id && $vc->group_id == $group->id) {
+                        $data[$city->id]->{$group->name} = (int)$vc->volunteer_count;
+                    }
+                }
+            }
+        }
+
+
+
+        /*var_dump($data);
+        die();*/
+
+
+        return $data;
+    }
 	
 	function get_volunteer_admin_credits() {
 		$data = array();

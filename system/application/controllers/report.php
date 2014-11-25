@@ -30,6 +30,22 @@ class Report extends Controller {
 		$report_data = $this->report_model->get_users_with_low_credits($credit, $signs[$sign], $city_id);
 		$this->show_report($report_data, array('name'=>'Name', 'credit'=>'Credits'), 'Users With Low Credits('.$credit.' or less)', 'developmental_conversation_for_low_credits_count');
 	}
+
+    function volunteer_count() {
+        $report_data = $this->report_model->get_volunteer_count();
+        $groups = $this->db->query('SELECT name FROM `Group` WHERE group_type = "normal" AND `type` <> "strat" AND `type` <> "national" ORDER BY name')->result();
+
+        $gfields['city_name'] = "City";
+
+        foreach($groups as $group) {
+            $gfields[$group->name] = $group->name;
+        }
+
+        $this->show_report($report_data,$gfields,'Volunteer Count Report');
+
+
+
+    }
 	
 	function absent() {
 		$report_data = $this->report_model->get_users_absent_without_substitute();

@@ -115,7 +115,7 @@ class Report_model extends Model {
                             ON Student.center_id = Center.id
                             INNER JOIN City
                             ON City.id = Center.city_id
-                            WHERE Student.status = 1
+                            WHERE Student.status = 1 AND Center.status = 1
                             GROUP BY City.name , Center.name WITH ROLLUP')->result();
 
     }

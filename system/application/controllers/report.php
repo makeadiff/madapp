@@ -32,19 +32,27 @@ class Report extends Controller {
 	}
 
     function volunteer_count() {
-        $report_data = $this->report_model->get_volunteer_count();
-        $groups = $this->db->query('SELECT name FROM `Group` WHERE group_type = "normal" AND `type` <> "strat" AND `type` <> "national" ORDER BY name')->result();
+        $data = $this->report_model->get_volunteer_count();
+        $report_data = $data['report_data'];
+        $groups = $data['groups'];
 
-        $gfields['city_name'] = "City";
+        $fields['city_name'] = "City";
 
         foreach($groups as $group) {
-            $gfields[$group->name] = $group->name;
+            $fields[$group->name] = $group->name;
         }
 
-        $this->show_report($report_data,$gfields,'Volunteer Count Report');
+        $fields['total'] = "Total";
+
+        $this->show_report($report_data,$fields,'Volunteer Count Report');
 
 
 
+    }
+
+    function child_count() {
+        $report_data = $this->report_model->get_child_count();
+        $this->show_report($report_data,array('City' => 'City','Center' => 'Center', 'Male' => 'Male', 'Female' => 'Female', 'NotSpecified' => 'Not Specified', 'Total' => 'Total'), 'Child Count');
     }
 	
 	function absent() {

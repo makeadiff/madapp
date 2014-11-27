@@ -185,35 +185,25 @@ class Api extends Controller {
 		$user_id = $this->get_input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
-		$history = array(
-			"data" => array(
-				array(
-					'center' 	=> 'MAD Center',
-					'level'		=> '5A - Kannada',
-					'time'		=> '05 Oct, 2014',
-					'teacher'	=> 'Binny V A',
-					'substitute'=> '',
-					'status'	=> 'Projected',
-				),
-				array(
-					'center' 	=> 'MAD Center',
-					'level'		=> '5A - Kannada',
-					'time'		=> '28 Sept, 2014',
-					'teacher'	=> 'Binny V A',
-					'substitute'=> 'Nivi',
-					'status'	=> 'Substitued by',
-				),
-				array(
-					'center' 	=> 'MAD Center',
-					'level'		=> '5A - Kannada',
-					'time'		=> '21 Sept, 2014',
-					'teacher'	=> 'Binny V A',
-					'substitute'=> '',
-					'status'	=> 'Attended',
-				),
-			)
-		);
-		$this->send($history);
+		$all_classes = $this->class_model->get_all($user_id);
+
+		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0));
+ 		$all_users = idNameFormat($users);
+ 		$all_users[0] = '';
+		
+		$history = array();
+		foreach ($all_classes as $cls) {
+			$history[] = array(
+					'center'	=> $cls->center_name,
+					'level'		=> $cls->level_name,
+					'time'		=> $cls->class_on,
+					'teacher'	=> $all_users[$cls->user_id],
+					'substitute'=> $all_users[$cls->substitute_id],
+					'status'	=> ucfirst($cls->status),
+				);
+		}
+
+		$this->send(array('data'=>$history, 'success'=>true));
 	}
 
 	/**
@@ -227,41 +217,27 @@ class Api extends Controller {
 		$user_id = $this->get_input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
-		$history = array(
+		$credit_history = $this->user_model->get_credit_history($user_id);
+
+		foreach ($credit_history as $ch) {
+			$history[] = array(
+					'class_status'	=> 'Absent',
+					'class_time'	=> '19 Oct, 2014',
+					'credit_change'	=> '-2',
+					'credit'		=> '-1',
+				);
+		}
+
+		$return = array(
 			"title" => array(
 					'class_status'	=> 'Class Status',
 					'class_time'	=> 'Class Time',
 					'credit_change'	=> 'Credit Change',
 					'credit'		=> 'Credit',
 				),
-			"data" => array(
-				array(
-					'class_status'	=> 'Start',
-					'class_time'	=> '28 Sept, 2014',
-					'credit_change'	=> '0',
-					'credit'		=> '3',
-				),
-				array(
-					'class_status'	=> 'Absent',
-					'class_time'	=> '05 Oct, 2014',
-					'credit_change'	=> '-2',
-					'credit'		=> '1',
-				),
-				array(
-					'class_status'	=> 'Substitued For Aravind',
-					'class_time'	=> '12 Oct, 2014',
-					'credit_change'	=> '+1',
-					'credit'		=> '2',
-				),
-				array(
-					'class_status'	=> 'Absent',
-					'class_time'	=> '19 Oct, 2014',
-					'credit_change'	=> '-2',
-					'credit'		=> '-1',
-				)
-			),
+			"data" => $history,
 		);
-		$this->send($history);
+		$this->send($return);
 	}
 
 	/**
@@ -275,44 +251,7 @@ class Api extends Controller {
 		$city_id = $this->get_input('city_id');
 		if(!$city_id) $this->error("City ID is empty");
 
-		$data = array(
-				array(
-					'name'	=> "Jithin",
-					'credit'=> 7,
-				),
-				array(
-					'name'	=> "Paul",
-					'credit'=> 6,
-				),
-				array(
-					'name'	=> "Sanjay",
-					'credit'=> 5,
-				),
-				array(
-					'name'	=> "Aswin",
-					'credit'=> 4.5,
-				),
-				array(
-					'name'	=> "Nivi",
-					'credit'=> 4,
-				),
-				array(
-					'name'	=> "Shilpa",
-					'credit'=> 3,
-				),
-				array(
-					'name'	=> "Cathy",
-					'credit'=> 2,
-				),
-				array(
-					'name'	=> "Rijuta",
-					'credit'=> 1,
-				),
-				array(
-					'name'	=> "Megha",
-					'credit'=> 0.5,
-				),
-			);
+		$data = $this->user_model->get_credit_leaderboard($city_id);
 
 		$this->send(array('data' => $data));
 	}
@@ -323,7 +262,24 @@ class Api extends Controller {
 	 * Example: /api/report_low_credit_user?city_id=1&key=am3omo32hom4lnv32vO
 	 */
 	function report_low_credit_user() {
-		$this->report_credit_leaderboard();
+		$this->check_key();
+
+		$city_id = $this->get_input('city_id');
+		if(!$city_id) $this->error("City ID is empty");
+		$this->load->model('report_model');
+
+		$report = $this->report_model->get_users_with_low_credits(0, '<', $city_id);
+		$data = array();
+
+		foreach($report as $cls) {
+			$data[] = array(
+					'name'		=> $cls->name,
+					'user_id'	=> $cls->user_id,
+					'credit'	=> $cls->credit,
+				);
+		}
+
+		$this->send(array('data' => $data));
 	}
 
 	/**
@@ -336,24 +292,17 @@ class Api extends Controller {
 
 		$city_id = $this->get_input('city_id');
 		if(!$city_id) $this->error("City ID is empty");
+		$this->load->model('report_model');
 
-		$data = array(
-				array(
-					'name'	=> "Jithin",
-					'center_name'=> "Arya Bhavan",
-					'class_time' => 'Sept 07, 2014, 4:00 PM',
-				),
-				array(
-					'name'	=> "Binny",
-					'center_name'=> "Sneha Bhavan",
-					'class_time' => 'Sept 01, 2014, 4:00 PM',
-				),
-				array(
-					'name'	=> "Sanjay",
-					'center_name'=> "Valsalya Bhavan",
-					'class_time' => 'Sept 03, 2014, 4:00 PM',
-				),
-			);
+		$report = $this->report_model->get_users_absent_without_substitute($city_id);
+		$data = array();
+		foreach($report as $cls) {
+			$data[] = array(
+					'name'			=> $cls->name,
+					'center_name'	=> $cls->center_name,
+					'class_time'	=> date('dS M, H:i A', strtotime($cls->class_on)),
+				);
+		}
 
 		$this->send(array('data' => $data));
 	}

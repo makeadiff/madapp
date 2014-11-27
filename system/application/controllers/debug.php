@@ -128,6 +128,7 @@ class Debug extends Controller {
 	}
 	
 	/// Bulk add classes - add class to the given batch from the said date - this will add classes until we encounter a day which has classes already - or the current date is hit.
+	// Use this to add Back classes.
 	// Code taken from classes::add_manually_save
 	function add_class_to_batch($batch_id, $from_date) {
 		$batch = $this->batch_model->get_batch($batch_id);
@@ -166,6 +167,45 @@ class Debug extends Controller {
 			if($day_count > 50) exit;
 		}
 	}
+
+	// Add Back classes for the entire nation.
+	function add_back_classes($city_id=0) {
+		$all_centers = $this->center_model->get_all($city_id);
+
+		foreach($all_centers as $center) {
+			$batches = $this->batch_model->get_batches_in_center($center->id);
+			$center_class_starts_on = $center->class_starts_on;
+			if($center_class_starts_on == '0000-00-00') {
+				print "Invalid Start date for {$center->name}({$center->id}). Not generating class.<br />";
+				continue;
+			}
+			$start_on_day = date('w', strtotime($center_class_starts_on));
+			print "Generating back classes for " . $center->name . "<br />";
+
+			foreach ($batches as $batch) {
+				if($batch->day == $start_on_day) {
+					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on));
+					// $this->add_class_to_batch($batch->id, $class_starts_on);
+					echo "= $batch->id : $class_starts_on<br />";
+
+				} else if($batch->day < $start_on_day) {
+					$difference = ($batch->day + 7) - $start_on_day;
+					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on) + ($difference * 24 * 60 * 60));
+					// $this->add_class_to_batch($batch->id, $class_starts_on);
+					echo "< $batch->id : $class_starts_on<br />";
+
+				} else if($batch->day > $start_on_day) {
+					$difference = $batch->day + $start_on_day;
+					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on) + ($difference * 24 * 60 * 60));
+					// $this->add_class_to_batch($batch->id, $class_starts_on);
+					echo "> $batch->id : $class_starts_on<br />";
+				}
+			}
+			print "<br />";
+		}
+
+	}
+
 
 	function delete_usergroup_after_moving_members_to_other_group($usergroup_id_to_delete, $other_usergroup_id) {
 		$this->users_model->db->query("DELETE FROM `Group` WHERE id=$usergroup_id_to_delete");

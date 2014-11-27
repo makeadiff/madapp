@@ -222,8 +222,8 @@ class Class_model extends Model {
     /// Argument: $user_class_id - the id of a row in the UserClass table.
     function calculate_users_class_credit($user_class_id, $data = array(), $revert = false) {
     	if(!$data or empty($data->class_id)) $data = $this->db->where('id',$user_class_id)->get('UserClass')->row_array();
-    	$this->load->model('user_model','user_model');
-		$this->load->model('level_model','level_model');
+    	$this->ci->load->model('users_model','user_model');
+		$this->ci->load->model('level_model','level_model');
 		$this->ci->load->model('settings_model','settings_model');
     	
     	$debug = false;
@@ -250,25 +250,25 @@ class Class_model extends Model {
     	if($status == 'attended') {
     		if($substitute_id) {
     			// A substitute has attended the class. Substitute gets one/two credit, Original teacher loses one credit.
-    			$current_substitute_credit = $this->user_model->get_user($substitute_id)->credit;
+    			$current_substitute_credit = $this->ci->user_model->get_user($substitute_id)->credit;
     			
     			if($max_credit_threshold >= ($current_substitute_credit + $credit_for_substituting)) { // Make sure no one gets more than upper limit. :KNOWNISSUE: When reverting, this could be a issue.
-					$this->user_model->update_credit($substitute_id, $credit_for_substituting);
+					$this->ci->user_model->update_credit($substitute_id, $credit_for_substituting);
 				} else {
 					$credit_for_substituting = '0 (Upper limit hit)';
 				}
-    			$this->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
+    			$this->ci->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
     			if($debug) print "<br />Substitute attended. Sub: $credit_for_substituting and Teacher: $credit_lost_for_getting_substitute";
 				
 				if(!$zero_hour_attendance) {
 					// Sub didn't reach in time for zero hour. Loses a credit. 
-					$this->user_model->update_credit($substitute_id, $credit_lost_for_missing_zero_hour);
+					$this->ci->user_model->update_credit($substitute_id, $credit_lost_for_missing_zero_hour);
 					if($debug) print "<br />Missed Zero Hour. Sub $credit_lost_for_missing_zero_hour";
 				}
     		} else {
 				if(!$zero_hour_attendance) {
 					// Sub didn't reach in time for zero hour. Loses a credit. 
-					$this->user_model->update_credit($user_id, $credit_lost_for_missing_zero_hour);
+					$this->ci->user_model->update_credit($user_id, $credit_lost_for_missing_zero_hour);
 					if($debug) print "<br />Missed Zero Hour. Vol $credit_lost_for_missing_zero_hour";
 				}
 			}
@@ -276,12 +276,12 @@ class Class_model extends Model {
     	} elseif($status == 'absent') {
     		if($substitute_id) {
     			// A substitute was supposed to come - but didn't. Substitute loses two credit, Original teacher loses one credit.
-    			$this->user_model->update_credit($substitute_id, $credit_lost_for_missing_class);
-    			$this->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
+    			$this->ci->user_model->update_credit($substitute_id, $credit_lost_for_missing_class);
+    			$this->ci->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
     			if($debug) print "<br />Substitute was absent. Sub $credit_lost_for_missing_class and Teacher $credit_lost_for_getting_substitute";
     		} else {
     			// Absent without substitute. Teacher loses two credit.
-    			$this->user_model->update_credit($user_id, $credit_lost_for_missing_class);
+    			$this->ci->user_model->update_credit($user_id, $credit_lost_for_missing_class);
     			if($debug) print "<br />Teacher was absent. Teacher $credit_lost_for_missing_class";
     		}
     	}

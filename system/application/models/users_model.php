@@ -611,6 +611,121 @@ class Users_model extends Model {
 
     	return $consecutive_credit;
     }
+
+    function get_credit_history($user_id) {
+		$this->load->model('level_model');
+		$this->load->model('event_model');
+		$this->load->model('settings_model');
+
+    	$details = $this->get_usercredits($user_id);
+		
+		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
+		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
+		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
+		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
+		$credit_lost_for_missing_avm = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_avm');
+		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
+		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
+		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
+		
+		$credit_log = array();
+		$i = 0;
+		foreach($details as $row) {
+			$data = array();
+			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
+				$credit = $credit + $credit_lost_for_missing_class;
+				$data['class_on'] = $row['class_on'];
+				$data['Substitutedby'] = 'Absent';
+				$data['lost'] = "Lost $credit_lost_for_missing_class credits";
+				$data['credit']= $credit;
+				
+			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and ($row['status'] == 'absent' or $row['status'] == 'attended')) {
+				$substitute_id = $row['substitute_id'];
+				$Name_of_Substitute = $this->get_name_of_Substitute($substitute_id);
+				if(sizeof($Name_of_Substitute) >0) $Name_of_Substitute = $Name_of_Substitute->name;
+				else $Name_of_Substitute ='No Name';
+				
+				$credit = $credit + $credit_lost_for_getting_substitute;
+				$data['class_on']= $row['class_on'];
+				$data['Substitutedby']="Substituted by ".$Name_of_Substitute." ";
+				$data['lost'] = "Lost $credit_lost_for_getting_substitute credit";
+				$data['credit'] = $credit;
+			
+			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
+				$credit = $credit + $credit_lost_for_missing_class;
+				$data['class_on']= $row['class_on'];
+				$teacher_name = $this->get_name_of_Substitute($row['user_id']);
+				$data['Substitutedby'] = "Absent for " . $teacher_name->name . "'s substitute class";
+				$data['lost'] = "Lost $credit_lost_for_missing_class credit";
+				$data['credit'] = $credit;
+				
+			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
+				$sub_get_credits = $credit_for_substituting;
+				
+				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
+				$substitute_levels = $this->ci->level_model->get_user_level($row['substitute_id']);
+				$current_class_level = $this->ci->level_model->get_class_level($row['class_id']);
+				if(in_array($current_class_level, $substitute_levels)) {
+					$sub_get_credits = $credit_for_substituting_in_same_level;
+				}
+				
+				$data['class_on'] = $row['class_on'];
+				$teacher_name = $this->get_name_of_Substitute($row['user_id']);
+				$data['Substitutedby'] = "Substituted for " . $teacher_name->name;
+				$data['lost'] = "Gained $sub_get_credits credit.";
+
+				// Did we hit the upper limit?
+				if($credit_max_credit_threshold >= ($credit + $sub_get_credits)) {
+					$credit = $credit + $sub_get_credits;
+				} else {
+					$data['lost'] .= " Upper credit limit hit! You Rock!";
+				}
+				
+				$data['credit'] = $credit;
+				
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+					$credit = $credit + $credit_lost_for_missing_zero_hour;
+					$data['class_on'] = $row['class_on'];
+					$data['Substitutedby'] = "Missed Zero Hour";
+					$data['lost'] = "Lost $credit_lost_for_missing_zero_hour credit";
+					$data['credit'] = $credit;
+				}
+			}
+			
+			if ($row['substitute_id'] == 0 and $row['status'] == 'attended') {
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+					$credit = $credit + $credit_lost_for_missing_zero_hour;
+					$data['class_on'] = $row['class_on'];
+					$data['Substitutedby'] = "Missed Zero Hour";
+					$data['lost'] = "Lost $credit_lost_for_missing_zero_hour credit";
+					$data['credit'] = $credit;
+				}
+			}
+			
+			if(isset($data['credit'])) {
+				$i++;
+				$data['i'] = $i;
+				$credit_log[] = $data;
+			}
+		}
+		
+		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
+		foreach($event_attendence as $event) {
+			$i++;
+			if($i > 1) {
+				$data = array(
+					'i' 	=> $i,
+					'credit'=> $credit + $credit_lost_for_missing_avm,
+					'class_on'=> $event->starts_on,
+					'Substitutedby' => 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
+					'lost'	=> "Lost $credit_lost_for_missing_avm credit"
+				);
+				$credit_log[] = $data;
+			}
+		}
+
+		return $credit_log;
+    }
     
     function get_users_batch($user_id) {
 		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch 
@@ -941,7 +1056,10 @@ class Users_model extends Model {
 		$this->db->where('id',$substitute_id);
 		$result=$this->db->get();
 		return $result->row();
-	
+	}
+
+	function get_credit_leaderboard($city_id) {
+		return $this->db->query("SELECT id, name, credit FROM User WHERE city_id=$city_id AND status='1' AND user_type='volunteer' ORDER BY credit DESC LIMIT 0,10")->result_array();
 	}
 
 	/// Return all the people under you - till fellow level

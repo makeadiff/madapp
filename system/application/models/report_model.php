@@ -35,6 +35,22 @@ class Report_model extends Model {
     		WHERE User.city_id={$this->city_id} AND User.project_id={$this->project_id} 
     			AND UserClass.substitute_id=0 AND UserClass.status='absent'")->result();
     }
+
+    function unassigned_teachers($city_id=0) {
+        if(!$city_id) $city_id = $this->city_id;
+        $teacher_group_id = 9;
+        $assigned_teachers = idNameFormat($this->db->query("SELECT U.id,U.name FROM User U 
+                INNER JOIN UserGroup UG ON U.id=UG.user_id
+                INNER JOIN UserBatch UB ON U.id=UB.user_id
+                INNER JOIN Batch B ON UB.batch_id=B.id
+                WHERE UG.group_id=$teacher_group_id AND U.city_id=$city_id AND U.status='1' AND U.user_type='volunteer' AND B.year={$this->year} ORDER BY U.id")->result());
+
+        $all_teachers = idNameFormat($this->db->query("SELECT U.id,U.name FROM User U 
+                INNER JOIN UserGroup UG ON U.id=UG.user_id
+                WHERE UG.group_id=$teacher_group_id AND U.city_id=$city_id AND U.status='1' AND U.user_type='volunteer' ORDER BY U.id")->result());
+
+        return array_diff($all_teachers, $assigned_teachers);
+    }
     
     function get_volunteer_requirements($city_id=0) {
 		if(!$city_id) $city_id = $this->city_id;

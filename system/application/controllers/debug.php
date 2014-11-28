@@ -185,19 +185,19 @@ class Debug extends Controller {
 			foreach ($batches as $batch) {
 				if($batch->day == $start_on_day) {
 					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on));
-					// $this->add_class_to_batch($batch->id, $class_starts_on);
+					$this->add_class_to_batch($batch->id, $class_starts_on);
 					echo "= $batch->id : $class_starts_on<br />";
 
 				} else if($batch->day < $start_on_day) {
 					$difference = ($batch->day + 7) - $start_on_day;
 					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on) + ($difference * 24 * 60 * 60));
-					// $this->add_class_to_batch($batch->id, $class_starts_on);
+					$this->add_class_to_batch($batch->id, $class_starts_on);
 					echo "< $batch->id : $class_starts_on<br />";
 
 				} else if($batch->day > $start_on_day) {
 					$difference = $batch->day + $start_on_day;
 					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on) + ($difference * 24 * 60 * 60));
-					// $this->add_class_to_batch($batch->id, $class_starts_on);
+					$this->add_class_to_batch($batch->id, $class_starts_on);
 					echo "> $batch->id : $class_starts_on<br />";
 				}
 			}

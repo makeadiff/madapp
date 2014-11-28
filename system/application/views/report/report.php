@@ -1,7 +1,7 @@
-<?php $this->load->view('layout/header', array('title'=>'Reports')); ?>
+<?php $this->load->view('layout/header', array('title'=>'Report : ' . $title)); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/actions/hide_sidebar.css">
 
-<div id="head" class="clear"><h1>Reports</h1></div>
+<div id="head" class="clear"><h1>Report : <?php echo $title ?></h1></div>
 
 <table id="main" class="data-table">
 <tr>

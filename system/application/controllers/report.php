@@ -45,9 +45,20 @@ class Report extends Controller {
         $fields['total'] = "Total";
 
         $this->show_report($report_data,$fields,'Volunteer Count Report');
+    }
 
+    function unassigned_teachers() {
+    	$data = $this->report_model->unassigned_teachers();
+    	$report_data = array();
+    	foreach($data as $key => $value) {
+    		$report_data[] = (object) array('id' => $key, 'name' => $value);
+    	}
 
-
+    	$this->show_report($report_data, array(
+    			'id'		=> 'ID', 
+				'name'		=> 'Name', 
+			), 
+			'Unassigned Teachers');
     }
 
     function child_count() {

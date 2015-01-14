@@ -1,21 +1,8 @@
 <div class="container-fluid">
 <div class="board transparent-container">
 <h1 class="title">MADApp</h1>
-<br>
+<br />
 <div class="row">
-
-    <div class="row">
-
-        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-            <div class="alert alert-info alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <a href="http://makeadiff.in/onebigbulletin/" target="_blank" class="alert-link">One Big Bulletin</a> : Results from the first Happiness Index Survey!​<br />
-
-                <?php if($happiness_index_data_entry_status == 0) { ?>Please fill the <a class="alert-link" href="http://makeadiff.in/apps/stakeholder-survey/form.php">Happiness Index Survey...</a><?php } ?>
-            </div>
-        </div>
-
-    </div>
 
     <div class="col-md-3 col-sm-6 text-center">
         <a href="<?php echo site_url('edsupport/dashboard_view')?>" class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/ed_support.png"><br>Ed Support</a>
@@ -50,7 +37,7 @@
     </div>
 
     <div class="col-md-3 col-sm-6 text-center">
-        <a href='<?php echo site_url('review_milestone/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/review.png"><br>Review &<br>Milestones</a>
+        <a href='<?php echo site_url('review_milestone/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/review.png"><br>Review &amp;<br>Milestones</a>
     </div>
 
     <div class="col-md-3 col-sm-6 text-center">

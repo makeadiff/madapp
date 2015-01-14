@@ -14,6 +14,10 @@ class Api extends Controller {
 		$this->class_model->year = 2014;
 		$this->level_model->year = 2014;
 		$this->batch_model->year = 2014;
+		$this->user_model->project_id = 1;
+		$this->class_model->project_id = 1;
+		$this->level_model->project_id = 1;
+		$this->batch_model->project_id = 1;
 
 		header("Content-type: application/json");
 		header('Access-Control-Allow-Origin: *');
@@ -190,7 +194,7 @@ class Api extends Controller {
 		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0));
  		$all_users = idNameFormat($users);
  		$all_users[0] = '';
-		
+
 		$history = array();
 		foreach ($all_classes as $cls) {
 			$history[] = array(
@@ -218,13 +222,14 @@ class Api extends Controller {
 		if(!$user_id) $this->error("User ID is empty");
 
 		$credit_history = $this->user_model->get_credit_history($user_id);
+		$history = array();
 
 		foreach ($credit_history as $ch) {
 			$history[] = array(
-					'class_status'	=> 'Absent',
-					'class_time'	=> '19 Oct, 2014',
-					'credit_change'	=> '-2',
-					'credit'		=> '-1',
+					'class_status'	=> $ch['Substitutedby'],
+					'class_time'	=> date('d M, Y', strtotime($ch['class_on'])),
+					'credit_change'	=> $ch['lost'],
+					'credit'		=> $ch['credit'],
 				);
 		}
 
@@ -293,6 +298,8 @@ class Api extends Controller {
 		$city_id = $this->get_input('city_id');
 		if(!$city_id) $this->error("City ID is empty");
 		$this->load->model('report_model');
+		$this->report_model->year = get_year();
+		$this->report_model->city_id = $city_id;
 
 		$report = $this->report_model->get_users_absent_without_substitute($city_id);
 		$data = array();

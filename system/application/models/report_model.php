@@ -15,16 +15,20 @@ class Report_model extends Model {
 		if($sign != '<' and $sign != '>') $sign = '<';
 		if($city_id == -1) $city_id = $this->city_id;
 		if($project_id == -1) $project_id = $this->project_id;
+        $teacher_group_id = 9;
 		
 		$this->db->select("User.id AS user_id,name,credit");
 		$this->db->join('UserGroup', 'User.id=UserGroup.user_id');
-		$this->db->where('group_id', 9);
+		$this->db->where('group_id', $teacher_group_id); 
 		if($city_id) $this->db->where('city_id', $city_id);
-		$this->db->where('project_id',$project_id);
+		//$this->db->where('project_id',$project_id);
 		$this->db->where("credit $sign $credit");
 		$this->db->where('user_type','volunteer');
+        $this->db->where('status','1');
 		$this->db->order_by('credit');
-		return $this->db->get('User')->result();
+		$data = $this->db->get('User')->result();
+
+        return $data;
     }
     
     function get_users_absent_without_substitute() {
@@ -32,7 +36,7 @@ class Report_model extends Model {
     		FROM UserClass INNER JOIN User ON User.id=UserClass.user_id 
     			INNER JOIN Class ON UserClass.class_id=Class.id INNER JOIN Batch ON Batch.id=Class.batch_id
     			INNER JOIN Center ON Batch.center_id=Center.id
-    		WHERE User.city_id={$this->city_id} AND User.project_id={$this->project_id} 
+    		WHERE User.city_id={$this->city_id} AND User.user_type='volunteer' AND Class.class_on >='{$this->year}-04-01'
     			AND UserClass.substitute_id=0 AND UserClass.status='absent'")->result();
     }
 

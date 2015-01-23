@@ -223,6 +223,7 @@ class Api extends Controller {
 
 		$credit_history = $this->user_model->get_credit_history($user_id);
 		$history = array();
+		//dump($credit_history);exit;	
 
 		foreach ($credit_history as $ch) {
 			$history[] = array(
@@ -409,28 +410,20 @@ class Api extends Controller {
 		$this->send(array('success' => "Attendance Marked"));
 	}
 
-	/**
-	 * Get the enter Mentor view data in one call - just specify which Batch ID should be shown
-	 * Arguments:	$batch_id
-	 * Returns 	: 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
-	 * Example	: 	http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
-	 */	
-	function class_get_batch($batch_id = 0) {
+	/// Open a specific Class based on the Batch ID and the date that class has happened
+	function open_batch($batch_id='', $from_date='') {
 		$this->check_key();
-		// Lifted off classes.php:batch_view
+
 		if(!$batch_id) $batch_id = $this->get_input('batch_id');
+		if(!$from_date) $from_date = $this->get_input('batch_date');
 
-		if(!$batch_id) return $this->error("User doesn't have a batch");
-
-		$last_class = $this->class_model->get_last_class_in_batch($batch_id);
-		if(!$last_class) return $this->send(array('error' => "This batch does not have any past batches"));
-		
-		$from_date = date('Y-m-d', strtotime($last_class->class_on));
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
-		$center_name = $this->center_model->get_center_name($center_id);
+		$center = $this->center_model->edit_center($center_id)->row();
+		$center_name = $center->name;
+		$city_id = $center->city_id;
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date));
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9));
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'city_id' => $city_id));
 
 		$classes = array();
 		$class_done = array();
@@ -495,8 +488,37 @@ class Api extends Controller {
 				);
 			}
 		}
+		$class_on = '';
+		if(isset($data[0]->class_on)) $class_on = date('Y-m-d', strtotime($data[0]->class_on));
 
-		$this->send(array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name));
+		$this->send(array(
+				'classes'=>$classes, 
+				'center_name'=>$center_name, 
+				'batch_id'=>$batch_id, 
+				'batch_name'=>$batch->name,
+				'class_on' => $class_on,
+			));
+	}
+
+	/**
+	 * Get the enter Mentor view data in one call - just specify which Batch ID should be shown
+	 * Arguments:	$batch_id
+	 * Returns 	: 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
+	 * Example	: 	http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
+	 */	
+	function class_get_batch($batch_id = 0) {
+		$this->check_key();
+		// Lifted off classes.php:batch_view
+		if(!$batch_id) $batch_id = $this->get_input('batch_id');
+
+		if(!$batch_id) return $this->error("User doesn't have a batch");
+
+		$last_class = $this->class_model->get_last_class_in_batch($batch_id);
+		if(!$last_class) return $this->send(array('error' => "This batch does not have any past batches"));
+
+
+		$from_date = date('Y-m-d', strtotime($last_class->class_on));
+		$this->open_batch($batch_id, $from_date);
 	}
 
 	/**

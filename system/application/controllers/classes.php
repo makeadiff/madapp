@@ -88,11 +88,6 @@ class Classes extends Controller {
 				for($i=1; $i<=20; $i++) $all_lessons[$level_id][$i] = $i;
 				$all_lessons[$level_id][-1] = "Revision";
 				$all_lessons[$level_id][-2] = "Test";
-
-
-				// $level_info = $this->level_model->get_level($level_id);
-				// $all_lessons[$level_id] = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_info->book_id));
-				// $all_lessons[$level_id][0] = 'None';
 			}
 			
 			$present_count = 0;

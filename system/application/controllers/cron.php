@@ -51,7 +51,7 @@ class Cron extends Controller  {
 					//if($teacher->id != 496) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 					
 					// Make sure its not already inserted.
-					if(!$this->class_model->get_by_teacher_time($teacher->id, $date)) {
+					if(!$this->class_model->get_by_teacher_time($teacher->id, $date, '', $teacher->level_id)) {
 						print "Class by {$teacher->id} at $date\n";
 						
 						$class_data = array(

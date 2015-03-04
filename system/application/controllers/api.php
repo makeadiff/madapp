@@ -10,10 +10,10 @@ class Api extends Controller {
 		$this->load->model('batch_model');
 		$this->load->model('level_model');
 		$this->load->model('center_model');
-		$this->user_model->year = 2014;
-		$this->class_model->year = 2014;
-		$this->level_model->year = 2014;
-		$this->batch_model->year = 2014;
+		$this->user_model->year = get_year();
+		$this->class_model->year = get_year();
+		$this->level_model->year = get_year();
+		$this->batch_model->year = get_year();
 		$this->user_model->project_id = 1;
 		$this->class_model->project_id = 1;
 		$this->level_model->project_id = 1;

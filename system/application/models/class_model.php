@@ -156,6 +156,7 @@ class Class_model extends Model {
     
     function get_by_teacher_time($teacher_id, $time, $batch_id='', $level_id='') {
 		$batch_check = '';
+        $level_check = '';
 		if($batch_id) $batch_check = " AND Class.batch_id=$batch_id";
         if($level_id) $level_check = " AND Class.level_id=$level_id";
     	$result = $this->db->query("SELECT Class.id FROM Class 

@@ -40,7 +40,7 @@ Class User_auth {
 			
 			$this->ci->session->set_userdata('city_id', $status['city_id']);
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
-			$this->ci->session->set_userdata('year', '2014'); // Current year. Change every year. :HARDCODE:
+			$this->ci->session->set_userdata('year', get_year()); // Current year. Change every year.
 
 			$_SESSION['user_id'] = $status['id'];
 			
@@ -145,8 +145,8 @@ Class User_auth {
 			$new_registration_welcome_message = $this->ci->settings_model->get_setting_value('new_registration_welcome_message'); /// Returns the template of the email that should be sent to new recruites when they register on the site.
 			$new_registration_notification = $this->ci->settings_model->get_setting_value('new_registration_notification'); /// Returns the template of the email that should be sent to the HR when someone registers
 			
-			$replace_these = array('%NAME%', '%CITY_HR_EMAIL%');
-			$with_these = array($status['name'], $hr_email);
+			$replace_these = array('%NAME%', '%FIRST_NAME%', '%CITY_HR_EMAIL%');
+			$with_these = array($status['name'], short_name($status['name']), $hr_email);
 			$new_registration_notification = str_replace($replace_these, $with_these, $new_registration_notification);
 			$new_registration_welcome_message = str_replace($replace_these, $with_these, $new_registration_welcome_message);
 			

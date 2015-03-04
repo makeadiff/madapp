@@ -72,7 +72,7 @@ class Cron extends Controller  {
 	}
 	
 	/// Copies all the existing credits over to the Archive table and reset credits to 3.
-	function archive_credits() {
+	function  () {
 		$last_year = $this->year - 1;
 		
 		$users = $this->users_model->db->query("SELECT User.id,credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id 

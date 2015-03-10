@@ -226,14 +226,14 @@ class Classes extends Controller {
 			
 			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {
-				//if($batch_id != 1) continue; // :DEBUG: Use this to localize the issue
+				// if($batch_id != 1129) continue; // :DEBUG: Use this to localize the issue
 				
 				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
 				$days_with_classes = array();
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
-					//if($level->id != 71) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+					// if($level->id != 2319) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 					
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 					$class_info = array();
@@ -241,6 +241,7 @@ class Classes extends Controller {
 					// Get the list of teachers first.
 					$teachers_info = array();
 					$last_class_id = 0;
+
 					foreach($all_classes as $class) {
 						if(isset($teachers_info[$class->user_id])) continue;
 						

@@ -135,7 +135,7 @@ class Class_model extends Model {
 		
     	$classes = $this->db->query("SELECT Class.*,UserClass.user_id,UserClass.substitute_id,UserClass.status AS user_status
     		FROM Class INNER JOIN UserClass ON Class.id=UserClass.class_id 
-    		WHERE Class.level_id=$level_id AND Class.batch_id=$batch_id $date_range ORDER BY Class.class_on")->result();
+    		WHERE Class.level_id=$level_id AND Class.batch_id=$batch_id $date_range ORDER BY Class.class_on ASC")->result();
     	return $classes;
     }
     

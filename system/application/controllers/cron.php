@@ -2,13 +2,13 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends Controller  {
-	var $year;
+	public $year = false;
 	
     function Cron() {
         parent::Controller();
         header("Content-type: text/plain");
         $this->year = get_year();
-        
+
         $this->load->model('Users_model', 'users_model');
         $this->load->model('Class_model','class_model', TRUE);
         $this->class_model->year = $this->year;

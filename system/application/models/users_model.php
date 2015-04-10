@@ -1006,7 +1006,7 @@ class Users_model extends Model {
 				$more = 'You are already registered. ';
 				if($r->user_type != 'volunteer') {
 					$this->db->where('id', $r->id)->update('User', array('user_type'=>'applicant', 'joined_on'=>date('Y-m-d H:i:s')));
-					$more = 'Your applicantion has been bumped up. You will be informed when there is a recuitment happening in your city. Thank you.';
+					$more = 'Your application has been bumped up. You will be informed when there is a recuitment happening in your city. Thank you.';
 
 				}
 				if($r->status == '0') {

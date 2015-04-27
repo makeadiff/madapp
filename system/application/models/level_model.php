@@ -22,7 +22,7 @@ class Level_model extends Model {
     }
     
 	function get_all_levels_in_center($center_id) {
-		return $this->db->where('center_id',$center_id)->where('year', $this->year)->get('Level')->result();
+		return $this->db->where('center_id',$center_id)->where('year', $this->year)->where('status','1')->orderby('grade,name')->get('Level')->result();
 	}
 	
 	function get_level($level_id) {

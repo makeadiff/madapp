@@ -149,9 +149,36 @@ class Batch_model extends Model {
         }
     }
     
+    /// Delete the batch, the user batch connection, the batch subject connection - and the batch level connection.
     function delete($batch_id) {
     	$this->db->delete('Batch', array('id'=>$batch_id));
     	$this->db->delete('UserBatch', array('batch_id'=>$batch_id));
         $this->db->delete('BatchSubject', array('batch_id'=>$batch_id));
+        $this->db->delete('BatchLevel', array('batch_id'=>$batch_id));
+    }
+
+    /// Delet all the level connection that this batch has. Important to do that before insterting the connection.
+    function delete_batch_level_connection($batch_id) {
+        $this->db->delete('BatchLevel', array('batch_id'=>$batch_id, 'year'=>$this->year));
+    }
+    /// Insert the batch level connection with the current year.
+    function save_batch_level_connection($batch_id, $level_id) {
+        $this->db->insert("BatchLevel", array(
+                'batch_id'  => $batch_id,
+                'level_id'  => $level_id,
+                'year'      => $this->year,
+            ));
+    }
+
+    /// Find out all the batch level connection in the given center.
+    function get_batch_level_connections($center_id) {
+        $all_batchs = $this->get_batches_in_center($center_id);
+        $batch_ids = array_map(function($x) {
+            return $x->id;
+        },$all_batchs);
+
+        $batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
+
+        return $batch_level_connections;
     }
 }

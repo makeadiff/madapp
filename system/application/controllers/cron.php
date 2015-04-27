@@ -178,6 +178,67 @@ class Cron extends Controller  {
 			print "\n";
 		}
 	}
+
+
+	function copy_class_sturcture() {
+		$current_year = get_year();
+		$last_year = $current_year - 1;
+
+		$alphabets = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+
+		// Copy over batches to the new year
+		$batch_mapping = array();
+		$batches = $this->users_model->db->query("SELECT * FROM Batch WHERE year='$last_year' AND status='1'")->result();
+		print "Copying " . count($batches) . " batches<br />\n";
+		foreach($batches as $b) {
+			$this->users_model->db->query("INSERT INTO Batch (day,class_time,batch_head_id,center_id,project_id, year, status) 
+				VALUES('{$b->day}','{$b->class_time}','{$b->batch_head_id}','{$b->center_id}','{$b->project_id}','$current_year', '{$b->status}')");
+			$batch_mapping[$b->id] = mysql_insert_id();
+		}
+
+		// Copy over levels to the new year
+		$level_mapping = array();
+
+		$levels = $this->users_model->db->query("SELECT * FROM Level WHERE year='$last_year' AND status='1'")->result();
+		$uniqizer = array();
+		print "Copying " . count($levels) . " levels<br />\n";
+		foreach($levels as $b) {
+			$status = $b->status;
+			$new_grade = intval($b->grade) + 1;
+			if($new_grade == 11) $status = 0;
+
+			$name = addslashes($b->name);
+			if(!isset($uniqizer[$b->center_id])) {
+				$uniqizer[$b->center_id] = array();
+			}
+			if(!isset($uniqizer[$b->center_id][$new_grade])) {
+				$uniqizer[$b->center_id][$new_grade] = 0;
+			}
+
+			$name = $alphabets[$uniqizer[$b->center_id][$new_grade]];
+			$uniqizer[$b->center_id][$new_grade]++;
+
+			$this->users_model->db->query("INSERT INTO Level (name,grade,center_id,project_id, year, status) 
+				VALUES('$name','$new_grade','{$b->center_id}','{$b->project_id}','$current_year', '{$status}')");
+
+			$level_mapping[$b->id] = mysql_insert_id();
+		}
+
+		// Copy over StudentLevel table. Just relations.
+		$student_levels = $this->users_model->db->query("SELECT * FROM StudentLevel WHERE level_id IN (" . implode(",", array_keys($level_mapping)) .")")->result();
+		print "Copying " . count($student_levels) . " student level connections<br />\n";
+		foreach($student_levels as $sl) {
+			$this->users_model->db->query("INSERT INTO StudentLevel (student_id, level_id) VALUES('{$sl->student_id}','" . $level_mapping[$sl->level_id] . "')");
+		}
+
+		// Create BatchLevel table data using the data in UserBatch table
+		$user_batch = $this->users_model->db->query("SELECT * FROM UserBatch WHERE level_id IN (" . implode(",", array_keys($level_mapping)) .")")->result();
+		print "Copying " . count($user_batch) . " Batch Level connections<br />\n";
+		foreach($user_batch as $ub) {
+			$this->users_model->db->query("INSERT INTO BatchLevel (batch_id, level_id, year) VALUES('" . $batch_mapping[$ub->batch_id] . "','" . $level_mapping[$ub->level_id] . "', '{$this->year}')");
+		}
+
+	}
                
 }
 

@@ -12,6 +12,15 @@ if(!isset($level)) $level = array(
 <form action="" method="post" class="form-area">
 <ul class="form city-form">
 <li>
+<label for="grade">Grade</label>
+<select name="grade">
+	<?php for($i=1;$i<=12;$i++) { ?>
+	<option value="<?php echo $i ?>" <?php if($level['grade'] == $i) echo 'selected'; ?>><?php echo $i ?></option>
+	<?php } ?>
+</select>
+</li>
+
+<li>
 <label for='name'>Name: </label>
 <input type="text" width="400" id="level" name="name" value="<?php echo set_value('name', $level['name']); ?>" /><br />
 </li>
@@ -31,14 +40,6 @@ if(!isset($level)) $level = array(
 	<input id="students-filter" class="filter-multiselect" type="text" value="" target-field="students" placeholder="Filter..." />
 </li>
 
-<li>
-<label for="grade">Grade</label>
-<select name="grade">
-	<?php for($i=1;$i<=12;$i++) { ?>
-	<option value="<?php echo $i ?>" <?php if($level['grade'] == $i) echo 'selected'; ?>><?php echo $i ?></option>
-	<?php } ?>
-</select>
-</li>
 
 <?php
 echo form_hidden('center_id', $center_id);

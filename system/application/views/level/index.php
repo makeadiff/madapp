@@ -1,10 +1,10 @@
-<?php $this->load->view('layout/header', array('title'=>'Class Sections in ' . $center_name)); ?>
+<?php $this->load->view('layout/header', array('title'=>'Class Names in ' . $center_name)); ?>
 
 <div id="head" class="clear">
-<h1>Class Sections in <?php echo $center_name ?></h1>
+<h1>Class Names in <?php echo $center_name ?></h1>
 
 <div id="actions">
-<a  id="example" class="thickbox button green primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Class Section</a>
+<a  id="example" class="thickbox button green primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Class Name</a>
 </div><br class="clear" />
 
 <div id="train-nav">
@@ -21,10 +21,10 @@
 </div>
 
 <table class="data-table" id="main">
-<tr><th>Class Section Name</th><th colspan="2">Action</th></tr>
+<tr><th>Class Name</th><th colspan="2">Action</th></tr>
 <?php foreach($all_levels as $level) { ?>
 <tr>
-<td><?php echo $level->name ?></td>
+<td><?php echo $level->grade . ' ' . $level->name; ?></td>
 <td><a href="<?php echo base_url() ?>index.php/level/edit/<?php echo $level->id ?>" class="thickbox  primary popup edit with-icon" >Edit</a></td>
 <td><a href="<?php echo base_url() ?>index.php/level/delete/<?php echo $level->id ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($level->name) ?>">Delete</a></td>
 </tr>

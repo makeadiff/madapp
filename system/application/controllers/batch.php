@@ -207,4 +207,36 @@ class Batch extends Controller {
 		$this->message['success'] = 'The Batch has been deleted successfully';
 		$this->index('center',$batch['center_id']);
 	}
+
+	function level_assignment($center_id) {
+		$this->user_auth->check_permission('batch_level_assignment');
+
+		$all_batches = $this->model->get_batches_in_center($center_id);
+		$all_levels = $this->level_model->get_all_levels_in_center($center_id);
+		$center_name = $this->center_model->get_center_name($center_id);
+		$all_batch_level_connections = $this->model->get_batch_level_connections($center_id);
+
+		$this->load->view('batch/level_assignment.php',array(
+				'center_id'						=> $center_id,
+				'center_name'					=> $center_name,
+				'all_batches'					=> $all_batches,
+				'all_levels'					=> $all_levels,
+				'all_batch_level_connections'	=> $all_batch_level_connections,
+			));
+	}
+
+	function level_assignment_save() {
+		$batch_level_connection = $this->input->post('batch_level_connection');
+		$center_id = $this->input->post('center_id');
+
+		foreach ($batch_level_connection as $batch_id => $level_info) {
+			$this->model->delete_batch_level_connection($batch_id);
+			foreach ($level_info as $level_id => $value) {
+				$this->model->save_batch_level_connection($batch_id, $level_id);
+			}
+		}
+
+		$this->message['success'] = 'Level Batch assignment has been saved.';
+		redirect('batch/level_assignment/'.$center_id);
+	}
 }

@@ -110,7 +110,8 @@ class Batch_model extends Model {
         $selected_subjects = $data['subjects'];
 
         unset($data['subjects']);
-    	$batch_id = $this->db->insert("Batch", $data);
+    	$this->db->insert("Batch", $data);
+        $batch_id = $this->db->insert_id();
 
         if($selected_subjects) {
             foreach($selected_subjects as $subject_id) {
@@ -125,6 +126,8 @@ class Batch_model extends Model {
 			$this->load->model('users_model');
 			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
 		}
+
+        return $batch_id;
     }
     
     function edit($batch_id, $data) {
@@ -180,5 +183,10 @@ class Batch_model extends Model {
         $batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
 
         return $batch_level_connections;
+    }
+
+    function get_level_connection($batch_id) {
+        $levels = $this->db->query("SELECT level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id=$batch_id")->result();
+        return colFormat($levels);
     }
 }

@@ -40,6 +40,21 @@ if(!$batch['id']) $batch = array(
 </select>
 </li>
 
+<li>
+<label>Levels</label><br />
+<?php
+foreach($all_levels as $level) { ?>
+	<input type="checkbox" name="batch_level_connection[<?php echo $batch['id'] ?>][<?php echo $level->id ?>]" id="batch-<?php echo $batch['id'] ?>-level-<?php echo $level->id ?>" <?php
+			foreach($connected_levels as $level_id) {
+				if($level->id == $level_id) {
+					print "checked='checked'";
+				}
+			}
+		?> />
+	<label for="batch-<?php echo $batch['id'] ?>-level-<?php echo $level->id ?>"><?php echo $level->grade . ' ' . $level->name; ?></label><br />
+<?php } ?>
+</li>
+
 <?php 
 echo form_hidden('id', $batch['id']);
 echo form_hidden('center_id', $batch['center_id']);

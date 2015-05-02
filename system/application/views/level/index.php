@@ -21,10 +21,11 @@
 </div>
 
 <table class="data-table" id="main">
-<tr><th>Class Name</th><th colspan="2">Action</th></tr>
+<tr><th>Class Name</th><th>Medium</th><th colspan="2">Action</th></tr>
 <?php foreach($all_levels as $level) { ?>
 <tr>
 <td><?php echo $level->grade . ' ' . $level->name; ?></td>
+<td><?php echo $all_mediums[$level->medium_id]; ?></td>
 <td><a href="<?php echo base_url() ?>index.php/level/edit/<?php echo $level->id ?>" class="thickbox  primary popup edit with-icon" >Edit</a></td>
 <td><a href="<?php echo base_url() ?>index.php/level/delete/<?php echo $level->id ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($level->name) ?>">Delete</a></td>
 </tr>

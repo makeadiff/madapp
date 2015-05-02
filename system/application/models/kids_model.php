@@ -179,7 +179,7 @@ class Kids_model extends Model {
 		$this->db->from('Student');
 		$this->db->where('center_id',$center_id);
 		$this->db->where('status', 1);
+		$this->db->orderby('name');
 		return $this->db->get();
-	
 	}	
 }

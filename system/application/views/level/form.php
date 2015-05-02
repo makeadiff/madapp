@@ -39,7 +39,14 @@ if(!isset($level)) $level = array(
 	<label>&nbsp;</label>
 	<input id="students-filter" class="filter-multiselect" type="text" value="" target-field="students" placeholder="Filter..." />
 </li>
-
+<li>
+<label for="medium_id">Medium</label>
+<select name="medium_id">
+	<?php foreach($all_mediums as $medium_id => $medium_name) { ?>
+	<option value="<?php echo $medium_id ?>" <?php if($level['medium_id'] == $medium_id) echo 'selected'; ?>><?php echo $medium_name ?></option>
+	<?php } ?>
+</select>
+</li>
 
 <?php
 echo form_hidden('center_id', $center_id);

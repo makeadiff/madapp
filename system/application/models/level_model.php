@@ -20,6 +20,10 @@ class Level_model extends Model {
 		$this->project_id = $this->ci->session->userdata('project_id');
 		$this->year = $this->ci->session->userdata('year');
     }
+
+    function get_all_medium() {
+    	return $this->db->where('status', '1')->orderby('name')->get("Medium")->result();
+    }
     
 	function get_all_levels_in_center($center_id) {
 		return $this->db->where('center_id',$center_id)->where('year', $this->year)->where('status','1')->orderby('grade,name')->get('Level')->result();
@@ -50,6 +54,7 @@ class Level_model extends Model {
 			array(
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
+				'medium_id'	=>	$data['medium_id'],
 				'grade'		=>  $data['grade'],
 				'year'		=> 	$this->year,
 				'project_id'=>	$this->project_id,
@@ -73,6 +78,7 @@ class Level_model extends Model {
 			array(
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
+				'medium_id'	=>	$data['medium_id'],
 				'grade'		=>  $data['grade'],
 			));
 			

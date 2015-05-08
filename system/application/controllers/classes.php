@@ -198,6 +198,29 @@ class Classes extends Controller {
 		$this->session->set_flashdata('success', 'Class cancellation reverted.');
 		redirect('classes/batch_view/'.$batch_view.'/'.$date);
 	}
+
+	/// One place to do all the Teacher - Batch - Level - Subject Assignment.
+	function assign($center_id) {
+		$this->load->model('subject_model');
+
+		$this->user_auth->check_permission('classes_assign');
+		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9)));
+		$all_batches = $this->batch_model->get_class_days($center_id);
+
+		$all_levels = array();
+		$user_mapping = array();
+		foreach ($all_batches as $batch_id => $batch_name) {
+			$all_level_in_batch = idNameFormat($this->level_model->get_all_level_names_in_center_and_batch($center_id, $batch_id));
+			$all_levels[$batch_id] = $all_level_in_batch;
+			foreach ($all_level_in_batch as $level_id => $level_name) {
+				if(!isset($user_mapping[$batch_id])) $user_mapping[$batch_id] = array();
+				$user_mapping[$batch_id][$level_id] = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id);
+			}
+		}
+		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
+	
+		$this->load->view('classes/assign', array('all_users' => $all_users, 'all_levels' => $all_levels, 'all_batches' => $all_batches, 'all_subjects' => $all_subjects, 'title' => 'Assign Everything'));
+	}
 	
 	/// MADSheet in User mode.
 	function madsheet() {

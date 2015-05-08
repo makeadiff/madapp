@@ -257,7 +257,32 @@ class Kids extends Controller  {
 			redirect('kids/manageaddkids');
 		}
 	}
-	
+
+	/// Show all the students in the center with the level mappings. This is to move students between levels
+	function students_in_center($center_id) {
+		$action = $this->input->post('action');
+
+		if($action == 'Save') {
+			$student_level_mapping = $this->input->post('level_id');
+			foreach($student_level_mapping as $student_id => $level_id) {
+				$this->level_model->save_student_level_mapping($student_id, $level_id);
+			}
+			$this->session->set_flashdata('success', 'The Student Level Mapping saved.');
+		}
+
+		$all_students = idNameFormat($this->kids_model->get_kidsby_center($center_id)->result());
+		$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
+		$all_levels[0] = 'None';
+		$student_level_mapping_raw = $this->level_model->get_student_level_mapping($center_id);
+		$student_level_mapping = idNameFormat($student_level_mapping_raw, array('student_id', 'level_id'));
+
+		$this->load->view('kids/students_in_center',array(
+				'title'			=> 'Student Class Assignment',
+				'all_students'	=> $all_students,
+				'all_levels'	=> $all_levels,
+				'student_level_mapping'	=> $student_level_mapping,
+			));
+	}
 	
 	
 	/// Importing the CSV file

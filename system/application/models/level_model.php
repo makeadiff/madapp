@@ -28,6 +28,19 @@ class Level_model extends Model {
 	function get_all_levels_in_center($center_id) {
 		return $this->db->where('center_id',$center_id)->where('year', $this->year)->where('status','1')->orderby('grade,name')->get('Level')->result();
 	}
+
+	function get_all_level_names_in_center($center_id) {
+		return $this->db->query("SELECT id,CONCAT(grade,' ',name) AS name FROM Level 
+				WHERE center_id='$center_id' AND year='{$this->year}' AND status='1' 
+				ORDER BY grade,name")->result();
+	}
+
+	function get_all_level_names_in_center_and_batch($center_id, $batch_id) {
+		return $this->db->query("SELECT L.id,CONCAT(grade,' ',name) AS name FROM Level L
+				INNER JOIN BatchLevel BL ON L.id=BL.level_id
+				WHERE center_id='$center_id' AND L.year='{$this->year}' AND status='1' AND BL.batch_id=$batch_id
+				ORDER BY grade,name")->result();
+	}
 	
 	function get_level($level_id) {
 		return $this->db->where('id', $level_id)->get('Level')->row();
@@ -91,6 +104,14 @@ class Level_model extends Model {
 			));
 		}
     }
+
+    function save_student_level_mapping($student_id, $level_id) {
+    	if($student_id == 0) $this->db->delete("StudentLevel", array('level_id'=>$level_id));
+    	else if($level_id == 0) $this->db->delete("StudentLevel", array('student_id'=>$student_id));
+    	else {
+    		$this->db->where('student_id',$student_id)->update('StudentLevel', array('level_id' => $level_id));
+    	}
+    }
 	
 	/// Returs all the ids of the levels the given user teachs at.
 	function get_user_level($user_id) {
@@ -105,6 +126,12 @@ class Level_model extends Model {
 	function get_class_level($class_id) {
 		$level = $this->db->query("SELECT level_id FROM Class WHERE id=$class_id")->row();
 		return $level->level_id;
+	}
+
+	function get_student_level_mapping($center_id) {
+		return $this->db->query("SELECT SL.student_id, SL.level_id FROM StudentLevel SL 
+				INNER JOIN Level L ON L.id=SL.level_id 
+				WHERE L.year={$this->year} AND L.center_id=$center_id AND L.status='1'")->result();
 	}
 
 	function get_all_kids_in_level($level_id) {

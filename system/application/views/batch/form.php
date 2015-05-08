@@ -30,18 +30,7 @@ if(!$batch['id']) $batch = array(
 </li>
 
 <li>
-<label for="subjects">Subjects:</label>
-<select id="subjects" name="subjects[]">
-<?php foreach($all_subjects as $id=>$name) { ?>
-<option value="<?php echo $id; ?>" <?php 
-	if(isset($batch['selected_subjects']) and in_array($id, $batch['selected_subjects'])) echo 'selected'; 
-?>><?php echo $name; ?></option> 
-<?php } ?>
-</select>
-</li>
-
-<li>
-<label>Levels</label><br />
+<label>Class Names:</label><br />
 <?php
 foreach($all_levels as $level) { ?>
 	<input type="checkbox" name="batch_level_connection[<?php echo $batch['id'] ?>][<?php echo $level->id ?>]" id="batch-<?php echo $batch['id'] ?>-level-<?php echo $level->id ?>" <?php

@@ -193,7 +193,6 @@ class Batch extends Controller {
 		$center_ids = idNameFormat($this->center_model->get_all());
 		$batch_volunters = idNameFormat($this->user_model->get_users_in_city());
 		$center_name = $this->center_model->get_center_name($batch['center_id']);
-		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 		$all_levels = $this->level_model->get_all_levels_in_center($batch['center_id']);
 		$connected_levels = $this->model->get_level_connection($batch_id);
 
@@ -204,7 +203,6 @@ class Batch extends Controller {
 			'center_ids'		=> $center_ids,
 			'center_name'		=> $center_name,
 			'batch_volunters'	=> $batch_volunters,
-			'all_subjects'		=> $all_subjects,
 			'batch'				=> $batch,
 			'all_levels'		=> $all_levels,
 			'connected_levels'	=> $connected_levels,
@@ -219,7 +217,6 @@ class Batch extends Controller {
 				'class_time'	=>	$this->input->post('class_time'),
 				'batch_head_id' =>	$this->input->post('batch_head_id'),
 				'center_id'		=>	$this->input->post('center_id'),
-				'subjects'		=>  $this->input->post('subjects'),
 				'project_id'	=>	$this->input->post('project_id'),
 			));
 

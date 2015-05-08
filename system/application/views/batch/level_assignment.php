@@ -1,5 +1,5 @@
 <?php 
-$title = 'Level Batch Assignment ' . $center_name;
+$title = 'Class-Batch Assignment for ' . $center_name;
 $this->load->view('layout/flatui/header', array('title'=>$title)); ?>
 
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/sections/batch/level_assignment.css">

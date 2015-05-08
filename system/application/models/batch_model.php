@@ -67,7 +67,7 @@ class Batch_model extends Model {
 		return $this->db->where('id',$batch_id)->get('Batch')->row()->center_id;
 	}
 
-
+    /// :DEPRECIATED:
     function get_subjects_in_batch($batch_id) {
         $students = $this->db->query("SELECT Subject.id,Subject.name FROM Subject 
             INNER JOIN BatchSubject ON BatchSubject.Subject_id=Subject.id 

@@ -219,7 +219,13 @@ class Classes extends Controller {
 		}
 		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 	
-		$this->load->view('classes/assign', array('all_users' => $all_users, 'all_levels' => $all_levels, 'all_batches' => $all_batches, 'all_subjects' => $all_subjects, 'title' => 'Assign Everything'));
+		$this->load->view('classes/assign', array(
+				'all_users'		=> $all_users, 
+				'all_levels'	=> $all_levels, 
+				'all_batches'	=> $all_batches, 
+				'all_subjects'	=> $all_subjects, 
+				'user_mapping'	=> $user_mapping,
+				'title'			=> 'Assign Everything'));
 	}
 	
 	/// MADSheet in User mode.

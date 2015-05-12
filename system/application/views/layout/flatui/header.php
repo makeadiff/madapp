@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/custom.css" />
-    <script type="text/javascript" src="<?php echo base_url()?>js/jquery.tablesorter.min.js"></script>
+    
     <script type="text/javascript" src="<?php echo base_url()?>js/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="<?php echo base_url()?>js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url()?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url()?>js/uservoice.js"></script>
 

@@ -1,4 +1,8 @@
 <?php $this->load->view('layout/flatui/header', array('title' => $title)); ?>
+<script type="text/javascript">
+	var user_mapping = <?php echo json_encode($user_mapping); ?>;
+	var all_levels = <?php echo json_encode($all_levels); ?>;
+</script>
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/assign.js"></script>
 
 <style type="text/css">
@@ -17,6 +21,7 @@
 <tr>
 <td><?php echo $user_name ?></td>
 <td><select name="batch_id[<?php echo $user_id ?>]" id="batch-<?php echo $user_id ?>" class="batch">
+<option value="0">None</option>
 <?php foreach($all_batches as $batch_id => $batch_name) { ?>
 <option value="<?php echo $batch_id ?>" <?php 
 	//if(i($user_mapping, $student_id) == $batch_id) echo 'selected="selected"'; 
@@ -25,11 +30,7 @@
 </select></td>
 
 <td><select name="level_id[<?php echo $user_id ?>]" id="level-<?php echo $user_id ?>">
-<?php foreach($all_levels as $level_id => $level_name) { ?>
-<option value="<?php echo $level_id ?>" <?php 
-	//if(i($user_mapping, $student_id) == $level_id) echo 'selected="selected"'; 
-	?>><?php echo $level_name ?></option>
-<?php } ?>
+<option value="0">None</option>
 </select></td>
 
 <td><select name="subject_id[<?php echo $user_id ?>]">

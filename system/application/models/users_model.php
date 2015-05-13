@@ -194,20 +194,10 @@ class Users_model extends Model {
 	
 	/// Returns the groups the current user belongs to...
 	function get_user_groups_of_user($user_id, $data='name') {
-		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group` INNER JOIN UserGroup ON Group.id=UserGroup.group_id WHERE UserGroup.user_id=$user_id")->result();
+		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group` INNER JOIN UserGroup ON Group.id=UserGroup.group_id WHERE UserGroup.user_id=$user_id AND UserGroup.year='{$this->year}'")->result();
 		$all_groups = idNameFormat($groups);
 		
 		return $all_groups;
-	}
-	
-	/**
-    * Function to users_count
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [ Array()]
-    **/
-	function users_count()
-	{
 	}
 	
 	/**
@@ -220,7 +210,7 @@ class Users_model extends Model {
 	{
 		$this->db->select('User.*,City.name as city_name');
 		$this->db->from('User');
-		$this->db->where('User.project_id',$this->project_id)->where('User.status','1');
+		$this->db->where('User.status','1');
 		if(!empty($where['city_id'])) $this->db->where('User.city_id', $where['city_id']);
 		else $this->db->where('User.city_id', $this->city_id);
 		
@@ -244,7 +234,7 @@ class Users_model extends Model {
 		$this->db->from('User');
 		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
-		$this->db->where('User.project_id',$this->project_id)->where('User.status','1');
+		$this->db->where('User.status','1');
 		$result = $this->db->get();
 		return $result;
 	
@@ -338,7 +328,7 @@ class Users_model extends Model {
 	function adduser_to_group($user_id, $group_ids)
 	{
 		foreach($group_ids as $group_id) {
-			$user_array=array('user_id'=>$user_id, 'group_id'=> $group_id);
+			$user_array=array('user_id'=>$user_id, 'group_id'=> $group_id, 'year' => $this->year);
 			$this->db->insert('UserGroup',$user_array);
 		}
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;		
@@ -346,7 +336,7 @@ class Users_model extends Model {
 	
 	/// Removes the given user from the given group.
 	function remove_user_from_group($user_id, $group_id) {
-		$this->db->delete('UserGroup', array('user_id'=>$user_id, 'group_id'=>$group_id));
+		$this->db->delete('UserGroup', array('user_id'=>$user_id, 'group_id'=>$group_id, 'year' => $this->year));
 		return ($this->db->affected_rows() > 0) ? true : false;		
 	}
 	
@@ -428,7 +418,7 @@ class Users_model extends Model {
 		for($i=0;$i <sizeof($group);$i++)
 		{
 		 	$data['group']=$group[$i];
-			$user_array=array('group_id'=> $data['group'],'user_id'=>$rootId);
+			$user_array=array('group_id'=> $data['group'],'user_id'=>$rootId, 'year' => $this->year);
 			$this->db->insert('UserGroup', $user_array);
 		}
 		return ($this->db->affected_rows() > 0) ? true: false ;
@@ -461,10 +451,12 @@ class Users_model extends Model {
 	
 	function set_user_batch_and_level($user_id, $batch_id, $level_id) {
     	$this->db->insert("UserBatch", array('user_id'=>$user_id, 'batch_id'=>$batch_id, 'level_id'=>$level_id));
+    	return $this->db->insert_id();
     }
     
 	function unset_user_batch_and_level($batch_id, $level_id) {
     	$this->db->delete("UserBatch", array('batch_id'=>$batch_id, 'level_id'=>$level_id));
+    	return $this->db->affected_rows();
     }
     
     function update_credit($user_id, $change) {
@@ -755,7 +747,7 @@ class Users_model extends Model {
     	$fellows = $this->db->query("SELECT DISTINCT U.id,U.name, G.name AS title,G.vertical_id AS title FROM User U
     		INNER JOIN UserGroup UG ON U.id=UG.user_id
     		INNER JOIN `Group` G ON UG.group_id=G.id
-    		WHERE G.type='fellow' AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical
+    		WHERE G.type='fellow' AND U.user_type='volunteer' AND UG.year='{$this->year}' AND U.status='1' $where_city $where_vertical
     		GROUP BY U.id")->result();
 
     	return $fellows;
@@ -771,7 +763,7 @@ class Users_model extends Model {
     		FROM User U
     		INNER JOIN UserGroup UG ON U.id=UG.user_id
     		INNER JOIN `Group` G ON UG.group_id=G.id
-    		WHERE (G.type='fellow' OR G.type='strat' OR G.type='national') AND U.user_type='volunteer' AND U.status='1' $where_city $where_vertical
+    		WHERE (G.type='fellow' OR G.type='strat' OR G.type='national') AND U.user_type='volunteer' AND U.status='1' AND UG.year='{$this->year}' $where_city $where_vertical
     		GROUP BY U.id")->result();
 
     	return $fellows;
@@ -805,16 +797,19 @@ class Users_model extends Model {
 		if(!empty($data['user_group'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
 			$this->db->where_in('UserGroup.group_id', $data['user_group']);
+			$this->db->where('UserGroup.year', $this->year);
 		}
 		if(!empty($data['user_group_type'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
 			$this->db->join('Group', 'Group.id = UserGroup.group_id' ,'join');
 			$this->db->where_in('Group.type', $data['user_group_type']);
+			$this->db->where('UserGroup.year', $this->year);
 		}
 		if(!empty($data['user_group_group_type'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
 			$this->db->join('Group', 'Group.id = UserGroup.group_id' ,'join');
 			$this->db->where_in('Group.group_type', $data['user_group_group_type']);
+			$this->db->where('UserGroup.year', $this->year);
 		}
 		if(!empty($data['center'])) {
 			$this->db->join('UserClass', 'User.id = UserClass.user_id' ,'join');

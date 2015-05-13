@@ -202,29 +202,110 @@ class Classes extends Controller {
 	/// One place to do all the Teacher - Batch - Level - Subject Assignment.
 	function assign($center_id) {
 		$this->load->model('subject_model');
-
 		$this->user_auth->check_permission('classes_assign');
-		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9)));
-		$all_batches = $this->batch_model->get_class_days($center_id);
 
+		// Get all Batches and Levels in this center.
+		$all_batches = $this->batch_model->get_class_days($center_id); // All batches in the given center.
 		$all_levels = array();
-		$user_mapping = array();
 		foreach ($all_batches as $batch_id => $batch_name) {
+			// Get all levels assigned to the said batch.
 			$all_level_in_batch = idNameFormat($this->level_model->get_all_level_names_in_center_and_batch($center_id, $batch_id));
 			$all_levels[$batch_id] = $all_level_in_batch;
-			foreach ($all_level_in_batch as $level_id => $level_name) {
-				if(!isset($user_mapping[$batch_id])) $user_mapping[$batch_id] = array();
-				$user_mapping[$batch_id][$level_id] = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id);
+		}
+
+		$action = $this->input->post("action");
+
+		if($action) {
+			$batch_ids = $this->input->post('batch_id');
+			$level_ids = $this->input->post('level_id');
+			$subject_ids = $this->input->post('subject_id');
+			// dump($batch_ids, $level_ids, $subject_ids);
+
+			foreach ($all_batches as $batch_id => $batch_name) {
+				foreach ($all_levels[$batch_id] as $level_id => $level_name) {
+					// Get old assignment data before unseting.
+					// Save the details of the old volunteers in the batch/level
+					$old_volunteers[$level_id] = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id);
+
+					// Unset existing connection. We'll reset them later.
+					$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
+				}
+			}
+
+			// Have to be done in two sepreate loops otherwise set things will be deleted by the unset functaonality.
+			foreach ($batch_ids as $user_id => $batch_id) {
+				$level_id = $level_ids[$user_id];
+				$subject_id = $subject_ids[$user_id];
+
+				// Batch is not set. That means no class.
+				if(!$batch_id) {
+					// See if it was assigned earlier. If so, we must delete the assignments.
+					if(isset($old_volunteers[$level_id]) and in_array($user_id, $old_volunteers[$level_id])) {
+						// If someone removes a volunteer from a batch, make sure his future classes are deleted
+						$this->class_model->delete_future_classes($user_id, $batch_id, $level_id);
+					}
+				} else {
+					// Set the assigment with the data provided by the user.
+					$insert_id = $this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
+				}
+			}
+
+			$this->session->set_flashdata('success','Saved the new assignments.');
+		} 
+
+		// Get all teachers in the current city.
+		$teacher_group_id = 9;
+		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group' => $teacher_group_id)));
+
+		// Yes. We are creating two different data represtation...
+		$batch_level_user_hirarchy = array(); // On with a Batch -> Level -> User hirarchy.
+		$user_mapping = array(); // And another with a User -> Batch / Level Hirarchy. Ugly - but makes things easier.
+		foreach ($all_batches as $batch_id => $batch_name) {
+			//print "SELECT * FROM `UserBatch` WHERE batch_id=$batch_id  AND level_id IN (". implode(",", array_keys($all_level_in_batch)) . ")<br />";
+
+			foreach ($all_levels[$batch_id] as $level_id => $level_name) {
+				if(!isset($batch_level_user_hirarchy[$batch_id])) $batch_level_user_hirarchy[$batch_id] = array();
+				$user_ids = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id); // Get all teacher assignments in the Batch/Level combo.
+				$batch_level_user_hirarchy[$batch_id][$level_id] = $user_ids;
+
+				foreach($user_ids as $user_id) {
+					if(!$user_id) continue;
+
+					$batch_level_info = array(
+							'batch_id' => $batch_id,
+							'level_id' => $level_id,
+						);
+					// Just assign all the batch/level combos under this user to an array. Just in case that the user is taking more than one class. 
+					if(!isset($user_mapping[$user_id])) $user_mapping[$user_id] = array($batch_level_info);
+					else array_push($user_mapping[$user_id], $batch_level_info);
+				}
 			}
 		}
+
+
+		// This is to sort the users in such a way that the users with classes in the given center will come to the top.
+		uksort($all_users, function($a, $b) use ($user_mapping, $all_users) {
+			if(isset($user_mapping[$a]) and !isset($user_mapping[$b])) { // If only one has a batch assigned in this center, that user should show up first.
+				return -1;
+			} else if(isset($user_mapping[$b]) and !isset($user_mapping[$a])) { 
+				return 1;
+			} else { // If both users have batches assigned, do a string comparison on the names.
+			    return strcmp($all_users[$a], $all_users[$b]);
+			}
+		});
+
+		//dump($user_mapping);exit;
+
 		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
+		$all_subjects[0] = "None";
 	
 		$this->load->view('classes/assign', array(
 				'all_users'		=> $all_users, 
 				'all_levels'	=> $all_levels, 
 				'all_batches'	=> $all_batches, 
-				'all_subjects'	=> $all_subjects, 
-				'user_mapping'	=> $user_mapping,
+				'all_subjects'	=> $all_subjects,
+				'user_mapping'	=> $user_mapping, 
+				'batch_level_user_hirarchy'	=> $batch_level_user_hirarchy,
 				'title'			=> 'Assign Everything'));
 	}
 	

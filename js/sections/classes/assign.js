@@ -4,6 +4,7 @@ function init() {
 	for(var i=0; i<batches.length; i++) {
 		var batch = $(batches[i]);
 		batch.on("change", updateClassName);
+		//updateClassName.apply(batches[i]);
 	}
 }
 
@@ -17,7 +18,7 @@ function updateClassName() {
 	if(batch_id == 0) {
 		select = '<option value="0">None</option>';
 	} else {
-		var levels = user_mapping[this.value];
+		var levels = batch_level_user_hirarchy[this.value];
 		for(var level_id in all_levels[batch_id]) {
 			select += '<option value="'+level_id+'">'+all_levels[batch_id][level_id]+'</option>';
 		}

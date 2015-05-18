@@ -48,6 +48,12 @@ foreach($upcomming_classes as $class) { ?>
                     <img src="<?php echo base_url(); ?>images/flat_ui/centers.png" alt="" /> <br>Center<br>Management</a></div>
         <?php } ?>
 
+
+        <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/edsupport-assessment/public/manage">
+        	<img src="<?php echo base_url(); ?>images/flat_ui/exams.png" alt="" /> <br>Mark<br>Management</a>
+        </div>
+        
+
         <?php if($this->user_auth->get_permission('report_index')) { ?>
             <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('report/') ?>">
                     <img src="<?php echo base_url(); ?>images/flat_ui/reports.png" alt="" /> <br>Reports</a></div>

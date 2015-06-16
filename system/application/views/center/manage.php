@@ -54,7 +54,17 @@ function showMessage($count, $message, $type='') {
 <tr><td>5</td>	
 <td><a href="<?php echo site_url('batch/index/center/'.$center_id); ?>">Manage Batches</a></td>
 <td><?php showMessage($details['batch_count'], $details['batch_count'] . " Batchs/".$details['teacher_count'] . " volunteers assigned"); ?></td></tr><?php } ?>
-	
+
+<?php if($this->user_auth->get_permission('batch_index')) { ?>
+<tr><td>6</td>	
+<td><a href="<?php echo site_url('batch/level_assignment/'.$center_id); ?>">Batch/Class Assignment</a></td>
+<td></td></tr><?php } ?>
+
+<?php if($this->user_auth->get_permission('batch_index')) { ?>
+<tr><td>7</td>	
+<td><a href="<?php echo site_url('classes/assign/'.$center_id); ?>">Assign Tecahers</a></td>
+<td></td></tr><?php } ?>
+
 </table>
 
 <br /><br />

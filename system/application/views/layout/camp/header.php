@@ -29,10 +29,13 @@
 			if($this->uri->segment(1) == 'centers') $url = site_url('center/manageaddcenters');
 			if($this->uri->segment(1) == 'user') $url = site_url('user/view_users');
 			if($this->uri->segment(1) == 'classes') $url = site_url('classes/madsheet');
+
+			$years = array();
+			for($y = 2011; $y <= get_year(); $y++) $years[$y] = $y;
 			
 			echo form_open($url);
 			echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id'));
-			echo form_dropdown('year', array('2011'=>'2011','2012'=>'2012','2013'=>'2013','2014'=>'2014','2015'=>'2015'), $this->session->userdata('year')); //:HARDCODE:
+			echo form_dropdown('year', $years, $this->session->userdata('year'));
 			echo form_submit('action', "Change");
 			echo form_close();
 		}

@@ -161,12 +161,17 @@ class Common extends Controller {
 		if($debug) print "$city:$full_name:$name:$email<br />";
 
 		// Find the user with who sent the SMS - using the phone number.
-		$user = $this->city_model->db->query("SELECT id,name,phone,email,city_id,status FROM User WHERE phone='$phone' OR email='$email'")->row();
+		$user = $this->city_model->db->query("SELECT id,name,phone,email,city_id,status,user_type FROM User WHERE phone='$phone' OR email='$email'")->row();
 		if($user) {
-			// User exists in the database. Can't add.
-			$this->city_model->db->where('id', $user->id)->update('User', array('joined_on'=>date('Y-m-d H:i:s'), 'user_type'=>'applicant'));
+			if($user->user_type != 'volunteer') {
+				// User exists in the database. Can't add.
+				$this->city_model->db->where('id', $user->id)->update('User', array('joined_on'=>date('Y-m-d H:i:s'), 'user_type'=>'applicant'));
 
-			if(!$debug) $this->sms->send($phone, "$name, you are already in our Database. Your application is bumped up. You'll be informed when there is a recruitment in your city. Thank you.");
+				if(!$debug) $this->sms->send($phone, "$name, you are already in our Database. Your application is bumped up. You'll be informed when there is a recruitment in your city. Thank you.");
+			} else {
+				if(!$debug) $this->sms->send($phone, "$name, you are already a volunteer according to our database. If this is a mistake, please send an email to contact@makeadiff.in");
+			}
+
 			$log .= "User exists in Database.\n";
 			$log .= print_r($user, 1);
 			if($debug) print "User Exists...<br />" . print_r($user, 1);
@@ -211,21 +216,21 @@ class Common extends Controller {
 			
 			// Add the user to the database.
 			$user_array = array(
-				'name'		=> $full_name,
-				'email'		=> $email,
-				'phone'		=> $phone,
-				'password'	=> 'pass',
-				'city_id'	=> $most_likely,
-				'city_other'=> $city,
-				'project_id'=> 1,
-				'user_type' => 'applicant',
-				'source'	=> 'sms',
-				'source_other'=>'sms',
+				'name'				=> $full_name,
+				'email'				=> $email,
+				'phone'				=> $phone,
+				'password'			=> 'pass',
+				'city_id'			=> $most_likely,
+				'city_other'		=> $city,
+				'project_id'		=> 1,
+				'user_type' 		=> 'applicant',
+				'source'			=> 'sms',
+				'source_other'		=>'sms',
 				'dream_tee'			=> '0',
 				'english_teacher'	=> '1',
 				'placements'		=> '0',
 				'events'			=> '0',
-				'joined_on'	=> date('Y-m-d H:i:s'),
+				'joined_on'			=> date('Y-m-d H:i:s'),
 			);
 			if(!$debug) $this->users_model->db->insert('User',$user_array);
 			$user_id = $this->users_model->db->insert_id();

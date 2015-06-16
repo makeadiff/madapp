@@ -40,7 +40,7 @@ Class User_auth {
 			
 			$this->ci->session->set_userdata('city_id', $status['city_id']);
 			$this->ci->session->set_userdata('project_id', $status['project_id']);
-			$this->ci->session->set_userdata('year', '2014'); // Current year. Change every year. Should be get_year()
+			$this->ci->session->set_userdata('year', get_year()); // Current year. Change every year. Should be get_year()
 
 			$_SESSION['user_id'] = $status['id'];
 			
@@ -209,5 +209,3 @@ END;
 		return false;
 	}
 }
-
-

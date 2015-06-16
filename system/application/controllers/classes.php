@@ -247,6 +247,7 @@ class Classes extends Controller {
 				} else {
 					// Set the assigment with the data provided by the user.
 					$insert_id = $this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
+					$this->user_model->set_user_subject($user_id, $subject_id);
 				}
 			}
 
@@ -255,7 +256,7 @@ class Classes extends Controller {
 
 		// Get all teachers in the current city.
 		$teacher_group_id = 9;
-		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group' => $teacher_group_id)));
+		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group' => $teacher_group_id)), array('id'));
 
 		// Yes. We are creating two different data represtation...
 		$batch_level_user_hirarchy = array(); // On with a Batch -> Level -> User hirarchy.
@@ -290,11 +291,11 @@ class Classes extends Controller {
 			} else if(isset($user_mapping[$b]) and !isset($user_mapping[$a])) { 
 				return 1;
 			} else { // If both users have batches assigned, do a string comparison on the names.
-			    return strcmp($all_users[$a], $all_users[$b]);
+			    return strcmp($all_users[$a]->name, $all_users[$b]->name);
 			}
 		});
 
-		//dump($user_mapping);exit;
+		// dump($all_users);exit;
 
 		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 		$all_subjects[0] = "None";

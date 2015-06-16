@@ -48,8 +48,11 @@
                 ?>
                     <form class="navbar-form navbar-right" method="post" action="<?php $url?>">
                         <?php
+                        $years = array();
+                        for($y = 2011; $y <= get_year(); $y++) $years[$y] = $y;
+           
                         echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id'));
-                        echo form_dropdown('year', array('2011'=>'2011','2012'=>'2012','2013'=>'2013','2014'=>'2014','2015'=>'2015'), $this->session->userdata('year')); //:HARDCODE:
+                        echo form_dropdown('year', $years, $this->session->userdata('year'));
                         echo form_submit('action', "Change");
                         ?>
                     </form>
@@ -58,12 +61,11 @@
                 ?>
             </li>
 
-            <li><a>
-                    <?php echo $this->session->userdata('name');
-                    $groups = $this->session->userdata('groups');
-                    if($groups) print ' (' . implode(',', $groups) . ')';
-                    ?>
-                </a></li>
+            <li><a href="#"><?php
+                echo $this->session->userdata('name');
+                $groups = $this->session->userdata('groups');
+                if($groups) print ' (' . implode(',', $groups) . ')';
+            ?></a></li>
             <li><a href="<?php echo site_url('auth/logout') ?>">Logout</a></li>
 
         </ul>

@@ -159,3 +159,8 @@ body.green
     background: linear-gradient(135deg, #78b745 0%,#66b46d 50%,#58b28c 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#78b745', endColorstr='#58b28c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
+
+#success-message {
+    color: #fff;
+    font-weight: bold;
+}

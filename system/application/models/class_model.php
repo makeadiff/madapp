@@ -172,7 +172,7 @@ class Class_model extends Model {
     	
     	$attendence = array();
     	foreach($result as $class) {
-    		$attendence[$class->student_id] = $class->present;
+    		$attendence[$class->student_id] = $class->participation;
     	}
     	
     	return $attendence;
@@ -182,11 +182,12 @@ class Class_model extends Model {
     	$this->db->where('class_id', $class_id)->delete("StudentClass");
     	
     	foreach($all_students as $student_id=>$name) {
-    		$present = !(empty($attendence[$student_id])) ? '1' : '0';
+    		$present = (!empty($attendence[$student_id]) and $attendence[$student_id] > 0) ? '1' : '0';
 	    	$this->db->insert("StudentClass", array(
-	    		'class_id'	=> $class_id, 
-	    		'student_id'=> $student_id, 
-	    		'present'	=> $present));
+	    		'class_id'       => $class_id,
+	    		'student_id'     => $student_id, 
+	    		'present'        => $present,
+                'participation'  => $attendence[$student_id]));
 	    }
     }
     
@@ -206,12 +207,13 @@ class Class_model extends Model {
     	if(!$user_class_id) { // Sometimes, the UserClass.id is not provided. Then we find the unique row using UserClass.class_id and UserClass.user_id. Then cache its UserClass.id
     		$user_class_id = $this->db->where(array('class_id'=>$data['class_id'],'user_id'=>$data['user_id']))->get('UserClass')->row()->id;
     	}
-		
+
     	// When editing the class info, make sure that the credits asigned during the last edit is removed...
     	$previous_class_data = $this->db->where(array('id'=>$user_class_id))->get('UserClass')->row_array();
     	$this->revert_user_class_credit($user_class_id, $previous_class_data);
     	
     	$this->db->update('UserClass', $data, array('id'=>$user_class_id));
+
     	$status = $data['status'];
     	if($status == 'confirmed' or $status == 'attended' or $status == 'absent') $status = 'happened';
     	$this->db->update('Class', array('status' => $status), array('id'=>$data['class_id']));

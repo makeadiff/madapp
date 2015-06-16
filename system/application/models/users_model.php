@@ -48,7 +48,7 @@ class Users_model extends Model {
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
 			$all_positions = $this->get_user_groups_of_user($user->id, 'type');
 			$memberCredentials['positions'] = array_unique(array_values($all_positions));
-			
+
             return $memberCredentials;
         
         } else {
@@ -107,7 +107,6 @@ class Users_model extends Model {
 		$data = array('name'=> $groupname);
 		$this->db->insert('Group',$data);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id(): false ;
-		
 	}
 	/**
     * Function to add_group_permission
@@ -279,7 +278,7 @@ class Users_model extends Model {
 			return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 		}
 	}
-	
+
 	function undelete($user_id) {
 		return $this->db->where('id',$user_id)->update('User', array('status'=>1));
 	}
@@ -406,6 +405,12 @@ class Users_model extends Model {
 		$this->db->update('User', $user_array);
 
 		return $this->db->affected_rows();
+	}
+
+	/// Save the subject for the given user.
+	function set_user_subject($user_id, $subject_id) {
+		$this->db->where('id', $user_id);
+		$this->db->update('User', array('subject_id' => $subject_id));
 	}
 
 	
@@ -773,7 +778,7 @@ class Users_model extends Model {
 	function search_users($data) {
 		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,
 							User.joined_on,User.left_on,User.user_type,User.address,User.sex,User.source,User.birthday,
-							User.job_status,User.preferred_day,User.why_mad, City.name as city_name');
+							User.job_status,User.preferred_day,User.why_mad, City.name as city_name, User.subject_id');
 		$this->db->from('User');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
 		
@@ -817,7 +822,6 @@ class Users_model extends Model {
 			$this->db->join('Level', 'Class.level_id = Level.id' ,'join');
 			$this->db->where_in('Level.center_id', $data['center']);
 		}
-		
 		
 		if(!empty($data['user_type'])) {
 			if($data['user_type'] == 'applicant') {

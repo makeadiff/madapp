@@ -22,7 +22,7 @@
 	$show_level_of_batch = 0;
 ?>
 <tr>
-<td><?php echo $user_name ?></td>
+<td><?php echo $user_name->name ?></td>
 <td><select name="batch_id[<?php echo $user_id ?>]" id="batch-<?php echo $user_id ?>" class="batch">
 <option value="0">None</option>
 <?php foreach($all_batches as $batch_id => $batch_name) { ?>
@@ -54,7 +54,7 @@
 <td><select name="subject_id[<?php echo $user_id ?>]">
 <?php foreach($all_subjects as $subject_id => $subject_name) { ?>
 <option value="<?php echo $subject_id ?>" <?php 
-	// if(i($level_level_user_hirarchy, $student_id) == $subject_id) echo 'selected="selected"'; 
+	if($all_users[$user_id]->subject_id == $subject_id) echo 'selected="selected"'; 
 	?>><?php echo $subject_name ?></option>
 <?php } ?>
 </select></td>

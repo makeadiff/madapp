@@ -132,7 +132,7 @@ class Center_model extends Model
 		$this->db->update('Center', $data);
 		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
 		
-		if($data['center_head_id'] > 0) {
+		if(!empty($data['center_head_id']) and $data['center_head_id'] > 0) {
 			$this->load->model('users_model');
 			$this->users_model->remove_user_from_group($center_details->center_head_id, 7); // Remove the old center head from the group 'Center Head'
 			$this->users_model->adduser_to_group($data['center_head_id'], array(7));// Add the center head to Center Head group.
@@ -196,7 +196,7 @@ class Center_model extends Model
 	
 	// Get all the centers. No matter what city
 	function get_all_centers() {
-		return $this->db->select(array('id','name'))->where('status','1')->get('Center')->result();
+		return $this->db->where('status','1')->get('Center')->result();
 	}
 	
 	// Find the errors in the center - if any.
@@ -285,4 +285,18 @@ class Center_model extends Model
 	{
 		return $this->db->query("SELECT DISTINCT(Center.name),Center.id FROM Center JOIN Exam_Event ON Center.id = Exam_Event.center_id WHERE Center.city_id={$this->city_id}")->result();
 	}
+
+
+	function get_center_data($center_id, $name) {
+		$result = $this->db->query("SELECT * FROM CenterData WHERE name LIKE '$name' AND center_id=$center_id");
+		return $result->result_array();
+	}
+
+	function save_center_data($center_id, $name, $data) {
+    	$this->db->delete("CenterData", array('center_id'=>$center_id, 'name'=>$name));
+    	$data['center_id'] = $center_id;
+    	$data['name'] = $name;
+    	$this->db->insert("CenterData", $data);
+	}
 }
+

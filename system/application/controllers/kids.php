@@ -342,7 +342,7 @@ class Kids extends Controller  {
 					
 					if($fields[$key] == 'Name') $insert['name'] = $value;
 					elseif($fields[$key] == 'Description') $insert['description'] = $value;
-					elseif($fields[$key] == 'Sex') $insert['sex'] = $value;
+					elseif($fields[$key] == 'Sex') $insert['sex'] = strtolower($value);
 					elseif($fields[$key] == 'Birthday') $insert['birthday'] = date('Y-m-d', strtotime($value));
 				}
 				$insert['center_id'] = $this->input->post('center_id');

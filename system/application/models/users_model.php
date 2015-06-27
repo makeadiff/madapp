@@ -30,7 +30,6 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	
 	function login($data) {
       	$username= $data['username'];
         $password = $data['password'];
@@ -735,6 +734,14 @@ class Users_model extends Model {
 		return $credit_log;
     }
     
+    /// Given a user id, get the batch they are mentoring. If there such a batch.
+    function get_mentoring_batch($user_id) {
+    	$users_batch = $this->db->query("SELECT id FROM Batch 
+			WHERE Batch.batch_head_id=$user_id AND Batch.year={$this->year}")->row();
+		if($users_batch) return $users_batch->id;
+		else return 0;
+    }
+
     function get_users_batch($user_id) {
 		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch 
 			INNER JOIN Batch ON Batch.id=UserBatch.batch_id 

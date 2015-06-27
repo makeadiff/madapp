@@ -34,7 +34,7 @@ class Batch_model extends Model {
     
     function get_all_batches($class_starts_check=false) {
 		$start_check = '';
-		if($class_starts_check) $start_check = " AND Center.class_starts_on<CURDATE()"; // AND Center.class_starts_on!='0000-00-00'";
+		if($class_starts_check) $start_check = " AND Center.class_starts_on<CURDATE() AND Center.class_starts_on!='0000-00-00'";
 		
 		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN Center ON Batch.center_id=Center.id 
 			WHERE Batch.project_id={$this->project_id} AND Batch.year={$this->year} AND Center.status='1' $start_check")->result();

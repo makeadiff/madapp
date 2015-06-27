@@ -182,7 +182,7 @@ class Class_model extends Model {
     	$this->db->where('class_id', $class_id)->delete("StudentClass");
     	
     	foreach($all_students as $student_id=>$name) {
-    		$present = (!empty($attendence[$student_id]) and $attendence[$student_id] > 0) ? '1' : '0';
+    		$present = ($attendence[$student_id]) ? '1' : '0';
 	    	$this->db->insert("StudentClass", array(
 	    		'class_id'       => $class_id,
 	    		'student_id'     => $student_id, 
@@ -342,6 +342,20 @@ class Class_model extends Model {
     				
     	return $this->db->query($query)->row();
     }
+
+    /// Return the class info using a class_id instead of a user id
+    function get_class_on($user_id, $class_on) {
+        $query = "SELECT Class.id, Center.name, Class.class_on, Class.level_id, Class.batch_id, Level.center_id, UserClass.status FROM UserClass 
+                        INNER JOIN Class ON Class.id=UserClass.class_id 
+                        INNER JOIN Level ON Class.level_id=Level.id
+                        INNER JOIN Center ON Level.center_id=Center.id
+                        WHERE UserClass.user_id=$user_id 
+                            AND DATE(Class.class_on) = '$class_on'
+                        ORDER BY Class.class_on DESC LIMIT 0,1";
+
+        return $this->db->query($query)->row();
+    }
+
     
     /// Returns the closest unconfirmed class. This is the class that get 'confirmed' when a user replies to a text we send.
     function get_closest_unconfirmed_class($user_id) {
@@ -356,7 +370,7 @@ class Class_model extends Model {
 
     
     function search_classes($data) {
-    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Level.id AS level_id,Level.name,UserClass.user_id,UserClass.substitute_id,UserClass.zero_hour_attendance,UserClass.status
+    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Level.id AS level_id,Level.name,Level.grade,UserClass.user_id,UserClass.substitute_id,UserClass.zero_hour_attendance,UserClass.status
 			FROM Class
 			INNER JOIN Level ON Class.level_id=Level.id
 			INNER JOIN UserClass ON UserClass.class_id=Class.id

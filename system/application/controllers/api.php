@@ -10,10 +10,10 @@ class Api extends Controller {
 		$this->load->model('batch_model');
 		$this->load->model('level_model');
 		$this->load->model('center_model');
-		$this->user_model->year = 2014; //get_year(); // :DEBUG:
-		$this->class_model->year = 2014; //get_year();
-		$this->level_model->year = 2014; //get_year();
-		$this->batch_model->year = 2014; //get_year();
+		$this->user_model->year = get_year();
+		$this->class_model->year = get_year();
+		$this->level_model->year = get_year();
+		$this->batch_model->year = get_year();
 		$this->user_model->project_id = 1;
 		$this->class_model->project_id = 1;
 		$this->level_model->project_id = 1;
@@ -77,13 +77,31 @@ class Api extends Controller {
 	}
 
 	/**
+	 * Get the class using the user_id and class date.
+	 */ 
+	function get_class_on() {
+		$this->check_key();
+
+		$user_id = $this->get_input('user_id');
+		$class_on= $this->get_input('class_on');
+
+		$class_info = $this->class_model->get_class_on($user_id, $class_on);
+
+		if(!$class_info) return $this->send(array('success'=>false, 'error'=>"Can't find any classes matching that criteria."));
+		$this->open_class($class_info->id, $class_info, $user_id);
+	}
+
+	/**
 	 * Returns the details of the class with the given ID.
 	 */
 	function open_class($class_id, $class_info = false, $user_id=0) {
 		$class_details = $this->class_model->get_class($class_id);
 
-		if($class_info) $class_details['center_name'] = $class_info->name;
+		$class_details['center_name'] = $class_info->name;
 		$class_details['class_time'] = date('d M, Y, h:i A', strtotime($class_details['class_on']));
+		
+		$level_info = $this->level_model->get_level($class_details['level_id']);
+		$class_details['level_name'] = $level_info->name;
 
 		foreach($class_details['teachers'] as $index => $teacher) {
 			$user = $this->user_model->get_user($teacher['user_id']);
@@ -94,13 +112,17 @@ class Api extends Controller {
 		}
 
 		$students = $this->level_model->get_kids_in_level($class_info->level_id);
+
 		$participation = $this->class_model->get_attendence($class_id);
 		$class_details['students'] = array();
+
 		foreach ($students as $id => $name) {
-			if(!isset($class_details['students'][$id])) continue;
-			$class_details['students'][$id]['name'] = $name;
-			$class_details['students'][$id]['id'] = $id;
-			$class_details['students'][$id]['participation'] = $participation[$id];
+			// if(!isset($class_details['students'][$id])) continue;
+			$class_details['students'][$id] = array(
+				'name'			=> $name,
+				'id'			=> $id,
+				'participation' => (!isset($participation[$id]) ? 3 : $participation[$id])
+			);
 		}
 
 		$this->send($class_details);
@@ -142,7 +164,8 @@ class Api extends Controller {
 		$user_id = $this->get_input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
-		$batch_id = $this->user_model->get_users_batch($user_id);
+		//$batch_id = $this->user_model->get_users_batch($user_id);
+		$batch_id = $this->user_model->get_mentoring_batch($user_id);
 
 		$this->class_get_batch($batch_id);
 	}
@@ -153,7 +176,7 @@ class Api extends Controller {
 
 		// $from_date = '2015-01-11';
 		if(!$batch_id) $batch_id = $this->get_input('batch_id');
-		if(!$from_date) $from_date = $this->get_input('batch_date');
+		if(!$from_date) $from_date = $this->get_input('class_on');
 
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
@@ -181,6 +204,7 @@ class Api extends Controller {
 					'id'			=> $row->id,
 					'level_id'		=> $row->level_id,
 					'level_name'	=> $row->name,
+					'grade'			=> $row->grade,
 					'class_status'	=> ($row->status == 'cancelled') ? '0' : '1',
 					'student_attendance'	=> $attendence_count,
 					'teachers'		=> array(array(
@@ -198,19 +222,23 @@ class Api extends Controller {
 
 			} else { // We got another class with same id. Which means more than one teachers in the same class. Add the teacher to the class.
 				$classes[$class_done[$row->id]]['teachers'][] = array(
-					'id'	=> $row->user_id,
-					'name'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
-					'status'=> ($row->status == 'attended') ? true : false,
-					'user_type'	=>isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
-					'substitute_id'=>$row->substitute_id,
-					'substitute' => ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
+					'id'			=> $row->user_id,
+					'name'			=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->name : 'None',
+					'status'		=> ($row->status == 'attended') ? true : false,
+					'user_type'		=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
+					'substitute_id'	=> $row->substitute_id,
+					'substitute'	=> ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
 											$all_users[$row->substitute_id]->name : 'None',
 					'zero_hour_attendance'	=> ($row->zero_hour_attendance) ? true : false
 				);
 			}
 		}
 		$class_on = '';
-		if(isset($data[0]->class_on)) $class_on = date('Y-m-d', strtotime($data[0]->class_on));
+		$class_date = '';
+		if(isset($data[0]->class_on)) {
+			$class_on = date('Y-m-d', strtotime($data[0]->class_on));
+			$class_date = date('dS M, Y', strtotime($data[0]->class_on));
+		}
 
 		$this->send(array(
 				'classes'		=> $classes, 
@@ -218,6 +246,7 @@ class Api extends Controller {
 				'batch_id'		=> $batch_id, 
 				'batch_name'	=> $batch->name,
 				'class_on' 		=> $class_on,
+				'class_date'	=> $class_date,
 			));
 	}
 
@@ -236,7 +265,6 @@ class Api extends Controller {
 
 		$last_class = $this->class_model->get_last_class_in_batch($batch_id);
 		if(!$last_class) return $this->send(array('error' => "This batch does not have any past batches"));
-
 
 		$from_date = date('Y-m-d', strtotime($last_class->class_on));
 		$this->open_batch($batch_id, $from_date);
@@ -341,7 +369,7 @@ class Api extends Controller {
 	}
 
 	function send($data) {
-		if(!isset($data['status'])) {
+		if(!isset($data['status']) and !isset($data['success'])) {
 			$data['status'] = "1";
 			$data['success'] = "1";
 		}

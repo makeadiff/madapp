@@ -245,6 +245,7 @@ class Batch extends Controller {
 	}
 
 	/// Shows all the batches and levels under it for the given center. Gives you the option to tick off the levels under the batch.
+	/// This functionality is duplicated in Batch Edit. So, I'm not sure if this page will be used a lot.
 	function level_assignment($center_id) {
 		$this->user_auth->check_permission('batch_level_assignment');
 

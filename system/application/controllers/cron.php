@@ -23,8 +23,8 @@ class Cron extends Controller  {
 		$all_batches = $this->batch_model->get_all_batches(true);
 		
 		if($debug) {
-			print "Debug Mode\n---------------------------\n";
-			print "Batches: " . count($all_batches);
+			print "Debug Mode\n----------\n";
+			print "Batches: " . count($all_batches) . "\n";
 		}
 		
 		// Wee have to add all the classes for the next two weeks.
@@ -101,6 +101,25 @@ class Cron extends Controller  {
 		}
 		$this->users_model->db->query("INSERT INTO Archive(user_id, name, value, year, added_on) VALUES (" . implode("),(", $data) . ")");
 		print "Saved admin credits of $count people.\n";
+	}
+
+	/// In all years the center updates the date which the center started class. And there is no way to archive that before. Now, every year, we reset it to 0 - and then save it to the CenterData table.
+	function archive_center_start_dates() {
+		$this->load->model('Center_model','center_model');
+
+		$last_year = $this->year - 1;
+
+		$all_centers = $this->center_model->get_all_centers();
+		foreach ($all_centers as $center) {
+			if($center->class_starts_on == '0000-00-00') continue;
+
+			$this->center_model->save_center_data($center->id, 'class_info', array(
+					'year'	=> $last_year,
+					'data'	=> json_encode(array('class_starts_on' => $center->class_starts_on, 'center_head_id'=> $center->center_head_id))
+				));
+			$this->center_model->update_center(array('rootId' => $center->id, 'class_starts_on'=>'0000-00-00'));
+			print $center->class_starts_on . "\n";
+		}
 	}
 	
 	/// Sometimes, the credits go bad. In such cases, rebuild the credits using the credit history.

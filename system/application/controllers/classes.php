@@ -199,6 +199,33 @@ class Classes extends Controller {
 		redirect('classes/batch_view/'.$batch_view.'/'.$date);
 	}
 
+	/// One place to do all Stundent - Level assignments.
+	function assign_students($center_id) {
+		$this->user_auth->check_permission('classes_assign_students');
+		$this->load->model('Kids_model', 'kids_model');
+
+		$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
+		$all_students = $this->kids_model->get_kidsby_center($center_id)->result();
+		
+		$action = $this->input->post("action");
+		if($action) {
+			$level_ids = $this->input->post('level_id');
+
+			foreach ($level_ids as $student_id => $level_id) {
+				$this->level_model->save_student_level_mapping($student_id, $level_id);
+			}
+			$this->session->set_flashdata('success','Saved the new assignments.');
+		}
+
+		$student_level_mapping = idNameFormat($this->level_model->get_student_level_mapping($center_id), array('student_id', 'level_id'));
+
+		$this->load->view('classes/assign_students', array(
+				'all_levels'	=> $all_levels, 
+				'all_students'	=> $all_students,
+				'student_level_mapping' => $student_level_mapping,
+				'title'			=> 'Assign Students to Classes'));
+	}
+
 	/// One place to do all the Teacher - Batch - Level - Subject Assignment.
 	function assign($center_id) {
 		$this->load->model('subject_model');

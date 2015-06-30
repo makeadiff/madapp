@@ -16,7 +16,7 @@
 
 <form action="" method="post">
 <table class="table">
-<tr><th>Teacher</th><th>Batch</th><th>Class Name</th><th>Subject</th></tr>
+<tr><th>Teacher</th><th>Batch</th><th>Class Section</th><th>Subject</th></tr>
 <?php foreach($all_users as $user_id => $user_name) { 
 	$show_level = 0;
 	$show_level_of_batch = 0;

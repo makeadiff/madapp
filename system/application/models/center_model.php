@@ -211,8 +211,15 @@ class Center_model extends Model
 		$requirement_count = $this->db->query("SELECT SUM(UserBatch.requirement) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year}")->row()->count;
 		$kids_count = $this->db->query("SELECT COUNT(id) AS count FROM Student WHERE center_id=$center_id AND status='1'")->row()->count;
 		$total_volunteer_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id={$this->city_id} AND user_type='volunteer' AND project_id={$this->project_id} AND status='1'")->row()->count;
+		$assigned_student_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS student_count FROM Student S INNER JOIN StudentLevel SL ON SL.student_id=S.id INNER JOIN Level L ON L.id=SL.level_id WHERE L.year={$this->year} AND SL.level_id!=0 AND S.status='1' AND S.center_id=$center_id")->row()->student_count;
+
 		if($total_volunteer_count) {
 			$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year}")->row()->count;
+		}
+
+		if($assigned_student_count < $kids_count) {
+			$information[] = "Not all kids are assigned. <span class='warning icon'>!</span>";
+			$problem_flag++;
 		}
 		
 		if(!$center_head_id) {
@@ -259,6 +266,7 @@ class Center_model extends Model
 			'teacher_count'		=> $teacher_count,
 			'requirement_count'	=> $requirement_count,
 			'kids_count'		=> $kids_count,
+			'assigned_student_count' => $assigned_student_count,
 			'total_volunteer_count'=>$total_volunteer_count,
 		);
 		

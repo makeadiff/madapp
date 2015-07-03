@@ -199,16 +199,17 @@ class Classes extends Controller {
 		redirect('classes/batch_view/'.$batch_view.'/'.$date);
 	}
 
-	/// One place to do all Stundent - Level assignments.
-	function assign_students($center_id) {
+	/// One place to do all Student - Level assignments.
+	function assign_students($center_id, $action='') {
 		$this->user_auth->check_permission('classes_assign_students');
 		$this->load->model('Kids_model', 'kids_model');
 
 		$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
 		$all_students = $this->kids_model->get_kidsby_center($center_id)->result();
 		
-		$action = $this->input->post("action");
-		if($action) {
+		if(!$action) $action = $this->input->post("action");
+
+		if($action == 'Save') {
 			$level_ids = $this->input->post('level_id');
 
 			foreach ($level_ids as $student_id => $level_id) {
@@ -218,6 +219,40 @@ class Classes extends Controller {
 		}
 
 		$student_level_mapping = idNameFormat($this->level_model->get_student_level_mapping($center_id), array('student_id', 'level_id'));
+		$all_levels_data = $this->level_model->get_all_levels_in_center($center_id);
+		$all_levels = idNameFormat($all_levels_data,array('id'));
+
+		// Sort students using the Level and grade.
+		usort($all_students, function($a, $b) use ($student_level_mapping, $all_levels) {
+			// If student is not given a grade/level, send them to bottom.
+			if(!isset($student_level_mapping[$a->id])) return 1;
+			if(!isset($student_level_mapping[$b->id])) return -1;
+
+			$i = $all_levels[$student_level_mapping[$a->id]];
+			$j = $all_levels[$student_level_mapping[$b->id]];
+
+			if($i->grade > $j->grade) {
+				return 1;
+			} elseif($i->grade < $j->grade) {
+				return -1;
+			} else {
+				return strcmp($i->name, $j->name);
+			}
+		});
+
+		if($action == 'Export to CSV') {
+			header("Content-type:text/csv");
+			header('Content-Disposition: attachment; filename="Student_Mapping.csv"');
+			foreach($all_students as $student) {
+				$grade = 'None';
+				if(isset($student_level_mapping[$student->id])) {
+					$grade = $all_levels[$student_level_mapping[$student->id]]->grade . $all_levels[$student_level_mapping[$student->id]]->name;
+				}
+
+				print "\"$student->name\", \"$grade\"\n";
+			}
+			exit;
+		}
 
 		$this->load->view('classes/assign_students', array(
 				'all_levels'	=> $all_levels, 

@@ -173,13 +173,15 @@ class Kids_model extends Model {
 	
 	}
 
-	function get_kidsby_center($center_id)
+	function get_kidsby_center($center_id, $sort_by='name')
 	{
 		$this->db->select('*');
 		$this->db->from('Student');
 		$this->db->where('center_id',$center_id);
 		$this->db->where('status', 1);
 		$this->db->orderby('name');
-		return $this->db->get();
+		$data = $this->db->get();
+
+		return $data;
 	}	
 }

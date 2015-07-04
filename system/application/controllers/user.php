@@ -155,6 +155,7 @@ class User extends Controller  {
 	function popupEditusers($user_id)
 	{	
 		$this->user_auth->check_permission('user_edit');
+
 		$data['all_cities']= $this->city_model->get_all(0);
 		$data['all_cities'][0] = 'None';
 		$data['user'] = $this->users_model->user_details($user_id);

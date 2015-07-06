@@ -109,7 +109,11 @@ class Level_model extends Model {
     	if($student_id == 0) $this->db->delete("StudentLevel", array('level_id'=>$level_id));
     	else if($level_id == 0) $this->db->delete("StudentLevel", array('student_id'=>$student_id));
     	else {
-    		$this->db->where('student_id',$student_id)->update('StudentLevel', array('level_id' => $level_id));
+    		$this->db->delete("StudentLevel", array('student_id'=>$student_id));
+    		$this->db->insert("StudentLevel", array(
+    			'student_id'=>$student_id, 
+    			'level_id' => $level_id
+    		));
     	}
     }
 	

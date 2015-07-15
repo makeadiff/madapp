@@ -24,7 +24,7 @@ class Cron extends Controller  {
 		
 		if($debug) {
 			print "Debug Mode\n----------\n";
-			print "Batches: " . count($all_batches) . "\n";
+			print "Total Batches: " . count($all_batches) . "\n";
 		}
 		
 		// Wee have to add all the classes for the next two weeks.
@@ -45,14 +45,19 @@ class Cron extends Controller  {
 				$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
 				$date = date("Y-m-d H:i:s", $time);
 				
-				if($debug) dump($teachers, $date, $batch);
+				if($debug and count($teachers)) {
+					// dump($teachers, $date, $batch);
+					print "\n\n-------------------------------\n";
+					print "Current Batch: $batch->id at center $batch->center_id\n";
+					print "\tTotal Teaches in this Batch: ". count($teachers) . "\n";
+				}
 				
 				foreach($teachers as $teacher) {
 					//if($teacher->id != 496) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 					
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date, '', $teacher->level_id)) {
-						print "Class by {$teacher->id} at $date\n";
+						print "\tClass by {$teacher->id} at $date\n";
 						
 						$class_data = array(
 							'batch_id'	=> $batch->id,
@@ -65,8 +70,6 @@ class Cron extends Controller  {
 						$this->class_model->save_class($class_data);
 					}
 				}
-				
-				if($debug) print "++++++++++++++++++++++++++++++++++++++++++++++\n";
 			}
 		}
 	}

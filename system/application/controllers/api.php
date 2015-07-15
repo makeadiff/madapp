@@ -70,9 +70,10 @@ class Api extends Controller {
 		$this->check_key();
 
 		$user_id = $this->get_input('user_id');
-		if(!$user_id) $this->error("User ID is empty");
+		if(!$user_id) return $this->error("User ID is empty");
 
 		$class_info = $this->class_model->get_last_class($user_id);
+		if(!$class_info) return $this->error("No classes found.");
 		$this->open_class($class_info->id, $class_info, $user_id);
 	}
 
@@ -87,7 +88,7 @@ class Api extends Controller {
 
 		$class_info = $this->class_model->get_class_on($user_id, $class_on);
 
-		if(!$class_info) return $this->send(array('success'=>false, 'error'=>"Can't find any classes matching that criteria."));
+		if(!$class_info) return $this->error("Can't find any classes matching that criteria.");
 		$this->open_class($class_info->id, $class_info, $user_id);
 	}
 

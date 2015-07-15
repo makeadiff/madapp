@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Script</title>
+<script src="http://localhost/Projects/Friendlee/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+<script src="http://localhost/Projects/Friendlee/js/application.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var index = 1;
+function next() {
+	if(index > 1) document.getElementById("script-"+(index - 1)).style.display="none";
+	document.getElementById("script-"+index).style.display="block";
+	index++;
+}
+</script>
+<style type="text/css">
+p {
+	display: none;
+}
+</style>
+</head>
+<body>
+<table height="200"><tr>
+<td width="100">&nbsp;</td>
+<td width="1300">
+<p id="script-1">Go to the Center Management Page<br />
+Dashboard &gt; Ed Support &gt; Center Management &gt; Manage(for relevent Center)</p>
+
+<p id="script-2">Volunteers Page : Should be filled already</p>
+
+<p id="script-3">Students Page : Should be filled already</p>
+
+<p id="script-4">Go to Manage Class Sections<br />
+Create the Class Sections.<br />
+For this exercise, I'll create '6A', '6B', '7A', '7B'</p>
+
+<p id="script-5">Go to Assign Students to Class Sections<br />
+Make all the necessary Assignments.</p>
+
+<p id="script-6">Go to Manage Batches. Create the batches for this center.<br />
+I'll create Sunday 4 PM and Saturday 4 PM Batch.</p>
+
+<p id="script-7">Go to Batch/Class Assignments and mark which all classes come under which all batches.</p>
+
+<p id="script-8">Go to Assign Teachers<br />
+Assign the teachers to each class.</p>
+</td>
+<td><a href="#" onclick="next()">Next</a></td>
+</tr>
+</table>
+
+</body>
+</html>

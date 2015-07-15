@@ -63,7 +63,7 @@ function showMessage($count, $message, $threshold=1) {
 
 <?php if($this->user_auth->get_permission('batch_index')) { // :PERMISSION_RESET: ?>
 <tr><td>8</td>	
-<td><a href="<?php echo site_url('classes/assign/'.$center_id); ?>">Assign Tecahers</a></td>
+<td><a href="<?php echo site_url('classes/assign/'.$center_id); ?>">Assign Teachers</a></td>
 <td><?php showMessage($details['teacher_count'], $details['teacher_count'] . " volunteers assigned.", ($details['batch_count'] * $details['level_count'])); ?></td></tr><?php } ?>
 
 </table>

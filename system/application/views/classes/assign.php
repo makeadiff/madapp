@@ -14,6 +14,8 @@
 <div id="head" class="clear">
 <h1 class="title"><?php echo $title; ?></h1>
 
+<p class="text-muted">Total Teachers: <?php echo count($all_users) ?>. Assigned Teacher: <?php echo $assigned_teacher_count; ?>. Unassigned Teacher Count: <?php echo count($all_users) - $assigned_teacher_count; ?>.</p>
+
 <form action="" method="post">
 <table class="table">
 <tr><th>Teacher</th><th>Batch</th><th>Class Section</th><th>Subject</th></tr>

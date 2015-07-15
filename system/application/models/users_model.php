@@ -192,9 +192,11 @@ class Users_model extends Model {
 	
 	/// Returns the groups the current user belongs to...
 	function get_user_groups_of_user($user_id, $data='name') {
-		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group` INNER JOIN UserGroup ON Group.id=UserGroup.group_id WHERE UserGroup.user_id=$user_id AND UserGroup.year='{$this->year}'")->result();
+		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group` 
+				INNER JOIN UserGroup ON Group.id=UserGroup.group_id 
+				WHERE UserGroup.user_id=$user_id AND UserGroup.year='{$this->year}'")->result();
 		$all_groups = idNameFormat($groups);
-		
+
 		return $all_groups;
 	}
 	
@@ -886,7 +888,7 @@ class Users_model extends Model {
 	function get_user_groups($user_id, $details = false) {
 		$groups = $this->db->query("SELECT * FROM `Group`
 			INNER JOIN `UserGroup` ON `Group`.id=`UserGroup`.group_id 
-			WHERE `UserGroup`.user_id=$user_id")->result();
+			WHERE `UserGroup`.user_id=$user_id AND UserGroup.year='{$this->year}'")->result();
 
 		if($details) return $groups;
 		

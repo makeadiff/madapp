@@ -337,6 +337,7 @@ class Class_model extends Model {
     					INNER JOIN Center ON Level.center_id=Center.id
     					WHERE UserClass.user_id=$user_id 
     						AND Class.project_id={$this->project_id}
+                            AND Level.year = {$this->year}
     						AND Class.class_on < NOW()
     					ORDER BY Class.class_on DESC LIMIT 0,1";
     				

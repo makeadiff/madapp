@@ -40,6 +40,22 @@ class Kids_model extends Model {
 		return $result;
 	}
 	
+	/// Returns the deleted kids of the given center.
+	function get_deleted_kids($city_id = 0) {
+		if(!$city_id) $city_id = $this->city_id;
+		
+		$this->db->select('Student.*,Center.name as center_name');
+		$this->db->from('Student');
+		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
+		$this->db->where('Center.city_id', $city_id);
+		$this->db->where('Center.status', 1);
+		$this->db->where('Student.status', '0');
+		$this->db->orderby('Student.name');
+		$result=$this->db->get();
+
+		return $result;
+	}
+
 	function kids_count()
 	{
 	
@@ -87,12 +103,12 @@ class Kids_model extends Model {
     * @param :[$data]
     * @return: type: [ Array()]
     **/
-	function get_kids_details($uid)
+	function get_kids_details($uid, $status)
 	{
 		$this->db->select('*');
 		$this->db->from('Student');
 		$this->db->where('id',$uid);
-		$this->db->where('Student.status', 1);
+		$this->db->where('Student.status', $status);
 		$result=$this->db->get();
 		return $result;
 	

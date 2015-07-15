@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Student Grouping in MADApp</title>
+<link href="http://makeadiff.in/madapp/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+<h1>Student Grouping in MADApp</h1>
+
+<h2>Section 1: The Center Management Page</h2>
+
+<p>First, get to the Center Management Page - this has all the necessary pages under.</p>
+
+<p class="well">Login &gt; Ed Support &gt; Center Management</p>
+
+<p>Click Manage on the Center you want to do the grouping for.</p>
+
+<img src='01_Manage_Page.png' class="img-thumbnail img-rounded" />
+
+<p>I'm assuming you already have Volunteers on MADApp - I'm not covering that.</p>
+
+<p>If you have added kids already, skip to <a href="#sec3">Section 3</a>. If not, continue.</p>
+
+
+<h2 id="sec2">Section 2: Adding Kids</h2>
+
+<p>Click on <kbd>Manage Kids</kbd> - the 3rd link.</p>
+
+<p>If there is just a few kids to add to this center(say 3 or less), click on <kbd>Add Kids</kbd> - enter their details one by one.</p>
+
+<p>If you have more kids to add, you'll have to create a spreadsheet with all the kids you want to add.</p>
+
+<p>You'll need the list of all the kids in an Excel/Spreadsheet. I'm going to assume that its in a Google Spreadsheet. Make sure that the Spreadsheet is in this format...</p>
+
+<p><code>Name, Sex, Birthday, Description</code></p>
+
+<p>Sex should be 'm' or 'f'.<br />
+Birthday should be in the format YYYY-MM-DD</p>
+
+<p>You can leave the Birthday and Description empty if you don't have that data.</p>
+
+<p>Now, open the spreadsheet, Go to <code>File &gt; Download As &gt; Comma Separated Values(.csv, current Sheet)</code></p>
+
+<p>This will download a version of that sheet to your system.</p>
+
+<p>Now, Click on <kbd>Import Kids</kbd>. Then upload that file by clicking on '<kbd>Browse...</kbd>' and selecting the file you just downloaded. Make sure you have the right center selected in the Center Drop down.</p>
+
+<p>It will show you a page where you can confirm the fields. Make sure the name column corresponds to the name of the kid, the sex column to the sex, etc. Once that is done, click on '<kbd>Import Data</kbd>'</p>
+
+<p>This will add all the kids in your CSV file to the center.</p>
+
+<h2 id="sec3">Section 3: Class Sections</h2>
+
+<p>Click on Manage Class Sections - make sure all class sections are present. If not, add it by clicking on the <kbd>Add Class Section</kbd> button.</p>
+
+<p>Select the kids in that class by holding down Control while clicking on the Students name. This is optional - there is another way to add students to Classes - we'll get to that in the next section. For now, just make sure you have all the Classes needed in this center.</p>
+
+<p>Click on the button '<kbd>Create</kbd>' when you are done.</p>
+
+<img src="02_Adding_Class_Sections.png" class="img-thumbnail img-rounded" />
+
+<h2 id="sec4">Section 4: Assigning Students to Class Sections.</h2>
+
+<p>Go back to the Center Management page by clicking on the Back button on your browser. </p>
+
+<p>This page has all the students in this center with a drop down signifying which Class they belong to. Go thru the entire list making sure the mappings are correct. If not, change the class section and click on the '<kbd>Save</kbd>' button at the bottom of the page.</p>
+
+
+<h2 id="sec5">Section 5: Batches</h2>
+
+<p>Come back to the Center Management page(See <a href="#sec1">section 1</a> if you are not sure how to go that page).</p>
+
+<p>Now click on <kbd>Batch Management</kbd>. Make sure all the necessary batches are present. This data is copied over from last year. You might have to update it.</p>
+
+<p>Once you are done, go back to the Center Management page.</p>
+
+<h2 id="sec6">Section 6: Batch/Class Assignment</h2>
+
+<p>Clicking on Batch/Class Assignment will take you to a page that list all the Batches and Class Sections in that center. Just make sure all the Batch class mapping are correct.</p>
+
+<img src="03_Batch_Class_Assignment.png" class="img-thumbnail img-rounded" />
+
+<h2 id="sec7">Section 7: Teacher Assignment</h2>
+
+<p>Click on the <kbd>Assign Teacher</kbd> Link. This page will show all the Volunteers who has the teacher User Group. You can map them to the correct Batch, Class Section and the subject they'll be taking there itself.</p>
+
+<img src="04_Teacher_Mapping.png" class="img-thumbnail img-rounded" />
+
+<p>If any teacher is not taking class in that center, leave the batch drop down empty and they wont be assigned to this center.</p>
+
+<p>Click on <kbd>Save</kbd> when done.</p>
+
+<center><h2>And you are done</h2></center>
+</div>
+</body>
+</html>

@@ -70,6 +70,8 @@ class Kids extends Controller  {
 		
 		$data['details']= $this->kids_model->getkids_details();
 		$data['center_list']=$this->center_model->get_all();
+		$data['page'] = 'get_kids_details';
+
 		$this->load->view('kids/kids_list',$data);
 		$this->load->view('layout/footer');
 	
@@ -79,11 +81,14 @@ class Kids extends Controller  {
 	{
 		$center_id=$_REQUEST['center_id'];
 		$page_no = $_REQUEST['page_no'];
+		$status = (empty($_REQUEST['status']) ? 0 : $_REQUEST['status']);
+
 		$linkCount = $this->kids_model->kids_count();
 		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
 		$data['currentPage'] = $page_no;
+		$data['page'] = 'get_kids_details';
 		if($center_id) {
-			$data['kids_details']=$this->kids_model->get_kidsby_center($center_id);
+			$data['kids_details']=$this->kids_model->get_kidsby_center($center_id, $status);
 			$data['center_name'] = $this->center_model->center_name($center_id);
 		} else {
 			$data['kids_details']=$this->kids_model->getkids_details();
@@ -92,6 +97,24 @@ class Kids extends Controller  {
 		
 		$this->load->view('kids/kids_update_list',$data);
 	}
+
+
+	/// Show the deleted kids of the current city.
+	function show_deleted($city_id = 0) {
+		$this->user_auth->check_permission('kids_show_deleted');
+
+		$data = array(
+			'page' 			=> 'show_deleted', 
+			'details' 		=> $this->kids_model->get_deleted_kids($city_id),
+			'center_list'	=> $this->center_model->get_all()
+		);
+		
+		$this->load->view('layout/header',array('title'=>'Deleted Kids'));
+		$this->load->view('kids/kids_list', $data);
+		$this->load->view('layout/footer');
+	}
+
+
 	/**
     *
     * Function to popupaddKids
@@ -106,8 +129,8 @@ class Kids extends Controller  {
 		
 		$data['center']= $this->center_model->getcenter();
 		$this->load->view('kids/popups/addkids_popup',$data);
-	
 	}
+
 	/**
     *
     * Function to popupEdit_kids

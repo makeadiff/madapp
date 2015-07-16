@@ -207,6 +207,8 @@ class Api extends Controller {
 					'level_name'	=> $row->name,
 					'grade'			=> $row->grade,
 					'class_status'	=> ($row->status == 'cancelled') ? '0' : '1',
+					'cancel_option'	=> $row->cancel_option,
+					'cancel_reason'	=> $row->cancel_reason,
 					'student_attendance'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,
@@ -315,11 +317,12 @@ class Api extends Controller {
 		$this->check_key();
 
 		$class_data = json_decode($this->get_input('class_data'));
+		// dump($class_data);exit;
 
 		foreach ($class_data as $class_info) {
 			$class_id = $class_info->id;
 			if(!$class_info->class_status) {
-				$this->class_model->cancel_class($class_id);
+				$this->class_model->cancel_class($class_id, $class_info->cancel_option, $class_info->cancel_reason);
 				continue;
 			}
 

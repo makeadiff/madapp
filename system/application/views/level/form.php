@@ -13,16 +13,17 @@ if(!isset($level)) $level = array(
 <ul class="form city-form">
 <li>
 <label for="grade">Grade</label>
-<select name="grade">
+<select name="grade" style="width:100px;">
 	<?php for($i=1;$i<=12;$i++) { ?>
 	<option value="<?php echo $i ?>" <?php if($level['grade'] == $i) echo 'selected'; ?>><?php echo $i ?></option>
 	<?php } ?>
 </select>
-</li>
 
-<li>
-<label for='name'>Name: </label>
-<input type="text" width="400" id="level" name="name" value="<?php echo set_value('name', $level['name']); ?>" /><br />
+<select name="name" style="width:100px;">
+	<?php foreach(range('A','M') as $l) { ?>
+	<option value="<?php echo $l ?>" <?php if($level['name'] == $l) echo 'selected'; ?>><?php echo $l ?></option>
+	<?php } ?>
+</select>
 </li>
 
 <li>

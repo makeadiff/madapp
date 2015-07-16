@@ -33,13 +33,13 @@ class Class_model extends Model {
     }
     
     /// Sets the status of all the teacher in the set class as cancelled. Used to cancel a class.
-    function cancel_class($class_id) {
+    function cancel_class($class_id, $cancel_option='', $cancel_reason='') {
 		$previous_class_data = $this->db->where(array('class_id'=>$class_id))->get('UserClass')->result_array();
 		foreach($previous_class_data as $class_data) {
 			$this->revert_user_class_credit($class_data['id'], $class_data);
 		}
 		$this->db->query("UPDATE UserClass SET status='cancelled' WHERE class_id=$class_id");
-		$this->db->query("UPDATE Class SET status='cancelled' WHERE id=$class_id");
+		$this->db->query("UPDATE Class SET status='cancelled', cancel_option='$cancel_option', cancel_reason='$cancel_reason' WHERE id=$class_id");
 		return $this->db->affected_rows();
     }
     
@@ -371,7 +371,8 @@ class Class_model extends Model {
 
     
     function search_classes($data) {
-    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Level.id AS level_id,Level.name,Level.grade,UserClass.user_id,UserClass.substitute_id,UserClass.zero_hour_attendance,UserClass.status
+    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Class.cancel_option,Class.cancel_reason,
+                    Level.id AS level_id,Level.name,Level.grade,UserClass.user_id,UserClass.substitute_id,UserClass.zero_hour_attendance,UserClass.status
 			FROM Class
 			INNER JOIN Level ON Class.level_id=Level.id
 			INNER JOIN UserClass ON UserClass.class_id=Class.id

@@ -181,3 +181,7 @@ a.fdbk_tab_bottom {
     top: auto !important;
     width: 102px !important;
 }
+
+.checkbox-listing {
+	width: 300px;
+}

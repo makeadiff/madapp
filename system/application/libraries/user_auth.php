@@ -29,7 +29,7 @@ Class User_auth {
 		$data['username']=$username;
 		$data['password']=$password;
 		$status = $this->ci->users_model->login($data);
-		
+
 		if($status) {
 			$this->ci->session->set_userdata('id', $status['id']);
 			$this->ci->session->set_userdata('email', $status['email']);
@@ -67,6 +67,7 @@ Class User_auth {
 		} elseif(!empty($_SESSION['user_id'])) {
 			$user_data = $this->ci->users_model->db->query("SELECT email,password FROM User WHERE id=".$_SESSION['user_id'])->row();
 			$status = $this->login($user_data->email, $user_data->password);
+
 			return $status['id'];
 
 		} elseif(get_cookie('email') and get_cookie('password_hash')) {
@@ -74,8 +75,8 @@ Class User_auth {
 			$email = get_cookie('email');
 			$password_hash = get_cookie('password_hash');
 
-			$user_details = $this->ci->users_model->db->query("SELECT email,password FROM User 
-				WHERE email='$email' AND MD5(CONCAT(password,'{$this->hash}'))='$password_hash'")->row();
+			$user_details = $this->ci->users_model->db->query("SELECT email,password FROM User WHERE email='$email' AND MD5(CONCAT(password,'{$this->hash}'))='$password_hash'")->row();
+
 			if($user_details) {
 				$status = $this->login($user_details->email, $user_details->password);
 				return $status['id'];

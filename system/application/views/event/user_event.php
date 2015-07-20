@@ -49,6 +49,6 @@ function validate() {
 
 <form class="form-area" action="<?php echo site_url('event/insert_userevent')?>" method="post" onsubmit="return validate();" >
 <input type="hidden" value="<?php echo $event->id; ?>" name="event" id="event" />
-<ul>
+<ul class="checkbox-listing">
 <li><label for="txtName"><strong>Users :</strong></label></li>
 <li><a onclick="selectAll()">Select All</a></li>

@@ -19,6 +19,7 @@ class Users_model extends Model {
         $this->city_id = $this->ci->session->userdata('city_id');
         $this->project_id = $this->ci->session->userdata('project_id');
         $this->year = $this->ci->session->userdata('year');
+        if(!$this->year) $this->year = get_year();
 
         $this->load->model('Class_model','class_model');
 
@@ -46,6 +47,7 @@ class Users_model extends Model {
 			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
 			$memberCredentials['groups'] = $this->get_user_groups($user->id);
 			$all_positions = $this->get_user_groups_of_user($user->id, 'type');
+			
 			$memberCredentials['positions'] = array_unique(array_values($all_positions));
 
             return $memberCredentials;

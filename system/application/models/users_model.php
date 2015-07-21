@@ -58,17 +58,6 @@ class Users_model extends Model {
     }
     
 	/**
-    * Function to group_count
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function group_count()
-	{
-		
-		
-	}
-	/**
     * Function to getgroup_details
     * @author:Rabeesh 
     * @param :[$data]
@@ -805,6 +794,7 @@ class Users_model extends Model {
 		
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
 		if(!empty($data['not_user_type'])) $this->db->where_not_in('user_type', $data['not_user_type']);
+		if(!empty($data['id'])) $this->db->where('User.id', $data['id']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
 		if(!empty($data['phone'])) $this->db->where('User.phone', $data['phone']);
 		if(!empty($data['email'])) $this->db->where('User.email', $data['email']);

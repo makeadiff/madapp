@@ -4,4 +4,9 @@
 
 label {
 	font-weight:bold;
+	width: 70px;
+	display: block;
+	float: left;
+	text-align: right;
+	padding: 0 5px;
 }

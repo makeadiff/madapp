@@ -71,10 +71,10 @@ $.tablesorter.addParser({
 	<select name="city_id" id="city_id">
 	<option value="0">Any City</option>
 	<?php
-	foreach($all_cities as $row) { ?>
-	<option value="<?php echo $row->id; ?>" <?php 
-		if(!empty($city_id) and $city_id == $row->id) echo 'selected="selected"';
-	?>><?php echo $row->name; ?></option>
+	foreach($all_cities as $this_city_id => $this_city_name) { ?>
+	<option value="<?php echo $this_city_id; ?>" <?php 
+		if(!empty($city_id) and $city_id == $this_city_id) echo 'selected="selected"';
+	?>><?php echo $this_city_name; ?></option>
 	<?php } ?>
 	</select>
 	<p class="error clear"></p> 
@@ -113,10 +113,12 @@ $.tablesorter.addParser({
 	</div>
 </td>
 <td style="vertical-align:top;"><div  class="field clear" style="margin-left:20px;">
-	<label for="name">Name</label>
-	<input name="name" id="name" type="text" value="<?php echo $name ?>">
-	<p class="error clear"></p>
-	</div>
+
+<label for="search_id">ID</label><?php echo form_input('search_id', $search_id); ?><br />
+<label for="name">Name</label><?php echo form_input('name', $name); ?><br />
+<label for="email">Email</label><?php echo form_input('email', $email); ?><br />
+<label for="phone">Phone</label><?php echo form_input('phone', $phone); ?><br />
+</div>
 </td>
 <td style="vertical-align:bottom;"><div  class="field clear" style="margin-left:20px;">
 <input type="submit" value="Get Users"/>
@@ -174,16 +176,16 @@ $.tablesorter.addParser({
 <?php if($this->user_auth->get_permission('user_delete')) { ?><input type="submit" name="action" value="Delete Selected Users" /><?php } ?>
 </td>
 </tr></table>
-<input type="submit" name="action" value="Update" />
+<input type="submit" name="action" value="Update" /><br />
 </div><?php } ?>
-<br /><br />
 
 <a class="with-icon settings" href="#" onclick="showFilters()">Filters</a> &nbsp; &nbsp;
-<a class="with-icon add" href="<?php echo site_url('user/import'); ?>">Import Users...</a> &nbsp; &nbsp;
-<?php if($this->user_auth->get_permission('user_export')) { ?><a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;<?php } ?>
 <?php if($this->user_auth->get_permission('user_bulk_email')) { ?><a class="with-icon email" href="#" onclick="showEmail();">EMail...</a> &nbsp; &nbsp;<?php } ?>
 <!-- <?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?> -->
-<?php if($this->user_auth->get_permission('user_bulk_edit')) { ?><a class="with-icon edit" href="#" onclick="showBulkEdit();">Bulk Edit Users...</a> &nbsp; &nbsp;<?php } ?>
+<?php if($this->user_auth->get_permission('user_bulk_edit')) { ?><a class="with-icon edit" href="#" onclick="showBulkEdit();">Bulk Edit Users...</a> &nbsp; <?php } ?>
+| &nbsp; <a class="with-icon add" href="<?php echo site_url('user/import'); ?>">Import Users...</a> &nbsp; &nbsp;
+<?php if($this->user_auth->get_permission('user_export')) { ?><a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;<?php } ?>
+
 <br /><br />
 
 <table cellpadding="0"  cellspacing="0" class="clear data-table">

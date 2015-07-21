@@ -345,7 +345,7 @@ class User extends Controller  {
 	}
 	
 	/// The User index is handled by this action
-	function view_users($city_id='', $user_groups='', $name='',$user_type='volunteer') {
+	function view_users($city_id='', $user_groups='', $name='',$user_type='volunteer', $search_id='', $email='', $phone='') {
 		$this->user_auth->check_permission('user_index');
 		set_city_year($this);
 		
@@ -361,10 +361,26 @@ class User extends Controller  {
 		elseif($user_groups) $data['user_group'] = explode(',', $user_groups);
 		else $data['user_group'] = array();
 
+		// ID selection
+		if($this->input->post('search_id') !== false) $data['search_id'] = $this->input->post('search_id');
+		elseif($search_id) $data['search_id'] = $search_id;
+		else $data['search_id'] = '';
+		$data['id'] = $data['search_id'];
+
 		// Name selection
 		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
 		elseif($name) $data['name'] = $name;
 		else $data['name'] = '';
+
+		// Email selection
+		if($this->input->post('email') !== false) $data['email'] = $this->input->post('email');
+		elseif($email) $data['email'] = $email;
+		else $data['email'] = '';
+
+		// Phone selection
+		if($this->input->post('phone') !== false) $data['phone'] = $this->input->post('phone');
+		elseif($phone) $data['phone'] = $phone;
+		else $data['phone'] = '';
 		
 		// User type
 		if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
@@ -376,7 +392,7 @@ class User extends Controller  {
 		if(!$group) $group = 0;
 		$name = $data['name'];
 		if(!$name) $name = 0;
-		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type']; // This will be passed to the export page...
+		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type'] . '/' . $search_id . '/' . $email . '/' . $phone; // This will be passed to the export page...
 		
 		// If we don't have a query_string yet, get the necessary data from the hidden field.
 		if(empty($data['query_string'])) {
@@ -389,7 +405,7 @@ class User extends Controller  {
 		}
 		
 		// Some data needed for rendering the page.
-		$data['all_cities'] = $this->city_model->getCities();
+		$data['all_cities'] = $this->city_model->get_all();
 		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
 		$data['get_user_groups'] = true;
 		$data['get_user_class'] = true;

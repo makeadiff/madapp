@@ -2,7 +2,7 @@
 
 <form action="<?php echo site_url('user/search_email') ?>" method="post" class="form-area">
 
-<label>ID</label><?php echo form_input('id', $id); ?><br />
+<label>ID</label><?php echo form_input('search_id', $search_id); ?><br />
 <label>Name</label><?php echo form_input('name', $name); ?><br />
 <label>Email</label><?php echo form_input('email', $email); ?><br />
 <label>Phone</label><?php echo form_input('phone', $phone); ?><br />

@@ -25,6 +25,11 @@ class City extends Controller {
 		
 		$this->load->view('city/index', array('all_cities'	=> $all_cities, 'message'=>$this->message));
 	}
+
+	function info($city_id = 0) {
+		$info =  $this->model->get_info($city_id);
+		$this->load->view('city/info', $info);
+	}
 	
 	function create() {
 		$this->user_auth->check_permission('city_create');

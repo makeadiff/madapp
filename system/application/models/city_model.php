@@ -1,14 +1,53 @@
 <?php
 class City_model extends Model {
     function City_model() {
-        // Call the Model constructor
         parent::Model();
         
         $this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
+
+		$this->load->model('Users_model','user_model');
+    }
+
+    /// Function returns all the critical info about the center given as ID
+    function get_info($city_id = 0) {
+    	if(!$city_id) $city_id = $this->city_id;
+
+    	$center_count = $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id AND Center.status='1'")->row()->count;
+		$kids_count = 0;
+		if($center_count) {
+			$kids_count = $this->db->query("SELECT COUNT(Student.id) AS count 
+				FROM Student INNER JOIN Center ON Center.id=Student.center_id 
+				WHERE Center.city_id=$city_id AND Student.status='1' AND Center.status='1'")->row()->count;
+		}
+
+		$all_users = $this->user_model->search_users(array(
+				'user_type'			=> 'volunteer',
+				'city_id'			=> $city_id,
+				'get_user_class'	=> true,
+				'get_user_groups'	=> true
+			));
+		$volunteer_count = count($all_users);
+		$teacher_count = 0;
+		$mapped_teachers_count = 0;
+
+		foreach ($all_users as $u) {
+			$groups = array_keys($u->groups);
+			if(in_array(9, $groups)) $teacher_count++;
+			if($u->batch) $mapped_teachers_count++;
+		}
+
+		return array(
+			'center_count' 			=> $center_count, 
+			'kids_count' 			=> $kids_count, 
+			'volunteer_count' 		=> $volunteer_count, 
+			'teacher_count' 		=> $teacher_count, 
+			'mapped_teachers_count' => $mapped_teachers_count
+		);
     }
     
+    /// Get all cites - with information.
     function getCities() {
     	$cities = $this->db->orderby('name')->get('City')->result();
     	

@@ -38,15 +38,16 @@
 
                 if($this->user_auth and $this->user_auth->get_permission('change_city')) {
                     $all_cities = idNameFormat($this->db->query("SELECT id, name FROM City ORDER BY name")->result());
-                    $url = site_url('edsupport/dashboard_view');
+                    $url = site_url('dashboard/dashboard_view');
 
                     if($this->uri->segment(1) == 'kids') $url = site_url('kids/manageaddkids');
                     if($this->uri->segment(1) == 'centers') $url = site_url('center/manageaddcenters');
                     if($this->uri->segment(1) == 'user') $url = site_url('user/view_users');
                     if($this->uri->segment(1) == 'classes') $url = site_url('classes/madsheet');
+                    if($this->uri->segment(1) == 'city') $url = site_url('city/info');
 
                 ?>
-                    <form class="navbar-form navbar-right" method="post" action="<?php $url?>">
+                    <form class="navbar-form navbar-right" method="post" action="<?php echo $url?>">
                         <?php
                         $years = array();
                         for($y = 2011; $y <= get_year(); $y++) $years[$y] = $y;

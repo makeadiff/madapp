@@ -10,13 +10,10 @@ class dashboard extends Controller  {
         if(!$logged_user_id) {
             redirect('auth/login');
         }
-
-
     }
 
 
     function dashboard_view() {
-
         $data['title'] = 'MADApp';
 
         set_city_year($this);
@@ -27,6 +24,5 @@ class dashboard extends Controller  {
         $this->load->view('layout/flatui/header',$data);
         $this->load->view('common_dashboard/common_dashboard', array('happiness_index_data_entry_status'=>$happiness_index_data_entry_status));
         $this->load->view('layout/flatui/footer',$data);
-
     }
 }

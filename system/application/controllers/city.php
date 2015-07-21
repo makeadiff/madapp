@@ -27,6 +27,7 @@ class City extends Controller {
 	}
 
 	function info($city_id = 0) {
+		set_city_year($this);
 		$info =  $this->model->get_info($city_id);
 		$this->load->view('city/info', $info);
 	}

@@ -29,6 +29,7 @@
 			if($this->uri->segment(1) == 'centers') $url = site_url('center/manageaddcenters');
 			if($this->uri->segment(1) == 'user') $url = site_url('user/view_users');
 			if($this->uri->segment(1) == 'classes') $url = site_url('classes/madsheet');
+            if($this->uri->segment(1) == 'city') $url = site_url('city/info');
 
 			$years = array();
 			for($y = 2011; $y <= get_year(); $y++) $years[$y] = $y;

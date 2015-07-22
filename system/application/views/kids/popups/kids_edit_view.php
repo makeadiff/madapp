@@ -18,8 +18,7 @@ foreach($kids_details as $row) {
 	$center_id=$row['center_id'];
 	$sex = $row['sex'];
 	$birthday = $row['birthday'];
-	$birthday = explode("-",$birthday);
-	$birthday = $birthday[2]."/".$birthday[1]."/".$birthday[0];
+	// $birthday = date("m/d/Y", strtotime($birthday));
 	$description=$row['description'];
 	$photo = $row['photo'];
 }

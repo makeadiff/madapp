@@ -97,14 +97,9 @@ class Kids_model extends Model {
 		 
 		return ($affected) ? true: false;
 	}
-	/**
-    * Function to get_kids_details
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [ Array()]
-    **/
-	function get_kids_details($uid, $status)
-	{
+
+	/// Function to get_kids_details
+	function get_kids_details($uid, $status = '1') {
 		$this->db->select('*');
 		$this->db->from('Student');
 		$this->db->where('id',$uid);

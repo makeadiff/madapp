@@ -5,7 +5,7 @@ class City_model extends Model {
         
         $this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
-		$this->project_id = $this->ci->session->userdata('project_id');
+		$this->year = $this->ci->session->userdata('year');
 
 		$this->load->model('Users_model','user_model');
     }
@@ -16,11 +16,33 @@ class City_model extends Model {
 
     	$center_count = $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id AND Center.status='1'")->row()->count;
 		$kids_count = 0;
-		if($center_count) {
-			$kids_count = $this->db->query("SELECT COUNT(Student.id) AS count 
-				FROM Student INNER JOIN Center ON Center.id=Student.center_id 
-				WHERE Center.city_id=$city_id AND Student.status='1' AND Center.status='1'")->row()->count;
-		}
+		$alloted_kids_count = 0;
+
+		if(!$center_count) return array();
+
+		$kids_count = $this->db->query("SELECT COUNT(Student.id) AS count 
+			FROM Student INNER JOIN Center ON Center.id=Student.center_id 
+			WHERE Center.city_id=$city_id AND Student.status='1' AND Center.status='1'")->row()->count;
+
+		$alloted_kids_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS count FROM Student S
+			INNER JOIN StudentLevel SL ON SL.student_id=S.id
+			INNER JOIN Level L ON L.id=SL.level_id
+			INNER JOIN Center C ON C.id=S.center_id
+			WHERE L.year='{$this->year}' AND C.city_id='$city_id' AND S.status='1' AND L.status='1' AND C.status='1'" )->row()->count;
+
+		$five_to_ten_kids_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS count FROM Student S
+			INNER JOIN StudentLevel SL ON SL.student_id=S.id
+			INNER JOIN Level L ON L.id=SL.level_id
+			INNER JOIN Center C ON C.id=S.center_id
+			WHERE L.year='{$this->year}' AND C.city_id='$city_id' AND S.status='1' AND L.status='1' AND C.status='1' 
+				AND (L.grade='5' OR L.grade='6' OR L.grade='7' OR L.grade='8' OR L.grade='9' OR L.grade='10')")->row()->count;
+
+		$eleven_twelve_kids_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS count FROM Student S
+			INNER JOIN StudentLevel SL ON SL.student_id=S.id
+			INNER JOIN Level L ON L.id=SL.level_id
+			INNER JOIN Center C ON C.id=S.center_id
+			WHERE L.year='{$this->year}' AND C.city_id='$city_id' AND S.status='1' AND L.status='1' AND C.status='1' 
+				AND (L.grade='11' OR L.grade='12')" )->row()->count;
 
 		$all_users = $this->user_model->search_users(array(
 				'user_type'			=> 'volunteer',
@@ -43,7 +65,10 @@ class City_model extends Model {
 			'kids_count' 			=> $kids_count, 
 			'volunteer_count' 		=> $volunteer_count, 
 			'teacher_count' 		=> $teacher_count, 
-			'mapped_teachers_count' => $mapped_teachers_count
+			'mapped_teachers_count' => $mapped_teachers_count,
+			'alloted_kids_count'	=> $alloted_kids_count,
+			'five_to_ten_kids_count'=> $five_to_ten_kids_count,
+			'eleven_twelve_kids_count' => $eleven_twelve_kids_count
 		);
     }
     

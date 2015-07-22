@@ -10,6 +10,15 @@
 <dl>
 <dt>Total Students</dt>
 <dd><?php echo $kids_count ?></dd>
+
+<dt>Alloted Kids Count</dt>
+<dd><?php echo $alloted_kids_count ?></dd>
+<dt>Students from 5-10</dt>
+<dd><?php echo $five_to_ten_kids_count ?></dd>
+<dt>Sttudents in 11 and 12</dt>
+<dd><?php echo $eleven_twelve_kids_count ?></dd>
+
+
 </dl>
 
 <h3>Volunteer Information</h3>

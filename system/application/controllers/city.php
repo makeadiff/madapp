@@ -13,22 +13,20 @@ class City extends Controller {
 			redirect('auth/login');
 		}
 	
-		$this->load->scaffolding('City');
-		$this->load->model('City_model','model', TRUE);
+		$this->load->model('City_model','city_model', TRUE);
 		$this->load->helper('url');
 	}
 	
 	function index() {
 		$this->user_auth->check_permission('city_index');
-		
-		$all_cities = $this->model->getCities();
-		
+		$all_cities = $this->city_model->getCities();
 		$this->load->view('city/index', array('all_cities'	=> $all_cities, 'message'=>$this->message));
 	}
 
+	// Shows the important numbers of a city - Center count, Vol count, student count, etc.
 	function info($city_id = 0) {
 		set_city_year($this);
-		$info =  $this->model->get_info($city_id);
+		$info =  $this->city_model->get_info($city_id);
 		$this->load->view('city/info', $info);
 	}
 	
@@ -37,20 +35,19 @@ class City extends Controller {
 		
 		// Make a new city.
 		if($this->input->post('action') == 'New') {
-			if($this->input->post('name') != '')
-			{
-			$data = array(
-						'name'			=>	$this->input->post('name'), 
-						'president_id'	=>	$this->input->post('president_id'),
-					);
-			
-			$this->model->createCity($data);
-			$this->message['success'] = 'The City has been added';
-			$this->session->set_flashdata('success', 'The City has been added successfully');
-			redirect('city/index');
+			if($this->input->post('name') != '') {
+				$data = array(
+					'name'			=>	$this->input->post('name'), 
+					'president_id'	=>	$this->input->post('president_id'),
+				);
+				
+				$this->city_model->createCity($data);
+				$this->message['success'] = 'The City has been added';
+				$this->session->set_flashdata('success', 'The City has been added successfully');
+				redirect('city/index');
 			} else {
-			$this->session->set_flashdata('success', 'City Not Added ');
-			redirect('city/index');
+				$this->session->set_flashdata('success', 'City Not Added ');
+				redirect('city/index');
 			}
 		
 		} else {
@@ -86,7 +83,7 @@ class City extends Controller {
 						'name'			=>	$this->input->post('name'), 
 						'president_id'	=>	$this->input->post('president_id'),
 					);
-			$flag=$this->model->editCity($data);
+			$flag=$this->city_model->editCity($data);
 			if($flag){
 			$this->message['success'] = 'The City has been edited successfully';
 			redirect('city/index');
@@ -103,7 +100,7 @@ class City extends Controller {
 			$this->load->model('Users_model','user_model');
 			
 			$president_ids = $this->user_model->getUsersById();
-			$city = $this->model->getCity($city_id);
+			$city = $this->city_model->getCity($city_id);
 			
 			$this->load->view('city/form.php', array(
 				'action' 		=> 'Edit',

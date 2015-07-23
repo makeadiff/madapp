@@ -153,6 +153,7 @@ function set_city_year($that) {
 		$that->session->set_userdata('city_id', $city_id);
 		if(isset($that->center_model)) $that->center_model->city_id = $city_id;
 		if(isset($that->users_model)) $that->users_model->city_id = $city_id;
+		if(isset($that->city_model)) $that->city_model->city_id = $city_id;
 
 		$year = $that->input->post('year');
 		$that->session->set_userdata('year', $year);

@@ -37,19 +37,15 @@ class Center_model extends Model
 	}
     
 	
-    /**
-    * Function to getcenter_details
-    * @author : Rabeesh
-    * @param  : [$data]
-    * @return : type: [Array()]
-    **/
-    function getcenter_details()
-    {
+    /// Return all centers in given city with information about it.
+    function get_all_info($city_id = 0) {
+    	if(!$city_id) $city_id = $this->city_id;
+
 		$this->ci->load->model('city_model');
 		
 		$this->db->select("Center.*, User.name as user_name");
 		$this->db->from('Center');
-		$this->db->where('Center.city_id',$this->city_id)->where('Center.status','1');
+		$this->db->where('Center.city_id',$city_id)->where('Center.status','1');
 		$this->db->join('User', 'Center.center_head_id = User.id' ,'left');
 		
 		$result = $this->db->get()->result();
@@ -67,12 +63,9 @@ class Center_model extends Model
 		
 		return $result;	
     }
-	 /**
-    * Function to getcity
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [ Array()]
-    **/
+    function getcenter_details() { return $this->get_all(); } // :ALIAS: :DEPRICIATED:
+
+
 	function getcity() {
 		$this->db->select('*');
 		$this->db->from('City');

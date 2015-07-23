@@ -1,32 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
- * CodeIgniter
- *
- * An open source application development framework for PHP 4.3.2 or newer
- *
- * @package         MadApp
- * @author          Rabeesh
- * @copyright       Copyright (c) 2008 - 2010, OrisysIndia, LLP.
- * @link            http://orisysindia.com
- * @since           Version 1.0
- * @filesource
- */
 
 class Kids extends Controller  {
-
-    /**
-    * constructor 
-    **/
-
     function Kids() {
         parent::Controller();
 		
 		$this->load->library('session');
         $this->load->library('user_auth');
 		$logged_user_id = $this->session->userdata('id');
-		if($logged_user_id == NULL ) {
-			redirect('auth/login');
-		}
+		if($logged_user_id == NULL ) redirect('auth/login');
 		
 		$this->load->helper('url');
         $this->load->helper('form');
@@ -37,67 +18,25 @@ class Kids extends Controller  {
 		$this->load->library('upload');
     }
 	
-    /**
-    *
-    * Function to 
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-
-    function index()
-    {
-        
-    }
-
-    /**
-    *
-    * Function to manageaddkids
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function manageaddkids()
-	{
+	/// Show all kids - or if a Center ID is given, that centers kids
+	function index($center_id = 0) {
 		$this->user_auth->check_permission('kids_index');
-		
-		// This page can get a change city request.
-		set_city_year($this);
+		if($this->input->get_post('center_id')) $center_id = $this->input->get_post('center_id', true);
+
+		set_city_year($this); // This page can get a change city request.
 	
+		$data = array(
+			'details' 		=> $this->kids_model->get_all(0, $center_id),
+			'center_list'	=> $this->center_model->get_all(),
+			'page'			=> 'index',
+			'center_id'		=> $center_id,
+		);
+
 		$this->load->view('layout/header',array('title'=>'Manage Kids'));
-		
-		$data['details']= $this->kids_model->getkids_details();
-		$data['center_list']=$this->center_model->get_all();
-		$data['page'] = 'get_kids_details';
-
-		$this->load->view('kids/kids_list',$data);
+		$this->load->view('kids/index',$data);
 		$this->load->view('layout/footer');
-	
 	}
-		
-	function get_kids_details()
-	{
-		$center_id=$_REQUEST['center_id'];
-		$page_no = $_REQUEST['page_no'];
-		$status = (empty($_REQUEST['status']) ? 0 : $_REQUEST['status']);
-
-		$linkCount = $this->kids_model->kids_count();
-		$data['linkCounter'] = ceil($linkCount/PAGINATION_CONSTANT);
-		$data['currentPage'] = $page_no;
-		$data['page'] = 'get_kids_details';
-		if($center_id) {
-			$data['kids_details']=$this->kids_model->get_kidsby_center($center_id, $status);
-			$data['center_name'] = $this->center_model->center_name($center_id);
-		} else {
-			$data['kids_details']=$this->kids_model->getkids_details();
-			$data['center_name'] = '';
-		}
-		
-		$this->load->view('kids/kids_update_list',$data);
-	}
-
+	function manageaddkids($center_id = 0) { $this->index($center_id); } // Alias for backward compatibilty :DEPRICIATED: :ALIAS:
 
 	/// Show the deleted kids of the current city.
 	function show_deleted($city_id = 0) {
@@ -192,21 +131,16 @@ class Kids extends Controller  {
                 }
              }
         }
-		if($returnFlag != '') 
-			{
+		if($returnFlag != '') {
 			$this->session->set_flashdata('success', 'Student updated successfully.');
 			redirect('kids/manageaddkids');  
-			}
-		elseif($flag!= '')
-		{
+		} elseif($flag!= '') {
 			$this->session->set_flashdata('success', 'Student updated successfully.');
 			redirect('kids/manageaddkids');
-			}
-		else
-			{
+		} else {
 			$this->session->set_flashdata('error', 'Student not edited.');
 			redirect('kids/manageaddkids');  
-			}
+		}
 	}
 	
 	/**
@@ -217,12 +151,11 @@ class Kids extends Controller  {
     * @return : type : []
     *
     **/
-	function addkids()
-	{
+	function addkids() {
 		$this->user_auth->check_permission('kids_add');
-		$data['center']=$_REQUEST['center'];
-		$data['name']=$_REQUEST['name'];
-		$data['sex']=$_REQUEST['sex'];
+		$data['center']	= $_REQUEST['center'];
+		$data['name']	= $_REQUEST['name'];
+		$data['sex']	= $_REQUEST['sex'];
 		
 		$data['date'] = '';
 		if(!empty($_REQUEST['date-pick'])) {

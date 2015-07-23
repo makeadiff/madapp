@@ -1,38 +1,27 @@
-<script type="text/javascript">
-function getKidsInCenter(center_id,pageno){
-	var status = <?php echo ($page == 'get_kids_details' ? 1 : 0) ?>;
-	$.ajax({
-		type: "POST",
-		url: "<?php echo site_url('kids/get_kids_details') ?>",
-		data: "center_id="+center_id+"&page_no="+pageno+"&status="+status,
-		success: function(msg){
-			$('#kids_list').html(msg);
-		}
-	});
-}
-</script>
-
 <div id="content" class="clear">
 <!-- Main Begins -->
 <div id="main" class="clear"> 
 
-<select name="center" id="center" onchange="javascript:getKidsInCenter(this.value,0);" >
+<form action="<?php echo site_url('kids/index'); ?>" method="post">
+<select name="center_id">
 <option value="0">All Kids</option>
 <?php foreach($center_list as $row){ ?>
-<option value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option>
+<option value="<?php echo $row->id; ?>" <?php if($center_id == $row->id) { echo 'selected'; } ?>><?php echo $row->name; ?></option>
 <?php } ?>
 </select>
+<input type="submit" name="action" value="Go" />
+</form>
 
 <div id="head" class="clear">
 <h1><?php echo $title; ?></h1>
 
 <div id="actions">
-<?php if($this->user_auth->get_permission('kids_add') and $page == 'get_kids_details') { ?>
+<?php if($this->user_auth->get_permission('kids_add') and $page == 'index') { ?>
 <a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button green primary popup" name="Add Kids">Add Kids</a>
 <?php } ?>
 </div><br class="clear" />
 
-<?php if($this->user_auth->get_permission('center_edit') and $page == 'get_kids_details') { ?>
+<?php if($this->user_auth->get_permission('center_edit') and $page == 'index') { ?>
 <div id="train-nav">
 <ul>
 <li id="train-prev"><a href="<?php echo site_url('user/view_users')?>">&lt; Manage Volunteers</a></li>
@@ -48,11 +37,11 @@ function getKidsInCenter(center_id,pageno){
 </div><br />
 
 <div id="kids_list">
-<?php if($this->user_auth->get_permission('kids_add') and $page == 'get_kids_details') { ?>
+<?php if($this->user_auth->get_permission('kids_add') and $page == 'index') { ?>
 <a class="add with-icon" href="<?php echo site_url('kids/import'); ?>">Import Kids</a>
 <?php } ?>
 
-<?php if($this->user_auth->get_permission('kids_show_deleted') and $page == 'get_kids_details') { ?>
+<?php if($this->user_auth->get_permission('kids_show_deleted') and $page == 'index') { ?>
 <a class="delete with-icon" href="<?php echo site_url('kids/show_deleted'); ?>">Show Deleted Kids</a>
 <?php } ?>
 
@@ -69,7 +58,7 @@ function getKidsInCenter(center_id,pageno){
 	<th class="colStatus sortable">Sex</th>
     <th class="colStatus sortable">Birth Day</th>
     <th class="colStatus">Center</th>
-	<th class="colStatus">Image</th>
+	<!-- <th class="colStatus">Image</th> -->
    <th class="colActions">Actions</th>
 </tr>
 </thead>
@@ -87,14 +76,14 @@ foreach($content as $row) {
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colName left"><?php echo $row['name']; ?></td>
-    <td class="colCount"><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row['sex']) echo $the_sexes[$row['sex']]; ?></td>
-    <td class="colCount"><?php echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
-    <td class="colStatus" style="text-align:left"><?php echo $row['center_name'];?></td>
-	<td class="colPosition"><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td>
+    <td><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row['sex']) echo $the_sexes[$row['sex']]; ?></td>
+    <td><?php echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
+    <td><?php echo $row['center_name'];?></td>
+	<!-- <td><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td> -->
     
     <td class="colActions right"> 
-    <?php if($this->user_auth->get_permission('kids_edit') and $page == 'get_kids_details') { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
-    <?php if($this->user_auth->get_permission('kids_delete') and $page == 'get_kids_details') { ?><a class="actionDelete icon delete confirm" href="<?php echo site_url('kids/ajax_deleteStudent/'.$row['id']); ?>">Delete</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_edit') and $page == 'index') { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_delete') and $page == 'index') { ?><a class="actionDelete icon delete confirm" href="<?php echo site_url('kids/ajax_deleteStudent/'.$row['id']); ?>">Delete</a><?php } ?>
     </td>
 </tr>
 

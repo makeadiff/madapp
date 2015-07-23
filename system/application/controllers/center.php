@@ -1,25 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
- * CodeIgniter
- *
- * An open source application development framework for PHP 4.3.2 or newer
- *
- * @package         MadApp
- * @author          Rabeesh
- * @copyright       Copyright (c) 2008 - 2010, OrisysIndia, LLP.
- * @link            http://orisysindia.com
- * @since           Version 1.0
- * @filesource
- */
- 
 class Center extends Controller  {
 
-    /**
-    * constructor 
-    **/
-
-    function Center()
-    {
+    function Center() {
         parent::Controller();
 
 		$this->load->library('session');
@@ -27,67 +9,39 @@ class Center extends Controller  {
 		$this->load->helper('url');
         $this->load->helper('form');
 		$logged_user_id = $this->session->userdata('id');
-		if($logged_user_id == NULL ) {
-			redirect('auth/login');
-		}
-		
+		if($logged_user_id == NULL ) redirect('auth/login');
+
 		$this->load->library('validation');
 		$this->load->model('center_model');
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
 		$this->load->model('users_model');
     }
-	
-	/**
-    *
-    * Function to manageaddcenters
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function manageaddcenters()
-	{
+
+    /// Show all centers in the current city
+	function index() {
 		$this->user_auth->check_permission('center_index');
 		
 		set_city_year($this);
 		
-		$page_no = !empty($_REQUEST['pageno']) ? $_REQUEST['pageno'] : 0;
-		$data['title'] = 'Manage Centers';
-		$data['details']= $this->center_model->getcenter_details($page_no);
+		$data = array(
+			'title' 	=> 'Manage Centers',
+			'details'	=> $this->center_model->get_all_info(),
+		);
 		
 		$this->load->view('layout/header',$data);
-		$this->load->view('center/center_list',$data);
+		$this->load->view('center/index',$data);
 		$this->load->view('layout/footer');
-	
 	}
-	/**
-    *
-    * Function to getcenterlist
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function getcenterlist()
-	{
-	
-		
-	}
-	/**
-    *
-    * Function to popupaddCneter
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	function popupaddCenter()
-	{
+	function manageaddcenters() { $this->index(); } // Alias for backward compatibilty :DEPRICIATED: :ALIAS:
+
+	/// Add center.
+	function popupaddCenter() {
 		$this->user_auth->check_permission('center_add');
 		$data['all_users']= $this->users_model->get_users_in_city();
 		$this->load->view('center/popups/addcenter_popup',$data);
 	}
+
 	/**
     *
     * Function to addCenter

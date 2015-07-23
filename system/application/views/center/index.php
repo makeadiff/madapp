@@ -7,7 +7,7 @@
 
 	<?php if($this->user_auth->get_permission('center_add')) { ?>
 	<div id="actions"> 
-	<a href="<?=site_url('center/popupaddCenter')?>" class="thickbox button green primary popup" style="margin-bottom:10px;" id="example" name="Add New Center">Add New Center</a>
+	<a href="<?php echo site_url('center/popupaddCenter'); ?>" class="thickbox button green primary popup" style="margin-bottom:10px;" id="example" name="Add New Center">Add New Center</a>
 	</div>
 	<?php } ?>
 </div><br />
@@ -15,7 +15,7 @@
 <table id="tableItems" class="clear info-box-table data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<th class="colCheck1">Id</th>
+	<th class="colCheck1">ID</th>
 	<th class="colName left sortable">Center Name</th>
     
     <th class="colStatus sortable">City</th>

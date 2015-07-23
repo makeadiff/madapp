@@ -38,7 +38,7 @@ function showMessage($count, $message, $threshold=1) {
 
 <?php if($this->user_auth->get_permission('kids_index')) { ?>
 <tr><td>3</td>
-<td><a href="<?php echo site_url('kids/manageaddkids'); ?>">Manage Kids</a></td>
+<td><a href="<?php echo site_url('kids/index/'.$center_id); ?>">Manage Kids</a></td>
 <td><?php showMessage($details['kids_count'], $details['kids_count'] . " Kids", 12); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('level_index')) { ?>

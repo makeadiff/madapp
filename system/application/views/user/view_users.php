@@ -53,11 +53,11 @@ $.tablesorter.addParser({
 <?php if($this->session->userdata("active_center")) { ?>
 <li id="train-prev"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">&lt; Edit Center Details</a></li>
 <li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
-<li id="train-next"><a href="<?php echo site_url('kids/manageaddkids')?>">Manage Kids &gt;</a></li>
+<li id="train-next"><a href="<?php echo site_url('kids/index')?>">Manage Kids &gt;</a></li>
 <?php } else { ?>
 <li id="train-prev">&nbsp;</li>
 <li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
-<li id="train-next"><a href="<?php echo site_url('kids/manageaddkids')?>">Manage Kids &gt;</a></li>
+<li id="train-next"><a href="<?php echo site_url('kids/index')?>">Manage Kids &gt;</a></li>
 <?php } ?>
 </ul>
 </div><br />

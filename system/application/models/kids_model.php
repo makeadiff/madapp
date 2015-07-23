@@ -19,26 +19,25 @@ class Kids_model extends Model {
 		$this->project_id = $this->ci->session->userdata('project_id');
 		$this->year = $this->ci->session->userdata('year');
     }
-    
-    /**
-    * Function to getkids_details
-    * @author:Rabeesh 
-    * @param :[$data]
-    * @return: type: [ Array()]
-    **/
-	function getkids_details($city_id = 0) {
+
+    /// Return all the kids in the given city.
+	function get_all($city_id = 0, $center_id = 0) {
 		if(!$city_id) $city_id = $this->city_id;
 		
 		$this->db->select('Student.*,Center.name as center_name');
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
 		$this->db->where('Center.city_id', $city_id);
+		if($center_id) $this->db->where('Student.center_id', $center_id);
 		$this->db->where('Center.status', 1);
 		$this->db->where('Student.status', 1);
-		$this->db->orderby('Student.id');
-		$result=$this->db->get();
+
+		$this->db->orderby('Student.center_id, Student.name');
+		$result = $this->db->get();
 		return $result;
 	}
+	function getkids_details($city_id = 0, $center_id = 0) { return $this->get_all($city_id, $center_id); } // :ALIAS: :DEPRECIATED:
+
 	
 	/// Returns the deleted kids of the given center.
 	function get_deleted_kids($city_id = 0) {

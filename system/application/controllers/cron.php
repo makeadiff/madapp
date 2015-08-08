@@ -201,7 +201,16 @@ class Cron extends Controller  {
 		}
 	}
 
+	function find_added_date_of_kids($center_id) {
+		$all_kids_in_center = $this->users_model->db->query("SELECT id,name, status FROM Student WHERE center_id=$center_id")->result();
+		foreach ($all_kids_in_center as $kid) {
+			$last_class_on = $this->users_model->db->query("SELECT MIN(C.class_on) AS first_class FROM Class C INNER JOIN StudentClass SC ON C.id=SC.student_id WHERE student_id=".$kid->id)->result();
+			dump($last_class_on, $kid);
+		}
 
+	}
+
+	/// Copy over last year's Class structure. Rename all fancy name to ABC, and increment their grade by one. '7 Rainbow class' becomes '8 A'
 	function copy_class_sturcture() {
 		$current_year = get_year();
 		$last_year = $current_year - 1;

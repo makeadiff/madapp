@@ -437,7 +437,7 @@ class User extends Controller  {
 			$phone = $this->input->post('phone');
 			$data = $this->users_model->db->query("SELECT * FROM User WHERE phone LIKE '%$phone%'")->result();
 		}
-		$this->load->view('user/search_email', array('email'=>$email, 'phone'=>$phone, 'name'=>$name, 'id'=>$id, 'data'=>$data));
+		$this->load->view('user/search_email', array('email'=>$email, 'phone'=>$phone, 'name'=>$name, 'id'=>$id, 'search_id' => $id, 'data'=>$data));
 	}
 
 	/// Export to CSV

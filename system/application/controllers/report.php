@@ -68,7 +68,7 @@ class Report extends Controller {
 
     function level_strength() {
     	$data = $this->report_model->get_level_strength();
-    	$this->show_report($data, array('city_name' => 'City', 'center_name' => 'Center', 'level_name' => 'Level', 'count' => 'Count'), 'Level Strength');
+    	$this->show_report($data, array('city_name' => 'City', 'center_name' => 'Center', 'level_name' => 'Class Section', 'count' => 'Count'), 'Class Section Strength');
     }
 	
 	function absent() {

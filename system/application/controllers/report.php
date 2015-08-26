@@ -63,7 +63,12 @@ class Report extends Controller {
 
     function child_count() {
         $report_data = $this->report_model->get_child_count();
-        $this->show_report($report_data,array('City' => 'City','Center' => 'Center', 'Male' => 'Male', 'Female' => 'Female', 'NotSpecified' => 'Not Specified', 'Total' => 'Total'), 'Child Count');
+        $this->show_report($report_data, array('City' => 'City','Center' => 'Center', 'Male' => 'Male', 'Female' => 'Female', 'NotSpecified' => 'Not Specified', 'Total' => 'Total'), 'Child Count');
+    }
+
+    function level_strength() {
+    	$data = $this->report_model->get_level_strength();
+    	$this->show_report($data, array('city_name' => 'City', 'center_name' => 'Center', 'level_name' => 'Level', 'count' => 'Count'), 'Level Strength');
     }
 	
 	function absent() {

@@ -139,7 +139,36 @@ class Report_model extends Model {
                             GROUP BY City.name , Center.name WITH ROLLUP')->result();
 
     }
-	
+
+    /// Shows the strength of all levels in all centers in all cities 
+    function get_level_strength($city_id = 0) {
+        $all_cities = $this->db->query('SELECT id,name FROM City ORDER BY name')->result();
+        $data = array(); 
+        foreach ($all_cities as $city) {
+            $all_centers = $this->db->query("SELECT id,name FROM Center WHERE status='1' AND city_id='{$city->id}' ORDER BY name")->result();
+            foreach ($all_centers as $center) {
+                $center_id = $center->id;
+
+                $counts = $this->db->query("SELECT CONCAT(L.grade,' ',L.name) AS name, COUNT(S.id) AS count 
+                    FROM Student S
+                    INNER JOIN StudentLevel SL ON SL.student_id=S.id
+                    INNER JOIN Level L ON L.id=SL.level_id 
+                    WHERE S.status='1' AND L.center_id=$center_id AND L.status='1'
+                    GROUP BY SL.level_id")->result();
+
+                foreach ($counts as $info) {
+                    $data[] = array(
+                        'city_name'     => $city->name,
+                        'center_name'   => $center->name,
+                        'level_name'    => $info->name,
+                        'count'         => $info->count
+                    );
+                }
+            }
+        }
+        return $data;
+    }
+
 	function get_volunteer_admin_credits() {
 		$data = array();
 		$intern_user_group_id = 14; // 14 is the intern group

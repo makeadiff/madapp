@@ -43,7 +43,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 	$level_user_count = 0;
 	foreach($level_info['users'] as $teacher) {
 		if(!$level_user_count) {
-			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap'><?php echo $level_info['name'] ?></td><?php 
+			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap'><?php echo $level_info['grade'] . $level_info['name'] ?></td><?php 
 		}
 		?><td nowrap='nowrap'><a href="<?php echo site_url('/user/view/'.$teacher['id']); ?>"<?php
 			if($teacher['user_type'] == 'let_go') echo ' class="let_go"';

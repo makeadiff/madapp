@@ -455,7 +455,8 @@ class Classes extends Controller {
 						}
 					}
 					
-					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['name'] = $level->name;
+					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['name']	= $level->name;
+					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['grade'] = $level->grade;
 					$data[$center->id]['batches'][$batch_id]['levels'][$level->id]['users'] = $teachers_info;
 				}
 				

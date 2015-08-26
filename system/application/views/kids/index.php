@@ -58,6 +58,7 @@
 	<th class="colStatus sortable">Sex</th>
     <th class="colStatus sortable">Birth Day</th>
     <th class="colStatus">Center</th>
+    <th class="colStatus">Added On</th>
 	<!-- <th class="colStatus">Image</th> -->
    <th class="colActions">Actions</th>
 </tr>
@@ -79,6 +80,7 @@ foreach($content as $row) {
     <td><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row['sex']) echo $the_sexes[$row['sex']]; ?></td>
     <td><?php echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
     <td><?php echo $row['center_name'];?></td>
+    <td><?php echo date('dS M, Y', strtotime($row['added_on'])); ?></td>
 	<!-- <td><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td> -->
     
     <td class="colActions right"> 

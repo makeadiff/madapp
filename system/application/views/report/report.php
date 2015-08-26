@@ -24,8 +24,13 @@ foreach($fields as $field_name=>$field_title) { ?>
 if($fields[$field_name] == 'Name' and isset($row->user_id)) echo '<a href="'.site_url('user/view/'.$row->user_id).'">';
 if (isset($row->{$field_name})) {
     echo $row->{$field_name};
-}else if($title == 'Child Count'){
+
+} elseif($row[$field_name]) {
+	echo $row[$field_name];
+
+} elseif($title == 'Child Count'){
     echo "Total";
+
 }else{
     echo "0";
 }

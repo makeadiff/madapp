@@ -26,7 +26,7 @@
 			$url = site_url('dashboard/dashboard_view');
 			
 			if($this->uri->segment(1) == 'kids') $url = site_url('kids/manageaddkids');
-			if($this->uri->segment(1) == 'centers') $url = site_url('center/manageaddcenters');
+			if($this->uri->segment(1) == 'center') $url = site_url('center/index');
 			if($this->uri->segment(1) == 'user') $url = site_url('user/view_users');
 			if($this->uri->segment(1) == 'classes') $url = site_url('classes/madsheet');
             if($this->uri->segment(1) == 'city') $url = site_url('city/info');

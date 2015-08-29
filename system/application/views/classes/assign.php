@@ -14,7 +14,14 @@
 <div id="head" class="clear">
 <h1 class="title"><?php echo $title; ?></h1>
 
-<p class="text-muted">Total Teachers: <?php echo count($all_users) ?>. Assigned Teacher: <?php echo $assigned_teacher_count; ?>. Unassigned Teacher Count: <?php echo count($all_users) - $assigned_teacher_count; ?>.</p>
+<ul class="text-muted">
+<li>Total Teachers in this city: <?php echo count($all_users) ?></li>
+<li>Assigned Teacher for this center: <?php echo $assigned_teacher_count; ?></li>
+<li>Assigned Teacher in this city: <?php echo count($all_assigned_teachers); ?></li>
+<li>Total Unassigned Teacher Count: <?php echo count($all_users) - count($all_assigned_teachers); ?></li>
+</ul>
+
+<p>Users who are <strong>bolded</strong> have already been assigned to a class.</p>
 
 <form action="" method="post">
 <table class="table">
@@ -24,7 +31,7 @@
 	$show_level_of_batch = 0;
 ?>
 <tr>
-<td><?php echo $user_name->name ?></td>
+<td <?php if(isset($all_assigned_teachers[$user_id])) echo 'style="font-weight:bold;" class="assigned"' ?>><?php echo $user_name->name ?></td>
 <td><select name="batch_id[<?php echo $user_id ?>]" id="batch-<?php echo $user_id ?>" class="batch">
 <option value="0">None</option>
 <?php foreach($all_batches as $batch_id => $batch_name) { ?>

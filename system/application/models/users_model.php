@@ -735,6 +735,19 @@ class Users_model extends Model {
 		else return 0;
     }
 
+
+    /// Returns all the Users who have a class assigned them that year
+    function get_assigned_teachers($city_id = 0) {
+    	if(!$city_id) $city_id = $this->city_id;
+
+    	$all_assigned_teachers = $this->db->query("SELECT UB.* FROM UserBatch UB 
+    		INNER JOIN User U ON U.id=UB.user_id
+    		INNER JOIN Batch B ON UB.batch_id=B.id
+    		WHERE U.user_type='volunteer' AND U.status='1' AND B.year='{$this->year}' AND U.city_id=$city_id")->result();
+
+    	return $all_assigned_teachers;
+    }
+
     function get_users_batch($user_id) {
 		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch 
 			INNER JOIN Batch ON Batch.id=UserBatch.batch_id 

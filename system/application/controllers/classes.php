@@ -347,13 +347,22 @@ class Classes extends Controller {
 			}
 		}
 
+		// Get all the assigned teachers in the city - even in other centers. This way, we can highlight them so that they don't get assigned again.
+		$all_assigned_teachers = idNameFormat($this->user_model->get_assigned_teachers(), array('user_id'));
 
 		// This is to sort the users in such a way that the users with classes in the given center will come to the top.
-		uksort($all_users, function($a, $b) use ($user_mapping, $all_users) {
+		uksort($all_users, function($a, $b) use ($user_mapping, $all_users, $all_assigned_teachers) {
 			if(isset($user_mapping[$a]) and !isset($user_mapping[$b])) { // If only one has a batch assigned in this center, that user should show up first.
 				return -1;
 			} else if(isset($user_mapping[$b]) and !isset($user_mapping[$a])) { 
 				return 1;
+
+			// User assigned elsewhere.
+			} elseif (isset($all_assigned_teachers[$a]) and !isset($all_assigned_teachers[$b])) {
+				return 1;
+			} elseif (isset($all_assigned_teachers[$b]) and !isset($all_assigned_teachers[$a])) {
+				return -1;
+
 			} else { // If both users have batches assigned, do a string comparison on the names.
 			    return strcmp($all_users[$a]->name, $all_users[$b]->name);
 			}
@@ -370,6 +379,7 @@ class Classes extends Controller {
 				'all_batches'	=> $all_batches, 
 				'all_subjects'	=> $all_subjects,
 				'user_mapping'	=> $user_mapping,
+				'all_assigned_teachers'		=> $all_assigned_teachers,
 				'assigned_teacher_count'	=> $assigned_teacher_count,
 				'batch_level_user_hirarchy'	=> $batch_level_user_hirarchy,
 				'title'			=> 'Assign Everything'));

@@ -153,7 +153,7 @@ class Report_model extends Model {
                     FROM Student S
                     INNER JOIN StudentLevel SL ON SL.student_id=S.id
                     INNER JOIN Level L ON L.id=SL.level_id 
-                    WHERE S.status='1' AND L.center_id=$center_id AND L.status='1'
+                    WHERE S.status='1' AND L.center_id=$center_id AND L.status='1' AND L.year='2015'
                     GROUP BY SL.level_id")->result();
 
                 foreach ($counts as $info) {

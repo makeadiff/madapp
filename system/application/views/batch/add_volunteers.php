@@ -22,7 +22,7 @@ $level_count = 0;
 foreach($levels_in_center as $level) { 
 	$level_count++;
 ?>
-<td width="200"><h3><?php echo $level->name ?></h3>
+<td width="200"><h3><?php echo $level->grade . ' ' . $level->name ?></h3>
 
 <select name="teachers_in_level[<?php echo $level->id ?>][]" id="teachers_in_level_<?php echo $level->id ?>" multiple="multiple">
 <?php foreach($level_teacher[$level->id] as $teacher_id=>$value) { // Show the selected volunteers first.

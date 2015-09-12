@@ -303,7 +303,9 @@ class Classes extends Controller {
 					// See if it was assigned earlier. If so, we must delete the assignments.
 					if(isset($old_volunteers[$level_id]) and in_array($user_id, $old_volunteers[$level_id])) {
 						// If someone removes a volunteer from a batch, make sure his future classes are deleted
-						$this->class_model->delete_future_classes($user_id, $batch_id, $level_id);
+						// $this->class_model->delete_future_classes($user_id, $batch_id, $level_id);
+						// Delete this users classes.
+						$this->class_model->delete_user_classes($user_id, $batch_id, $level_id);
 					}
 				} else {
 					// Set the assigment with the data provided by the user.

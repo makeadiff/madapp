@@ -45,29 +45,37 @@ class Class_model extends Model {
     
     /// Deletes the future classes of the given user - happens when a user is taken off a batch.
     function delete_future_classes($user_id, $batch_id, $level_id) {
-		// First get all the classes of this guy in the future.
-		$future_classes = $this->db->query("SELECT UserClass.id AS user_class_id,Class.id AS class_id 
-			FROM UserClass INNER JOIN Class ON Class.id=UserClass.class_id 
-			WHERE UserClass.user_id=$user_id AND Class.batch_id=$batch_id AND Class.level_id=$level_id AND Class.class_on > NOW()")->result();
-		
-		$class_ids = array();
-		foreach($future_classes as $classes) {
-			$class_ids[] = $classes->class_id;
-			
-			// Delete his part of the class...
-			$this->db->delete("UserClass", array('id'=>$classes->user_class_id));
-		}
-		
-		// Now go thru the class that he was there in. If the class has no other teacher, delete the class as well.
-		foreach($class_ids as $id) {
-			$teacher_count = oneFormat($this->db->query("SELECT COUNT(id) FROM UserClass WHERE class_id=$id")->row());
-
-			// No other teacher. Delete class.
-			if(!$teacher_count) $this->db->delete("Class", array('id'=>$id));
-		}
-		
-		return true;
+        delete_user_classes($user_id, $batch_id, $level_id, true);
     }
+
+    /// Deletes the classes of the given user in the batch/level - that has not been marked. If marked, ignore.
+    function delete_user_classes($user_id, $batch_id, $level_id, $delete_only_future_classes = false) {
+        $date_check = '';
+        if($delete_only_future_classes) $date_check = 'AND Class.class_on > NOW()';
+        // First get all the classes of this guy in the future.
+        $future_classes = $this->db->query("SELECT UserClass.id AS user_class_id,Class.id AS class_id 
+            FROM UserClass INNER JOIN Class ON Class.id=UserClass.class_id 
+            WHERE UserClass.user_id=$user_id AND Class.batch_id=$batch_id AND Class.level_id=$level_id AND UserClass.status='projected' $date_check")->result();
+        
+        $class_ids = array();
+        foreach($future_classes as $classes) {
+            $class_ids[] = $classes->class_id;
+            
+            // Delete his part of the class...
+            $this->db->delete("UserClass", array('id'=>$classes->user_class_id));
+        }
+        
+        // Now go thru the class that he was there in. If the class has no other teacher, delete the class as well.
+        foreach($class_ids as $id) {
+            $teacher_count = oneFormat($this->db->query("SELECT COUNT(id) FROM UserClass WHERE class_id=$id")->row());
+
+            // No other teacher. Delete class.
+            if(!$teacher_count) $this->db->delete("Class", array('id'=>$id));
+        }
+        
+        return true;
+    }
+
     
     /// Revert a class cancellation. The status becomes projected.
     function uncancel_class($class_id) {

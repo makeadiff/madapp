@@ -207,6 +207,33 @@ class Debug extends Controller {
 	}
 
 
+	// For some reason I havent figured out yet, there are duplicate users in madsheet. This deletes them. Have to figured out why later.
+	function delete_duplicate_class_entries() {
+		// Find users with multiple levels in this year.
+		$teachers = $this->users_model->db->query("SELECT U.id FROM User U INNER JOIN UserGroup UG ON U.id=UG.user_id WHERE UG.group_id=9 AND UG.year='2015'")->result();
+
+		foreach ($teachers as $t) {
+			// Find the actual levels
+			$offical_batch_level = $this->users_model->db->query("SELECT batch_id,level_id FROM UserBatch UB INNER JOIN Batch B ON B.id=UB.batch_id WHERE B.year='2015' AND UB.user_id={$t->id}")->result();
+			if(!$offical_batch_level) continue;
+
+			// Find which batch/level combo is in UserBatch
+			$other_classes_they_are_in = $this->users_model->db->query("SELECT C.* FROM Class C 
+						INNER JOIN UserClass UC ON UC.class_id=C.id 
+						WHERE UC.user_id={$t->id} AND DATE_FORMAT(C.class_on, '%Y')='2015'")->result();
+
+			foreach($other_classes_they_are_in as $cl) {
+				if(($cl->batch_id != $offical_batch_level[0]->batch_id) or ($cl->level_id != $offical_batch_level[0]->level_id)) {
+					// Delete other instances from Class Table
+					$this->users_model->db->query("DELETE FROM Class WHERE id={$cl->id}");
+					$this->users_model->db->query("DELETE FROM UserClass WHERE class_id={$cl->id}");
+					print "Deleting duplicate entries for {$t->id}<br />";
+				}
+			}
+		}
+	}
+
+
 	function delete_usergroup_after_moving_members_to_other_group($usergroup_id_to_delete, $other_usergroup_id) {
 		$this->users_model->db->query("DELETE FROM `Group` WHERE id=$usergroup_id_to_delete");
 		$this->users_model->db->query("UPDATE `UserGroup` SET group_id=$other_usergroup_id WHERE group_id=$usergroup_id_to_delete");

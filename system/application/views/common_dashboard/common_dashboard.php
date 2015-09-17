@@ -44,7 +44,7 @@
     </div>
 
     <div class="col-md-3 col-sm-6 text-center">
-        <a href='<?php echo site_url('review_milestone/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/review.png"><br>Review &amp;<br>Milestones</a>
+        <a href='<?php echo site_url('review_milestone/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/review.png"><br>Review</a>
     </div>
 
     <div class="col-md-3 col-sm-6 text-center">

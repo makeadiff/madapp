@@ -2,7 +2,14 @@
 <div class="board transparent-container">
 <h1 class="title">MADApp</h1>
 <br />
-<div class="row">
+
+<div class="alert alert-info alert-dismissible" role="alert">
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
+
+<div>Please enter your <a class="alert-link" href="http://makeadiff.in/apps/stakeholder-survey/form.php">Happiness Index answers</a> if you haven't done so already.</div>
+</div>
 
     <div class="col-md-3 col-sm-6 text-center">
         <a href="<?php echo site_url('edsupport/dashboard_view')?>" class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/ed_support.png"><br>Ed Support</a>

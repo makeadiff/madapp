@@ -5,6 +5,9 @@
         <br>
         <div class="row">
 
+            <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' target="_blank" href="http://makeadiff.in/apps/stakeholder-survey">
+                    <img class="dash" src="<?php echo base_url(); ?>images/flat_ui/happiness_index.png" alt="" /> <br>Happiness Index</a></div>
+
             <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' target="_blank" href="http://makeadiff.in/apps/stakeholder-survey/status.php">
                     <img class="dash" src="<?php echo base_url(); ?>images/flat_ui/national.png" alt="" /> <br>National<br>Completion<br>Status</a></div>
 

@@ -8,7 +8,7 @@
   <span aria-hidden="true">&times;</span>
 </button>
 
-<div>Please enter your <a class="alert-link" href="http://makeadiff.in/apps/stakeholder-survey/form.php">Happiness Index answers</a> if you haven't done so already.</div>
+<div >The Happiness Index Survey has been released! <a class="alert-link" href="http://makeadiff.in/apps/stakeholder-survey/form.php">Click here</a> to fill in your answers.</div>
 </div>
 
     <div class="col-md-3 col-sm-6 text-center">

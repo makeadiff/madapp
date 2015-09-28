@@ -99,6 +99,8 @@ class Classes extends Controller {
 				$classes[$row->id] = array(
 					'id'			=> $row->id,
 					'level_id'		=> $row->level_id,
+					'grade'			=> $row->grade,
+					'class_status'	=> $row->class_status,
 					'level_name'	=> $row->name,
 					'lesson_id'		=> $row->lesson_id,
 					'student_attendence'	=> $attendence_count,
@@ -137,6 +139,7 @@ class Classes extends Controller {
 		$lessons = $this->input->post('lesson_id');
 		$substitutes = $this->input->post('substitute_id');
 		$status = $this->input->post('status');
+		$class_status = $this->input->post('class_status');
 		$zero_hour_attendance = $this->input->post('zero_hour_attendance');
 		
 		$this->load->helper('misc_helper');
@@ -149,6 +152,7 @@ class Classes extends Controller {
 					'substitute_id'=>$substitute_id,
 					'status'	=> $status[$class_id][$teacher_id],
 					'zero_hour_attendance'	=> isset($zero_hour_attendance[$class_id][$teacher_id]) ? '1' : '0',
+					'class_status'	=> $class_status[$class_id],
 				));
 			}
 		}
@@ -313,6 +317,7 @@ class Classes extends Controller {
 					$this->user_model->set_user_subject($user_id, $subject_id);
 				}
 			}
+			print 
 
 			$this->session->set_flashdata('success','Saved the new assignments.');
 		} 
@@ -369,8 +374,6 @@ class Classes extends Controller {
 			    return strcmp($all_users[$a]->name, $all_users[$b]->name);
 			}
 		});
-
-		// dump($all_users);exit;
 
 		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 		$all_subjects[0] = "None";

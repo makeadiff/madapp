@@ -219,11 +219,18 @@ class Class_model extends Model {
     	// When editing the class info, make sure that the credits asigned during the last edit is removed...
     	$previous_class_data = $this->db->where(array('id'=>$user_class_id))->get('UserClass')->row_array();
     	$this->revert_user_class_credit($user_class_id, $previous_class_data);
+
+        $class_status = '1';
+        if(isset($data['class_status'])) {
+            $class_status = $data['class_status'];
+            unset($data['class_status']);
+        }
     	
     	$this->db->update('UserClass', $data, array('id'=>$user_class_id));
 
     	$status = $data['status'];
     	if($status == 'confirmed' or $status == 'attended' or $status == 'absent') $status = 'happened';
+        if($class_status == '0') $status = 'cancelled';
     	$this->db->update('Class', array('status' => $status), array('id'=>$data['class_id']));
 
     	$this->calculate_users_class_credit($user_class_id, $data);
@@ -379,12 +386,12 @@ class Class_model extends Model {
 
     
     function search_classes($data) {
-    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Class.cancel_option,Class.cancel_reason,
+    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Class.cancel_option,Class.cancel_reason,Class.status AS class_status,
                     Level.id AS level_id,Level.name,Level.grade,UserClass.user_id,UserClass.substitute_id,UserClass.zero_hour_attendance,UserClass.status
 			FROM Class
 			INNER JOIN Level ON Class.level_id=Level.id
 			INNER JOIN UserClass ON UserClass.class_id=Class.id
-			WHERE Class.batch_id=$data[batch_id] AND DATE(Class.class_on)='$data[from_date]' ORDER BY Level.name";
+			WHERE Class.batch_id=$data[batch_id] AND DATE(Class.class_on)='$data[from_date]' ORDER BY Level.grade, Level.name, Class.id";
 		$data = $this->db->query($query)->result();
 		return $data;
     }

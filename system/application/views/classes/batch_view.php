@@ -58,11 +58,11 @@ foreach($classes as $class) {
 	
 	for($teacher_index=0; $teacher_index < $teacher_count; $teacher_index++) {
 	?>
-<tr class="<?php echo ($row_count % 2) ? 'odd' : 'even'; if($class['teachers'][0]['status'] == 'cancelled') echo ' cancelled';  ?>">
+<tr class="<?php echo ($row_count % 2) ? 'odd' : 'even'; if(($class['teachers'][0]['status'] == 'cancelled') or ($class['class_status'] == 'cancelled')) echo ' cancelled';  ?>">
 <?php
 		if($teacher_index == 0) {
 ?>
-<td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/edit_class/'.$class['id'].'/batch') ?>"><?php echo $class['level_name'] ?></a></td>
+<td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/edit_class/'.$class['id'].'/batch') ?>"><?php echo $class['grade'] . ' ' . $class['level_name'] ?></a></td>
 <td <?php echo $rowspan ?>><?php echo form_dropdown('lesson_id['.$class['id'].']', $all_lessons[$class['level_id']], $class['lesson_id'], 'style="width:100px;"'); ?></td>
 <td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/mark_attendence/'.$class['id']); ?>"><?php echo $class['student_attendence'] ?></a></td>
 
@@ -85,8 +85,13 @@ if($class['teachers'][$teacher_index]['substitute_id'] and !isset($all_user_name
 <td><input type="checkbox" name="zero_hour_attendance[<?php echo $class['id'].']['.$class['teachers'][$teacher_index]['id']; ?>]" value="1" <?php if($class['teachers'][$teacher_index]['zero_hour_attendance'] != '0') echo 'checked="checked"'; ?>/></td>
 
 <?php if($teacher_index == 0) { ?><td <?php echo $rowspan ?>>
-<?php if($class['teachers'][0]['status'] == 'cancelled') { ?><a class="uncancel" href="<?php echo site_url('classes/uncancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Undo Class Cancellation<a/>
-<?php } else { ?><a href="<?php echo site_url('classes/cancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Cancel Class<a/><?php } ?>
+<?php if($class['class_status'] == 'cancelled') { ?>
+<a class="uncancel" href="<?php echo site_url('classes/uncancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Undo Class Cancellation</a>
+<input type="hidden" name="class_status[<?php echo $class['id'] ?>]" value="0" />
+<?php } else { ?>
+<a href="<?php echo site_url('classes/cancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Cancel Class</a>
+<input type="hidden" name="class_status[<?php echo $class['id'] ?>]" value="1" />
+<?php } ?>
 </td><?php } ?>
 </tr>
 <?php
@@ -102,7 +107,8 @@ if($class['teachers'][$teacher_index]['substitute_id'] and !isset($all_user_name
 <input type="submit" value="Save" class="button green" name="action" />
 </form>
 
-<?php $this->load->view('layout/footer');
+<?php
+$this->load->view('layout/footer');
 
 // Add or Subtract seven days.
 function change_week($date, $add_sub) {

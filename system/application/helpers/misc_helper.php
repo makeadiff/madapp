@@ -264,6 +264,9 @@ if(!function_exists('date_diff')) {
 
 
 function sendEmailWithAttachment($to_email, $subject, $body, $from=false, $login_details=false, $attachements=array(), $html_body='', $embedded_images=array()) {
+	require_once("Mail.php");
+	require_once('Mail/mime.php');
+
     $crlf = "\n";
     
     $finfo = finfo_open(FILEINFO_MIME_TYPE);

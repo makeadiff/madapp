@@ -248,18 +248,18 @@ class Review extends Controller {
 		if($group_type != 'all')	$wheres[] = "G.type='$group_type'";
 		if($survey_event_id) 		$wheres[] = "UA.survey_event_id='$survey_event_id'";
 
-		$raw_data = $this->db->query("SELECT UA.question_id, UA.answer FROM SS_UserAnswer UA 
+		$raw_data = $this->db->query("SELECT DISTINCT UA.user_id, UA.question_id, UA.answer FROM SS_UserAnswer UA 
 			INNER JOIN User U ON U.id=UA.user_id 
 			INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
 			INNER JOIN City C ON C.id=U.city_id 
-			WHERE ". implode(" AND ", $wheres))->result();
+			WHERE U.status='1' AND U.user_type='volunteer' AND ". implode(" AND ", $wheres))->result();
 		$answers = array();
 
 		$total_responders = $this->db->query("SELECT COUNT(DISTINCT UA.user_id) AS count FROM SS_UserAnswer UA 
 			INNER JOIN User U ON U.id=UA.user_id 
 			INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
 			INNER JOIN City C ON C.id=U.city_id 
-			WHERE ". implode(" AND ", $wheres))->row('count');
+			WHERE U.status='1' AND U.user_type='volunteer' AND ". implode(" AND ", $wheres))->row('count');
 
 		// Lifted from controllers/parameter.php:ss_calulate()
 		foreach ($raw_data as $ans) {

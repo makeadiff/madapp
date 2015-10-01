@@ -135,23 +135,26 @@ if($this->user_auth->get_permission('change_city')) { ?>
 </form>
             
 <script language="javascript">
-function validate()
-{
-	if(document.getElementById("names").value == '')
-			{
-				alert("Name Missing.");
-				return false;
-			}
-	if(document.getElementById("emails").value == '')
-			{
-				alert("Please enter an email address");
-				return false;
-			}
-	if(document.getElementById("spassword").value && (document.getElementById("spassword").value != document.getElementById("scpassword").value))
-			{
-				alert("Password Missmatch.");
-				return false;
-			}
+function validate() {
+	if(document.getElementById("names").value == '') {
+		alert("Name Missing.");
+		return false;
+	}
+
+	if(document.getElementById("emails").value == '') {
+		alert("Please enter an email address");
+		return false;
+	}
+
+	if(document.getElementById("phone").value == '') {
+		alert("Please enter a phone number");
+		return false;
+	}
+	
+	if(document.getElementById("spassword").value && (document.getElementById("spassword").value != document.getElementById("scpassword").value)) {
+		alert("Password Missmatch.");
+		return false;
+	}
 
 }
 </script>

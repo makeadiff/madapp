@@ -199,11 +199,12 @@ Thanks.
 MADApp
 END;
 
-			$this->ci->email->from('madapp@makeadiff.in', "MADApp");
-			$this->ci->email->to($user->email);
-			$this->ci->email->subject('MADApp Password Reminder');
-			$this->ci->email->message($password_message);
-			$this->ci->email->send();
+			// $this->ci->email->from('madapp@makeadiff.in', "MADApp");
+			// $this->ci->email->to($user->email);
+			// $this->ci->email->subject('MADApp Password Reminder');
+			// $this->ci->email->message($password_message);
+			// $this->ci->email->send();
+			sendEmailWithAttachment($user->email, 'MADApp Password Reminder', $password_message, "MADApp <madapp@makeadiff.in>");
 
 			return true;
 		}

@@ -230,27 +230,36 @@ class Review extends Controller {
 	}
 
 
-	
+	/// Aggregates the responses to the happiness index - with filters and options.
 	function aggregate() {
+		$survey_event_id = $this->db->query("SELECT MAX(id) as survey_event_id FROM SS_Survey_Event")->row('survey_event_id'); // Default Survey event.
+		$survey_event_id = i($_REQUEST, 'survey_event_id', $survey_event_id);
 		$region_id 	= i($_REQUEST, 'region_id', 0);
 		$city_id	= i($_REQUEST, 'city_id', 0);
 		$vertical_id= i($_REQUEST, 'vertical_id', 0);
 		$group_type = i($_REQUEST, 'group_type', 'all');
 		$data 		= array();
+		$total_responders = 0;
 
 		$wheres = array('1=1');
-		if($region_id) $wheres[] = "C.region_id=$region_id";
-		if($vertical_id) $wheres[] = "G.vertical_id=$vertical_id";
-		if($city_id) $wheres[] = "U.city_id=$city_id";
-		if($group_type != 'all') $wheres[] = "G.type='$group_type'";
+		if($region_id) 				$wheres[] = "C.region_id=$region_id";
+		if($vertical_id) 			$wheres[] = "G.vertical_id=$vertical_id";
+		if($city_id) 				$wheres[] = "U.city_id=$city_id";
+		if($group_type != 'all')	$wheres[] = "G.type='$group_type'";
+		if($survey_event_id) 		$wheres[] = "UA.survey_event_id='$survey_event_id'";
 
 		$raw_data = $this->db->query("SELECT UA.question_id, UA.answer FROM SS_UserAnswer UA 
 			INNER JOIN User U ON U.id=UA.user_id 
 			INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
 			INNER JOIN City C ON C.id=U.city_id 
 			WHERE ". implode(" AND ", $wheres))->result();
-
 		$answers = array();
+
+		$total_responders = $this->db->query("SELECT COUNT(DISTINCT UA.user_id) AS count FROM SS_UserAnswer UA 
+			INNER JOIN User U ON U.id=UA.user_id 
+			INNER JOIN UserGroup UG ON UG.user_id=U.id INNER JOIN `Group` G ON G.id=UG.group_id
+			INNER JOIN City C ON C.id=U.city_id 
+			WHERE ". implode(" AND ", $wheres))->row('count');
 
 		// Lifted from controllers/parameter.php:ss_calulate()
 		foreach ($raw_data as $ans) {
@@ -286,19 +295,20 @@ class Review extends Controller {
 			$data[$question_id]['total_answer_count'] = $total_answer_count;
 		}
 
-
+		// Get the options for the select forms.
 		$all_cities = $this->city_model->get_all(); $all_cities[0] = 'Any';
 		$all_verticals = $this->city_model->get_all_verticals(); $all_verticals[0] = 'Any';
 		$all_regions = $this->city_model->get_all_regions(); $all_regions[0] = 'Any';
 		$all_types = array('all' => 'All', 'executive' => 'Executive', 'national' => 'National', 'strat' => 'Strat', 'fellow' => 'Fellow','volunteer' => 'Volunteer');
 		$all_questions = $this->review_model->get_all_ss_questions();
-
+		$all_survey_events = $this->review_model->get_all_survey_events(); $all_survey_events[0] = 'Any';
 
 		$this->load->view('review/aggregate', array(
 			'data' => $data, 
-			'all_questions' => $all_questions, 'all_verticals'=>$all_verticals, 'all_types'=>$all_types, 'all_regions'=> $all_regions, 'all_cities' => $all_cities,
-			'region_id' => $region_id, 'vertical_id' => $vertical_id, 'group_type' => $group_type, 'city_id' => $city_id,
-			'total_answer_count' => $total_answer_count,
+			'all_questions' => $all_questions, 'all_verticals'=>$all_verticals, 'all_types'=>$all_types, 
+			'all_regions'=> $all_regions, 'all_cities' => $all_cities, 'all_survey_events' => $all_survey_events,
+			'region_id' => $region_id, 'vertical_id' => $vertical_id, 'group_type' => $group_type, 'city_id' => $city_id, 'survey_event_id' => $survey_event_id,
+			'total_responders' => $total_responders,
  			));
 	}
 }

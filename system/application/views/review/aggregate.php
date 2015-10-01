@@ -4,6 +4,11 @@ $this->load->view('layout/header', array('title' => "Aggregator!"));
 <div id="head" class="clear"><h1>Aggregator!</h1></div>
 
 <form action="" method="post" class="form-area">
+<label for="survey_event_id">Survey Event</label>
+<select name="survey_event_id">
+<?php foreach ($all_survey_events as $id => $name) { ?><option value="<?php echo $id ?>" <?php if($id == $survey_event_id) echo 'selected'; ?>><?php echo $name ?></option><?php } ?>
+</select><br />
+
 <label for="region_id">Region</label>
 <select name="region_id">
 <?php foreach ($all_regions as $id => $name) { ?><option value="<?php echo $id ?>" <?php if($id == $region_id) echo 'selected'; ?>><?php echo $name ?></option><?php } ?>
@@ -36,6 +41,7 @@ $level_sum = 0;
 <tr><th>Question</th><th>Answer 1</th><th>Answer 3</th><th>Answer 5</th><th>Level</th></tr>
 
 <?php foreach ($all_questions as $question_id => $question) { 
+	if(!isset($data[$question_id])) continue;
 	$question_info = $data[$question_id];
 	$level_sum += $question_info['aggregate_level'];
 	?>
@@ -49,11 +55,11 @@ $level_sum = 0;
 }
 
 if($level_sum) {
-$avg = round($level_sum / count($all_questions));
+$avg = round($level_sum / count($all_questions), 2);
 ?>
 <tr class="<?php echo $flags[$avg]; ?>"><td>Average Level </td><td colspan="4"><?php echo $avg ?></td></tr>
 <?php } ?>
-<tr><td>Total Responders</td><td colspan="4"><?php echo $total_answer_count ?></td></tr>
+<tr><td>Total Responders</td><td colspan="4"><?php echo $total_responders ?></td></tr>
 </table>
 <?php 
 }

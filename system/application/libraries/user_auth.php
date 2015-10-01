@@ -204,7 +204,7 @@ END;
 			$this->ci->email->subject('MADApp Password Reminder');
 			$this->ci->email->message($password_message);
 			$this->ci->email->send();
-			
+
 			return true;
 		}
 		return false;

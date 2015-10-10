@@ -107,6 +107,7 @@ class Api extends Controller {
 		foreach($class_details['teachers'] as $index => $teacher) {
 			$user = $this->user_model->get_user($teacher['user_id']);
 			$class_details['teachers'][$index]['name'] = $user->name;
+			$class_details['teachers'][$index]['credit'] = $user->credit;
 			if($user_id == $teacher['user_id']) {
 				$class_details['teachers'][$index]['current_user'] = true;
 			}

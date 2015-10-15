@@ -22,23 +22,27 @@ $level_count = 0;
 foreach($levels_in_center as $level) { 
 	$level_count++;
 ?>
-<td width="200"><h3><?php echo $level->grade . ' ' . $level->name ?></h3>
+<td width="200"><h3><?php echo $level->name; ?></h3>
 
 <select name="teachers_in_level[<?php echo $level->id ?>][]" id="teachers_in_level_<?php echo $level->id ?>" multiple="multiple">
-<?php foreach($level_teacher[$level->id] as $teacher_id=>$value) { // Show the selected volunteers first.
-	if(isset($all_teachers[$teacher_id])) {
+<?php if(isset($level_teacher[$level->id])) {
+	foreach($level_teacher[$level->id] as $teacher_id=>$value) { // Show the selected volunteers first.
+		if(isset($all_teachers[$teacher_id])) {
 ?>
-<option value="<?php echo $teacher_id ?>" selected="selected"><?php echo $all_teachers[$teacher_id] ?></option>
+<option value="<?php echo $teacher_id ?>" selected="selected"><?php echo $all_teachers[$teacher_id]->name ?></option>
 <?php
+		}
 	}
 }
 
 // Now show the rest of the volunteers...
-foreach($all_teachers as $id=>$name) {
+foreach($all_teachers as $teacher) {
+	$id = $teacher->id;
+	$name = $teacher->name;
 	//Don't show the row if its selected - we have already shown it...
 	if(isset($level_teacher[$level->id][$id])) continue;
 ?>
-<option value="<?php echo $id ?>"><?php echo $name ?></option>
+<option value="<?php echo $id ?>"><?php echo "$name({$teacher->phone})" ?></option>
 <?php } ?>
 </select><br />
 <input name="filter[]" class="filter-multiselect" target-field="teachers_in_level_<?php echo $level->id ?>" value="" placeholder="Filter..." />

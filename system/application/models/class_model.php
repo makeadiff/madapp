@@ -45,7 +45,7 @@ class Class_model extends Model {
     
     /// Deletes the future classes of the given user - happens when a user is taken off a batch.
     function delete_future_classes($user_id, $batch_id, $level_id) {
-        delete_user_classes($user_id, $batch_id, $level_id, true);
+        $this->delete_user_classes($user_id, $batch_id, $level_id, true);
     }
 
     /// Deletes the classes of the given user in the batch/level - that has not been marked. If marked, ignore.

@@ -45,7 +45,8 @@ class Batch extends Controller {
 			
 			$item_name = $level->name .  ' at ' . $this->center_model->get_center_name($center_id);
 		}
-		$all_users = idNameFormat($this->users_model->getuser_details()->result());
+		$user_data = $this->users_model->search_users(array());
+		$all_users = idNameFormat($user_data);
 		
 		$this->load->view('batch/index', array('all_batches' => $all_batches,'center_name'=>$item_name, 'center_id'=>$center_id, 'all_users'=>$all_users));
 	}
@@ -65,10 +66,11 @@ class Batch extends Controller {
 		$batch_name =  $day_list[$batch->day] . ' ' . date('h:i A', strtotime('2000-01-01 ' . $batch->class_time));
 		
 		// Get the rest of the necessary stuff...
-		$levels_in_center = $this->level_model->get_all_levels_in_center($batch->center_id);
-		$all_teachers = idNameFormat($this->user_model->get_users_in_city($this->session->userdata('city_id')));
+		// $levels_in_center = $this->level_model->get_all_levels_in_center($batch->center_id);
+		$levels_in_center= $this->level_model->get_all_level_names_in_center_and_batch($batch->center_id, $batch_id);
+		$all_teachers = idNameFormat($this->user_model->get_users_in_city($this->session->userdata('city_id')), array('id'));
 		$volunteer_requirement = idNameFormat($this->model->get_volunteer_requirement_in_batch($batch->id));
-		
+
 		// This array will be used later to decide who belongs to which level.
 		$level_teacher = array();
 		foreach($levels_in_center as $level) {
@@ -77,7 +79,7 @@ class Batch extends Controller {
 				$level_teacher[$level->id][$user] = true;
 			}
 		}
-		
+
 		$this->load->view('batch/add_volunteers', array('batch' => $batch,'batch_name'=>$batch_name, 'center_id'=>$batch->center_id, 'volunteer_requirement'=>$volunteer_requirement,
 				'levels_in_center'=>$levels_in_center,'all_teachers'=>$all_teachers, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
 	}
@@ -93,7 +95,7 @@ class Batch extends Controller {
 		$batch_id = $this->input->post('batch_id');
 		$teacher_levels = $this->input->post('teachers_in_level');
 		$volunteer_requirement = $this->input->post('volunteer_requirement');
-		
+
 		$old_volunteers = array();
 		
 		foreach($volunteer_requirement as $level_id => $requirement) {
@@ -112,10 +114,10 @@ class Batch extends Controller {
 			foreach($delete_future_class_of as $user_id) $this->class_model->delete_future_classes($user_id, $batch_id, $level_id);
 			
 			foreach($teacher_ids as $user_id) {
-				$this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
+				$result = $this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
 			}
 		}
-		
+	
 		// :TODO: Call the class scheduler manually.
 		
 		$this->session->set_flashdata('success','Saved the new teachers');

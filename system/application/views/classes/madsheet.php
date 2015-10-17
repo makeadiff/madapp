@@ -28,7 +28,7 @@ foreach($data as $center_id => $center_info) {
 ?>
 <table class="madsheet data-table info-box-table">
 <tr>
-<th colspan="3"><?php echo $batch_info['name']; ?></th>
+<th colspan="3"><a href="<?php echo site_url('classes/batch_view/' . $batch_id) ?>"><?php echo $batch_info['name']; ?></a></th>
 <?php
 foreach($batch_info['days_with_classes'] as $day) print "<th>$day</th>";
 ?>
@@ -43,7 +43,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 	$level_user_count = 0;
 	foreach($level_info['users'] as $teacher) {
 		if(!$level_user_count) {
-			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap'><?php echo $level_info['grade'] . $level_info['name'] ?></td><?php 
+			?><td rowspan="<?php echo count($level_info['users']); ?>" nowrap='nowrap' title="<?php echo "Level ID : " . $level_id ?>"><?php echo $level_info['grade'] . $level_info['name'] ?></td><?php 
 		}
 		?><td nowrap='nowrap'><a href="<?php echo site_url('/user/view/'.$teacher['id']); ?>"<?php
 			if($teacher['user_type'] == 'let_go') echo ' class="let_go"';
@@ -68,7 +68,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 				else print "&nbsp;";
 				print "</td>";
 				$class_count++;
-				if($class_count > 100) exit; // In case something goes terribly, terribly bad.
+				if($class_count > 100) exit; // In case something goes terribly, terribly wrong.
 			}
 			
 			

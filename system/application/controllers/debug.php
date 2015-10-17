@@ -257,27 +257,28 @@ class Debug extends Controller {
 				foreach ($all_levels_in_batch as $lb) {
 					if($lc->id == $lb->id) continue 2;
 				}
-				$teachers = $this->batch_model->get_teachers_in_batch_and_level($b->id, $lc->id);
-				$classes = $this->class_model->get_classes_by_level_and_batch($lc->id, $b->id);
+				// $teachers = $this->batch_model->get_teachers_in_batch_and_level($b->id, $lc->id);
+				// $classes = $this->class_model->get_classes_by_level_and_batch($lc->id, $b->id);
 
-				foreach ($classes as $c) {
-					$this->class_model->db->query("DELETE FROM UserClass WHERE class_id={$c->id}");
-					$this->class_model->db->query("DELETE FROM StudentClass WHERE class_id={$c->id}");
-				}
-				dump($classes);
+				// foreach ($classes as $c) {
+				// 	$this->class_model->db->query("DELETE FROM UserClass WHERE class_id={$c->id}");
+				// 	$this->class_model->db->query("DELETE FROM StudentClass WHERE class_id={$c->id}");
+				// }
+				// dump($classes);
+				$this->class_model->db->query("DELETE FROM UserBatch WHERE batch_id={$b->id} AND level_id={$lc->id}");
 
-				print "Extra in {$b->day} {$b->class_time} : {$lc->name} - " . count($teachers) . " <br />";
+
+				print "Extra in {$b->day} {$b->class_time} : " . $this->class_model->db->affected_rows() . " <br />";
 			}
 			
 		}
 	}
 
 
-	function move_classes_from_one_level_to_another($old_level, $new_level) {
-
+	function move_classes_from_one_level_to_another($old_batch, $old_level, $new_batch) {
+		$this->batch_model->db->query("UPDATE Class SET batch_id=$new_batch WHERE batch_id=$old_batch AND level_id=$old_level");
+		print "Updated " . $this->batch_model->db->affected_rows() . " class.";
 	}
 	
 }
-
-
 

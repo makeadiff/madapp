@@ -25,11 +25,16 @@ class Debug extends Controller {
 		$this->load->model('users_model');
 		$this->load->model('city_model');
 		$this->load->model('batch_model');
+		$this->load->model('level_model');
 		$this->load->model('class_model');
 	}
 
+
+	/// An easy way to delete a lot of students in the given centers. USE WITH CARE!
 	function delete_students_in_center() {
-		$centers = array(30,31,32,33,34);
+		$centers = array(); // Put the center IDs here - all the kids in thes will be deleted.
+
+		if(!$centers) return;
 		
 		$student_ids = $this->users_model->db->query("SELECT id FROM `Student` WHERE center_id IN(".implode(',',$centers).")")->result();
 		print "Total Students: " . count($student_ids) . '<br />';
@@ -164,11 +169,11 @@ class Debug extends Controller {
 			}
 			$dt_from_date->add(new DateInterval('P7D')); // Jump to next week
 			$day_count++;
-			if($day_count > 50) exit;
+			if($day_count > 50) return; // Too long an interval. Don't bother creatinging classes.
 		}
 	}
 
-	// Add Back classes for the entire nation.
+	// Add Back classes for the entire city.
 	function add_back_classes($city_id=0) {
 		$all_centers = $this->center_model->get_all($city_id);
 
@@ -237,6 +242,39 @@ class Debug extends Controller {
 	function delete_usergroup_after_moving_members_to_other_group($usergroup_id_to_delete, $other_usergroup_id) {
 		$this->users_model->db->query("DELETE FROM `Group` WHERE id=$usergroup_id_to_delete");
 		$this->users_model->db->query("UPDATE `UserGroup` SET group_id=$other_usergroup_id WHERE group_id=$usergroup_id_to_delete");
+	}
+
+	/// New method for entering data involves using a BatchLevel connection - and the old method doesnt. Use this function to delete people who are assigned classes - but in batches which should not be in the right level.
+	/// CODE IS NOT COMPLETE YET.
+	function delete_class_without_batch_level_connection($center_id) {
+		$all_batchs = $this->batch_model->get_batches_in_center($center_id);
+		$all_levels_in_center = $this->level_model->get_all_level_names_in_center($center_id);
+
+		foreach ($all_batchs as $b) {
+			$all_levels_in_batch = $this->level_model->get_all_level_names_in_center_and_batch($center_id, $b->id);
+
+			foreach ($all_levels_in_center as $lc) {
+				foreach ($all_levels_in_batch as $lb) {
+					if($lc->id == $lb->id) continue 2;
+				}
+				$teachers = $this->batch_model->get_teachers_in_batch_and_level($b->id, $lc->id);
+				$classes = $this->class_model->get_classes_by_level_and_batch($lc->id, $b->id);
+
+				foreach ($classes as $c) {
+					$this->class_model->db->query("DELETE FROM UserClass WHERE class_id={$c->id}");
+					$this->class_model->db->query("DELETE FROM StudentClass WHERE class_id={$c->id}");
+				}
+				dump($classes);
+
+				print "Extra in {$b->day} {$b->class_time} : {$lc->name} - " . count($teachers) . " <br />";
+			}
+			
+		}
+	}
+
+
+	function move_classes_from_one_level_to_another($old_level, $new_level) {
+
 	}
 	
 }

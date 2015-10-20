@@ -22,7 +22,7 @@
 
             <?php if($this->user_auth->get_permission('admincredit_index')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/intern_credits.php">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/credit_history.png" alt="" /> <br>Intern Credits</a></div>
+                        <img src="<?php echo base_url(); ?>images/flat_ui/credit_history.png" alt="" /> <br>Volunteer Credits</a></div>
             <?php } ?><br />
 
             <?php if($this->user_auth->get_permission('event_index')) { ?>

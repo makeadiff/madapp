@@ -186,6 +186,11 @@ class Center_model extends Model
 		if(!$city_id) $city_id = $this->city_id;
 		return $this->db->where('city_id',$city_id)->where('status','1')->orderby('name')->get('Center')->result();
 	}
+
+	// Get info on the current center id
+	function get_info($center_id) {
+		return $this->db->where('id',$center_id)->where('status','1')->orderby('name')->get('Center')->result();
+	}
 	
 	// Get all the centers. No matter what city
 	function get_all_centers() {

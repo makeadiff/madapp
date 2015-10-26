@@ -20,7 +20,7 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <p>Chapter : <strong><?php echo $all_cities[$user->city_id] ?></strong></p>
 <p>User Type : <strong><?php echo ucfirst(str_replace('_',' ',$user->user_type)); ?></strong></p>
 <p>Roles: <strong><?php echo implode(',', $user->groups_name); ?></strong></p>
-<?php if(in_array('Teacher', $user->groups_name)) { ?>
+<?php if(in_array('ES Volunteer', $user->groups_name)) { ?>
 
 <?php if($user->batch) { ?>
 <p>Center: <strong><?php echo $user->batch->name; ?></strong></p>

@@ -59,7 +59,6 @@ class Debug extends Controller {
 		$affected_rows += $this->db->affected_rows();
 		
 		print "Affected: $affected_rows";
-		
 	}
 	
 	function delete_classes_of_deactivated_centers() {
@@ -153,7 +152,7 @@ class Debug extends Controller {
 			$teachers = $this->batch_model->get_batch_teachers($batch->id);
 			foreach($teachers as $teacher) {
 				// Make sure its not already inserted.
-				if(!$this->class_model->get_by_teacher_time($teacher->id, $class_date, $batch->id)) {
+				if(!$this->class_model->get_by_teacher_date($teacher->id, $class_date, $batch->id)) {
 					$user_class_id[] = $this->class_model->save_class(array(
 						'batch_id'	=> $batch->id,
 						'level_id'	=> $teacher->level_id,
@@ -174,8 +173,11 @@ class Debug extends Controller {
 	}
 
 	// Add Back classes for the entire city.
-	function add_back_classes($city_id=0) {
-		$all_centers = $this->center_model->get_all($city_id);
+	function add_back_classes($city_id=0, $center_id = 0) {
+		if(!$center_id)
+			$all_centers = $this->center_model->get_all($city_id);
+		else
+			$all_centers = $this->center_model->get_info($center_id);
 
 		foreach($all_centers as $center) {
 			$batches = $this->batch_model->get_batches_in_center($center->id);
@@ -244,41 +246,46 @@ class Debug extends Controller {
 		$this->users_model->db->query("UPDATE `UserGroup` SET group_id=$other_usergroup_id WHERE group_id=$usergroup_id_to_delete");
 	}
 
-	/// New method for entering data involves using a BatchLevel connection - and the old method doesnt. Use this function to delete people who are assigned classes - but in batches which should not be in the right level.
-	/// CODE IS NOT COMPLETE YET.
-	function delete_class_without_batch_level_connection($center_id) {
-		$all_batchs = $this->batch_model->get_batches_in_center($center_id);
-		$all_levels_in_center = $this->level_model->get_all_level_names_in_center($center_id);
-
-		foreach ($all_batchs as $b) {
-			$all_levels_in_batch = $this->level_model->get_all_level_names_in_center_and_batch($center_id, $b->id);
-
-			foreach ($all_levels_in_center as $lc) {
-				foreach ($all_levels_in_batch as $lb) {
-					if($lc->id == $lb->id) continue 2;
-				}
-				// $teachers = $this->batch_model->get_teachers_in_batch_and_level($b->id, $lc->id);
-				// $classes = $this->class_model->get_classes_by_level_and_batch($lc->id, $b->id);
-
-				// foreach ($classes as $c) {
-				// 	$this->class_model->db->query("DELETE FROM UserClass WHERE class_id={$c->id}");
-				// 	$this->class_model->db->query("DELETE FROM StudentClass WHERE class_id={$c->id}");
-				// }
-				// dump($classes);
-				$this->class_model->db->query("DELETE FROM UserBatch WHERE batch_id={$b->id} AND level_id={$lc->id}");
-
-
-				print "Extra in {$b->day} {$b->class_time} : " . $this->class_model->db->affected_rows() . " <br />";
-			}
-			
-		}
-	}
-
-
 	function move_classes_from_one_level_to_another($old_batch, $old_level, $new_batch) {
 		$this->batch_model->db->query("UPDATE Class SET batch_id=$new_batch WHERE batch_id=$old_batch AND level_id=$old_level");
 		print "Updated " . $this->batch_model->db->affected_rows() . " class.";
 	}
 	
+	/// This will delete the duplacated classes in the given batch. Usually this happens because the time of the class has been changed.
+	function delete_duplicate_classes($batch_id) {
+		$all_classes = $this->batch_model->db->query("SELECT * FROM Class WHERE batch_id=$batch_id")->result();
+
+		$existing_level_dates = array();
+		foreach ($all_classes as $cl) {
+			$key = $cl->level_id . ':' . date('Y-m-d', strtotime($cl->class_on)); // Create a key with the level id and the date of the class. If the keys of multiple classes match, that means its duplate class.
+
+			// Its a match! Duplate class.
+			if(isset($existing_level_dates[$key])) {
+				print "Duplicated at " . $cl->id . "<br />\n";
+
+				// First, check to make sure this one has no data
+				// $student_attendance_data = $this->class_model->get_attendence($cl->id); // Don't check for student attendance. No chance people are going to mark teacher attendance for one and student attendance for other.
+				$vol_attendance_data = $this->class_model->get_class($cl->id);
+
+				if(		!($vol_attendance_data['teachers']) 
+					or 	($cl->status == 'projected') 
+					or 	($vol_attendance_data['teachers'][0]['status'] == 'projected')) {
+						// No volunteer attendance data - delete with impunity.
+						$this->class_model->delete($cl->id); // Delete class
+						print "Deleting: $cl->id<br \>";
+				
+				} else { // If we have data in the current class, just delete the other class. Blindly.
+					$this->class_model->delete($existing_level_dates[$key]);
+					print "Deleted: $cl->id<br \>";
+				}
+
+			// Class is unique(so far). So save it to the hash table
+			} else {
+				$existing_level_dates[$key] = $cl->id;
+			}
+		}
+
+		dump($existing_level_dates);
+	}
 }
 

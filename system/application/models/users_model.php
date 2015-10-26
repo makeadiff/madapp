@@ -22,7 +22,6 @@ class Users_model extends Model {
         if(!$this->year) $this->year = get_year();
 
         $this->load->model('Class_model','class_model');
-
     }
     
     /**

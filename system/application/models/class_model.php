@@ -162,6 +162,7 @@ class Class_model extends Model {
     	return 0;
     }
     
+    // Returns the class the given teacher has on the said time
     function get_by_teacher_time($teacher_id, $time, $batch_id='', $level_id='') {
 		$batch_check = '';
         $level_check = '';
@@ -172,6 +173,20 @@ class Class_model extends Model {
     		WHERE UserClass.user_id=$teacher_id AND Class.class_on='$time' $batch_check $level_check")->result();
 
     	return $result;
+    }
+
+    // Returns the class the given teacher has on the given date. Time was creating issues - take off the code above.
+    function get_by_teacher_date($teacher_id, $time, $batch_id='', $level_id='') {
+        $batch_check = '';
+        $level_check = '';
+        if($batch_id) $batch_check = " AND Class.batch_id=$batch_id";
+        if($level_id) $level_check = " AND Class.level_id=$level_id";
+        $result = $this->db->query("SELECT Class.id FROM Class 
+            INNER JOIN UserClass on UserClass.class_id=Class.id 
+            WHERE UserClass.user_id=$teacher_id AND DATE_FORMAT(Class.class_on, '%Y-%m-%d')=DATE_FORMAT('$time', '%Y-%m-%d') 
+            $batch_check $level_check")->result();
+
+        return $result;
     }
     
     /// The the absent/present status of the kids of any perticular class.

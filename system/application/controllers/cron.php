@@ -30,7 +30,7 @@ class Cron extends Controller  {
 		// Wee have to add all the classes for the next two weeks.
 		for($week = 0; $week < 2; $week++) {
 			foreach($all_batches as $batch) {
-				//if($batch->id != 368) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+				// if($batch->id != 1333 or $batch->id != 1349 or $batch->id != 1350) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
 				
 				list($hour, $min, $secs) = explode(":", $batch->class_time);

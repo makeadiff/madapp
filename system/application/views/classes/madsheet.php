@@ -4,6 +4,14 @@ $this->load->view('layout/header', array('title'=>'MAD Sheet'));
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>css/sections/classes/madsheet.css">
 <script type="text/javascript" src="<?php echo base_url() ?>js/sections/classes/madsheet.js"></script>
 
+<h3>Index</h3>
+<ul>
+<?php foreach($data as $center_id => $center_info) {
+	if(empty($center_info)) continue;
+	print "<li><a href='#center-$center_id'>$center_info[center_name]</a></li>\n";
+} ?>
+</ul>
+
 <h3>Legend</h3>
 <table class="legend">
 <tr>
@@ -21,7 +29,7 @@ foreach($data as $center_id => $center_info) {
 
 	$all_batches = $center_info['batches'];
 ?>
-<h3><?php echo $center_info['center_name'] ?></h3>
+<h3 id="center-<?php echo $center_id ?>"><?php echo $center_info['center_name'] ?></h3>
 
 <?php foreach($all_batches as $batch_id => $batch_info) {
 	if(empty($batch_info['days_with_classes'])) continue;

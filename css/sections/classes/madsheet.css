@@ -6,6 +6,10 @@
 	padding:10px;
 }
 
+.legend td {
+	padding:5px;
+}
+
 .class-projected,.class-confirmed,.class-absent,.class-attended,.class-cancelled {
 	text-align:center;
 	font-weight:bold;

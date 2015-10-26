@@ -168,7 +168,7 @@ class Debug extends Controller {
 			}
 			$dt_from_date->add(new DateInterval('P7D')); // Jump to next week
 			$day_count++;
-			if($day_count > 50) return; // Too long an interval. Don't bother creatinging classes.
+			if($day_count > 50) return; // Too long an interval. Don't bother creating classes.
 		}
 	}
 

@@ -152,7 +152,7 @@ class Debug extends Controller {
 			$teachers = $this->batch_model->get_batch_teachers($batch->id);
 			foreach($teachers as $teacher) {
 				// Make sure its not already inserted.
-				if(!$this->class_model->get_by_teacher_date($teacher->id, $class_date, $batch->id)) {
+				if(!$this->class_model->get_by_teacher_date($teacher->id, $class_date, $batch->id, $teacher->level_id)) {
 					$user_class_id[] = $this->class_model->save_class(array(
 						'batch_id'	=> $batch->id,
 						'level_id'	=> $teacher->level_id,

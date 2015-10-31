@@ -94,7 +94,7 @@ class Review_parameter_model extends Model {
 	}
 
 	function get_all_survey_events() {
-		$all_survey_events = $this->db->query("SELECT id, CONCAT(id, ') ', DATE_FORMAT(added_on, '%Y %M')) AS name FROM SS_Survey_Event")->result();
+		$all_survey_events = $this->db->query("SELECT id, CONCAT(id, ') ', DATE_FORMAT(added_on, '%Y %M')) AS name FROM SS_Survey_Event ORDER BY added_on DESC")->result();
 		return idNameFormat($all_survey_events);
 	}
 

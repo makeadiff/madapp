@@ -374,14 +374,31 @@ class Class_model extends Model {
     	return $this->db->query($query)->row();
     }
 
+    /// Return the class with the given id - in the same format as get_last_class(). Needed for API.
+    function get_class_by_id($class_id) {
+        $query = "SELECT Class.id, Center.name, Class.class_on, Class.level_id, Class.batch_id, Center.id AS center_id, UserClass.status FROM UserClass 
+                        INNER JOIN Class ON Class.id=UserClass.class_id 
+                        INNER JOIN Level ON Class.level_id=Level.id
+                        INNER JOIN Center ON Level.center_id=Center.id
+                        WHERE Class.id=$class_id
+                        ORDER BY Class.class_on DESC LIMIT 0,1";
+                    
+        return $this->db->query($query)->row();
+    }
+
     /// Return the class info using a class_id instead of a user id
-    function get_class_on($user_id, $class_on) {
+    function get_class_on($user_id, $class_on, $level_id = 0, $batch_id = 0) {
+        $level_check = '';
+        $batch_check = '';
+
+        if($level_id) $level_check = " AND Level.id=$level_id";
+        if($batch_id) $batch_check = " AND Class.batch_id=$batch_id";
+
         $query = "SELECT Class.id, Center.name, Class.class_on, Class.level_id, Class.batch_id, Level.center_id, UserClass.status FROM UserClass 
                         INNER JOIN Class ON Class.id=UserClass.class_id 
                         INNER JOIN Level ON Class.level_id=Level.id
                         INNER JOIN Center ON Level.center_id=Center.id
-                        WHERE UserClass.user_id=$user_id 
-                            AND DATE(Class.class_on) = '$class_on'
+                        WHERE UserClass.user_id=$user_id AND DATE(Class.class_on) = '$class_on' $level_check $batch_check
                         ORDER BY Class.class_on DESC LIMIT 0,1";
 
         return $this->db->query($query)->row();

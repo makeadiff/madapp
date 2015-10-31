@@ -1,13 +1,32 @@
 <?php $this->load->view('layout/header',array('title'=>'Class on ' . date('dS M, Y', strtotime($class_info['class_on'])))); ?>
 <div id="head" class="clear"><h1>Class on <?php echo date('dS M, Y', strtotime($class_info['class_on'])); ?></h1></div>
 
-<form action="<?php echo site_url('classes/mark_attendence_save') ?>" method="post">
+<form action="<?php echo site_url('classes/mark_attendence_save') ?>" method="post" class="form-area">
 
-<?php foreach($students as $student_id => $student_name) { ?>
-<input type="checkbox" name="attendence[<?php echo $student_id ?>]" id="attendence-<?php echo $student_id ?>" value="1" <?php 
-	if(!isset($attendence[$student_id]) or $attendence[$student_id] != '0') print "checked='checked'";
-?>/> 
-<label for="attendence-<?php echo $student_id; ?>"> &nbsp; <?php echo $student_name; ?></label><br />
+<?php
+$participation_options = array(
+		'0'	=> 'Absent',
+		"1"	=> "Disruptive",
+		"2"	=> "Distracted",
+		"3"	=> "Attentive",
+		"4"	=> "Involved",
+		"5"	=> "Participative",
+	);
+foreach($students as $student_id => $student_name) { ?>
+<label for="attendence-<?php echo $student_id; ?>"> &nbsp; <?php echo $student_name; ?></label>
+<select name="attendence[<?php echo $student_id ?>]">
+<?php foreach ($participation_options as $key => $value) {
+	echo "<option value='$key'";
+	if(isset($attendence[$student_id])) {
+		if($attendence[$student_id] == $key) print " selected";
+	} else {
+		if($key == 3) print " selected";
+	}
+	echo ">$value</option>\n";
+}
+?>
+</select><br />
+
 <?php } ?>
 <br />
 

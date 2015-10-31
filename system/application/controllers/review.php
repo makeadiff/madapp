@@ -232,7 +232,7 @@ class Review extends Controller {
 
 	/// Aggregates the responses to the happiness index - with filters and options.
 	function aggregate() {
-		$survey_event_id = $this->db->query("SELECT MAX(id) as survey_event_id FROM SS_Survey_Event")->row('survey_event_id'); // Default Survey event.
+		$survey_event_id = $this->db->query("SELECT id as survey_event_id FROM SS_Survey_Event ORDER BY added_on DESC LIMIT 0,1")->row('survey_event_id'); // Default Survey event.
 		$survey_event_id = i($_REQUEST, 'survey_event_id', $survey_event_id);
 		$region_id 	= i($_REQUEST, 'region_id', 0);
 		$city_id	= i($_REQUEST, 'city_id', 0);

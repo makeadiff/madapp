@@ -50,12 +50,15 @@ class Api extends Controller {
 		$mentor = "0";
 		if(in_array('Mentors', array_values($status['groups']))) $mentor = "1";
 
+		$connections = $this->user_model->get_class_connections($status['id']);
+
 		$this->send(array(
 			'user_id'	=> $status['id'],
 			'key'		=> $this->key,
 			'name'		=> $status['name'],
 			'city_id'	=> $status['city_id'],
 			'mentor'	=> $mentor,
+			'connections'=>$connections,
 			'groups'	=> array_values($status['groups']),
 		));
 	}
@@ -85,8 +88,10 @@ class Api extends Controller {
 
 		$user_id = $this->get_input('user_id');
 		$class_on= $this->get_input('class_on');
+		$level_id= $this->get_input('level_id');
+		$batch_id= $this->get_input('batch_id');
 
-		$class_info = $this->class_model->get_class_on($user_id, $class_on);
+		$class_info = $this->class_model->get_class_on($user_id, $class_on, $level_id, $batch_id);
 
 		if(!$class_info) return $this->error("Can't find any classes matching that criteria.");
 		$this->open_class($class_info->id, $class_info, $user_id);
@@ -95,8 +100,14 @@ class Api extends Controller {
 	/**
 	 * Returns the details of the class with the given ID.
 	 */
-	function open_class($class_id, $class_info = false, $user_id=0) {
+	function open_class($class_id = 0, $class_info = false, $user_id=0) {
+		$this->check_key();
+		if(!$class_id) $class_id = $this->get_input('class_id');
+		if(!$user_id) $user_id = $this->get_input('user_id');
+
+
 		$class_details = $this->class_model->get_class($class_id);
+		if(!$class_info) $class_info = $this->class_model->get_class_by_id($class_id);
 
 		$class_details['center_name'] = $class_info->name;
 		$class_details['class_time'] = date('d M, Y, h:i A', strtotime($class_details['class_on']));

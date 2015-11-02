@@ -15,6 +15,7 @@ class Center extends Controller  {
 		$this->load->model('center_model');
 		$this->load->model('kids_model');
 		$this->load->model('level_model');
+		$this->load->model('batch_model');
 		$this->load->model('users_model');
     }
 
@@ -140,5 +141,33 @@ class Center extends Controller  {
 		$this->session->set_userdata("active_center", $center_id);
 		
 		$this->load->view('center/manage', $issues);
+	}
+
+	function info($center_id) {
+		$data = array();
+		$all_levels = $this->level_model->get_all_level_names_in_center($center_id);
+		$center = $this->center_model->get_info($center_id);
+		$all_users = idNameFormat($this->users_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9)));
+		$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
+
+		foreach ($all_levels as $level) {
+			$level_id = $level->id;
+			$all_batches_in_level = $this->batch_model->get_batches_in_level($level_id);
+
+			$batch_data = array();
+			foreach ($all_batches_in_level as $batch) {
+				$batch_data[$batch->id] = array(
+					'name'		=>  $day_list[$batch->day] . ', ' . date('h:i A', strtotime('2000-01-01 ' . $batch->class_time)),
+					'teachers'	=> $this->batch_model->get_teachers_in_batch_and_level($batch->id, $level_id),
+				);
+			}
+
+			$data[$level_id] = array(
+					'level_name'=> $level->name,
+					'kids'		=> $this->level_model->get_kids_in_level($level_id),
+					"batch"		=> $batch_data
+				);
+		}
+		$this->load->view('center/info', array('data' => $data, 'all_users' => $all_users, 'center' => $center[0]));
 	}
 }

@@ -29,7 +29,7 @@ foreach($data as $center_id => $center_info) {
 
 	$all_batches = $center_info['batches'];
 ?>
-<h3 id="center-<?php echo $center_id ?>"><?php echo $center_info['center_name'] ?></h3>
+<h3 id="center-<?php echo $center_id ?>"><a href="<?php echo site_url('center/manage/'.$center_id) ?>"><?php echo $center_info['center_name'] ?></a></h3>
 
 <?php foreach($all_batches as $batch_id => $batch_info) {
 	if(empty($batch_info['days_with_classes'])) continue;

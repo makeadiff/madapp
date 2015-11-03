@@ -1,70 +1,45 @@
-<?php $this->load->view('layout/flatui/header', array('title'=>'City Information')); ?>
+<?php $this->load->view('layout/flatui/header', array('title' => $center->name . ' Allocation Report')); ?>
+<style type="text/css">
+td, th {
+	padding:3px;
+}
+.nopad {
+	padding: 0 !important;
+}
+</style>
 
 <div class="container" id="content">
-<h2 class="title"><?php echo $center->name ?> Information</h2>
+<h2 class="title"><?php echo $center->name ?> Allocation Report</h2>
 
-<table border="1" width="100%">
-<tr><th>Level</th><th>Students</th><th>Batche Info</th></tr>
-<?php 
-// dump($data);
+<p>Class started on <strong><?php echo date("F dS, Y", strtotime($center->class_starts_on)) ?></strong>.</p>
 
-foreach($data as $level) {
-	print "<tr><td>" . $level['level_name'] . "</td>";
+<table width="100%" class="table">
+<tr><th>Level</th><th>Students</th><th>Batch Info</th></tr>
+<?php foreach($data as $level) { ?>
+<tr><td><?php echo $level['level_name'] ?></td>
 
-	print "<td><table>";
-	foreach ($level['kids'] as $student_id => $name) {
-		print "<tr><td>$name</td></tr>";
-	}
-	print "</table></td>";
+<td class="nopad"><table>
+<?php foreach ($level['kids'] as $student_id => $name) { ?>
+<tr><td><?php echo $name ?></td></tr>
+<?php } ?>
+</table></td>
 
-	print "<td valign='top'><table width='100%' border='1'><tr><th>Batches</th><th>Teachers</th></tr>";
-	foreach ($level['batch'] as $batch_id => $batch) {
-		print "<tr><td width='50%'>" . $batch['name'] . "</td><td><table>";
+<td valign='top' class="nopad"><table width='100%'><tr><th>Batches</th><th>Teachers</th></tr>
 
-		foreach ($batch['teachers'] as $user_id) {
-			print "<tr><td>" . (isset($all_users[$user_id]) ? $all_users[$user_id] : 'None') . "</td></tr>";
-		}
+<?php foreach ($level['batch'] as $batch_id => $batch) { ?>
+<tr><td width='50%'><?php echo $batch['name'] ?></td><td class="nopad"><table width="100%">
 
-		print "</table></td></tr>";
-	}
+<?php foreach ($batch['teachers'] as $user_id) { ?>
+<tr><td width="50%"><?php echo (isset($all_users[$user_id]) ? $all_users[$user_id]->name : 'None') ?></td>
+<td><?php echo (isset($all_users[$user_id]) ? $all_subjects[$all_users[$user_id]->subject_id] : 'None') ?></td></tr>
+<?php } ?>
+</table></td></tr>
+<?php } ?>
 
-	print "</table></td>";
-
-	print "</tr>";
-} ?>
+</table></td>
+</tr>
+<?php } ?>
 </table>
-<!--
-(
-    [2570] => Array
-        (
-            [level_name] => 6 A
-            [kids] => Array
-                (
-                    [11463] => Binny
-                    [11459] => Cathy
-                    [11466] => Jithin
-                    [11469] => Rijuta
-                )
-
-            [batch] => Array
-                (
-                    [1195] => Array
-                        (
-                            [name] => 0 16:00:00
-                            [teachers] => Array
-                                (
-                                    [0] => 45482
-                                    [1] => 42117
-                                )
-
-                        )
-
-                )
-
-        )
-
--->
 </div>
 
 <?php $this->load->view('layout/flatui/footer'); ?>
-

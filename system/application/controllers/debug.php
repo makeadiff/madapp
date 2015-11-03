@@ -87,22 +87,7 @@ class Debug extends Controller {
 		
 		print "Deleted $count exams.";
 	}
-	
-	
-	function copy_class_status() {
-		$all_class_status = idNameFormat($this->db->query("SELECT class_id as id,status as name FROM UserClass")->result());
-		
-		$done_class_id = array();
-		foreach($all_class_status as $class_id => $status) {
-			if(isset($done_class_id[$class_id])) continue;
-			
-			if($status == 'confirmed' or $status == 'attended' or $status == 'absent') $status = 'happened';
-			$this->db->query("UPDATE Class SET status='$status' WHERE id=$class_id");
-		
-			$done_class_id[$class_id] = true;
-		}
-	}
-	
+	 
 	/**
 	 * Use this to clear off entire regions of the MADSheet - use this with care. Deletes data without any hope of retrival.
 	 */
@@ -286,6 +271,34 @@ class Debug extends Controller {
 		}
 
 		dump($existing_level_dates);
+	}
+
+
+	function delete_classes_of_user_in_given_batch_and_level($user_id, $batch_id, $level_id=0, $from_date='', $to_date='') {
+		$level_check = '';
+		$date_check = '';
+		if($level_id) $level_check = "AND C.level_id=$level_id";
+		if($from_date) $date_check .= "AND C.class_on >= '$from_date'";
+		if($to_date) $date_check .= "AND C.class_on <= '$to_date'";
+
+		$classes = $this->batch_model->db->query("SELECT C.id AS class_id,UC.id AS user_class_id 
+			FROM Class C 
+			INNER JOIN UserClass UC ON C.id=UC.class_id 
+			WHERE UC.user_id=$user_id AND C.batch_id=$batch_id $level_check $date_check")->result();
+
+		foreach ($classes as $c) {
+			$this->batch_model->db->query("DELETE FROM UserClass WHERE id=" . $c->user_class_id);
+
+			$other_user_for_class = $this->batch_model->db->query("SELECT id FROM UserClass WHERE class_id={$c->class_id}")->result();
+			if(count($other_user_for_class) == 0) { // If there are no other teachers, delete the class too.
+				$this->batch_model->db->query("DELETE FROM Class WHERE id={$c->class_id}");
+
+				// If class is deleted, delete student attandance too.
+				$this->batch_model->db->query("DELETE FROM StudentClass WHERE class_id={$c->class_id}");
+			}
+		}
+		print "Deleted " . count($classes) . " classes.";
+
 	}
 }
 

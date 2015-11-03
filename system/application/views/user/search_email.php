@@ -4,7 +4,7 @@
 
 <label>ID</label><?php echo form_input('search_id', $search_id); ?><br />
 <label>Name</label><?php echo form_input('name', $name); ?><br />
-<label>Email</label><?php echo form_input('email', $email); ?><br />
+<label>Email</label><?php echo form_input(array('name'=>'email', 'value'=>$email, "autofocus" => true)); ?><br />
 <label>Phone</label><?php echo form_input('phone', $phone); ?><br />
 
 <label>&nbsp;</label><?php echo form_submit('action', "Search"); ?>

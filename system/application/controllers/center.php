@@ -17,6 +17,7 @@ class Center extends Controller  {
 		$this->load->model('level_model');
 		$this->load->model('batch_model');
 		$this->load->model('users_model');
+		$this->load->model('subject_model');
     }
 
     /// Show all centers in the current city
@@ -147,7 +148,9 @@ class Center extends Controller  {
 		$data = array();
 		$all_levels = $this->level_model->get_all_level_names_in_center($center_id);
 		$center = $this->center_model->get_info($center_id);
-		$all_users = idNameFormat($this->users_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9)));
+		$all_users = idNameFormat($this->users_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9)), array('id'));
+		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
+		$all_subjects[0] = "None";
 		$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 
 		foreach ($all_levels as $level) {
@@ -168,6 +171,6 @@ class Center extends Controller  {
 					"batch"		=> $batch_data
 				);
 		}
-		$this->load->view('center/info', array('data' => $data, 'all_users' => $all_users, 'center' => $center[0]));
+		$this->load->view('center/info', array('data' => $data, 'all_users' => $all_users, 'center' => $center[0], 'all_subjects' => $all_subjects));
 	}
 }

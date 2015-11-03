@@ -24,6 +24,11 @@
                         <img src="<?php echo base_url(); ?>images/flat_ui/credit_history.png" alt="" /> <br>Volunteer Credits</a></div>
             <?php } ?><br />
 
+            <?php if($this->user_auth->get_permission('admincredit_index')) { // :PERMISSION_RESET: ?>
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/intern_monthly_report.php">
+                        <img src="http://makeadiff.in/apps/prism/public/img/reports.png" alt="" /> <br>Volunteer Credits</a></div>
+            <?php } ?><br />
+
             <?php if($this->user_auth->get_permission('event_index')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('event/event') ?>">
                         <img src="<?php echo base_url(); ?>images/flat_ui/events.png" alt="" /> <br>Event</a></div>

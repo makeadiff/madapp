@@ -1,7 +1,7 @@
 
 <div class="container-fluid">
     <div class="board transparent-container">
-        <h1 class="title">HR</h1>
+        <h1 class="title">HC</h1>
         <br>
         <div class="row">
             <?php if($this->user_auth->get_permission('user_index')) { ?>
@@ -21,12 +21,12 @@
 
             <?php if($this->user_auth->get_permission('admincredit_index')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/intern_credits.php">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/credit_history.png" alt="" /> <br>Volunteer Credits</a></div>
+                        <img src="<?php echo base_url(); ?>images/flat_ui/credit_history.png" alt="" /> <br>Assign Volunteer<br /> Credits</a></div>
             <?php } ?><br />
 
             <?php if($this->user_auth->get_permission('admincredit_index')) { // :PERMISSION_RESET: ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/intern_monthly_report.php">
-                        <img src="http://makeadiff.in/apps/prism/public/img/reports.png" alt="" /> <br>Volunteer Credits</a></div>
+                        <img src="http://makeadiff.in/apps/prism/public/img/reports.png" alt="" /> <br>Volunteer Credits<br /> Monthly Report</a></div>
             <?php } ?><br />
 
             <?php if($this->user_auth->get_permission('event_index')) { ?>

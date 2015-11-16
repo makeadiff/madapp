@@ -352,25 +352,6 @@ class Users_model extends Model {
 		return $result;
 	}
 
-	/// Returns all the class connections of this user - all the classes they are a teacher at and all they are a mentor at.
-	function get_class_connections($user_id) {
-		$mentor_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.class_on, Ctr.name AS center_name
-			FROM Batch B 
-			INNER JOIN Class C ON C.batch_id=B.id
-			INNER JOIN Center Ctr ON B.center_id=Ctr.id
-			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}' 
-				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
-
-		$teacher_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.id AS class_id, C.class_on, Ctr.name AS center_name
-			FROM Class C 
-			INNER JOIN UserClass UC ON UC.class_id=C.id
-			INNER JOIN Batch B ON C.batch_id=B.id
-			INNER JOIN Center Ctr ON B.center_id=Ctr.id
-			WHERE B.status='1' AND UC.user_id='$user_id' AND B.year='{$this->year}' 
-				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
-		
-		return array('teacher_at' => $teacher_at, 'mentor_at' => $mentor_at);
-	}
 
 	function updateuser($data) {
 		$user_id = $data['rootId'];
@@ -746,12 +727,37 @@ class Users_model extends Model {
 
 		return $credit_log;
     }
+
+    	/// Returns all the class connections of this user - all the classes they are a teacher at and all they are a mentor at.
+	function get_class_connections($user_id) {
+		$mentor_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.class_on, Ctr.name AS center_name
+			FROM Batch B 
+			INNER JOIN Class C ON C.batch_id=B.id
+			INNER JOIN Center Ctr ON B.center_id=Ctr.id
+			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}' 
+				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
+
+		$teacher_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.id AS class_id, C.class_on, Ctr.name AS center_name
+			FROM Class C 
+			INNER JOIN UserClass UC ON UC.class_id=C.id
+			INNER JOIN Batch B ON C.batch_id=B.id
+			INNER JOIN Center Ctr ON B.center_id=Ctr.id
+			WHERE B.status='1' AND UC.user_id='$user_id' AND B.year='{$this->year}' 
+				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
+		
+		return array('teacher_at' => $teacher_at, 'mentor_at' => $mentor_at);
+	}
+
     
     /// Given a user id, get the batch they are mentoring. If there such a batch.
     function get_mentoring_batch($user_id) {
-    	$users_batch = $this->db->query("SELECT id FROM Batch 
-			WHERE Batch.batch_head_id=$user_id AND Batch.year={$this->year}")->row();
-		if($users_batch) return $users_batch->id;
+    	$users_batch = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.class_on, Ctr.name AS center_name
+			FROM Batch B 
+			INNER JOIN Class C ON C.batch_id=B.id
+			INNER JOIN Center Ctr ON B.center_id=Ctr.id
+			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}' 
+				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->row();
+		if($users_batch) return $users_batch->batch_id;
 		else return 0;
     }
 

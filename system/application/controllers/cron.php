@@ -26,13 +26,13 @@ class Cron extends Controller  {
 			print "Debug Mode\n----------\n";
 			print "Total Batches: " . count($all_batches) . "\n";
 		}
-		
-		// Wee have to add all the classes for the next two weeks.
+
+		// We have to add all the classes for the next two weeks.
 		for($week = 0; $week < 2; $week++) {
 			foreach($all_batches as $batch) {
-				// if($batch->id != 1333 or $batch->id != 1349 or $batch->id != 1350) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+				// if($batch->id != 1214 and $batch->id != 1464) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
-				
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
 				
 				// This is how we find the next sunday, monday(whatever is in the $batch->day).
@@ -45,19 +45,13 @@ class Cron extends Controller  {
 				$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
 				$date = date("Y-m-d H:i:s", $time);
 				
-				if($debug and count($teachers)) {
-					// dump($teachers, $date, $batch);
-					print "\n\n-------------------------------\n";
-					print "Current Batch: $batch->id at center $batch->center_id\n";
-					print "\tTotal Teaches in this Batch: ". count($teachers) . "\n";
-				}
-				
+				$debug_text = '';
 				foreach($teachers as $teacher) {
-					//if($teacher->id != 496) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
-					
+					// if($teacher->id != 83172) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+
 					// Make sure its not already inserted.
-					if(!$this->class_model->get_by_teacher_time($teacher->id, $date, '', $teacher->level_id)) {
-						print "\tClass by {$teacher->id} at $date\n";
+					if(!$this->class_model->get_by_teacher_time($teacher->id, $date, $batch->id, $teacher->level_id)) {
+						$debug_text .= "\tClass by {$teacher->id} at $date\n";
 						
 						$class_data = array(
 							'batch_id'	=> $batch->id,
@@ -69,6 +63,14 @@ class Cron extends Controller  {
 						);
 						$this->class_model->save_class($class_data);
 					}
+				}
+
+				if($debug and count($teachers) and $debug_text) {
+					// dump($teachers, $date, $batch);
+					print "\n\n-------------------------------\n";
+					print "Current Batch: $batch->id at center $batch->center_id\n";
+					print "\tTotal Teaches in this Batch: ". count($teachers) . "\n";
+					print $debug_text;
 				}
 			}
 		}

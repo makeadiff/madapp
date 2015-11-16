@@ -300,5 +300,31 @@ class Debug extends Controller {
 		print "Deleted " . count($classes) . " classes.";
 
 	}
+
+
+	/// New method for entering data involves using a BatchLevel connection - and the old method doesnt. Use this function to delete people who are assigned classes - but in batches which should not be in the right level.
+	function delete_class_without_batch_level_connection($center_id) {
+		$all_batchs = $this->batch_model->get_batches_in_center($center_id);
+		$all_levels_in_center = $this->level_model->get_all_level_names_in_center($center_id);
+		foreach ($all_batchs as $b) {
+			$all_levels_in_batch = $this->level_model->get_all_level_names_in_center_and_batch($center_id, $b->id);
+			foreach ($all_levels_in_center as $lc) {
+				foreach ($all_levels_in_batch as $lb) {
+					if($lc->id == $lb->id) continue 2;
+				}
+				$teachers = $this->batch_model->get_teachers_in_batch_and_level($b->id, $lc->id);
+				$classes = $this->class_model->get_classes_by_level_and_batch($lc->id, $b->id);
+				foreach ($classes as $c) {
+					$this->class_model->db->query("DELETE FROM UserClass WHERE class_id={$c->id}");
+					$this->class_model->db->query("DELETE FROM StudentClass WHERE class_id={$c->id}");
+				}
+				// dump($classes);
+				$this->class_model->db->query("DELETE FROM UserBatch WHERE batch_id={$b->id} AND level_id={$lc->id}");
+				print "Extra in {$b->day} {$b->class_time} : " . $this->class_model->db->affected_rows() . " <br />";
+			}
+			
+		}
+	}
+
 }
 

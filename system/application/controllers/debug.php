@@ -325,15 +325,5 @@ class Debug extends Controller {
 			
 		}
 	}
-
-	function delete_class_without_batch_level_connection_nationally() {
-		$all_centers = $this->db->query("SELECT id, name FROM Center WHERE status='1'")->result();
-		foreach ($all_centers as $row) {
-			print "Center {$row->id}: {$row->name}<br />";
-			$this->delete_class_without_batch_level_connection($row->id);
-			print "------------------------------------------------------------<br /><br />";
-		}
-	}
-
 }
 

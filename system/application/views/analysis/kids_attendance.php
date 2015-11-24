@@ -34,7 +34,7 @@ $level_attendence = array();
 foreach($all_levels[$center_id] as $level_info) { // Level start.
 ?>
 <tr class="<?php echo ($row_count % 2) ? 'odd' : 'even' ?>">
-<td nowrap='nowrap'><?php echo $level_info->name ?></td>
+<td nowrap='nowrap'><?php echo $level_info->grade . ' ' . $level_info->name ?></td>
 <td><?php echo $all_kids[$level_info->id] ?></td>
 <?php 
 	$var += $all_kids[$level_info->id];

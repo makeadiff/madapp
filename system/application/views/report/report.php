@@ -20,7 +20,7 @@ if(isset($devcon_title)) {
 <td><?php echo $count; $count++; ?></td>
 <?php 
 foreach($fields as $field_name=>$field_title) { ?>
-<td><?php dump($row);
+<td><?php
 if($fields[$field_name] == 'Name' and isset($row->user_id)) echo '<a href="'.site_url('user/view/'.$row->user_id).'">';
 if (isset($row->{$field_name})) {
     echo $row->{$field_name};

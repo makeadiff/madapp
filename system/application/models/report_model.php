@@ -78,41 +78,38 @@ class Report_model extends Model {
                             GROUP BY  `Group`.id, City.id
                             ORDER BY City.name, Group.name')->result();
 
-        $cities = $this->db->query('SELECT id,name FROM City ORDER BY name')->result();
+        $cities = $this->db->query('SELECT id,name FROM City WHERE type="actual" ORDER BY name')->result();
         $groups = $this->db->query('SELECT id,name FROM `Group` WHERE `type` <> "national" AND `type` <> "strat" AND group_type = "normal" ORDER BY name')->result();
 
         foreach($groups as $group) {
             $group->total = 0;
         }
 
-
-
         foreach($cities as $city) {
-            $report_data[$city->id] = new stdClass();
-            $report_data[$city->id]->city_name = $city->name;
+            $report_data[$city->id] = array();
+            $report_data[$city->id]['city_name'] = $city->name;
             $total = 0;
             foreach($groups as $group) {
-
                 foreach($vc_data as $vc) {
                     if($vc->city_id == $city->id && $vc->group_id == $group->id) {
-                        $report_data[$city->id]->{$group->name} = (int)$vc->volunteer_count;
+                        $report_data[$city->id][$group->name] = (int)$vc->volunteer_count;
                         $total += (int)$vc->volunteer_count;
                         $group->total += (int)$vc->volunteer_count;
                     }
                 }
             }
-            $report_data[$city->id]->total = $total;
+            $report_data[$city->id]['total'] = $total;
         }
 
-        $report_data[0] = new stdClass();
-        $report_data[0]->city_name = "Total";
+        $report_data[0] = array();
+        $report_data[0]['city_name'] = "Total";
         $total_volunteers = 0;
         foreach($groups as $group) {
-            $report_data[0]->{$group->name} = $group->total;
+            $report_data[0][$group->name] = $group->total;
             $total_volunteers += $group->total;
         }
 
-        $report_data[0]->total = $total_volunteers;
+        $report_data[0]['total'] = $total_volunteers;
 
 
 

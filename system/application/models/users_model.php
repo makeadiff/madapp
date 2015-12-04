@@ -1170,6 +1170,11 @@ class Users_model extends Model {
 	}
 
 
+	function get_intern_credit($user_id) {
+		$credit = $this->db->query("SELECT SUM(credit) AS credit FROM UserCredit WHERE user_id=$user_id AND year={$this->year}")->row();
+
+		return $credit->credit;
+	}
 
 	function get_subordinates($user_id) {
 		$current_user_ka_groups = implode(',', array_keys($this->get_user_groups_of_user($user_id)));

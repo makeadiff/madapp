@@ -6,7 +6,10 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 
 <?php if($user->photo) { ?><img src="<?php echo base_url().'uploads/users/'.$user->photo; ?>" height="100" /><br /><?php } ?>
 
-<h2><?php echo $user->name ?> (<?php echo $user->credit ?>)</h2>
+<h2><?php echo $user->name ?></h2>
+
+<h3>Ed Support Credit : <?php echo $user->credit ?></h3>
+<h3>Intern Credit : <?php echo $user->intern_credit ?></h3>
 
 <h3>Contact Details...</h3>
 

@@ -45,6 +45,7 @@ class User extends Controller  {
 		$data['all_cities']= $this->city_model->get_all(0);
 		$data['all_cities'][0] = 'None';
 		$data['user'] = $this->users_model->user_details($user_id);
+		$data['user']->intern_credit = $this->users_model->get_intern_credit($user_id);
 	
 		$data['all_groups'] = idNameFormat($this->users_model->get_all_groups());
 		

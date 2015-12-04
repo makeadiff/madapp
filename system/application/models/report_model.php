@@ -73,13 +73,13 @@ class Report_model extends Model {
                             INNER JOIN City ON City.id = User.city_id
                             INNER JOIN UserGroup ON UserGroup.user_id = User.id
                             INNER JOIN  `Group` ON  `Group`.id = UserGroup.group_id
-                            WHERE User.status =1
+                            WHERE User.status =1 AND `Group`.status="1"
                             AND User.user_type =  "volunteer"
                             GROUP BY  `Group`.id, City.id
                             ORDER BY City.name, Group.name')->result();
 
         $cities = $this->db->query('SELECT id,name FROM City WHERE type="actual" ORDER BY name')->result();
-        $groups = $this->db->query('SELECT id,name FROM `Group` WHERE `type` <> "national" AND `type` <> "strat" AND group_type = "normal" ORDER BY name')->result();
+        $groups = $this->db->query('SELECT id,name FROM `Group` WHERE `type` <> "national" AND `type` <> "strat" AND group_type = "normal" AND status="1" ORDER BY name')->result();
 
         foreach($groups as $group) {
             $group->total = 0;
@@ -110,12 +110,6 @@ class Report_model extends Model {
         }
 
         $report_data[0]['total'] = $total_volunteers;
-
-
-
-        /*var_dump($report_data);
-        die();*/
-
         $data = array('report_data' => $report_data, 'groups' => $groups);
 
         return $data;
@@ -123,17 +117,17 @@ class Report_model extends Model {
 
 
     function get_child_count() {
-
-        return $this->db->query('SELECT City.name as City, Center.name as Center, SUM(CASE Student.sex WHEN "m" THEN 1 ELSE 0 END) AS Male,
-                            SUM(CASE Student.sex WHEN "f" THEN 1 ELSE 0 END) AS Female,
-                            SUM(CASE Student.sex WHEN "u" THEN 1 ELSE 0 END) AS NotSpecified,
-                            COUNT(Student.id) as Total FROM Student
-                            INNER JOIN Center
-                            ON Student.center_id = Center.id
-                            INNER JOIN City
-                            ON City.id = Center.city_id
-                            WHERE Student.status = 1 AND Center.status = 1
-                            GROUP BY City.name , Center.name WITH ROLLUP')->result();
+        return $this->db->query('SELECT City.name as City, Center.name as Center,
+                                        SUM(CASE Student.sex WHEN "m" THEN 1 ELSE 0 END) AS Male,
+                                        SUM(CASE Student.sex WHEN "f" THEN 1 ELSE 0 END) AS Female,
+                                        SUM(CASE Student.sex WHEN "u" THEN 1 ELSE 0 END) AS NotSpecified,
+                                        COUNT(Student.id) as Total 
+                                    FROM Student
+                                    INNER JOIN Center ON Student.center_id = Center.id
+                                    INNER JOIN City ON City.id = Center.city_id
+                                    WHERE Student.status = "1" AND Center.status = "1" AND City.type="actual"
+                                    GROUP BY Center.name
+                                    ORDER BY City.name, Center.name')->result();
 
     }
 

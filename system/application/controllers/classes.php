@@ -424,7 +424,7 @@ class Classes extends Controller {
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.
 				foreach($all_levels[$center->id] as $level) {
-					// if($level->id != 2319) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+					// if($level->id != 3212) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 					
 					$all_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 					$class_info = array();

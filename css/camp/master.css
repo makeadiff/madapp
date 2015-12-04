@@ -253,7 +253,7 @@ background: -moz-linear-gradient(top, #BFFE01, #44A615);	filter: progid:DXImageT
 }
 
 
-#pg-classes-batch_view .cancelled a, #pg-classes-batch_view .cancelled select {
+#pg-classes-batch_view .cancelled a, #pg-classes-batch_view .cancelled select, #pg-classes-batch_view .cancelled input {
 	color:#666;
 	text-decoration:line-through;
 }

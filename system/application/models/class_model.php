@@ -42,6 +42,13 @@ class Class_model extends Model {
 		$this->db->query("UPDATE Class SET status='cancelled', cancel_option='$cancel_option', cancel_reason='$cancel_reason' WHERE id=$class_id");
 		return $this->db->affected_rows();
     }
+
+    /// Revert a class cancellation. The status becomes projected.
+    function uncancel_class($class_id) {
+        $this->db->query("UPDATE UserClass SET status='projected' WHERE class_id=$class_id");
+        $this->db->query("UPDATE Class SET status='projected' WHERE id=$class_id");
+        return $this->db->affected_rows();
+    }
     
     /// Deletes the future classes of the given user - happens when a user is taken off a batch.
     function delete_future_classes($user_id, $batch_id, $level_id) {
@@ -76,14 +83,6 @@ class Class_model extends Model {
         return true;
     }
 
-    
-    /// Revert a class cancellation. The status becomes projected.
-    function uncancel_class($class_id) {
-		$this->db->query("UPDATE UserClass SET status='projected' WHERE class_id=$class_id");
-		$this->db->query("UPDATE Class SET status='projected' WHERE id=$class_id");
-		return $this->db->affected_rows();
-    }
-    
     function get_last_class_in_batch($batch_id) {
     	return $this->db->query("SELECT * FROM Class WHERE batch_id=$batch_id AND DATE(class_on)<=DATE(NOW()) ORDER BY class_on DESC LIMIT 0,1")->row();
     }

@@ -156,7 +156,7 @@ class Classes extends Controller {
 				));
 			}
 		}
- 	
+		
 		$this->session->set_flashdata('success', 'Batch information saved.');
 		redirect('classes/batch_view/'.$this->input->post('batch_id').'/'.$this->input->post('from_date'));
 	}
@@ -200,7 +200,7 @@ class Classes extends Controller {
 	function uncancel_class($class_id, $batch_id=0, $date='') {
 		$this->class_model->uncancel_class($class_id);
 		$this->session->set_flashdata('success', 'Class cancellation reverted.');
-		redirect('classes/batch_view/'.$batch_view.'/'.$date);
+		redirect('classes/batch_view/'.$batch_id.'/'.$date);
 	}
 
 	/// One place to do all Student - Level assignments.

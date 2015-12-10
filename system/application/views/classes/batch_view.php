@@ -2,26 +2,7 @@
 $this->load->view('layout/header', array('title'=>'Mentor View'));
 ?>
 <link href="<?php echo base_url(); ?>/css/sections/classes/batch_view.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript">
-$(document).ready(function(){
-	$('.substitute_select').change(function(){
-		if($(this).val() == -1){
-			var flag = $(this).attr('id').replace(/\D/g,"");
-			showCities(flag);
-		}
-    });
-});
-
-function showCities(flag) {
-	$.ajax({
-		type: "POST",
-		url: "<?php echo site_url('classes/other_city_teachers')?>"+'/'+flag,
-		success: function(msg){
-			$('#sidebar').html(msg);
-		}
-	});
-}
-</script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/js/sections/classes/batch_view.js"></script>
 
 Center: <strong><?php echo $center_name; ?></strong><br />
 Batch: <?php echo $batch_name ?><br />
@@ -87,10 +68,10 @@ if($class['teachers'][$teacher_index]['substitute_id'] and !isset($all_user_name
 <?php if($teacher_index == 0) { ?><td <?php echo $rowspan ?>>
 <?php if($class['class_status'] == 'cancelled') { ?>
 <a class="uncancel" href="<?php echo site_url('classes/uncancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Undo Class Cancellation</a>
-<input type="hidden" name="class_status[<?php echo $class['id'] ?>]" value="0" />
+<input type="hidden" name="class_status[<?php echo $class['id'] ?>]" class="class_status" value="0" />
 <?php } else { ?>
 <a href="<?php echo site_url('classes/cancel_class/'.$class['id'].'/'.$batch_id.'/'.$from_date) ?>">Cancel Class</a>
-<input type="hidden" name="class_status[<?php echo $class['id'] ?>]" value="1" />
+<input type="hidden" name="class_status[<?php echo $class['id'] ?>]" class="class_status" value="1" />
 <?php } ?>
 </td><?php } ?>
 </tr>
@@ -104,7 +85,7 @@ if($class['teachers'][$teacher_index]['substitute_id'] and !isset($all_user_name
 <input type="hidden" name="batch_id" value="<?php echo $batch_id ?>" />
 <input type="hidden" name="from_date" value="<?php echo $from_date ?>" />
 <input type="hidden" name="to_date" value="<?php echo $to_date ?>" />
-<input type="submit" value="Save" class="button green" name="action" />
+<input type="submit" value="Save" class="button green" name="action" id="action" />
 </form>
 
 <?php

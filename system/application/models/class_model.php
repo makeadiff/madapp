@@ -239,7 +239,8 @@ class Class_model extends Model {
             $class_status = $data['class_status'];
             unset($data['class_status']);
         }
-    	
+        if(!$class_status) $data['status'] = 'cancelled';
+        
     	$this->db->update('UserClass', $data, array('id'=>$user_class_id));
 
     	$status = $data['status'];

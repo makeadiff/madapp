@@ -325,5 +325,22 @@ class Debug extends Controller {
 			
 		}
 	}
+
+	/// If the Class.status is cancelled, make sure that UserClass.status is also cancelled for all the classes under it
+	function cancel_the_cancelled_classes($city_id) {
+		$cancelled_classes = $this->class_model->db->query("SELECT *, C.status AS class_status
+			FROM Class C 
+			INNER JOIN UserClass UC ON UC.class_id=C.id 
+			INNER JOIN Batch B ON C.batch_id=B.id
+			INNER JOIN Center Ctr ON Ctr.id=B.center_id
+			WHERE C.status='cancelled' AND UC.status != 'cancelled' AND Ctr.city_id=$city_id")->result();
+
+		foreach($cancelled_classes as $cc) {
+			$this->class_model->db->query("UPDATE UserClass SET status='{$cc->class_status}' WHERE class_id={$cc->class_id}");
+		}
+
+	}
+
+
 }
 

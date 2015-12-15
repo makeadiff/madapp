@@ -35,8 +35,8 @@ class Api extends Controller {
 	 */
 	function user_login() {
 		$data = array(
-			'username' => $this->get_input('email'),
-			'password' => $this->get_input('password')
+			'username' => $this->input('email'),
+			'password' => $this->input('password')
 		);
 		if(!$data['username'] or !$data['password']) {
 			return $this->error("Username or password not provided.");
@@ -72,7 +72,7 @@ class Api extends Controller {
 	function class_get_last() {
 		$this->check_key();
 
-		$user_id = $this->get_input('user_id');
+		$user_id = $this->input('user_id');
 		if(!$user_id) return $this->error("User ID is empty");
 
 		$class_info = $this->class_model->get_last_class($user_id);
@@ -86,10 +86,10 @@ class Api extends Controller {
 	function get_class_on() {
 		$this->check_key();
 
-		$user_id = $this->get_input('user_id');
-		$class_on= $this->get_input('class_on');
-		$level_id= $this->get_input('level_id');
-		$batch_id= $this->get_input('batch_id');
+		$user_id = $this->input('user_id');
+		$class_on= $this->input('class_on');
+		$level_id= $this->input('level_id');
+		$batch_id= $this->input('batch_id');
 
 		$class_info = $this->class_model->get_class_on($user_id, $class_on, $level_id, $batch_id);
 
@@ -102,8 +102,8 @@ class Api extends Controller {
 	 */
 	function open_class($class_id = 0, $class_info = false, $user_id=0) {
 		$this->check_key();
-		if(!$class_id) $class_id = $this->get_input('class_id');
-		if(!$user_id) $user_id = $this->get_input('user_id');
+		if(!$class_id) $class_id = $this->input('class_id');
+		if(!$user_id) $user_id = $this->input('user_id');
 
 
 		$class_details = $this->class_model->get_class($class_id);
@@ -147,11 +147,11 @@ class Api extends Controller {
 	function class_save_student_participation() {
 		$this->check_key();
 
-		$user_id = $this->get_input('user_id');
+		$user_id = $this->input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
-		$class_id = $this->get_input('class_id');
-		$students = json_decode($this->get_input('students'), true);
+		$class_id = $this->input('class_id');
+		$students = json_decode($this->input('students'), true);
 
 		$all_students = array();
 		$attendence = array();
@@ -174,7 +174,7 @@ class Api extends Controller {
 	function class_get_last_batch() {
 		$this->check_key();
 
-		$user_id = $this->get_input('user_id');
+		$user_id = $this->input('user_id');
 		if(!$user_id) $this->error("User ID is empty");
 
 		//$batch_id = $this->user_model->get_users_batch($user_id);
@@ -188,8 +188,8 @@ class Api extends Controller {
 		$this->check_key();
 
 		// $from_date = '2015-01-11';
-		if(!$batch_id) $batch_id = $this->get_input('batch_id');
-		if(!$from_date) $from_date = $this->get_input('class_on');
+		if(!$batch_id) $batch_id = $this->input('batch_id');
+		if(!$from_date) $from_date = $this->input('class_on');
 
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
@@ -274,7 +274,7 @@ class Api extends Controller {
 	function class_get_batch($batch_id = 0) {
 		$this->check_key();
 		// Lifted off classes.php:batch_view
-		if(!$batch_id) $batch_id = $this->get_input('batch_id');
+		if(!$batch_id) $batch_id = $this->input('batch_id');
 
 		if(!$batch_id) return $this->error("User doesn't have a batch");
 
@@ -293,7 +293,7 @@ class Api extends Controller {
 	 */
 	function user_get_teachers() {
 		$this->check_key();
-		$city_id = $this->get_input('city_id');
+		$city_id = $this->input('city_id');
 		if(!$city_id) return $this->error("Invalid City ID");
 
 		$teachers = $this->user_model->search_users(array('user_type'=>'volunteer', 'user_group'=>9, 'city_id'=>$city_id));
@@ -328,8 +328,7 @@ class Api extends Controller {
 	function class_save() {
 		$this->check_key();
 
-		$class_data = json_decode($this->get_input('class_data'));
-		// dump($class_data);exit;
+		$class_data = json_decode($this->input('class_data'));
 
 		foreach ($class_data as $class_info) {
 			$class_id = $class_info->id;
@@ -360,7 +359,7 @@ class Api extends Controller {
 
 
 	///////////////////////////////////////// Internal ////////////////////////////////
-	function get_input($name) {
+	function input($name) {
 		$return = '';
 
 		$return = $this->input->post($name);
@@ -371,7 +370,7 @@ class Api extends Controller {
 	}
 
 	function check_key() {
-		$key = $this->get_input('key');
+		$key = $this->input('key');
 		if($key != $this->key) {
 			$this->error("Invalid Key");
 			exit;

@@ -348,8 +348,7 @@ class Class_model extends Model {
     					INNER JOIN Class ON Class.id=UserClass.class_id 
     					INNER JOIN Level ON Class.level_id=Level.id
     					INNER JOIN Center ON Level.center_id=Center.id
-    					WHERE UserClass.user_id=$user_id 
-    						AND Class.project_id={$this->project_id}
+    					WHERE UserClass.user_id=$user_id
     						AND UserClass.status != 'cancelled'
     						AND Class.class_on > NOW()
     					ORDER BY Class.class_on";
@@ -365,8 +364,7 @@ class Class_model extends Model {
     					INNER JOIN Class ON Class.id=UserClass.class_id 
     					INNER JOIN Level ON Class.level_id=Level.id
     					INNER JOIN Center ON Level.center_id=Center.id
-    					WHERE UserClass.user_id=$user_id 
-    						AND Class.project_id={$this->project_id}
+    					WHERE UserClass.user_id=$user_id
                             AND Level.year = {$this->year}
     						AND Class.class_on < NOW()
     					ORDER BY Class.class_on DESC LIMIT 0,1";

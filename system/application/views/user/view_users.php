@@ -201,9 +201,10 @@ $.tablesorter.addParser({
     <th>Address</th>
     <?php } elseif($this->input->post('user_type') == 'let_go' or $this->input->post('user_type') == 'alumni') { ?>
     <th>Left On</th>
-    <?php if($this->input->post('user_type') == 'let_go') { ?>
+    <th>Exit Interview</th>
+    <?php } if($this->input->post('user_type') == 'let_go') { ?>
     <th>Reason</th>
-    <?php } } else { ?>
+    <?php } else { ?>
     <th>User Groups</th>
     <th>Center</th>
     <th>Batch</th>
@@ -236,9 +237,10 @@ foreach($all_users as $id => $user) {
     <td class="col-address"><?php echo $user->address; ?></td>
     <?php } elseif($this->input->post('user_type') == 'let_go' or $this->input->post('user_type') == 'alumni') { ?>
     <td class="col-left_on"><?php if($user->left_on != '0000-00-00') echo date('d\<\s\u\p\>S\<\/\s\u\p\> M, Y', strtotime($user->left_on)); ?></td>
-    <?php if($this->input->post('user_type') == 'let_go') { ?>
+    <td><a class="with-icon <?php echo ($user->exit_interview) ? 'done' : 'error'; ?>" href="http://makeadiff.in/apps/survey/form.php?user_id=<?php echo base64_encode($user->id); ?>">Exit Interview</a></td>
+    <?php } if($this->input->post('user_type') == 'let_go') { ?>
     <td class="col-reason_for_leaving"><?php echo $user->reason_for_leaving; ?></td>
-	<?php } } else { ?>
+    <?php } else { ?>
     <td class="col-groups"><?php echo implode(',', $user->groups); ?></td>
     <td class="col-center"><?php if($user->batch) echo $user->batch->name; ?></td>
     <td class="col-batch"><?php if($user->batch) echo $days[$user->batch->day] . ' ' . date('h:i A', strtotime(date('Y-m-d ').$user->batch->class_time)); ?></td>

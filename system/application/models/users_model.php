@@ -886,6 +886,10 @@ class Users_model extends Model {
 					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
 					INNER JOIN Center ON Batch.center_id=Center.id 
 					WHERE UserBatch.user_id={$user->id} AND Batch.year={$this->year}")->row();
+
+			if($data['user_type'] == 'let_go' or $data['user_type'] == 'alumni') {
+				$user->exit_interview = $this->db->query("SELECT COUNT(id) AS count FROM SurveyResponse WHERE user_id={$user->id}")->row()->count;
+			}
 			
 			$return[$user->id] = $user;
 		}

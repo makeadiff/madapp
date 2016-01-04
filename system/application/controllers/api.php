@@ -47,10 +47,10 @@ class Api extends Controller {
 			return $this->error("Invalid Username or password.");
 		}
 
-		$mentor = "0";
-		if(in_array('Mentors', array_values($status['groups']))) $mentor = "1";
-
 		$connections = $this->user_model->get_class_connections($status['id']);
+
+		$mentor = "0";
+		if($connections['mentor_at']) $mentor = "1";
 
 		$this->send(array(
 			'user_id'	=> $status['id'],

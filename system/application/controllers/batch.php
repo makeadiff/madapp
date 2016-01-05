@@ -269,13 +269,30 @@ class Batch extends Controller {
 	function level_assignment_save() {
 		$batch_level_connection = $this->input->post('batch_level_connection');
 		$center_id = $this->input->post('center_id');
+		$all_levels = $this->level_model->get_all_levels_in_center($center_id);
+		$missing_levels = array();
+		$all_level_ids_in_center = array();
+		foreach($all_levels as $level) {
+			$all_level_ids_in_center[] = $level->id;
+		}
 
 		foreach ($batch_level_connection as $batch_id => $level_info) {
 			$this->model->delete_batch_level_connection($batch_id);
+
+			// Find the unchecked batch and remove that data from UserBatch Table
+			$levels_in_batch = array_keys($level_info);
+			$missing_levels = array_diff($all_level_ids_in_center, $levels_in_batch);
+			foreach ($missing_levels as $key => $level_id) {
+				$this->model->delete_user_batch_level_connection($batch_id, $level_id);
+			}
+
 			foreach ($level_info as $level_id => $value) {
 				$this->model->save_batch_level_connection($batch_id, $level_id);
 			}
 		}
+		
+
+
 
 		$this->message['success'] = 'Level Batch assignment has been saved.';
 		redirect('batch/level_assignment/'.$center_id);

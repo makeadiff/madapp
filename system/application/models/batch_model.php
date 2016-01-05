@@ -160,10 +160,15 @@ class Batch_model extends Model {
 		$this->db->delete('BatchLevel', array('batch_id'=>$batch_id));
 	}
 
-	/// Delet all the level connection that this batch has. Important to do that before insterting the connection.
+	/// Delete all the level connection that this batch has. Important to do that before insterting the connection.
 	function delete_batch_level_connection($batch_id) {
 		$this->db->delete('BatchLevel', array('batch_id'=>$batch_id, 'year'=>$this->year));
 	}
+	/// Delete all the level connection that this batch has from the UserBatch Table.
+	function delete_user_batch_level_connection($batch_id, $level_id) {
+		$this->db->delete('UserBatch', array('batch_id'=>$batch_id, 'level_id' => $level_id));
+	}
+
 	/// Insert the batch level connection with the current year.
 	function save_batch_level_connection($batch_id, $level_id) {
 		$this->db->insert("BatchLevel", array(

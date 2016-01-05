@@ -31,7 +31,7 @@ class Cron extends Controller  {
 		// We have to add all the classes for the next two weeks.
 		for($week = 0; $week < 2; $week++) {
 			foreach($all_batches as $batch) {
-				// if($batch->id != 1214 and $batch->id != 1464) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+				// if($batch->id != 1187) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
@@ -62,7 +62,7 @@ class Cron extends Controller  {
 							'class_on'	=> $date,
 							'status'	=> 'projected'
 						);
-						$this->class_model->save_class($class_data);
+						// $this->class_model->save_class($class_data);
 					}
 				}
 
@@ -70,7 +70,7 @@ class Cron extends Controller  {
 					// dump($teachers, $date, $batch);
 					print "\n\n-------------------------------\n";
 					print "Current Batch: $batch->id at center $batch->center_id\n";
-					print "\tTotal Teaches in this Batch: ". count($teachers) . "\n";
+					print "\tTotal Teachers in this Batch: ". count($teachers) . "\n";
 					print $debug_text;
 				}
 			}

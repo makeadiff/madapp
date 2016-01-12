@@ -78,8 +78,14 @@ class Report_model extends Model {
                             GROUP BY  `Group`.id, City.id
                             ORDER BY City.name, Group.name')->result();
 
+        $groups_to_ignore = array('CTL Multiplier', 'Aftercare Wingman', 'FH Intern', 'Executive Team', 'Fund Raising Head', 'CS Volunteer');
+
         $cities = $this->db->query('SELECT id,name FROM City WHERE type="actual" ORDER BY name')->result();
-        $groups = $this->db->query('SELECT id,name FROM `Group` WHERE `type` <> "national" AND `type` <> "strat" AND group_type = "normal" AND status="1" ORDER BY name')->result();
+        $groups = $this->db->query('SELECT id,name FROM `Group` 
+            WHERE `type` <> "national" AND `type` <> "strat" AND group_type = "normal" AND status="1" 
+                AND name NOT IN ("'.implode('","', $groups_to_ignore).'") ORDER BY name')->result();
+
+        
 
         foreach($groups as $group) {
             $group->total = 0;
@@ -93,12 +99,11 @@ class Report_model extends Model {
                 foreach($vc_data as $vc) {
                     if($vc->city_id == $city->id && $vc->group_id == $group->id) {
                         $report_data[$city->id][$group->name] = (int)$vc->volunteer_count;
-                        $total += (int)$vc->volunteer_count;
                         $group->total += (int)$vc->volunteer_count;
                     }
                 }
             }
-            $report_data[$city->id]['total'] = $total;
+            $report_data[$city->id]['total'] = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE status='1' AND user_type='volunteer' AND city_id={$city->id}")->row('count');
         }
 
         $report_data[0] = array();

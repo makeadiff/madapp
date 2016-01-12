@@ -16,7 +16,7 @@ if(isset($devcon_title)) {
 ?></tr>
 
 <?php $count = 1; foreach($data as $row) { ?>
-<tr>
+<tr class="<?php echo ($count % 2) ? 'even' : 'odd'; ?>-row">
 <td><?php echo $count; $count++; ?></td>
 <?php 
 foreach($fields as $field_name=>$field_title) { ?>

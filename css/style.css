@@ -185,3 +185,7 @@ a.fdbk_tab_bottom {
 .checkbox-listing {
 	width: 300px;
 }
+
+table tr.odd-row {
+	background-color: #fff;
+}

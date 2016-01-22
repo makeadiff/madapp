@@ -62,7 +62,7 @@ class Cron extends Controller  {
 							'class_on'	=> $date,
 							'status'	=> 'projected'
 						);
-						// $this->class_model->save_class($class_data);
+						$this->class_model->save_class($class_data);
 					}
 				}
 

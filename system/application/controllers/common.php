@@ -54,6 +54,24 @@ class Common extends Controller {
 				$this->load->view('user/register_view', $data);
 				
 			} else {
+
+				// Check for spam...
+				if(stripos($data['address'], '<a ') !== false) {					// There is a link in the address field. Spam.
+						// Make sure this is spam. There are some people with malware infection who automatially inject links into any form they fill.
+						if(
+							(stripos($data['email'], '@gmail.com') !== false)		// People with gmail email ids tend to be real.
+							// and (preg_match('/^[0987]/', $data['phone']))		// Indian Phone number(Well, first number is accurate.)
+							and (strpos($data['name'], ' ') !== false)
+							) {
+						// Not spam
+						$data['address'] = trim(strip_tags($data['address']));
+						$data['why_mad'] = trim(strip_tags($data['why_mad']));
+
+					} else { // Is spam.
+						return false;
+					}
+				}
+
 				list($status, $message) = $this->user_auth->register($data);
 				if($status)	{
 					redirect('common/thank_you');

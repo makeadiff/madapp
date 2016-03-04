@@ -237,6 +237,7 @@ class Users_model extends Model {
     **/
 	function adduser($data)
 	{
+		// Check if this user is already present in the DB
 		$email=$data['email'];
 		$this->db->select('email');
 		$this->db->from('User');
@@ -244,30 +245,30 @@ class Users_model extends Model {
 		$result=$this->db->get();
 		if($result->num_rows() > 0){
 			return false;
-		} else {
-			$user_array = array(
-				'name'		=>$data['name'],
-				'email'		=> $data['email'],
-				'phone'		=> $this->_correct_phone_number($data['phone']),
-				'password'	=> $data['password'],
-				'address'	=> $data['address'],
-				'sex'		=> $data['sex'],
-				'city_id'	=> $data['city'],
-				'english_teacher'	=> isset($data['english_teacher']) ? $data['english_teacher'] : 0,
-				'dream_tee'	=> isset($data['dream_tee']) ? $data['dream_tee'] : 0,
-				'events'	=> isset($data['events']) ? $data['events'] : 0,
-				'placements'=> isset($data['placements']) ? $data['placements'] : 0,
-				'project_id'=> $data['project'],
-				'user_type' => $data['type'],
-			);
-			if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
-			else $user_array['joined_on'] = date('Y-m-d H:i:s');
-			
-			if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
-			
-			$this->db->insert('User',$user_array);
-			return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 		}
+
+		$user_array = array(
+			'name'		=>$data['name'],
+			'email'		=> $data['email'],
+			'phone'		=> $this->_correct_phone_number($data['phone']),
+			'password'	=> $data['password'],
+			'address'	=> $data['address'],
+			'sex'		=> $data['sex'],
+			'city_id'	=> $data['city'],
+			'english_teacher'	=> isset($data['english_teacher']) ? $data['english_teacher'] : 0,
+			'dream_tee'	=> isset($data['dream_tee']) ? $data['dream_tee'] : 0,
+			'events'	=> isset($data['events']) ? $data['events'] : 0,
+			'placements'=> isset($data['placements']) ? $data['placements'] : 0,
+			'project_id'=> $data['project'],
+			'user_type' => $data['type'],
+		);
+		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
+		else $user_array['joined_on'] = date('Y-m-d H:i:s');
+		
+		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
+		
+		$this->db->insert('User',$user_array);
+		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
 
 	function undelete($user_id) {

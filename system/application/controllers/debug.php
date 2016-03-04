@@ -338,7 +338,33 @@ class Debug extends Controller {
 		foreach($cancelled_classes as $cc) {
 			$this->class_model->db->query("UPDATE UserClass SET status='{$cc->class_status}' WHERE class_id={$cc->class_id}");
 		}
+	}
 
+
+	/// Remove spam users. Some time in the early 2016, some bots discovered our registeration form. Got in a lot of spam applicants before I noticed it. This will remove the spam users. And there is this check happening in the insert user part so that they won't get in again.
+	function remove_spam_users() {
+		$data = $this->batch_model->db->query("SELECT id,name,email,phone,address, why_mad FROM User WHERE user_type='applicant' AND address LIKE '%<a %' OR why_mad LIKE '%<a %'")->result_array();
+
+		foreach($data as $row) {
+			// Check for spam...
+			if(stripos($row['address'], '<a ') !== false) {				// There is a link in the address field. Spam.
+				// Make sure this is spam. There are some people with malware infection who automatially inject links into any form they fill.
+				if(
+					(stripos($row['email'], '@gmail.com') !== false)	// People with gmail email ids tend to be real.
+					// and (preg_match('/^[0987]/', $row['phone']))		// Indian Phone number(Well, first number is accurate.)
+					and (strpos($row['name'], ' ') !== false)
+					) {
+					// Not spam
+					dump($row);
+
+					$address = trim(strip_tags($row['address']));
+					$why_mad = trim(strip_tags($row['why_mad']));
+					$this->batch_model->db->query("UPDATE User SET address='$address', why_mad='$why_mad' WHERE id=$row[id]");
+				} else {
+					$this->batch_model->db->query("DELETE FROM User WHERE id=$row[id]");
+				}
+			}
+		}
 	}
 
 

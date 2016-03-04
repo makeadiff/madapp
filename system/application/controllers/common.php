@@ -56,7 +56,7 @@ class Common extends Controller {
 			} else {
 
 				// Check for spam...
-				if(stripos($data['address'], '<a ') !== false) {					// There is a link in the address field. Spam.
+				if((stripos($data['address'], '<a ') !== false) or (stripos($data['address'], 'http://') !== false) or (stripos($data['address'], 'https://') !== false)) {					// There is a link in the address field. Spam.
 						// Make sure this is spam. There are some people with malware infection who automatially inject links into any form they fill.
 						if(
 							(stripos($data['email'], '@gmail.com') !== false)		// People with gmail email ids tend to be real.

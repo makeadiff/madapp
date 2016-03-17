@@ -129,12 +129,16 @@ class Cron extends Controller  {
 	}
 	
 	/// Sometimes, the credits go bad. In such cases, rebuild the credits using the credit history.
-	function recalculate_credits($city_id=0) {
+	function recalculate_credits($city_id=0, $user_id = 0) {
 		$this->load->model('users_model');
 		
-		$conditions = array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'project_id'=>1,'city_id'=>false);
-		if($city_id) $conditions['city_id'] = $city_id;
-		$all_users = $this->users_model->search_users($conditions);
+		if($user_id) {
+			$all_users = json_decode('[{"id":'.$user_id.', "name": "User"}]');
+		} else {
+			$conditions = array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'project_id'=>1,'city_id'=>false);
+			if($city_id) $conditions['city_id'] = $city_id;
+			$all_users = $this->users_model->search_users($conditions);
+		}
 		
 		print "Recalculating credits of " . count($all_users) . " users.\n";
 		foreach($all_users as $user) {

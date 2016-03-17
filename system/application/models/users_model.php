@@ -485,7 +485,13 @@ class Users_model extends Model {
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
 		
 		$classes_so_far = $this->get_usercredits($user_id);
-		
+
+		$start_date = get_year() . '-04-01';
+		$end_date = (get_year() + 1) . '-03-31';
+
+		// Find the sunday after the start_date
+		$current_date = date('Y-m-d', strtotime('next sunday', strtotime($start_date)));
+
 		foreach($classes_so_far as $row) {
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
 				$credit = $credit + $credit_lost_for_missing_class;
@@ -525,6 +531,20 @@ class Users_model extends Model {
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
 					if($debug) print "Missed Zero Hour: $credit_lost_for_missing_zero_hour<br />\n";
 				}
+			}
+
+			// Get all sundays from last date to this class date.
+			$class_date = date('Y-m-d', strtotime($row['class_on']));
+			while($current_date < $class_date) {
+				$current_date = date('Y-m-d', strtotime("next sunday",strtotime($current_date)));
+				// print "$current_date - $class_date : $credit\n";
+
+				// Save user's credit for that week to the DB.
+				$this->db->insert("User_Credit_Archive", array(
+					'user_id'	=> $user_id,
+					'credit'	=> $credit,
+					'credit_on'	=> $current_date,
+				));
 			}
 		}
 		

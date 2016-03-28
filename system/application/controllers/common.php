@@ -65,6 +65,7 @@ class Common extends Controller {
 				if ($resp->isSuccess()) {
 				    // verified!
 				} else {
+					print "Your application has triggered our spam detection algorithm. Click on the back button then make sure you have the \"I'm not a robot\" checkbox ticked.";
 					return false; // Spam.
 				}
 
@@ -81,6 +82,7 @@ class Common extends Controller {
 						$data['why_mad'] = trim(strip_tags($data['why_mad']));
 
 					} else { // Is spam.
+						print "Your application has triggered our spam detection algorithm. Make sure you don't have links/URLs in your application.";
 						return false;
 					}
 				}

@@ -55,6 +55,19 @@ class Common extends Controller {
 				
 			} else {
 
+				require('system/vendor/autoload.php');
+				$secret = '6Le_7hsTAAAAAG8-PiI757qs4LQEzQ28TZOgL-vJ';
+				$recaptcha = new \ReCaptcha\ReCaptcha($secret);
+				$gRecaptchaResponse = $_REQUEST['g-recaptcha-response'];
+				$remoteIp = $_SERVER['REMOTE_ADDR'];
+
+				$resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
+				if ($resp->isSuccess()) {
+				    // verified!
+				} else {
+					return false; // Spam.
+				}
+
 				// Check for spam...
 				if((stripos($data['address'], '<a ') !== false) or (stripos($data['address'], 'http://') !== false) or (stripos($data['address'], 'https://') !== false)) {					// There is a link in the address field. Spam.
 						// Make sure this is spam. There are some people with malware infection who automatially inject links into any form they fill.

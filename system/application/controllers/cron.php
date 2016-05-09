@@ -124,7 +124,7 @@ class Cron extends Controller  {
 					'data'	=> json_encode(array('class_starts_on' => $center->class_starts_on, 'center_head_id'=> $center->center_head_id))
 				));
 			$this->center_model->update_center(array('rootId' => $center->id, 'class_starts_on'=>'0000-00-00'));
-			print $center->class_starts_on . "\n";
+			print "Archived {$center->name} - start date - {$center->class_starts_on}\n";
 		}
 	}
 	

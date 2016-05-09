@@ -105,7 +105,8 @@ class Center_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
-	 /**
+	
+	/**
     * Function to update_center
     * @author:Rabeesh 
     * @param :[$data]
@@ -116,13 +117,13 @@ class Center_model extends Model
 		$center_details = $this->edit_center($center_id)->row();
 		if(!$center_details) return false;
 		
-		$data = array(
-				'name' => $data['center'] ,
-				'center_head_id' => $data['user_id'],
-				'class_starts_on'=> $data['class_starts_on'],
-				);
+		$new_data = array();
+		if(!empty($data['center'])) $new_data['name'] = $data['center'];
+		if(!empty($data['user_id'])) $new_data['center_head_id'] = $data['user_id'];
+		if(!empty($data['class_starts_on'])) $new_data['class_starts_on'] = $data['class_starts_on'];
+
 		$this->db->where('id', $center_id);
-		$this->db->update('Center', $data);
+		$this->db->update('Center', $new_data);
 		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
 		
 		if(!empty($data['center_head_id']) and $data['center_head_id'] > 0) {

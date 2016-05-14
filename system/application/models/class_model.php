@@ -182,7 +182,7 @@ class Class_model extends Model {
         if($level_id) $level_check = " AND Class.level_id=$level_id";
         $result = $this->db->query("SELECT Class.id FROM Class 
             INNER JOIN UserClass on UserClass.class_id=Class.id 
-            WHERE UserClass.user_id=$teacher_id AND DATE_FORMAT(Class.class_on, '%Y-%m-%d')=DATE_FORMAT('$time', '%Y-%m-%d') 
+            WHERE UserClass.user_id=$teacher_id AND DATE(Class.class_on)=DATE('$time') 
             $batch_check $level_check")->result();
 
         return $result;
@@ -414,9 +414,27 @@ class Class_model extends Model {
 		return $closest_unconfirmed_class;
 	}
 
+    /// Find the next class in the given batch from the given date in either direction.
+    function get_next_class($batch_id, $from_date, $direction) {
+        if($direction == "+") {
+            $where = '>';
+            $order = 'ASC';
+            $time  = '23:59:59';
+        } else {
+            $where = '<';
+            $order = 'DESC';
+            $time  = '00:00:00';
+        }
+
+        $next_class = $this->db->query("SELECT * FROM Class WHERE class_on $where '$from_date $time' AND batch_id=$batch_id ORDER BY class_on $order LIMIT 0,1")->row();
+
+        return $next_class;
+    }
+
+
     
     function search_classes($data) {
-    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Class.cancel_option,Class.cancel_reason,Class.status AS class_status,
+    	$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Class.cancel_option,Class.cancel_reason,Class.class_type,Class.status AS class_status,
                     Level.id AS level_id,Level.name,Level.grade,UserClass.user_id,UserClass.substitute_id,UserClass.zero_hour_attendance,UserClass.status
 			FROM Class
 			INNER JOIN Level ON Class.level_id=Level.id
@@ -426,7 +444,7 @@ class Class_model extends Model {
 		return $data;
     }
     
-    function add_class_manually($level_id, $batch_id, $class_on, $user_id) {
+    function add_class_manually($level_id, $batch_id, $class_on, $user_id, $class_type = 'scheduled') {
 		$existing_class = $this->db->query("SELECT id FROM Class WHERE batch_id=$batch_id AND level_id=$level_id AND class_on='$class_on'")->row();
 		if(!$existing_class) {
 			$this->db->insert('Class', array(
@@ -434,6 +452,7 @@ class Class_model extends Model {
 				'batch_id'	=> $batch_id,
 				'class_on'	=> $class_on,
 				'project_id'=> $this->project_id,
+                'class_type'=> $class_type,
 				'status'	=> 'projected'
 			));
 			$class_id = $this->db->insert_id();

@@ -217,6 +217,11 @@ class Cron extends Controller  {
 
 	}
 
+	/// When the year changes, copy over the last year's usergroup structure to the current year. That way, we'll have an archive of people's profile.
+	function copy_user_groups() {
+		$this->user_model->db->query("INSERT INTO UserGroup(user_id, group_id, year) SELECT user_id, group_id, '2016' FROM UserGroup WHERE year='2015'");
+	}
+
 	/// Copy over last year's Class structure. Rename all fancy name to ABC, and increment their grade by one. '7 Rainbow class' becomes '8 A'
 	function copy_class_sturcture() {
 		$current_year = get_year();

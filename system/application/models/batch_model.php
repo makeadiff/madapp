@@ -26,10 +26,14 @@ class Batch_model extends Model {
 	}
 	
 	function get_teachers_in_batch_and_level($batch_id, $level_id) {
-		return colFormat($this->db->query("SELECT user_id FROM UserBatch WHERE batch_id={$batch_id} AND level_id={$level_id} AND user_id!=0")->result());
+		return colFormat($this->db->query("SELECT UserBatch.user_id FROM UserBatch 
+				INNER JOIN UserGroup ON UserBatch.user_id=UserGroup.user_id 
+				WHERE batch_id={$batch_id} AND level_id={$level_id} AND UserBatch.user_id!=0 AND UserGroup.group_id=9")->result());
 	}
 	function get_teachers_in_batch($batch_id) {
-		return $this->db->query("SELECT user_id AS id FROM UserBatch WHERE batch_id={$batch_id}")->result();
+		return $this->db->query("SELECT UserBatch.user_id AS id FROM UserBatch 
+			INNER JOIN UserGroup ON UserBatch.user_id=UserGroup.user_id 
+				WHERE batch_id={$batch_id} AND UserBatch.user_id!=0 AND UserGroup.group_id=9")->result();
 	}
 	
 	function get_all_batches($class_starts_check=false) {
@@ -50,8 +54,9 @@ class Batch_model extends Model {
 	}
 	
 	function get_levels_in_batch($batch_id) {
-		return $this->db->query("SELECT Level.id,Level.name FROM Level INNER JOIN UserBatch ON Level.id=UserBatch.level_id 
-			WHERE UserBatch.batch_id=$batch_id AND Level.project_id={$this->project_id}")->result();
+		return $this->db->query("SELECT DISTINCT Level.id,CONCAT(Level.grade, ' ', Level.name) AS name FROM Level 
+			INNER JOIN UserBatch ON Level.id=UserBatch.level_id 
+			WHERE UserBatch.batch_id=$batch_id AND Level.project_id={$this->project_id} AND Level.year={$this->year}")->result();
 	}
 	
 	function get_batches_in_center($center_id) {

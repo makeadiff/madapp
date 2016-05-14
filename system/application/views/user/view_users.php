@@ -121,7 +121,7 @@ $.tablesorter.addParser({
 </div>
 </td>
 <td style="vertical-align:bottom;"><div  class="field clear" style="margin-left:20px;">
-<input type="submit" value="Get Users"/>
+<input type="submit"  class="button green" value="Get Users"/>
 </div>
 </td>                                     
 </tr>
@@ -171,12 +171,11 @@ $.tablesorter.addParser({
 	<option value="<?php echo $id; ?>"><?php echo $name; ?></option> 
 	<?php } ?>
 </select><br />
-<a href="#" onclick="javascript:$('#group-bulk option').prop('selected', false);">Leave Group Unchanged</a><br />
 </td><td valign="top" style="padding-left:30px;">
-<?php if($this->user_auth->get_permission('user_delete')) { ?><input type="submit" name="action" value="Delete Selected Users" /><?php } ?>
+<?php if($this->user_auth->get_permission('user_delete')) { ?><br /><input type="submit" name="action"  class="button primary" value="Delete Selected Users" /><?php } ?>
 </td>
 </tr></table>
-<input type="submit" name="action" value="Update" /><br />
+<input type="submit" name="action" class="button green" value="Update" /><br />
 </div><?php } ?>
 
 <a class="with-icon settings" href="#" onclick="showFilters()">Filters</a> &nbsp; &nbsp;

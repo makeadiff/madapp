@@ -191,11 +191,21 @@ class Api extends Controller {
 		if(!$batch_id) $batch_id = $this->input('batch_id');
 		if(!$from_date) $from_date = $this->input('class_on');
 
+		if(!$from_date) {
+			$class_from = $this->input('class_from');
+			$direction = $this->input('direction');
+
+			// Change the date to the date of the next class in the said direction.
+			$next_class = $this->class_model->get_next_class($batch_id, $class_from, $direction);
+			$from_date = date("Y-m-d", strtotime($next_class->class_on));
+		}
+
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
 		$center = $this->center_model->edit_center($center_id)->row();
 		$center_name = $center->name;
 		$city_id = $center->city_id;
+
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date));
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'city_id' => $city_id));
 
@@ -221,6 +231,7 @@ class Api extends Controller {
 					'class_status'	=> ($row->status == 'cancelled') ? '0' : '1',
 					'cancel_option'	=> $row->cancel_option,
 					'cancel_reason'	=> $row->cancel_reason,
+					'class_type'	=> $row->class_type,
 					'student_attendance'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,
@@ -271,18 +282,72 @@ class Api extends Controller {
 	 * Returns 	: 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
 	 * Example	: 	http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
 	 */	
-	function class_get_batch($batch_id = 0) {
+	function class_get_batch($batch_id = 0, $class_on = false) {
 		$this->check_key();
 		// Lifted off classes.php:batch_view
 		if(!$batch_id) $batch_id = $this->input('batch_id');
+		if(!$class_on) $class_on = $this->input('class_on');
 
 		if(!$batch_id) return $this->error("User doesn't have a batch");
 
-		$last_class = $this->class_model->get_last_class_in_batch($batch_id);
-		if(!$last_class) return $this->send(array('error' => "This batch does not have any past batches"));
+		if(!$class_on) {
+			$last_class = $this->class_model->get_last_class_in_batch($batch_id);
+			if(!$last_class) return $this->send(array('error' => "This batch does not have any past batches"));
 
-		$from_date = date('Y-m-d', strtotime($last_class->class_on));
+			$from_date = date('Y-m-d', strtotime($last_class->class_on));
+		} else {
+			$from_date = date('Y-m-d', strtotime($class_on));
+		}
+		
 		$this->open_batch($batch_id, $from_date);
+	}
+
+
+	/// Returns all level in the given batch
+	function all_levels_in_batch($batch_id = 0) {
+		$this->check_key();
+		if(!$batch_id) $batch_id = $this->input('batch_id');
+		if(!$batch_id) return $this->error("User doesn't have a batch");
+		$levels = $this->batch_model->get_levels_in_batch($batch_id);
+
+		$this->send(array('levels' => $levels));
+	}
+
+
+	/// Save extra classes using the given batch, class date and a collection of level_ids that the user selected using the app.
+	function save_extra_class($batch_id = 0, $class_on = '', $levels = array()) {
+		$this->check_key();
+		if(!$batch_id) $batch_id = $this->input('batch_id');
+		if(!$batch_id) return $this->error("Specify 'batch_id' as an argument for this call.");
+
+		if(!$class_on) $class_on = $this->input('class_on');
+		if(!$class_on) return $this->error("Specify 'class_on' as argument");
+
+		if(!$levels) $levels = json_decode($this->input('levels'));
+		if(!$levels) return $this->error("Provide an array of levels as argument");
+
+		$class_on = date('Y-m-d 15:00:00', strtotime($class_on));
+		$class_ids = array();
+
+		if($levels) {
+			foreach ($levels as $level_id) {
+				$teachers = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id);
+				foreach($teachers as $teacher_id) {
+					// Make sure its not already inserted.
+					if(!$this->class_model->get_by_teacher_date($teacher_id, $class_on, $batch_id, $level_id)) {
+						list($class_id, $user_class_id) = $this->class_model->add_class_manually($level_id, $batch_id, $class_on, $teacher_id, 'extra');
+						$class_ids[] = $class_id;
+					}
+				}
+				// $this->batch_model->db->query("INSERT INTO Class(batch_id,level_id,project_id,class_on,class_type,status) 
+				// 	VALUES($batch_id, $level_id, '1', '$class_on', 'extra', 'projected')");
+				// $this->batch_model->db->insert_id();
+			}
+
+			$this->send(array('classes' => $class_ids));
+		} else {
+			$this->error("Couldn't create the classes");
+		}
 	}
 
 	/**

@@ -97,6 +97,27 @@ class Api extends Controller {
 		$this->open_class($class_info->id, $class_info, $user_id);
 	}
 
+	function browse_class($batch_id = 0, $level_id = 0, $from_date = '', $direction = '+') {
+		$this->check_key();
+
+		if(!$batch_id) $batch_id = $this->input('batch_id');
+		if(!$level_id) $level_id = $this->input('level_id');
+		if(!$from_date) $from_date = $this->input('class_on');
+
+		if(!$from_date) {
+			$class_from = $this->input('class_from');
+			$direction = $this->input('direction');
+
+			// Change the date to the date of the next class in the said direction.
+			$next_class = $this->class_model->get_next_class($batch_id, $class_from, $direction);
+			$from_date = date("Y-m-d", strtotime($next_class->class_on));
+		}
+		dump($batch_id, $level_id, $from_date);
+
+		$class_info = $this->class_model->get_class_by_batch_level_and_date($batch_id, $level_id, $from_date);
+		$this->open_class($class_info->id, $class_info);
+	}
+
 	/**
 	 * Returns the details of the class with the given ID.
 	 */
@@ -153,6 +174,8 @@ class Api extends Controller {
 		$class_id = $this->input('class_id');
 		$students = json_decode($this->input('students'), true);
 
+		$check_for_understanding = $this->input('check_for_understanding');
+
 		$all_students = array();
 		$attendence = array();
 		foreach($students as $student_id => $student) {
@@ -161,6 +184,7 @@ class Api extends Controller {
 		}
 		//dump($class_id, $all_students, $attendence);
 		$this->class_model->save_attendence($class_id, $all_students, $attendence);
+		$this->class_model->save_class_understanding($class_id, $check_for_understanding);
 
 		$this->send(array('status' => "Class saved."));
 	}

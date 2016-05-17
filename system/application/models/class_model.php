@@ -128,6 +128,10 @@ class Class_model extends Model {
     function save_class_lesson($class_id, $lesson_id) {
     	$this->db->where('id', $class_id)->update('Class',array('lesson_id'=>$lesson_id));
     }
+
+    function save_class_understanding($class_id, $check_for_understanding) {
+        $this->db->where('id', $class_id)->update('Class',array('check_for_understanding'=>$check_for_understanding));   
+    }
     
     /// Get just the class information for the current level
     function get_classes_by_level($level_id) {
@@ -219,7 +223,8 @@ class Class_model extends Model {
     }
     
     function get_class($class_id) {
-    	$class_details = $this->db->where('id',$class_id)->get('Class')->row_array();
+    	// $class_details = $this->db->where('id',$class_id)->get('Class')->row_array();
+        $class_details = $this->db->query('SELECT C.*,CONCAT(L.grade, " ", L.name) AS level FROM Class C INNER JOIN Level L ON L.id=C.level_id WHERE C.id='.$class_id)->row_array();
     	$class_details['teachers'] = $this->db->where('class_id',$class_id)->get("UserClass")->result_array();
     	
     	return $class_details;
@@ -396,8 +401,24 @@ class Class_model extends Model {
                         INNER JOIN Class ON Class.id=UserClass.class_id 
                         INNER JOIN Level ON Class.level_id=Level.id
                         INNER JOIN Center ON Level.center_id=Center.id
-                        WHERE UserClass.user_id=$user_id AND DATE(Class.class_on) = '$class_on' $level_check $batch_check
+                        WHERE DATE(Class.class_on) = '$class_on'  AND UserClass.user_id=$user_id $level_check $batch_check
                         ORDER BY Class.class_on DESC LIMIT 0,1";
+
+        return $this->db->query($query)->row();
+    }
+
+    function get_class_by_batch_level_and_date($batch_id, $level_id, $class_on) {
+        $level_check = '';
+        $batch_check = '';
+
+        if($level_id) $level_check = " AND Class.level_id=$level_id";
+        if($batch_id) $batch_check = " AND Class.batch_id=$batch_id";
+
+        $query = "SELECT Class.id, Class.class_on, Class.level_id, Class.batch_id FROM Class
+                        WHERE DATE(Class.class_on) = '$class_on' $level_check $batch_check
+                        ORDER BY Class.class_on DESC LIMIT 0,1";
+
+        print $query; // :TODO: 
 
         return $this->db->query($query)->row();
     }

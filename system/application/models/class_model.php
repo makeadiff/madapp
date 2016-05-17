@@ -132,6 +132,10 @@ class Class_model extends Model {
     function save_class_understanding($class_id, $check_for_understanding) {
         $this->db->where('id', $class_id)->update('Class',array('check_for_understanding'=>$check_for_understanding));   
     }
+
+	function save_class_satisfaction($class_id, $class_satisfaction) {
+		$this->db->where('id', $class_id)->update('Class',array('class_satisfaction'=>$class_satisfaction));
+	}
     
     /// Get just the class information for the current level
     function get_classes_by_level($level_id) {

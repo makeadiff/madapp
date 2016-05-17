@@ -175,6 +175,7 @@ class Api extends Controller {
 		$students = json_decode($this->input('students'), true);
 
 		$check_for_understanding = $this->input('check_for_understanding');
+		$class_satisfaction= $this->input('class_satisfaction');
 
 		$all_students = array();
 		$attendence = array();
@@ -185,6 +186,7 @@ class Api extends Controller {
 		//dump($class_id, $all_students, $attendence);
 		$this->class_model->save_attendence($class_id, $all_students, $attendence);
 		$this->class_model->save_class_understanding($class_id, $check_for_understanding);
+		$this->class_model->save_class_satisfaction($class_id, $class_satisfaction);
 
 		$this->send(array('status' => "Class saved."));
 	}

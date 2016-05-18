@@ -196,7 +196,7 @@ class Class_model extends Model {
         return $result;
     }
     
-    /// The the absent/present status of the kids of any perticular class.
+    /// The the absent/present status of the kids of any perticular class. :DEPRICATED:
     function get_attendence($class_id) {
     	$result = $this->db->where('class_id', $class_id)->get('StudentClass')->result();
     	
@@ -207,17 +207,35 @@ class Class_model extends Model {
     	
     	return $attendence;
     }
+
+    /// The the participation and the understanding check of all the students in the given class 
+    function get_attendence_and_understanding($class_id) {
+        $result = $this->db->where('class_id', $class_id)->get('StudentClass')->result();
+        
+        $attendence = array(
+                'participation' => array(),
+                'check_for_understanding'   => array()
+            );
+        foreach($result as $class) {
+            $attendence['participation'][$class->student_id] = $class->participation;
+            $attendence['check_for_understanding'][$class->student_id] = $class->check_for_understanding;
+        }
+        
+        return $attendence;
+    }
     
-    function save_attendence($class_id, $all_students, $attendence) {
+    function save_attendence($class_id, $all_students, $participation, $check_for_understanding) {
     	$this->db->where('class_id', $class_id)->delete("StudentClass");
     	
     	foreach($all_students as $student_id=>$name) {
-    		$present = ($attendence[$student_id]) ? '1' : '0';
+    		$present = ($participation[$student_id]) ? '1' : '0';
 	    	$this->db->insert("StudentClass", array(
 	    		'class_id'       => $class_id,
 	    		'student_id'     => $student_id, 
 	    		'present'        => $present,
-                'participation'  => $attendence[$student_id]));
+                'participation'  => $participation[$student_id],
+                'check_for_understanding' => $check_for_understanding[$student_id]
+            ));
 	    }
     }
     
@@ -422,8 +440,6 @@ class Class_model extends Model {
                         WHERE DATE(Class.class_on) = '$class_on' $level_check $batch_check
                         ORDER BY Class.class_on DESC LIMIT 0,1";
 
-        print $query; // :TODO: 
-
         return $this->db->query($query)->row();
     }
 
@@ -440,7 +456,7 @@ class Class_model extends Model {
 	}
 
     /// Find the next class in the given batch from the given date in either direction.
-    function get_next_class($batch_id, $from_date, $direction) {
+    function get_next_class($batch_id, $level_id, $from_date, $direction) {
         if($direction == "+") {
             $where = '>';
             $order = 'ASC';
@@ -451,7 +467,10 @@ class Class_model extends Model {
             $time  = '00:00:00';
         }
 
-        $next_class = $this->db->query("SELECT * FROM Class WHERE class_on $where '$from_date $time' AND batch_id=$batch_id ORDER BY class_on $order LIMIT 0,1")->row();
+        $level_check = '';
+        if($level_id) $level_check = " AND level_id=$level_id";
+
+        $next_class = $this->db->query("SELECT * FROM Class WHERE class_on $where '$from_date $time' $level_check AND batch_id=$batch_id ORDER BY class_on $order LIMIT 0,1")->row();
 
         return $next_class;
     }

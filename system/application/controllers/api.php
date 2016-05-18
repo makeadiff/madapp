@@ -109,13 +109,12 @@ class Api extends Controller {
 			$direction = $this->input('direction');
 
 			// Change the date to the date of the next class in the said direction.
-			$next_class = $this->class_model->get_next_class($batch_id, $class_from, $direction);
+			$next_class = $this->class_model->get_next_class($batch_id, $level_id, $class_from, $direction);
 			$from_date = date("Y-m-d", strtotime($next_class->class_on));
 		}
-		dump($batch_id, $level_id, $from_date);
 
 		$class_info = $this->class_model->get_class_by_batch_level_and_date($batch_id, $level_id, $from_date);
-		$this->open_class($class_info->id, $class_info);
+		$this->open_class($class_info->id);
 	}
 
 	/**
@@ -126,11 +125,12 @@ class Api extends Controller {
 		if(!$class_id) $class_id = $this->input('class_id');
 		if(!$user_id) $user_id = $this->input('user_id');
 
-
 		$class_details = $this->class_model->get_class($class_id);
-		if(!$class_info) $class_info = $this->class_model->get_class_by_id($class_id);
-
-		$class_details['center_name'] = $class_info->name;
+		if(!$class_info) {
+			$class_info = $this->class_model->get_class_by_id($class_id);
+			$class_details['center_name'] = $class_info->name;
+		}
+		
 		$class_details['class_time'] = date('d M, Y, h:i A', strtotime($class_details['class_on']));
 		
 		$level_info = $this->level_model->get_level($class_details['level_id']);
@@ -147,15 +147,18 @@ class Api extends Controller {
 
 		$students = $this->level_model->get_kids_in_level($class_info->level_id);
 
-		$participation = $this->class_model->get_attendence($class_id);
+		$student_data = $this->class_model->get_attendence_and_understanding($class_id);
 		$class_details['students'] = array();
 
 		foreach ($students as $id => $name) {
-			// if(!isset($class_details['students'][$id])) continue;
+			$check_for_understanding = false;
+			if(isset($student_data['check_for_understanding'][$id]) and $student_data['check_for_understanding'][$id] == '1') $check_for_understanding = true;
+
 			$class_details['students'][$id] = array(
 				'name'			=> $name,
 				'id'			=> $id,
-				'participation' => (!isset($participation[$id]) ? 3 : $participation[$id])
+				'participation' => (!isset($student_data['participation'][$id]) ? 3 : $student_data['participation'][$id]),
+				'check_for_understanding'	=> $check_for_understanding
 			);
 		}
 
@@ -173,19 +176,19 @@ class Api extends Controller {
 
 		$class_id = $this->input('class_id');
 		$students = json_decode($this->input('students'), true);
-
-		$check_for_understanding = $this->input('check_for_understanding');
 		$class_satisfaction= $this->input('class_satisfaction');
 
 		$all_students = array();
-		$attendence = array();
+		$participation = array();
+		$check_for_understanding = array();
+
 		foreach($students as $student_id => $student) {
 			$all_students[$student_id] = $student_id;
-			$attendence[$student_id] = $student['participation'];
+			$participation[$student_id] = $student['participation'];
+			$check_for_understanding[$student_id] = $student['check_for_understanding'];
 		}
-		//dump($class_id, $all_students, $attendence);
-		$this->class_model->save_attendence($class_id, $all_students, $attendence);
-		$this->class_model->save_class_understanding($class_id, $check_for_understanding);
+
+		$this->class_model->save_attendence($class_id, $all_students, $participation, $check_for_understanding);
 		$this->class_model->save_class_satisfaction($class_id, $class_satisfaction);
 
 		$this->send(array('status' => "Class saved."));
@@ -222,7 +225,7 @@ class Api extends Controller {
 			$direction = $this->input('direction');
 
 			// Change the date to the date of the next class in the said direction.
-			$next_class = $this->class_model->get_next_class($batch_id, $class_from, $direction);
+			$next_class = $this->class_model->get_next_class($batch_id, 0, $class_from, $direction);
 			$from_date = date("Y-m-d", strtotime($next_class->class_on));
 		}
 

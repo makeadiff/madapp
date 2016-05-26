@@ -189,6 +189,7 @@ class Api extends Controller {
 		}
 
 		$this->class_model->save_attendence($class_id, $all_students, $participation, $check_for_understanding);
+		$this->class_model->save_class_satisfaction($class_id, $class_satisfaction);
 
 		$this->send(array('status' => "Class saved."));
 	}

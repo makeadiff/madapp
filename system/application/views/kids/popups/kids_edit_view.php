@@ -29,15 +29,12 @@ foreach($kids_details as $row) {
 <li><label for="selBulkActions">Select Center</label> 
 <select id="center" name="center" > 
 <option selected="selected" >- Choose -</option> 
-	<?php 
-	$center = $center->result_array();
-	foreach($center as $row)
-	{ ?>
-	<?php if($center_id==$row['id']) { 
+	<?php foreach($center as $row) { ?>
+	<?php if($center_id==$row->id) { 
 	?>
-	<option value="<?php echo $row['id']; ?>" selected="selected"><?php echo $row['name']; ?></option> 
+	<option value="<?php echo $row->id; ?>" selected="selected"><?php echo $row->name; ?></option> 
 	<?php }else{ ?> 
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
+	<option value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option> 
 	<?php } }?>
 </select>
 </li>

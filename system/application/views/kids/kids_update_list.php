@@ -2,7 +2,7 @@
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
-	<th class="colCheck1">Id</th>
+	<th class="colCheck1">ID</th>
 	<th class="colName left sortable">Name</th>
     <th class="colStatus sortable">Birth Day</th>
     <th class="colStatus">Center</th>

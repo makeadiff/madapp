@@ -8,11 +8,8 @@
 <li><label for="selBulkActions">Select Center: </label> 
 <select id="center" name="center" > 
 <option selected="selected" value="-1" >- Choose -</option> 
-	<?php
-	$center = $center->result_array();
-	foreach($center as $row) {
-	?>
-	<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option> 
+	<?php foreach($center as $row) { ?>
+	<option value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option> 
 	<?php } ?>
 </select>
 </li>

@@ -97,16 +97,24 @@ class Kids_model extends Model {
 		return ($affected) ? true: false;
 	}
 
+	function undelete($student_id) {
+		$this->db->where('id',$student_id);
+		$affected = $this->db->update('Student', array('status' => '1'));
+
+		return $affected;
+	}
+
 	/// Function to get_kids_details
 	function get_kids_details($uid, $status = '1') {
 		$this->db->select('*');
 		$this->db->from('Student');
 		$this->db->where('id',$uid);
 		$this->db->where('Student.status', $status);
-		$result=$this->db->get();
+		$result = $this->db->get();
 		return $result;
-	
 	}
+
+
 	/**
     * Function to get_kids_details
     * @author:Rabeesh 
@@ -143,14 +151,16 @@ class Kids_model extends Model {
     **/
 	function update_student($data) {
 		$rootId=$data['rootId'];
-		$data = array(	'center_id'	=> $data['center'],
-						'name'		=> $data['name'],
-						'birthday'	=> $data['date'],
-						'sex'		=> $data ['sex'],
-						'description'=> $data['description'],
-					);
+		$update = array();
+		if(isset($data['center'])) $update['center_id']	= $data['center'];
+		if(isset($data['name'])) $update['name']	= $data['name'];
+		if(isset($data['birthday'])) $update['birthday']	= $data['date'];
+		if(isset($data['sex'])) $update['sex']	= $data['sex'];
+		if(isset($data['description'])) $update['description']	= $data['description'];
+		if(isset($data['reason_for_leaving'])) $update['reason_for_leaving']	= $data['reason_for_leaving'];
+
 		$this->db->where('id', $rootId);
-		$this->db->update('Student', $data);
+		$this->db->update('Student', $update);
 		
 		return ($this->db->affected_rows() > 0) ? 1: 0 ;
 	}

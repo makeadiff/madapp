@@ -85,7 +85,7 @@ foreach($content as $row) {
     
     <td class="colActions right"> 
     <?php if($this->user_auth->get_permission('kids_edit') and $page == 'index') { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
-    <?php if($this->user_auth->get_permission('kids_delete') and $page == 'index') { ?><a class="actionDelete icon delete confirm" href="<?php echo site_url('kids/ajax_deleteStudent/'.$row['id']); ?>">Delete</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_delete') and $page == 'index') { ?><a class="actionDelete icon delete popup" href="<?php echo site_url('kids/popupDelete_kid/'.$row['id']); ?>">Delete</a><?php } ?>
     </td>
 </tr>
 

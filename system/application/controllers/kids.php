@@ -49,7 +49,7 @@ class Kids extends Controller  {
 		);
 		
 		$this->load->view('layout/header',array('title'=>'Deleted Kids'));
-		$this->load->view('kids/kids_list', $data);
+		$this->load->view('kids/show_deleted', $data);
 		$this->load->view('layout/footer');
 	}
 
@@ -66,7 +66,7 @@ class Kids extends Controller  {
 	{	
 		$this->user_auth->check_permission('kids_add');
 		
-		$data['center']= $this->center_model->getcenter();
+		$data['center']= $this->center_model->get_all();
 		$this->load->view('kids/popups/addkids_popup',$data);
 	}
 
@@ -83,11 +83,21 @@ class Kids extends Controller  {
 		$this->user_auth->check_permission('kids_edit');
 		
 		$uid = $this->uri->segment(3);
-		$data['center']= $this->center_model->getcenter();
+		$data['center']= $this->center_model->get_all();
 		$data['kids_details']= $this->kids_model->get_kids_details($uid);
 		$this->load->view('kids/popups/kids_edit_view',$data);
-	
 	}
+
+	function popupDelete_kid() {
+		$this->user_auth->check_permission('kids_delete');
+
+		$uid = $this->uri->segment(3);
+		$data = $this->kids_model->get_kids_details($uid)->row_array();
+		$data['id'] = $uid;
+		$this->load->view('kids/popups/kids_delete_view', $data);
+	}
+
+
 	/**
     *
     * Function to update_kids
@@ -184,7 +194,6 @@ class Kids extends Controller  {
         }
         
 		if($returnFlag) {
-			
 			$this->session->set_flashdata('success', 'Student Inserted successfully');
 			redirect('kids/manageaddkids');
 		} else {
@@ -193,7 +202,29 @@ class Kids extends Controller  {
 		}
 	}
 	
-	
+	function delete_student($student_id) {
+		$this->user_auth->check_permission('kids_delete');
+
+		$reason_for_leaving = $this->input->post('reason_for_leaving');
+
+		$data = array('rootId' => $student_id, 'reason_for_leaving' => $reason_for_leaving);
+		$this->kids_model->update_student($data);
+		
+		$flag = $this->kids_model->delete_kids($student_id);
+		if($flag){
+			$this->session->set_flashdata('success', 'The Student has been deleted successfully.');
+			redirect('kids/manageaddkids');
+		}
+	}
+
+	function undelete($student_id) {
+		$this->user_auth->check_permission('kids_delete');
+
+		$this->kids_model->undelete($student_id);
+
+		$this->session->set_flashdata('success', 'The Student has been un-deleted.');
+		redirect('kids/show_deleted');
+	}
 
 	/**
     *
@@ -209,7 +240,7 @@ class Kids extends Controller  {
 		
 		$flag= $this->kids_model->delete_kids($kid_id);
 		if($flag){
-			$this->session->set_flashdata('success', 'The Kids has been deleted successfully.');
+			$this->session->set_flashdata('success', 'The Student has been deleted successfully.');
 			redirect('kids/manageaddkids');
 		}
 	}

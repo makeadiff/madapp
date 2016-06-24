@@ -255,10 +255,6 @@ class Users_model extends Model {
 			'address'	=> $data['address'],
 			'sex'		=> $data['sex'],
 			'city_id'	=> $data['city'],
-			'english_teacher'	=> isset($data['english_teacher']) ? $data['english_teacher'] : 0,
-			'dream_tee'	=> isset($data['dream_tee']) ? $data['dream_tee'] : 0,
-			'events'	=> isset($data['events']) ? $data['events'] : 0,
-			'placements'=> isset($data['placements']) ? $data['placements'] : 0,
 			'project_id'=> $data['project'],
 			'user_type' => $data['type'],
 		);
@@ -1010,10 +1006,6 @@ class Users_model extends Model {
 										'job_status'=> $data['job_status'],
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
 										'why_mad'	=> $data['why_mad'],
-										'english_teacher'	=> $data['english_teacher'],
-										'dream_tee'	=> $data['dream_tee'],
-										'events'	=> $data['events'],
-										'placements'=> $data['placements'],
 										'source'	=> $data['source'],
 										);
 			$this->db->where('id', $data['user_id'])->update('User', $userdetailsArray);
@@ -1038,10 +1030,6 @@ class Users_model extends Model {
 										'job_status'=> $data['job_status'],
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
 										'why_mad'	=> $data['why_mad'],
-										'english_teacher'	=> isset($data['english_teacher']) ? 1 : 0,
-										'dream_tee'	=> isset($data['dream_tee']) ? 1 : 0,
-										'events'	=> isset($data['events']) ? 1 : 0,
-										'placements'=> isset($data['placements']) ? 1 : 0,
 										'source'	=> $data['source'],
 										'user_type'	=> 'applicant',
 										'status'	=> '1',

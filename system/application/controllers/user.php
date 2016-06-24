@@ -104,10 +104,6 @@ class User extends Controller  {
 		$data['joined_on'] = $_REQUEST['joined_on'];
 		$data['left_on'] = $_REQUEST['left_on'];
 		$data['type'] = $_POST['type'];
-		$data['english_teacher']	= $_POST['english_teacher'];
-		$data['dream_tee']	= $_POST['dream_tee'];
-		$data['events']	= $_POST['events'];
-		$data['placements'] = $_POST['placements'];
 			
 		$data['city'] = $this->session->userdata('city_id');
 		$data['project'] = $this->session->userdata('project_id');
@@ -186,10 +182,6 @@ class User extends Controller  {
 		if($this->input->post('type')) $data['type'] = $this->input->post('type');
 		$data['joined_on'] = $this->input->post('joined_on');
 		$data['left_on'] = $this->input->post('left_on');
-		$data['english_teacher'] = $this->input->post('english_teacher');
-		$data['events'] = $this->input->post('events');
-		$data['dream_tee'] = $this->input->post('dream_tee');
-		$data['placements'] = $this->input->post('placements');
 		$data['reason_for_leaving'] = $this->input->post('reason_for_leaving');
 		
 		$flag= $this->users_model->updateuser($data);

@@ -65,9 +65,9 @@ class Users_model extends Model {
 	function getgroup_details($show_hirachy_groups = false)
 	{
 		$group_type = "";
-		if(!$show_hirachy_groups) $group_type = "WHERE group_type='normal'";
+		if(!$show_hirachy_groups) $group_type = " AND group_type='normal'";
 
-		$data = $this->db->query("SELECT * FROM `Group` $group_type 
+		$data = $this->db->query("SELECT * FROM `Group` WHERE status='1' $group_type 
 			ORDER BY type='national' DESC,type='strat' DESC,type='fellow' DESC,type='volunteer' DESC, name");
 
 		return $data;
@@ -184,7 +184,7 @@ class Users_model extends Model {
 	function get_user_groups_of_user($user_id, $data='name') {
 		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group` 
 				INNER JOIN UserGroup ON Group.id=UserGroup.group_id 
-				WHERE UserGroup.user_id=$user_id AND UserGroup.year='{$this->year}'")->result();
+				WHERE UserGroup.user_id=$user_id AND UserGroup.year='{$this->year}' AND `Group`.status='1'")->result();
 		$all_groups = idNameFormat($groups);
 
 		return $all_groups;

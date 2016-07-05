@@ -226,7 +226,8 @@ class Api extends Controller {
 
 			// Change the date to the date of the next class in the said direction.
 			$next_class = $this->class_model->get_next_class($batch_id, 0, $class_from, $direction);
-			$from_date = date("Y-m-d", strtotime($next_class->class_on));
+			if($next_class) $from_date = date("Y-m-d", strtotime($next_class->class_on));
+			else $from_date = date("Y-m-d");
 		}
 
 		$batch = $this->batch_model->get_batch($batch_id);

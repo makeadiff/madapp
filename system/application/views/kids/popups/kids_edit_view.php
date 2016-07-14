@@ -43,7 +43,7 @@ foreach($kids_details as $row) {
 			
 </li>
 <li><label for="date">Date of Birth</label>
-	<input name="date-pick" class="date-pick" id="date-pick" type="text" value="<?php echo $birthday ; ?>">
+	<input name="birthday" class="date-pick" id="date-pick" type="text" value="<?php echo $birthday ; ?>">
     <img src="<?php echo base_url()?>images/calender_images/cal.gif" onclick="javascript:NewCssCal ('date-pick','yyyyMMdd','arrow')" style="cursor:pointer"/>
 	<p class="error clear"></p>
 </li><br />

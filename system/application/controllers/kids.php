@@ -118,8 +118,8 @@ class Kids extends Controller  {
 		$data['name']=$_REQUEST['name'];
 		$data['sex']=$_REQUEST['sex'];
 		
-		$date= date('Y-m-d', strtotime($_REQUEST['date-pick']));
-		$data['date'] = $date;
+		$date= date('Y-m-d', strtotime($_REQUEST['birthday']));
+		$data['birthday'] = $date;
 		$data['description']=$_REQUEST['description'];
 		$returnFlag= $this->kids_model->update_student($data);
 		

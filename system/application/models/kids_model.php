@@ -154,7 +154,7 @@ class Kids_model extends Model {
 		$update = array();
 		if(isset($data['center'])) $update['center_id']	= $data['center'];
 		if(isset($data['name'])) $update['name']	= $data['name'];
-		if(isset($data['birthday'])) $update['birthday']	= $data['date'];
+		if(isset($data['birthday'])) $update['birthday']	= $data['birthday'];
 		if(isset($data['sex'])) $update['sex']	= $data['sex'];
 		if(isset($data['description'])) $update['description']	= $data['description'];
 		if(isset($data['reason_for_leaving'])) $update['reason_for_leaving']	= $data['reason_for_leaving'];

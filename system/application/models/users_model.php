@@ -172,10 +172,8 @@ class Users_model extends Model {
 	{
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
-		$this->db->delete('Group');
+		$this->db->update('Group', array('status' => '0'));
 		
-		$this->db->where('group_id',$id);
-		$this->db->delete('GroupPermission');
 			
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}

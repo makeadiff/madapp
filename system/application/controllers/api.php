@@ -110,6 +110,9 @@ class Api extends Controller {
 
 			// Change the date to the date of the next class in the said direction.
 			$next_class = $this->class_model->get_next_class($batch_id, $level_id, $class_from, $direction);
+			if(!$next_class) {
+				return $this->error("No classes found beyond this point.");
+			}
 			$from_date = date("Y-m-d", strtotime($next_class->class_on));
 		}
 

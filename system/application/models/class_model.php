@@ -389,7 +389,7 @@ class Class_model extends Model {
     					INNER JOIN Center ON Level.center_id=Center.id
     					WHERE UserClass.user_id=$user_id
                             AND Level.year = {$this->year}
-    						AND Class.class_on < NOW()
+    						AND DATE(Class.class_on) <= CURDATE()
     					ORDER BY Class.class_on DESC LIMIT 0,1";
     				
     	return $this->db->query($query)->row();

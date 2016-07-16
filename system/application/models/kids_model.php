@@ -90,9 +90,10 @@ class Kids_model extends Model {
 		$this->db->where('id',$id);
 		$this->db->update('Student', array('status' => '0'));
 		$affected = $this->db->affected_rows();
-		 
-		$this->db->where('student_id',$id);
-		$this->db->delete('StudentLevel');
+
+		//Disabling deleting student level associations until we figure out how to convert student to alumni when they leave the center
+		/*$this->db->where('student_id',$id);
+		$this->db->delete('StudentLevel');*/
 		 
 		return ($affected) ? true: false;
 	}

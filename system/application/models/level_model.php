@@ -106,15 +106,50 @@ class Level_model extends Model {
     }
 
     function save_student_level_mapping($student_id, $level_id) {
-    	if($student_id == 0) $this->db->delete("StudentLevel", array('level_id'=>$level_id));
-    	else if($level_id == 0) $this->db->delete("StudentLevel", array('student_id'=>$student_id));
+    	if($student_id == 0) $this->clear_existing_mapping(array('level_id'=>$level_id));
+    	else if($level_id == 0) $this->clear_existing_mapping(array('student_id'=>$student_id));
     	else {
-    		$this->db->delete("StudentLevel", array('student_id'=>$student_id));
+    		// $this->db->delete("StudentLevel", array('student_id'=>$student_id));
+    		$this->clear_existing_mapping(array('student_id'=>$student_id));
+
     		$this->db->insert("StudentLevel", array(
     			'student_id'=>$student_id, 
     			'level_id' => $level_id
     		));
     	}
+    }
+
+    /**
+     * This is to make sure that mapping from other years are not deleted. Make sure only the current year or the given year mappings are deleted.
+     */
+    function clear_existing_mapping($mapping, $year = 0) {
+    	if(!$year) $year = $this->year;
+    	extract($mapping);
+
+    	if(isset($student_id)) {
+	    	$levels = $this->db->query("SELECT level_id FROM StudentLevel SL 
+	    		INNER JOIN Level L ON L.id=SL.level_id 
+	    		WHERE SL.student_id=$student_id AND L.year=$year")->result();
+
+	    	$levels_associated_with_student = array();
+	    	foreach ($levels as $level_info) {
+	    		$levels_associated_with_student[] = $level_info->level_id;
+	    	}
+
+	    	if($levels_associated_with_student)
+		    	$this->db->query("DELETE FROM StudentLevel WHERE level_id IN (" . implode(",", $levels_associated_with_student) . ")");
+
+	    } else {
+	    	$levels = $this->db->query("SELECT id FROM Level WHERE year=$year")->result();
+
+	    	$levels_associated_with_year = array();
+	    	foreach ($levels as $level_info) {
+	    		$levels_associated_with_year[] = $level_info->level_id;
+	    	}
+
+	    	if($levels_associated_with_year)
+		    	$this->db->query("DELETE FROM StudentLevel WHERE level_id IN (" . implode(",", $levels_associated_with_year) . ")");
+	    }
     }
 	
 	/// Returs all the ids of the levels the given user teachs at.

@@ -644,7 +644,7 @@ class Class_model extends Model {
 		return count($data);
     }
         
-	 /**
+	/**
     *
     * Function to
     * @author : Rabeesh
@@ -657,30 +657,4 @@ class Class_model extends Model {
 		$attendance = $this->db->query("SELECT COUNT(id) as count FROM StudentClass WHERE class_id=$class_id AND present=1")->row()->count;
     	return $attendance;
 	}
-	 /**
-    *
-    * Function to
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
-	 /// Get just the class information for the current level/batch
-    function get_examname_by_level_and_center($level_id) {
-    	$classes = $this->db->query("SELECT Exam.id,Exam.name,Exam_Event.exam_on,Exam_Event.Level_id,Exam_Event.center_id 
-			FROM Exam JOIN Exam_Event ON Exam.id=Exam_Event.exam_id WHERE Exam_Event.center_id=$level_id ORDER BY Exam.id ASC")->result();
-    	return $classes;
-    }
-	function get__student_marks ($exam,$students)
-	{
-		return $this->db->query("SELECT Exam_Subject.name,Exam_Mark.mark FROM Exam_Mark JOIN Exam_Subject ON Exam_Mark.subject_id = 
-			Exam_Subject.id WHERE Exam_Mark.exam_id=$exam AND Exam_Mark.student_id=$students")->result();	
-			
-	}
-	function get__student_attendence($kids_id)
-	{
-		return $this->db->query("SELECT COUNT(StudentClass.id) AS count FROM StudentClass JOIN Exam_Mark ON Exam_Mark.student_id = 
-			StudentClass.student_id WHERE StudentClass.student_id=$kids_id AND StudentClass.present=1")->row()->count;	
-	}
-	
 }

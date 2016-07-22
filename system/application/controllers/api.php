@@ -465,6 +465,33 @@ class Api extends Controller {
 		$this->send(array('success' => "Class Attendance Updated", 'status'=>'1'));
 	}
 
+	////////////////////////////////////////// Reports ////////////////////////////////
+	function report_student_absenteeism() {
+		$this->load->model('kids_model');
+		$this->kids_model->year = get_year();
+
+		$level_id = $this->input('level_id');
+
+		$students = $this->level_model->get_kids_in_level($level_id);
+
+		$attendence = array();
+		foreach ($students as $student_id => $student_name) {
+			$attendence_all = $this->kids_model->get_attendance($student_id, 0);
+			$attendence_six = $this->kids_model->get_attendance($student_id, 6);
+			for($i = 0; $i < count($attendence_all); $i++) if(!$attendence_all[$i]->present) $attendence_all[$i]->present = 0;
+			for($i = 0; $i < count($attendence_six); $i++) if(!$attendence_six[$i]->present) $attendence_six[$i]->present = 0;
+
+			$attendence[$student_id] = array(
+				'id'			=> $student_id,
+				'name'			=> $student_name,
+				'attendence_all'=> $attendence_all,
+				'attendence_six'=> $attendence_six
+			);
+		}
+
+		$this->send(array('report' => $attendence));
+	}
+
 
 	///////////////////////////////////////// Internal ////////////////////////////////
 	function input($name) {

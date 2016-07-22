@@ -752,11 +752,13 @@ class Users_model extends Model {
 			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}' 
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
 
-		$teacher_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.id AS class_id, C.class_on, Ctr.name AS center_name
-			FROM Class C 
+		$teacher_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, UB.level_id, CONCAT(L.grade, ' ', L.name) AS level, B.day, B.class_time, C.id AS class_id, C.class_on, Ctr.name AS center_name
+			FROM Class C
 			INNER JOIN UserClass UC ON UC.class_id=C.id
 			INNER JOIN Batch B ON C.batch_id=B.id
+			INNER JOIN UserBatch UB ON UB.batch_id=B.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
+			INNER JOIN Level L ON UB.level_id=L.id
 			WHERE B.status='1' AND UC.user_id='$user_id' AND B.year='{$this->year}' 
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
 		

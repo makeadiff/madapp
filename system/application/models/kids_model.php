@@ -17,6 +17,7 @@ class Kids_model extends Model {
 		$this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
+
 		$this->year = $this->ci->session->userdata('year');
     }
 
@@ -37,7 +38,6 @@ class Kids_model extends Model {
 		return $result;
 	}
 	function getkids_details($city_id = 0, $center_id = 0) { return $this->get_all($city_id, $center_id); } // :ALIAS: :DEPRECIATED:
-
 	
 	/// Returns the deleted kids of the given center.
 	function get_deleted_kids($city_id = 0) {
@@ -204,5 +204,20 @@ class Kids_model extends Model {
 		$data = $this->db->get();
 
 		return $data;
-	}	
+	}
+
+	/// Returns the attendance of the given student - for the last X classes - can be specified as second argument.
+	function get_attendance($student_id, $class_count=0) {
+		$limit = '';
+		if($class_count) $limit = "LIMIT 0,$class_count";
+		$attendance = $this->db->query("SELECT SUM(SC.present) AS present, COUNT(SC.id) AS total 
+							FROM StudentClass SC
+							INNER JOIN Class C ON C.id=SC.class_id
+							INNER JOIN Level L ON C.level_id=L.id
+							WHERE L.year={$this->year} AND SC.student_id=$student_id
+							ORDER BY C.class_on DESC
+							$limit")->result();
+
+		return $attendance;
+	}
 }

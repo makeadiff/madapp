@@ -159,10 +159,14 @@ class Debug extends Controller {
 
 	// Add Back classes for the entire city.
 	function add_back_classes($city_id=0, $center_id = 0) {
-		if(!$center_id)
-			$all_centers = $this->center_model->get_all($city_id);
-		else
-			$all_centers = $this->center_model->get_info($center_id);
+		if($city_id) {
+			if(!$center_id)
+				$all_centers = $this->center_model->get_all($city_id);
+			else
+				$all_centers = $this->center_model->get_info($center_id);
+		} else {
+			$all_centers = $this->center_model->get_all_centers($city_id);
+		}
 
 		foreach($all_centers as $center) {
 			$batches = $this->batch_model->get_batches_in_center($center->id);
@@ -175,23 +179,26 @@ class Debug extends Controller {
 			print "Generating back classes for " . $center->name . "<br />";
 
 			foreach ($batches as $batch) {
+				print " &nbsp; &nbsp Batch: {$batch->day} {$batch->class_time}<br />";
 				if($batch->day == $start_on_day) {
 					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on));
 					$this->add_class_to_batch($batch->id, $class_starts_on);
-					echo "= $batch->id : $class_starts_on<br />";
+					echo " &nbsp; &nbsp  &nbsp; &nbsp = $batch->id : $class_starts_on<br />";
 
 				} else if($batch->day < $start_on_day) {
 					$difference = ($batch->day + 7) - $start_on_day;
 					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on) + ($difference * 24 * 60 * 60));
 					$this->add_class_to_batch($batch->id, $class_starts_on);
-					echo "< $batch->id : $class_starts_on<br />";
+					echo " &nbsp; &nbsp  &nbsp; &nbsp < $batch->id : $class_starts_on<br />";
 
 				} else if($batch->day > $start_on_day) {
 					$difference = $batch->day + $start_on_day;
 					$class_starts_on = date('Y-m-d', strtotime($center_class_starts_on) + ($difference * 24 * 60 * 60));
 					$this->add_class_to_batch($batch->id, $class_starts_on);
-					echo "> $batch->id : $class_starts_on<br />";
+					echo " &nbsp; &nbsp  &nbsp; &nbsp > $batch->id : $class_starts_on<br />";
 				}
+
+				print "<br />";
 			}
 			print "<br />";
 		}

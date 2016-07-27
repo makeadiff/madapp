@@ -26,9 +26,10 @@ class Batch_model extends Model {
 	}
 	
 	function get_teachers_in_batch_and_level($batch_id, $level_id) {
-		return colFormat($this->db->query("SELECT UserBatch.user_id FROM UserBatch 
-				INNER JOIN UserGroup ON UserBatch.user_id=UserGroup.user_id 
-				WHERE batch_id={$batch_id} AND level_id={$level_id} AND UserBatch.user_id!=0 AND UserGroup.group_id=9")->result());
+		return colFormat($this->db->query("SELECT DISTINCT UB.user_id FROM UserBatch UB
+				INNER JOIN Batch B ON B.id=UB.batch_id
+				INNER JOIN UserGroup ON UB.user_id=UserGroup.user_id 
+				WHERE batch_id={$batch_id} AND level_id={$level_id} AND UB.user_id!=0 AND UserGroup.group_id=9 AND B.year={$this->year}")->result());
 	}
 	function get_teachers_in_batch($batch_id) {
 		return $this->db->query("SELECT UserBatch.user_id AS id FROM UserBatch 

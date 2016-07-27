@@ -109,13 +109,13 @@ class Level_model extends Model {
     	if($student_id == 0) $this->clear_existing_mapping(array('level_id'=>$level_id));
     	else if($level_id == 0) $this->clear_existing_mapping(array('student_id'=>$student_id));
     	else {
-    		// $this->db->delete("StudentLevel", array('student_id'=>$student_id));
     		$this->clear_existing_mapping(array('student_id'=>$student_id));
 
     		$this->db->insert("StudentLevel", array(
     			'student_id'=>$student_id, 
     			'level_id' => $level_id
     		));
+    		$insert_id = $this->db->insert_id();
     	}
     }
 
@@ -125,7 +125,7 @@ class Level_model extends Model {
     function clear_existing_mapping($mapping, $year = 0) {
     	if(!$year) $year = $this->year;
     	extract($mapping);
-
+    	
     	if(isset($student_id)) {
 	    	$levels = $this->db->query("SELECT level_id FROM StudentLevel SL 
 	    		INNER JOIN Level L ON L.id=SL.level_id 
@@ -133,22 +133,13 @@ class Level_model extends Model {
 
 	    	$levels_associated_with_student = array();
 	    	foreach ($levels as $level_info) {
-	    		$levels_associated_with_student[] = $level_info->level_id;
+	    		$level_id = $level_info->level_id;
+	    		$this->db->query("DELETE FROM StudentLevel WHERE level_id=$level_id AND student_id=$student_id");
 	    	}
 
-	    	if($levels_associated_with_student)
-		    	$this->db->query("DELETE FROM StudentLevel WHERE level_id IN (" . implode(",", $levels_associated_with_student) . ")");
-
-	    } else {
-	    	$levels = $this->db->query("SELECT id FROM Level WHERE year=$year")->result();
-
-	    	$levels_associated_with_year = array();
-	    	foreach ($levels as $level_info) {
-	    		$levels_associated_with_year[] = $level_info->level_id;
-	    	}
-
-	    	if($levels_associated_with_year)
-		    	$this->db->query("DELETE FROM StudentLevel WHERE level_id IN (" . implode(",", $levels_associated_with_year) . ")");
+	    } elseif(isset($level_id)) { // Clears the mapping for an entire level. 
+	    	if(! $this->db->query("SELECT id FROM Level WHERE id=$level_id AND year=$year")->row()) return; // If the given level_id is not of the said year, return.
+	    	$this->db->query("DELETE FROM StudentLevel WHERE level_id=$level_id");
 	    }
     }
 	

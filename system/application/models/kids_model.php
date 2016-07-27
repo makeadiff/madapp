@@ -210,14 +210,44 @@ class Kids_model extends Model {
 	function get_attendance($student_id, $class_count=0) {
 		$limit = '';
 		if($class_count) $limit = "LIMIT 0,$class_count";
-		$attendance = $this->db->query("SELECT SUM(SC.present) AS present, COUNT(SC.id) AS total 
+		$attendance = $this->db->query("SELECT SUM(CASE WHEN SC.present = '1' THEN 1 ELSE 0 END) AS sum, COUNT(SC.id) AS total 
 							FROM StudentClass SC
 							INNER JOIN Class C ON C.id=SC.class_id
 							INNER JOIN Level L ON C.level_id=L.id
-							WHERE L.year={$this->year} AND SC.student_id=$student_id
+							WHERE L.year={$this->year} AND SC.student_id=$student_id AND C.status='happened'
 							ORDER BY C.class_on DESC
 							$limit")->result();
 
 		return $attendance;
+	}
+
+	/// Returns the check for understanding of the given student - for the last X classes - can be specified as second argument.
+	function get_understanding($student_id, $class_count=0) {
+		$limit = '';
+		if($class_count) $limit = "LIMIT 0,$class_count";
+		$understanding = $this->db->query("SELECT SUM(SC.check_for_understanding) AS sum, COUNT(SC.id) AS total 
+							FROM StudentClass SC
+							INNER JOIN Class C ON C.id=SC.class_id
+							INNER JOIN Level L ON C.level_id=L.id
+							WHERE L.year={$this->year} AND SC.student_id=$student_id AND C.status='happened'
+							ORDER BY C.class_on DESC
+							$limit")->result();
+
+		return $understanding;
+	}
+
+	/// Returns the participation level - basically the count of times the student had 3 or more participation - of the given student - for the last X classes - can be specified as second argument.
+	function get_participation($student_id, $class_count=0) {
+		$limit = '';
+		if($class_count) $limit = "LIMIT 0,$class_count";
+		$participation = $this->db->query("SELECT SUM(CASE WHEN SC.participation >= 3 THEN 1 ELSE 0 END) AS sum, COUNT(SC.id) AS total
+							FROM StudentClass SC
+							INNER JOIN Class C ON C.id=SC.class_id
+							INNER JOIN Level L ON C.level_id=L.id
+							WHERE L.year={$this->year} AND SC.student_id=$student_id AND C.status='happened'
+							ORDER BY C.class_on DESC
+							$limit")->result();
+
+		return $participation;
 	}
 }

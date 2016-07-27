@@ -10,14 +10,17 @@ class Api extends Controller {
 		$this->load->model('batch_model');
 		$this->load->model('level_model');
 		$this->load->model('center_model');
+		$this->load->model('kids_model');
 		$this->user_model->year = get_year();
 		$this->class_model->year = get_year();
 		$this->level_model->year = get_year();
 		$this->batch_model->year = get_year();
+		$this->kids_model->year = get_year();
 		$this->user_model->project_id = 1;
 		$this->class_model->project_id = 1;
 		$this->level_model->project_id = 1;
 		$this->batch_model->project_id = 1;
+		$this->kids_model->project_id = 1;
 
 		header("Content-type: application/json");
 		header('Access-Control-Allow-Origin: *');
@@ -466,26 +469,30 @@ class Api extends Controller {
 	}
 
 	////////////////////////////////////////// Reports ////////////////////////////////
+	/// Returns the absenteeism report for all students who are in the given level
 	function report_student_absenteeism() {
-		$this->load->model('kids_model');
-		$this->kids_model->year = get_year();
-
 		$level_id = $this->input('level_id');
 
 		$students = $this->level_model->get_kids_in_level($level_id);
 
 		$attendence = array();
 		foreach ($students as $student_id => $student_name) {
-			$attendence_all = $this->kids_model->get_attendance($student_id, 0);
-			$attendence_six = $this->kids_model->get_attendance($student_id, 6);
-			for($i = 0; $i < count($attendence_all); $i++) if(!$attendence_all[$i]->present) $attendence_all[$i]->present = 0;
-			for($i = 0; $i < count($attendence_six); $i++) if(!$attendence_six[$i]->present) $attendence_six[$i]->present = 0;
+			$all = $this->kids_model->get_attendance($student_id, 0);
+			$six = $this->kids_model->get_attendance($student_id, 6);
+			for($i = 0; $i < count($all); $i++) {
+				if(!$all[$i]->sum) $all[$i]->sum = 0;
+				$all[$i]->sum = $all[$i]->total - $all[$i]->sum; // Because we need the absence.
+			}
+			for($i = 0; $i < count($six); $i++) {
+				if(!$six[$i]->sum) $six[$i]->sum = 0;
+				$six[$i]->sum = $six[$i]->total - $six[$i]->sum;
+			}
 
 			$attendence[$student_id] = array(
 				'id'			=> $student_id,
 				'name'			=> $student_name,
-				'attendence_all'=> $attendence_all,
-				'attendence_six'=> $attendence_six
+				'all'			=> $all,
+				'six'			=> $six
 			);
 		}
 
@@ -493,6 +500,53 @@ class Api extends Controller {
 	}
 
 
+	/// Get all the students in the given level - and see how their check for understanding has been for the last 6 classes - and all the classes.
+	function report_check_for_understanding() {
+		$level_id = $this->input('level_id');
+
+		$students = $this->level_model->get_kids_in_level($level_id);
+
+		$check_for_understanding = array();
+		foreach ($students as $student_id => $student_name) {
+			$all = $this->kids_model->get_understanding($student_id, 0);
+			$six = $this->kids_model->get_understanding($student_id, 6);
+			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
+			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+
+			$check_for_understanding[$student_id] = array(
+				'id'			=> $student_id,
+				'name'			=> $student_name,
+				'all'			=> $all,
+				'six'			=> $six
+			);
+		}
+
+		$this->send(array('report' => $check_for_understanding));
+	}
+
+	/// Get all the students in the given level - and see how their participation has been for the last 6 classes - and all the classes.
+	function report_child_participation() {
+		$level_id = $this->input('level_id');
+
+		$students = $this->level_model->get_kids_in_level($level_id);
+
+		$child_participation = array();
+		foreach ($students as $student_id => $student_name) {
+			$all = $this->kids_model->get_participation($student_id, 0);
+			$six = $this->kids_model->get_participation($student_id, 6);
+			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
+			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+
+			$child_participation[$student_id] = array(
+				'id'			=> $student_id,
+				'name'			=> $student_name,
+				'all'			=> $all,
+				'six'			=> $six
+			);
+		}
+
+		$this->send(array('report' => $child_participation));
+	}
 	///////////////////////////////////////// Internal ////////////////////////////////
 	function input($name) {
 		$return = '';

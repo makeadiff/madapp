@@ -547,6 +547,145 @@ class Api extends Controller {
 
 		$this->send(array('report' => $child_participation));
 	}
+
+
+	/// Get Zero Hour Attendance for everyone in the given batch
+	function mentor_report_zero_hour_attendance() {
+		$batch_id = $this->input('batch_id');
+
+		$teachers = $this->batch_model->get_batch_teachers($batch_id);
+		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
+		// print json_encode($teachers); exit;
+
+		$zero_hour_attendance = array();
+		foreach ($teachers as $teach) {
+			$teacher_id = $teach->id;
+			$all = $this->class_model->get_zero_hour_attendance($teacher_id, 0);
+			$six = $this->class_model->get_zero_hour_attendance($teacher_id, 6);
+			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
+			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+
+			if(!isset($zero_hour_attendance[$teach->level_id])) {
+				$zero_hour_attendance[$teach->level_id] = array(
+					'id' 	=> $teach->level_id,
+					'name'	=> $all_levels[$teach->level_id]
+				);
+			}
+
+			$zero_hour_attendance[$teach->level_id]['teachers'][$teacher_id] = array(
+				'id'			=> $teacher_id,
+				'name'			=> $teach->name,
+				'level'			=> $all_levels[$teach->level_id],
+				'all'			=> $all,
+				'six'			=> $six
+			);
+		}
+
+		$this->send(array('report' => $zero_hour_attendance, 'levels' => $all_levels));
+	}
+
+	/// Get Class Satisfaction for everyone in the given batch
+	function mentor_class_satisfaction() {
+		$batch_id = $this->input('batch_id');
+
+		$teachers = $this->batch_model->get_batch_teachers($batch_id);
+		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
+		// print json_encode($teachers); exit;
+
+		$class_satisfaction = array();
+		foreach ($teachers as $teach) {
+			$teacher_id = $teach->id;
+			$all = $this->class_model->get_class_satisfaction($teacher_id, 0);
+			$six = $this->class_model->get_class_satisfaction($teacher_id, 6);
+			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
+			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+
+			if(!isset($class_satisfaction[$teach->level_id])) {
+				$class_satisfaction[$teach->level_id] = array(
+					'id' 	=> $teach->level_id,
+					'name'	=> $all_levels[$teach->level_id]
+				);
+			}
+
+			$class_satisfaction[$teach->level_id]['teachers'][$teacher_id] = array(
+				'id'			=> $teacher_id,
+				'name'			=> $teach->name,
+				'level'			=> $all_levels[$teach->level_id],
+				'all'			=> $all,
+				'six'			=> $six
+			);
+		}
+
+		$this->send(array('report' => $class_satisfaction, 'levels' => $all_levels));
+	}
+
+	function mentor_child_participation() {
+		$batch_id = $this->input('batch_id');
+
+		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
+
+		$class_participation = array();
+		foreach ($all_levels as $level_id => $level) {
+			$students = $this->level_model->get_kids_in_level($level_id);
+
+			foreach ($students as $student_id => $student_name) {
+				$all = $this->kids_model->get_participation($student_id, 0);
+				$six = $this->kids_model->get_participation($student_id, 6);
+				for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
+				for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+
+				if(!isset($child_participation[$level_id])) {
+					$child_participation[$level_id] = array(
+						'id' 	=> $level_id,
+						'name'	=> $all_levels[$level_id]
+					);
+				}
+
+				$child_participation[$level_id]['students'][$student_id] = array(
+					'id'			=> $student_id,
+					'name'			=> $student_name,
+					'all'			=> $all,
+					'six'			=> $six
+				);
+			}
+		}
+
+		$this->send(array('report' => $child_participation, 'levels' => $all_levels)); 
+	}
+
+	function mentor_child_cfu() {
+		$batch_id = $this->input('batch_id');
+
+		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
+
+		$class_participation = array();
+		foreach ($all_levels as $level_id => $level) {
+			$students = $this->level_model->get_kids_in_level($level_id);
+
+			foreach ($students as $student_id => $student_name) {
+				$all = $this->kids_model->get_understanding($student_id, 0);
+				$six = $this->kids_model->get_understanding($student_id, 6);
+				for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
+				for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+
+				if(!isset($child_participation[$level_id])) {
+					$child_participation[$level_id] = array(
+						'id' 	=> $level_id,
+						'name'	=> $all_levels[$level_id]
+					);
+				}
+
+				$child_participation[$level_id]['students'][$student_id] = array(
+					'id'			=> $student_id,
+					'name'			=> $student_name,
+					'all'			=> $all,
+					'six'			=> $six
+				);
+			}
+		}
+
+		$this->send(array('report' => $child_participation, 'levels' => $all_levels)); 
+	}
 	///////////////////////////////////////// Internal ////////////////////////////////
 	function input($name) {
 		$return = '';

@@ -763,6 +763,15 @@ class Users_model extends Model {
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() 
 			ORDER BY class_on 
 			DESC LIMIT 0,1)")->result();
+
+		// Find and put the batch name(Sunday, 4 PM) using the day and class time.
+		$weekdays = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Error');
+		for($i=0; $i<count($mentor_at);$i++) {
+			$mentor_at[$i]->batch_name = $weekdays[$mentor_at[$i]->day] . ', ' . date('g A', strtotime('2016-07-28 ' . $mentor_at[$i]->class_time));
+		}
+		for($i=0; $i<count($teacher_at);$i++) {
+			$teacher_at[$i]->batch_name = $weekdays[$teacher_at[$i]->day] . ', ' . date('g A', strtotime('2016-07-28 ' . $teacher_at[$i]->class_time));
+		}
 		
 		return array('teacher_at' => $teacher_at, 'mentor_at' => $mentor_at);
 	}

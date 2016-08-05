@@ -250,4 +250,6 @@ class Kids_model extends Model {
 
 		return $participation;
 	}
+
+
 }

@@ -2,6 +2,20 @@
 class Api extends Controller {
 	public $key = 'am3omo32hom4lnv32vO';
 
+	public 	$report_level_config = array(
+		'teacher'	=> array(
+				'student_attendance'		=> array('80', '60', '0'),
+				'check_for_understanding'	=> array('80', '60', '0'),
+				'child_participation'		=> array('80', '60', '0'),
+			),
+		'mentor'	=> array(
+				'student_attendance'		=> array('80', '60', '0'),
+				'check_for_understanding'	=> array('80', '60', '0'),
+				'child_participation'		=> array('80', '60', '0'),
+				'teacher_satisfaction'		=> array('80', '60', '0'),
+			)
+	);
+
 	function Api() {
 		parent::Controller();
 
@@ -469,6 +483,7 @@ class Api extends Controller {
 	}
 
 	////////////////////////////////////////// Reports ////////////////////////////////
+
 	/// Returns the absenteeism report for all students who are in the given level
 	function report_student_absenteeism() {
 		$level_id = $this->input('level_id');
@@ -664,9 +679,7 @@ class Api extends Controller {
 
 			foreach ($students as $student_id => $student_name) {
 				$all = $this->kids_model->get_understanding($student_id, 0);
-				$six = $this->kids_model->get_understanding($student_id, 6);
-				for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
-				for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+				$all = $this->_rateReports($all, 'mentor', 'child_participation');
 
 				if(!isset($child_participation[$level_id])) {
 					$child_participation[$level_id] = array(
@@ -679,12 +692,58 @@ class Api extends Controller {
 					'id'			=> $student_id,
 					'name'			=> $student_name,
 					'all'			=> $all,
-					'six'			=> $six
+					'six'			=> array_slice($all, 0, 6)
 				);
 			}
 		}
 
 		$this->send(array('report' => $child_participation, 'levels' => $all_levels)); 
+	}
+
+	function center_child_participation() {
+		$center_id = $this->input('center_id');
+
+		$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
+
+		$class_participation = array();
+		foreach ($all_levels as $level_id => $level) {
+			$students = $this->level_model->get_kids_in_level($level_id);
+
+			foreach ($students as $student_id => $student_name) {
+				$all = $this->kids_model->get_participation($student_id, 0);
+				$all = $this->_rateReports($all, 'mentor', 'child_participation');
+
+				if(!isset($child_participation[$level_id])) {
+					$child_participation[$level_id] = array(
+						'id' 	=> $level_id,
+						'name'	=> $all_levels[$level_id]
+					);
+				}
+
+				$child_participation[$level_id]['students'][$student_id] = array(
+					'id'			=> $student_id,
+					'name'			=> $student_name,
+					'all'			=> $all,
+					'six'			=> array_slice($all, 0, 6)
+				);
+			}
+		}
+
+		$this->send(array('report' => $child_participation, 'levels' => $all_levels)); 
+	}
+
+	function _rateReports($data, $report_type, $report_name) {
+		for($i = 0; $i < count($data); $i++) {
+			if(!$data[$i]->sum) $data[$i]->sum = 0;
+			if($data[$i]->total == 0 and $data[$i]->sum == 0) $data[$i]->percentage = 0;
+			else $data[$i]->percentage = intval($data[$i]->sum / $data[$i]->total * 100);
+
+			$data[$i]->rating = 'red';
+			if($data[$i]->percentage >= $this->report_level_config[$report_type][$report_name][0]) $data[$i]->rating = 'green';
+			else if($data[$i]->percentage >= $this->report_level_config[$report_type][$report_name][1]) $data[$i]->rating = 'yellow';
+		}
+
+		return $data;
 	}
 	///////////////////////////////////////// Internal ////////////////////////////////
 	function input($name) {

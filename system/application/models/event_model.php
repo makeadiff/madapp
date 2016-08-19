@@ -232,6 +232,9 @@ class Event_model extends Model{
 		
 	function get_all($event_type='', $date_range=false) {
 		$city_id = $this->city_id;
+		if($date_range == false) {
+			$date_range = array('from' => $this->year . "-04-01", 'to' => date('Y-m-d') );
+		}
 		$this->db->select('*')->from('Event')->where('city_id', $city_id);
 		if($event_type) $this->db->where('type',$event_type);
 		if($date_range) {
@@ -243,12 +246,20 @@ class Event_model extends Model{
 		return $result->result();
 	}
 	
-	function get_all_event_user_attendance($event_type='') {
+	function get_all_event_user_attendance($event_type='', $date_range=false) {
 		$city_id = $this->city_id;
+		if($date_range == false) {
+			$date_range = array('from' => $this->year . "-04-01", 'to' => date('Y-m-d') );
+		}
+
 		$this->db->select('UserEvent.*')->from('UserEvent')->join('Event','Event.id=UserEvent.event_id')
 			->where('Event.city_id', $city_id)->orderby('Event.starts_on DESC');
 		
 		if($event_type) $this->db->where('Event.type',$event_type);
+		if($date_range) {
+			$this->db->where("DATE(Event.starts_on) >", $date_range['from']);
+			$this->db->where("DATE(Event.starts_on) <", $date_range['to']);
+		}
 		$user_events = 	$this->db->get()->result();
 
 		$data = array();

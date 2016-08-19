@@ -51,21 +51,21 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		
 		if(!isset($center_info['class'][$level_info->id][$date_index])) { 
 			$status="null"; 
-			$attendanses =0;
+			$student_attendance = 0;
 		} else {
-			$attendanses=$attendance[$center_info['class'][$level_info->id][$date_index]->id];
+			$student_attendance = $attendance[$center_info['class'][$level_info->id][$date_index]->id];
 			$test=$center_info['class'][$level_info->id][$date_index]; 
 			$status=$test->status;
 		}
 		$percentage = 0;
 		if($all_kids[$level_info->id]) {
-			$percentage = ($attendanses * 100) / $all_kids[$level_info->id];
+			$percentage = ($student_attendance  * 100) / $all_kids[$level_info->id];
 		}
 		
 		if($status != "cancelled" and $status != 'null' and $classdateid != 0 and $status != 'projected') $totNumber++;
 		
 		$class_type = 'good';
-		if($classdateid == 0 or $status == 'projected') $class_type = 'no-data';
+		if($classdateid == 0 or $status == 'projected' or $student_attendance == 0) $class_type = 'no-data';
 		elseif($status == "cancelled" or $status == 'null') $class_type = 'cancelled';
 		elseif($percentage < $comppercentage ) $class_type = 'low-attendance';
 	?>
@@ -74,14 +74,11 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
     if($class_type == 'no-data' or $class_type == 'cancelled') echo '&nbsp;';
     else { ?><a href="<?php echo site_url('classes/mark_attendence/'.$classdateid); ?>"><?php  
 		//Attendance ...
-		echo $attendanses;
-		$sum += $attendanses;
+		echo $student_attendance;
+		$sum += $student_attendance;
+		$level_attendence[$level_info->id][$date_index] = $student_attendance;
 	?></a><?php } ?></td>
- 	<?php
-		$level_attendence[$level_info->id][$date_index] = $attendanses;
-	}
-	
-	?>
+ 	<?php } ?>
 <td nowrap='nowrap'><?php if($totNumber) {
 	$netSum += $sum / $totNumber; 
 	echo round($sum/$totNumber, 2); 
@@ -100,6 +97,7 @@ foreach($center_info['days_with_classes'] as $date_index => $day) { // All Days
 	print '<td>';
 	foreach($all_levels[$center_id] as $level_info) { // All Levels
 		if(isset($level_attendence[$level_info->id][$date_index])) $sum += $level_attendence[$level_info->id][$date_index];
+		// if(isset($attendance[$center_info['class'][$level_info->id][$date_index]->id])) $sum += $attendance[$center_info['class'][$level_info->id][$date_index]->id];
 	}
 	print $sum . '</td>';
 }

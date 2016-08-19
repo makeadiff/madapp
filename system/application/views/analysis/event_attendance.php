@@ -7,12 +7,13 @@ $this->load->view('layout/header', array('title'=>'Event Attendance'));
 <label for="event_type">Event Type:</label><select id="event_type" name="event_type"> 
 	<option value="">All</option>
 	<option value="others" <?php if($event_type == 'other') echo 'selected="selected"'; ?>>Other</option>
-	<option value="process" <?php if($event_type == 'process') echo 'selected="selected"'; ?>>Process Training</option> 
-	<option value="curriculum" <?php if($event_type == 'curriculum') echo 'selected="selected"'; ?>>Curriculum Training</option> 
-    <option value="teacher" <?php if($event_type == 'teacher') echo 'selected="selected"'; ?>>Teacher Training</option> 
+	<option value="process" <?php if($event_type == 'process') echo 'selected="selected"'; ?>>Process Training</option>
+	<option value="curriculum" <?php if($event_type == 'curriculum') echo 'selected="selected"'; ?>>Curriculum Training</option>
+    <option value="teacher" <?php if($event_type == 'teacher') echo 'selected="selected"'; ?>>Teacher Training</option>
 	<option value="avm" <?php if($event_type == 'avm') echo 'selected="selected"'; ?>>AVM</option>
-	<option value="coreteam_meeting" <?php if($event_type == 'coreteam_meeting') echo 'selected="selected"'; ?>>Core Team Meeting</option> 
-	<option value="admin_meeting" <?php if($event_type == 'admin_meeting') echo 'selected="selected"'; ?>>Admin Meeting</option> 
+	<option value="coreteam_meeting" <?php if($event_type == 'coreteam_meeting') echo 'selected="selected"'; ?>>Core Team Meeting</option>
+	<option value="admin_meeting" <?php if($event_type == 'admin_meeting') echo 'selected="selected"'; ?>>Admin Meeting</option>
+	<option value="center_sensitization" <?php if($event_type == 'center_sensitization') echo 'selected="selected"'; ?>>Shelter Sensitization</option>
 </select>
 <input type="submit" name="action" value="Filter" />
 </form>

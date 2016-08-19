@@ -858,7 +858,7 @@ class Users_model extends Model {
 		elseif($this->project_id) $this->db->where('User.project_id', $this->project_id);
 		
 		if(isset($data['city_id']) and $data['city_id'] != 0) $this->db->where('User.city_id', $data['city_id']);
-		else if(!isset($data['city_id'])) $this->db->where('User.city_id', $this->city_id);
+		else if(!isset($data['city_id']) and $this->city_id) $this->db->where('User.city_id', $this->city_id);
 		
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
 		if(!empty($data['not_user_type'])) $this->db->where_not_in('user_type', $data['not_user_type']);
@@ -902,7 +902,7 @@ class Users_model extends Model {
 		$this->db->orderby('User.name');
 		
 		$all_users = $this->db->get()->result();
-		//echo $this->db->last_query();
+		// echo $this->db->last_query();
 
 		$return = array();
 		foreach($all_users as $user) {

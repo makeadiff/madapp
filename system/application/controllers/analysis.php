@@ -25,13 +25,12 @@ class Analysis extends Controller {
         $this->user_details = $this->user_auth->getUser();
 	}
 	
-	function kids_attendance()
-	{
+	function kids_attendance() {
 		$all_centers = $this->center_model->get_all();
 		$data = array();
 		$datas = array();
 		$attendance = array();
-		$totalAttendance=array();
+
 		foreach($all_centers as $center) {
 			//if($center->id != 65) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 			$data[$center->id] = array(
@@ -48,17 +47,19 @@ class Analysis extends Controller {
 				);
 				$all_kids[$level->id] = $this->level_model->get_all_kids_in_level($level->id);
 				$all_classes = $this->class_model->get_classes_by_level_and_center($level->id);
-				$totalAttendance=0;
+
 				foreach($all_classes as $class) {
 					$date = date('d M',strtotime($class->class_on));
 					$month = date('m',strtotime($class->class_on));
 					if($month <= 3) $month = $month + 12; // So that january comes after december.
+
 					$key = $month . '-'.date('d',strtotime($class->class_on));
 					if(!in_array($date, $days_with_classes)) {
 						$days_with_classes[$key] = $date;
 					}
 					$data[$center->id]['class'][$level->id][$key] = $class; 
-					$attendance[$class->id]  = $this->class_model->get__kids_attendance ($class->id);
+					$student_attendance = $this->class_model->get_student_attendance($class->id);
+					$attendance[$class->id] = $student_attendance->present;
 				}	
 			}
 			//print_r($class->status);
@@ -91,6 +92,8 @@ class Analysis extends Controller {
 		foreach($users as $user_id=>$name) $user_attendance_count[$user_id] = array('total'=>0, 'present'=>0);
 		foreach($user_attendance as $event_id => $attendance) {
 			foreach($attendance as $user_id => $present) {
+				if(!isset($event_attendance_count[$event_id])) continue; 
+
 				$event_attendance_count[$event_id]['total']++;
 				if($present) $event_attendance_count[$event_id]['present']++;
 				

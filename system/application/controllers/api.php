@@ -13,6 +13,13 @@ class Api extends Controller {
 				'check_for_understanding'	=> array('80', '60', '0'),
 				'child_participation'		=> array('80', '60', '0'),
 				'teacher_satisfaction'		=> array('80', '60', '0'),
+			),
+		'center'	=> array(
+				'student_attendance'		=> array('80', '60', '0'),
+				'check_for_understanding'	=> array('80', '60', '0'),
+				'child_participation'		=> array('80', '60', '0'),
+				'teacher_satisfaction'		=> array('80', '60', '0'),
+				'volunteer_substitutions'	=> array('80', '60', '0'),
 			)
 	);
 
@@ -711,7 +718,7 @@ class Api extends Controller {
 
 			foreach ($students as $student_id => $student_name) {
 				$all = $this->kids_model->get_participation($student_id, 0);
-				$all = $this->_rateReports($all, 'mentor', 'child_participation');
+				$all = $this->_rateReports($all, 'center', 'child_participation');
 
 				if(!isset($child_participation[$level_id])) {
 					$child_participation[$level_id] = array(
@@ -730,6 +737,77 @@ class Api extends Controller {
 		}
 
 		$this->send(array('report' => $child_participation, 'levels' => $all_levels)); 
+	}
+
+	function center_child_cfu() {
+		$center_id = $this->input('center_id');
+
+		$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
+
+		$check_for_understanding = array();
+		foreach ($all_levels as $level_id => $level) {
+			$students = $this->level_model->get_kids_in_level($level_id);
+
+			foreach ($students as $student_id => $student_name) {
+				$all = $this->kids_model->get_participation($student_id, 0);
+				$all = $this->_rateReports($all, 'center', 'check_for_understanding');
+
+				if(!isset($check_for_understanding[$level_id])) {
+					$check_for_understanding[$level_id] = array(
+						'id' 	=> $level_id,
+						'name'	=> $all_levels[$level_id]
+					);
+				}
+
+				$check_for_understanding[$level_id]['students'][$student_id] = array(
+					'id'			=> $student_id,
+					'name'			=> $student_name,
+					'all'			=> $all,
+					'six'			=> array_slice($all, 0, 6)
+				);
+			}
+		}
+
+		$this->send(array('report' => $check_for_understanding, 'levels' => $all_levels)); 
+	}
+
+	function center_volunteer_subsitutions() {
+		$center_id = $this->input('center_id');
+
+		$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
+		$all_teachers = idNameFormat($this->user_model->search_users(array('center' => $center_id)));
+
+		$substitutions = array();
+		foreach ($all_levels as $level_id => $level) {
+			$batches_in_level = $this->batch_model->get_batches_in_level($level_id);
+
+			foreach ($batches_in_level as $batch) {
+				$batch_id = $batch->id;
+
+				$teachers = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id);
+				foreach ($teachers as $teacher_id) {
+					$all = $this->class_model->get_volunteer_substitutions($teacher_id, 0);
+					$all = $this->_rateReports($all, 'center', 'volunteer_substitutions');
+
+					if(!isset($substitutions[$level_id])) {
+						$substitutions[$level_id] = array(
+							'id' 	=> $level_id,
+							'name'	=> $all_levels[$level_id]
+						);
+					}
+
+					$substitutions[$level_id]['teachers'][$teacher_id] = array(
+						'id'			=> $teacher_id,
+						'name'			=> $all_teachers[$teacher_id],
+						'level'			=> $all_levels[$level_id],
+						'all'			=> $all,
+						'six'			=> array_slice($all, 0, 6)
+					);
+				}
+			}
+		}
+
+		$this->send(array('report' => $substitutions, 'levels' => $all_levels)); 
 	}
 
 	function _rateReports($data, $report_type, $report_name) {

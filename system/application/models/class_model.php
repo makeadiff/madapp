@@ -656,6 +656,11 @@ class Class_model extends Model {
 		return $attendance;
 	}
 
+	function get_student_attendance($class_id) {
+		$attendance = $this->db->query("SELECT SUM(CASE WHEN present = '1' THEN 1 ELSE 0 END) AS present,COUNT(id) as total FROM StudentClass WHERE class_id=$class_id AND present=1")->row();
+		return $attendance;
+	}
+
 
 	function get_zero_hour_attendance($teacher_id, $class_count = 0) {
 		$limit = '';
@@ -692,5 +697,24 @@ class Class_model extends Model {
 		$class_satisfaction = $this->db->query($query)->result();
 
 		return $class_satisfaction;
+	}
+
+
+	function get_volunteer_substitutions($teacher_id, $class_count = 0) {
+		$limit = '';
+		if($class_count) $limit = "LIMIT 0,$class_count";
+
+		$query = "SELECT SUM(CASE WHEN UC.substitute_id = 0 THEN 1 ELSE 0 END) AS sum, COUNT(C.id) AS total
+			FROM UserClass UC
+			INNER JOIN Class C ON C.id=UC.class_id
+			INNER JOIN Batch B ON C.batch_id=B.id
+			WHERE UC.user_id=$teacher_id AND C.status='happened' AND B.year={$this->year}
+			GROUP BY UC.user_id
+			ORDER BY C.class_on DESC
+			$limit";
+
+		$substitutions = $this->db->query($query)->result();
+
+		return $substitutions;
 	}
 }

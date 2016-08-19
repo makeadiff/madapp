@@ -10,10 +10,10 @@
                         <img src="<?php echo base_url(); ?>images/flat_ui/event_budget.png" alt="" /><br>Event<br>Budgeting</a></div>
             <?php } ?>
 
-            <?php if($this->user_auth->get_permission('reimbursement')) { ?>
+            <?php /*if($this->user_auth->get_permission('reimbursement')) { */?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/reimbursement/public">
                         <img src="<?php echo base_url(); ?>images/flat_ui/reimbursement.png" alt="" /><br>Reimbursement</a></div>
-            <?php } ?>
+           <!-- --><?php /*} */?>
 
             <?php if($this->user_auth->get_permission('event_index')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('event/event') ?>">

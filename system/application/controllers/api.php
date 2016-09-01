@@ -53,6 +53,8 @@ class Api extends Controller {
 
 	/// Returns the details of the user who's ID is provided as a get parameter. 
 	function user_details() {
+		$this->check_key();
+
 		$user_id = $this->input('user_id');
 		$user = $this->user_model->user_details($user_id);
 		if(!$user) $this->error("User($user_id) not found.");
@@ -79,7 +81,8 @@ class Api extends Controller {
 	 * Example: http://makeadiff.in/madapp/index.php/api/user_login?email=cto@makeadiff.in&password=pass
 	 */
 	function user_login() {
-		$this->check_key();
+		// $this->check_key();
+		
 		$data = array(
 			'username' => $this->input('email'),
 			'password' => $this->input('password')

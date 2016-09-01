@@ -3,7 +3,7 @@
 <script type="text/javascript" src="<?php echo base_url()?>css/datetimepicker_css.js"></script>
 
 <?php 
-foreach($event as $event_row):
+foreach($event as $event_row) {
 ?>
 <div id="message"></div>
 <form  class="mainForm clear" id="formEditor"  action="<?php echo site_url('event/update_event')?>" method="post" enctype="multipart/form-data" onsubmit="return validate();" >
@@ -42,7 +42,7 @@ foreach($event as $event_row):
 <?php } ?>
 </select>
 </li>
-<?php endforeach;?>
+<?php } ?>
  </ul>
  <ul>
 <li>

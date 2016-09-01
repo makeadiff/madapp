@@ -32,6 +32,7 @@ $netvalue = array();
 $level_attendence = array();
 
 foreach($all_levels[$center_id] as $level_info) { // Level start.
+	if(!$all_kids[$level_info->id]) continue; // Don't show the row if there are no kids in it.
 ?>
 <tr class="<?php echo ($row_count % 2) ? 'odd' : 'even' ?>">
 <td nowrap='nowrap'><?php echo $level_info->grade . ' ' . $level_info->name ?></td>
@@ -48,7 +49,7 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		} else {
 			$classdateid = $center_info['class'][$level_info->id][$date_index]->id;
 		}
-		
+
 		if(!isset($center_info['class'][$level_info->id][$date_index])) { 
 			$status="null"; 
 			$student_attendance = 0;
@@ -65,13 +66,15 @@ foreach($all_levels[$center_id] as $level_info) { // Level start.
 		if($status != "cancelled" and $status != 'null' and $classdateid != 0 and $status != 'projected') $totNumber++;
 		
 		$class_type = 'good';
-		if($classdateid == 0 or $status == 'projected' or $student_attendance == 0) $class_type = 'no-data';
-		elseif($status == "cancelled" or $status == 'null') $class_type = 'cancelled';
+
+		if($status == 'null') $class_type = 'no-class';
+		elseif($status == "cancelled") $class_type = 'cancelled';
+		elseif($classdateid == 0 or $status == 'projected' or $student_attendance == 0) $class_type = 'no-data';
 		elseif($percentage < $comppercentage ) $class_type = 'low-attendance';
 	?>
 
-    <td class="class-<?php echo $class_type ?>"><?php
-    if($class_type == 'no-data' or $class_type == 'cancelled') echo '&nbsp;';
+    <td class="class-<?php echo $class_type ?>"><?php // echo $status . ':' . $class_type;
+    if($class_type == 'no-data' or $class_type == 'cancelled' or $class_type == 'no-class') echo '&nbsp;'; //  . $class_type;
     else { ?><a href="<?php echo site_url('classes/mark_attendence/'.$classdateid); ?>"><?php  
 		//Attendance ...
 		echo $student_attendance;

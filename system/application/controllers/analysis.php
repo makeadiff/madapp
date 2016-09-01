@@ -57,11 +57,14 @@ class Analysis extends Controller {
 					if(!in_array($date, $days_with_classes)) {
 						$days_with_classes[$key] = $date;
 					}
-					$data[$center->id]['class'][$level->id][$key] = $class; 
+					$data[$center->id]['class'][$level->id][$key] = $class;
 					$student_attendance = $this->class_model->get_student_attendance($class->id);
+					// dump($student_attendance); var_export($student_attendance, 1); // 
 					$attendance[$class->id] = $student_attendance->present;
 				}	
 			}
+
+			// dump($attendance);
 			//print_r($class->status);
 			ksort($days_with_classes);
 			$data[$center->id]['days_with_classes'] = $days_with_classes;

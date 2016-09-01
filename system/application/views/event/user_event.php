@@ -23,7 +23,7 @@ function validate() {
 <ul class="form city-form">
 <li>Current Event: <strong><?php echo $event->name;?></strong></label></li>
 <li>User Group: <br />
-	<select name="user_group[]" id="user_group" style="width:150px; height:100px;" multiple>
+	<select name="user_group[]" id="user_group" style="width:90%; height:100px;" multiple>
 	<?php
 	foreach($all_groups as $id=>$gname) { ?>
 	<option value="<?php echo $id; ?>"<?php 
@@ -33,7 +33,7 @@ function validate() {
 	</select>
 </li>
 <li>Center: <br />
-	<select name="center[]" id="center" style="width:150px; height:100px;" multiple>
+	<select name="center[]" id="center" style="width:90%; height:100px;" multiple>
 	<?php
 	foreach($all_centers as $id=>$name) { ?>
 	<option value="<?php echo $id; ?>"<?php 

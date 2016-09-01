@@ -1,5 +1,7 @@
 <?php
 class Api extends Controller {
+	private $send_data = true;
+
 	public $key = 'am3omo32hom4lnv32vO';
 
 	public 	$report_level_config = array(
@@ -13,6 +15,8 @@ class Api extends Controller {
 				'check_for_understanding'	=> array('80', '60', '0'),
 				'child_participation'		=> array('80', '60', '0'),
 				'teacher_satisfaction'		=> array('80', '60', '0'),
+				'zero_hour_attendance'		=> array('80', '60', '0'),
+				'class_satisfaction'		=> array('80', '60', '0'),
 			),
 		'center'	=> array(
 				'student_attendance'		=> array('80', '60', '0'),
@@ -47,6 +51,23 @@ class Api extends Controller {
 		header('Access-Control-Allow-Origin: *');
 	}
 
+	/// Returns the details of the user who's ID is provided as a get parameter. 
+	function user_details() {
+		$user_id = $this->input('user_id');
+		$user = $this->user_model->user_details($user_id);
+		if(!$user) $this->error("User($user_id) not found.");
+
+		$fields_to_return = array('id', 'name', 'email', 'sex', 'phone', 'joined_on', 'address', 'birthday', 'city_id', 'user_type', 'credit', 'groups_name', 'batch');
+		$user_data = array();
+
+		foreach ($fields_to_return as $key) {
+			$user_data[$key] = $user->$key;
+		}
+
+		$this->send(array('user' => $user_data));
+		return $user_data;
+	}
+
 	/**
 	 * This will login the user into the system. 
 	 * Arguments : 	email - The username of the user to be logged in
@@ -58,6 +79,7 @@ class Api extends Controller {
 	 * Example: http://makeadiff.in/madapp/index.php/api/user_login?email=cto@makeadiff.in&password=pass
 	 */
 	function user_login() {
+		$this->check_key();
 		$data = array(
 			'username' => $this->input('email'),
 			'password' => $this->input('password')
@@ -491,8 +513,33 @@ class Api extends Controller {
 
 	////////////////////////////////////////// Reports ////////////////////////////////
 
+	function teacher_report_aggregate() {
+		$level_id = $this->input('level_id');
+		$result = array(
+				'student_attendance' 		=> 0,
+				'check_for_understanding'	=> 0,
+				'child_participation'		=> 0
+			);
+		$data = array();
+		$this->send_data = false;
+		$data['student_attendance'] = $this->teacher_report_student_attendance();
+		$data['child_participation'] = $this->teacher_report_child_participation();
+		$data['check_for_understanding'] = $this->teacher_report_check_for_understanding();
+
+		foreach ($result as $key => $value) {
+			foreach($data[$key] as $student) {
+				if($student['six'][0]->rating == 'red') {
+					$result[$key]++;
+				}
+			}
+		}
+
+		$this->send_data = true;
+		$this->send(array('reports' => $result, 'report_name' => 'teacher_report_aggregate'));
+	}
+
 	/// Returns the absenteeism report for all students who are in the given level
-	function report_student_absenteeism() {
+	function teacher_report_student_attendance() {
 		$level_id = $this->input('level_id');
 
 		$students = $this->level_model->get_kids_in_level($level_id);
@@ -500,30 +547,27 @@ class Api extends Controller {
 		$attendence = array();
 		foreach ($students as $student_id => $student_name) {
 			$all = $this->kids_model->get_attendance($student_id, 0);
-			$six = $this->kids_model->get_attendance($student_id, 6);
 			for($i = 0; $i < count($all); $i++) {
 				if(!$all[$i]->sum) $all[$i]->sum = 0;
 				$all[$i]->sum = $all[$i]->total - $all[$i]->sum; // Because we need the absence.
 			}
-			for($i = 0; $i < count($six); $i++) {
-				if(!$six[$i]->sum) $six[$i]->sum = 0;
-				$six[$i]->sum = $six[$i]->total - $six[$i]->sum;
-			}
+			$all = $this->_rateReports($all, 'teacher', 'student_attendance');
 
 			$attendence[$student_id] = array(
 				'id'			=> $student_id,
 				'name'			=> $student_name,
 				'all'			=> $all,
-				'six'			=> $six
+				'six'			=> array_slice($all, 0, 6)
 			);
 		}
 
-		$this->send(array('report' => $attendence));
+		$this->send(array('report' => $attendence, 'report_name' => 'student_attendance'));
+		return $attendence;
 	}
 
 
 	/// Get all the students in the given level - and see how their check for understanding has been for the last 6 classes - and all the classes.
-	function report_check_for_understanding() {
+	function teacher_report_check_for_understanding() {
 		$level_id = $this->input('level_id');
 
 		$students = $this->level_model->get_kids_in_level($level_id);
@@ -531,23 +575,22 @@ class Api extends Controller {
 		$check_for_understanding = array();
 		foreach ($students as $student_id => $student_name) {
 			$all = $this->kids_model->get_understanding($student_id, 0);
-			$six = $this->kids_model->get_understanding($student_id, 6);
-			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
-			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+			$all = $this->_rateReports($all, 'teacher', 'check_for_understanding');
 
 			$check_for_understanding[$student_id] = array(
 				'id'			=> $student_id,
 				'name'			=> $student_name,
 				'all'			=> $all,
-				'six'			=> $six
+				'six'			=> array_slice($all, 0, 6)
 			);
 		}
 
-		$this->send(array('report' => $check_for_understanding));
+		$this->send(array('report' => $check_for_understanding, 'report_name' => 'check_for_understanding'));
+		return $check_for_understanding;
 	}
 
 	/// Get all the students in the given level - and see how their participation has been for the last 6 classes - and all the classes.
-	function report_child_participation() {
+	function teacher_report_child_participation() {
 		$level_id = $this->input('level_id');
 
 		$students = $this->level_model->get_kids_in_level($level_id);
@@ -555,19 +598,50 @@ class Api extends Controller {
 		$child_participation = array();
 		foreach ($students as $student_id => $student_name) {
 			$all = $this->kids_model->get_participation($student_id, 0);
-			$six = $this->kids_model->get_participation($student_id, 6);
-			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
-			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+			$all = $this->_rateReports($all, 'teacher', 'child_participation');
 
 			$child_participation[$student_id] = array(
 				'id'			=> $student_id,
 				'name'			=> $student_name,
 				'all'			=> $all,
-				'six'			=> $six
+				'six'			=> array_slice($all, 0, 6)
 			);
 		}
 
-		$this->send(array('report' => $child_participation));
+		$this->send(array('report' => $child_participation, 'report_name' => 'child_participation'));
+		return $child_participation;
+	}
+
+	// Get aggregate for all mentor reports. 
+	function mentor_report_aggregate() {
+		$batch_id = $this->input('batch_id');
+		$result = array(
+				'zero_hour_attendance' 		=> 0,
+				'class_satisfaction'		=> 0,
+				'child_participation'		=> 0,
+				'check_for_understanding' 	=> 0,
+			);
+		$data = array();
+		$this->send_data = false;
+		$data['zero_hour_attendance'] = $this->mentor_report_zero_hour_attendance();
+		$data['class_satisfaction'] = $this->mentor_class_satisfaction();
+		$data['child_participation'] = $this->mentor_child_participation();
+		$data['check_for_understanding'] = $this->mentor_child_cfu();
+
+		foreach ($data as $report_key => $report_data) {
+			foreach($report_data as $level) {
+				if(isset($level['teachers'])) {
+					foreach ($level['teachers'] as $teacher_id => $teacher_data) {
+						if(isset($teacher_data['six'][0]) and $teacher_data['six'][0]->rating == 'red') {
+							$result[$report_key]++;
+						}
+					}
+				}
+			}
+		}
+
+		$this->send_data = true;
+		$this->send(array('reports' => $result, 'report_name' => 'mentor_report_aggregate'));
 	}
 
 
@@ -583,9 +657,7 @@ class Api extends Controller {
 		foreach ($teachers as $teach) {
 			$teacher_id = $teach->id;
 			$all = $this->class_model->get_zero_hour_attendance($teacher_id, 0);
-			$six = $this->class_model->get_zero_hour_attendance($teacher_id, 6);
-			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
-			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+			$all = $this->_rateReports($all, 'mentor', 'zero_hour_attendance');
 
 			if(!isset($zero_hour_attendance[$teach->level_id])) {
 				$zero_hour_attendance[$teach->level_id] = array(
@@ -599,11 +671,12 @@ class Api extends Controller {
 				'name'			=> $teach->name,
 				'level'			=> $all_levels[$teach->level_id],
 				'all'			=> $all,
-				'six'			=> $six
+				'six'			=> array_slice($all, 0, 6)
 			);
 		}
 
 		$this->send(array('report' => $zero_hour_attendance, 'levels' => $all_levels));
+		return $zero_hour_attendance;
 	}
 
 	/// Get Class Satisfaction for everyone in the given batch
@@ -618,9 +691,7 @@ class Api extends Controller {
 		foreach ($teachers as $teach) {
 			$teacher_id = $teach->id;
 			$all = $this->class_model->get_class_satisfaction($teacher_id, 0);
-			$six = $this->class_model->get_class_satisfaction($teacher_id, 6);
-			for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
-			for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+			$all = $this->_rateReports($all, 'mentor', 'class_satisfaction');
 
 			if(!isset($class_satisfaction[$teach->level_id])) {
 				$class_satisfaction[$teach->level_id] = array(
@@ -634,11 +705,12 @@ class Api extends Controller {
 				'name'			=> $teach->name,
 				'level'			=> $all_levels[$teach->level_id],
 				'all'			=> $all,
-				'six'			=> $six
+				'six'			=> array_slice($all, 0, 6)
 			);
 		}
 
 		$this->send(array('report' => $class_satisfaction, 'levels' => $all_levels));
+		return $class_satisfaction;
 	}
 
 	function mentor_child_participation() {
@@ -652,9 +724,7 @@ class Api extends Controller {
 
 			foreach ($students as $student_id => $student_name) {
 				$all = $this->kids_model->get_participation($student_id, 0);
-				$six = $this->kids_model->get_participation($student_id, 6);
-				for($i = 0; $i < count($all); $i++) if(!$all[$i]->sum) $all[$i]->sum = 0;
-				for($i = 0; $i < count($six); $i++) if(!$six[$i]->sum) $six[$i]->sum = 0;
+				$all = $this->_rateReports($all, 'mentor', 'child_participation');
 
 				if(!isset($child_participation[$level_id])) {
 					$child_participation[$level_id] = array(
@@ -667,12 +737,13 @@ class Api extends Controller {
 					'id'			=> $student_id,
 					'name'			=> $student_name,
 					'all'			=> $all,
-					'six'			=> $six
+					'six'			=> array_slice($all, 0, 6)
 				);
 			}
 		}
 
-		$this->send(array('report' => $child_participation, 'levels' => $all_levels)); 
+		$this->send(array('report' => $child_participation, 'levels' => $all_levels));
+		return $child_participation;
 	}
 
 	function mentor_child_cfu() {
@@ -704,8 +775,13 @@ class Api extends Controller {
 			}
 		}
 
-		$this->send(array('report' => $child_participation, 'levels' => $all_levels)); 
+		$this->send(array('report' => $child_participation, 'levels' => $all_levels));
+		return $child_participation;
 	}
+
+
+	/// Center reports start now...
+
 
 	function center_child_participation() {
 		$center_id = $this->input('center_id');
@@ -854,7 +930,7 @@ class Api extends Controller {
 			$data['success'] = "1";
 		}
 
-		print json_encode($data);
+		if($this->send_data) print json_encode($data);
 		return true;
 	}
 }

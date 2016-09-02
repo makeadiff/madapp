@@ -134,6 +134,7 @@ class Level_model extends Model {
 	    	$levels_associated_with_student = array();
 	    	foreach ($levels as $level_info) {
 	    		$level_id = $level_info->level_id;
+	    		print "Deleting - Level: $level_id, Student: $student_id<br />";
 	    		$this->db->query("DELETE FROM StudentLevel WHERE level_id=$level_id AND student_id=$student_id");
 	    	}
 

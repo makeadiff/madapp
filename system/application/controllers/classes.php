@@ -215,9 +215,14 @@ class Classes extends Controller {
 
 		if($action == 'Save') {
 			$level_ids = $this->input->post('level_id');
-
+			$cleared_levels = array();
 			foreach ($level_ids as $student_id => $level_id) {
-				$this->level_model->save_student_level_mapping($student_id, $level_id);
+				if(!isset($cleared_levels[$level_id])) { // Clear existing mapping for this level - but only once. Don't do it even if the level_id comes up multiple times.
+					$this->level_model->clear_existing_mapping(array('level_id'=>$level_id));
+					$cleared_levels[$level_id] = true;
+				}
+
+				$this->level_model->save_student_level_mapping($student_id, $level_id, false);
 			}
 			$this->session->set_flashdata('success','Saved the new assignments.');
 		}

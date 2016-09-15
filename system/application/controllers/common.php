@@ -55,7 +55,7 @@ class Common extends Controller {
 				
 			} else {
 
-				require('system/vendor/autoload.php');
+				/* require('system/vendor/autoload.php');
 				$secret = '6Le_7hsTAAAAAG8-PiI757qs4LQEzQ28TZOgL-vJ';
 				$recaptcha = new \ReCaptcha\ReCaptcha($secret);
 				$gRecaptchaResponse = $_REQUEST['g-recaptcha-response'];
@@ -67,7 +67,7 @@ class Common extends Controller {
 				} else {
 					print "Your application has triggered our spam detection algorithm. Click on the back button then make sure you have the \"I'm not a robot\" checkbox ticked.";
 					return false; // Spam.
-				}
+				} */
 
 				// Check for spam...
 				if((stripos($data['address'], '<a ') !== false) or (stripos($data['address'], 'http://') !== false) or (stripos($data['address'], 'https://') !== false)) {					// There is a link in the address field. Spam.
@@ -96,7 +96,7 @@ class Common extends Controller {
 					
 					$this->load->view('user/register_view',$data);
 				}
-			}
+			} 
 
         } else {
 			if($user_id_encoded) {
@@ -110,6 +110,9 @@ class Common extends Controller {
 				}
 			}
 			$data['cities'] = $this->city_model->get_unique_cities();
+			unset($data['cities'][26]); // remove Leadership
+			unset($data['cities'][28]); // remove Test 
+			//print_r($data['cities']);
 			$this->load->view('user/register_view', $data);
 		}
     }

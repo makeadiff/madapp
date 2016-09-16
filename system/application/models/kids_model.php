@@ -206,50 +206,24 @@ class Kids_model extends Model {
 		return $data;
 	}
 
-	/// Returns the attendance of the given student - for the last X classes - can be specified as second argument.
-	function get_attendance($student_id, $class_count=0) {
+	/// Returns the relevant class details for all the clasess that match the given criteria.
+	function get_class_details($student_id, $batch_id, $level_id, $class_count=0) {
 		$limit = '';
+		$batch_check = '';
+		$level_check = '';
+
 		if($class_count) $limit = "LIMIT 0,$class_count";
-		$attendance = $this->db->query("SELECT SUM(CASE WHEN SC.present = '1' THEN 1 ELSE 0 END) AS sum, COUNT(SC.id) AS total 
+		if($level_id) $level_check = "C.level_id=$level_id AND ";
+		if($batch_id) $batch_check = "C.batch_id=$batch_id AND ";
+
+		$attendance = $this->db->query("SELECT SC.participation, SC.present, SC.check_for_understanding, C.class_on, C.status, C.class_type, C.class_satisfaction
 							FROM StudentClass SC
 							INNER JOIN Class C ON C.id=SC.class_id
-							INNER JOIN Level L ON C.level_id=L.id
-							WHERE L.year={$this->year} AND SC.student_id=$student_id AND C.status='happened'
+							WHERE $batch_check $level_check SC.student_id=$student_id AND C.status='happened'
 							ORDER BY C.class_on DESC
-							$limit")->result();
+							$limit")->result_array();
 
 		return $attendance;
 	}
-
-	/// Returns the check for understanding of the given student - for the last X classes - can be specified as second argument.
-	function get_understanding($student_id, $class_count=0) {
-		$limit = '';
-		if($class_count) $limit = "LIMIT 0,$class_count";
-		$understanding = $this->db->query("SELECT SUM(SC.check_for_understanding) AS sum, COUNT(SC.id) AS total 
-							FROM StudentClass SC
-							INNER JOIN Class C ON C.id=SC.class_id
-							INNER JOIN Level L ON C.level_id=L.id
-							WHERE L.year={$this->year} AND SC.student_id=$student_id AND C.status='happened'
-							ORDER BY C.class_on DESC
-							$limit")->result();
-
-		return $understanding;
-	}
-
-	/// Returns the participation level - basically the count of times the student had 3 or more participation - of the given student - for the last X classes - can be specified as second argument.
-	function get_participation($student_id, $class_count=0) {
-		$limit = '';
-		if($class_count) $limit = "LIMIT 0,$class_count";
-		$participation = $this->db->query("SELECT SUM(CASE WHEN SC.participation >= 3 THEN 1 ELSE 0 END) AS sum, COUNT(SC.id) AS total
-							FROM StudentClass SC
-							INNER JOIN Class C ON C.id=SC.class_id
-							INNER JOIN Level L ON C.level_id=L.id
-							WHERE L.year={$this->year} AND SC.student_id=$student_id AND C.status='happened'
-							ORDER BY C.class_on DESC
-							$limit")->result();
-
-		return $participation;
-	}
-
 
 }

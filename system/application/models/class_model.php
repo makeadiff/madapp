@@ -662,59 +662,46 @@ class Class_model extends Model {
 	}
 
 
-	function get_zero_hour_attendance($teacher_id, $class_count = 0) {
+
+	/// Returns the relevant class details from the view point of a teacher for all the clasess that match the given criteria.
+	function get_teacher_class_details($teacher_id, $batch_id, $level_id, $class_count=0) {
 		$limit = '';
+		$batch_check = '';
+		$level_check = '';
+
 		if($class_count) $limit = "LIMIT 0,$class_count";
+		if($level_id) $level_check = "C.level_id=$level_id AND ";
+		if($batch_id) $batch_check = "C.batch_id=$batch_id AND ";
 
-		$query = "SELECT SUM(CASE WHEN UC.zero_hour_attendance = '1' THEN 1 ELSE 0 END) AS sum, COUNT(UC.id) AS total
-			FROM UserClass UC
-			INNER JOIN Class C ON C.id=UC.class_id
-			INNER JOIN Batch B ON C.batch_id=B.id
-			WHERE UC.user_id=$teacher_id AND C.status='happened' AND B.year={$this->year}
-			GROUP BY UC.user_id
-			ORDER BY C.class_on DESC
-			$limit";
+		$attendance = $this->db->query("SELECT UC.zero_hour_attendance, UC.substitute_id, C.class_on, C.status, C.class_type, C.class_satisfaction
+							FROM UserClass UC
+							INNER JOIN Class C ON C.id=UC.class_id
+							WHERE $batch_check UC.user_id=$teacher_id AND (C.status='happened' OR UC.status='happened')
+							ORDER BY C.class_on DESC
+							$limit")->result_array();
 
-		$zero_hour_attendance = $this->db->query($query)->result();
-
-		return $zero_hour_attendance;
+		return $attendance;
 	}
 
-	
-	function get_class_satisfaction($teacher_id, $class_count = 0) {
+	function get_student_class_details($teacher_id, $batch_id, $level_id, $class_count=0) {
 		$limit = '';
+		$batch_check = '';
+		$level_check = '';
+
 		if($class_count) $limit = "LIMIT 0,$class_count";
+		if($level_id) $level_check = "C.level_id=$level_id AND ";
+		if($batch_id) $batch_check = "C.batch_id=$batch_id AND ";
 
-		$query = "SELECT SUM(CASE WHEN C.class_satisfaction >= 3 THEN 1 ELSE 0 END) AS sum, COUNT(C.id) AS total
-			FROM UserClass UC
-			INNER JOIN Class C ON C.id=UC.class_id
-			INNER JOIN Batch B ON C.batch_id=B.id
-			WHERE UC.user_id=$teacher_id AND C.status='happened' AND B.year={$this->year}
-			GROUP BY UC.user_id
-			ORDER BY C.class_on DESC
-			$limit";
+		$attendance = $this->db->query("SELECT SC.student_id, SC.participation, SC.present, SC.check_for_understanding,
+				C.class_on, C.status, C.class_type, C.class_satisfaction, 
+				UC.zero_hour_attendance, UC.substitute_id
+							FROM StudentClass SC 
+							INNER JOIN Class C ON C.id=SC.class_id
+							INNER JOIN UserClass UC ON C.id=UC.class_id
+							WHERE $batch_check UC.user_id=$teacher_id AND (C.status='happened' OR UC.status='happened')
+							ORDER BY C.class_on DESC
+							$limit")->result_array();
 
-		$class_satisfaction = $this->db->query($query)->result();
-
-		return $class_satisfaction;
-	}
-
-
-	function get_volunteer_substitutions($teacher_id, $class_count = 0) {
-		$limit = '';
-		if($class_count) $limit = "LIMIT 0,$class_count";
-
-		$query = "SELECT SUM(CASE WHEN UC.substitute_id = 0 THEN 1 ELSE 0 END) AS sum, COUNT(C.id) AS total
-			FROM UserClass UC
-			INNER JOIN Class C ON C.id=UC.class_id
-			INNER JOIN Batch B ON C.batch_id=B.id
-			WHERE UC.user_id=$teacher_id AND C.status='happened' AND B.year={$this->year}
-			GROUP BY UC.user_id
-			ORDER BY C.class_on DESC
-			$limit";
-
-		$substitutions = $this->db->query($query)->result();
-
-		return $substitutions;
+		return $attendance;
 	}
 }

@@ -423,8 +423,10 @@ class Classes extends Controller {
 			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {
 				// if($batch_id != 1129) continue; // :DEBUG: Use this to localize the issue
+
+				$batch_head = $this->batch_model->get_batch_head($batch_id);
 				
-				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
+				$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name, 'batch_head' => $batch_head);
 				$days_with_classes = array();
 				
 				// NOTE: Each batch has all the levels in the center. Think. Its how that works.

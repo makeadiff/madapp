@@ -518,20 +518,18 @@ class Api extends Controller {
 
 	function teacher_report_aggregate() {
 		$level_id = $this->input('level_id');
-		$result = array(
-				'student_attendance' 		=> 0,
-				'check_for_understanding'	=> 0,
-				'child_participation'		=> 0
-			);
+		$result = array();
 		$data = array();
 		$this->send_data = false;
 		$data['student_attendance'] = $this->teacher_report_student_attendance();
 		$data['child_participation'] = $this->teacher_report_child_participation();
 		$data['check_for_understanding'] = $this->teacher_report_check_for_understanding();
 
-		foreach ($result as $key => $value) {
-			foreach($data[$key] as $student) {
-				if($student['six'][0]->rating == 'red') {
+		foreach($data as $key => $report) {
+			if(!isset($result[$key])) $result[$key] = 0; // Initialize.
+
+			foreach($report as $student) {
+				if($student['six']['rating'] == 'red') {
 					$result[$key]++;
 				}
 			}
@@ -541,101 +539,81 @@ class Api extends Controller {
 		$this->send(array('reports' => $result, 'report_name' => 'teacher_report_aggregate'));
 	}
 
-	/// Returns the absenteeism report for all students who are in the given level
-	function teacher_report_student_attendance() {
+	function _getStudentData($report_type, $report_name, $reduce_function) {
 		$level_id = $this->input('level_id');
+		$batch_id = $this->input('batch_id');
 
 		$students = $this->level_model->get_kids_in_level($level_id);
 
-		$attendence = array();
+		$report = array();
 		foreach ($students as $student_id => $student_name) {
-			$all = $this->kids_model->get_attendance($student_id, 0);
-			for($i = 0; $i < count($all); $i++) {
-				if(!$all[$i]->sum) $all[$i]->sum = 0;
-				$all[$i]->sum = $all[$i]->total - $all[$i]->sum; // Because we need the absence.
-			}
-			$all = $this->_rateReports($all, 'teacher', 'student_attendance');
+			$data = array();
+			$data['all'] = $this->kids_model->get_class_details($student_id, $batch_id, $level_id, 0);
+			$data['six'] = array_slice($data['all'], 0, 6);
 
-			$attendence[$student_id] = array(
+			$return = array();
+			foreach ($data as $key => $value) {
+				$return[$key] = array(
+					'total' => count($data[$key]),
+					'sum'	=> array_reduce($data[$key], $reduce_function),
+				);
+			}
+			$return = $this->_rateReportsArray($return, $report_type, $report_name);
+
+			$report[] = array(
 				'id'			=> $student_id,
 				'name'			=> $student_name,
-				'all'			=> $all,
-				'six'			=> array_slice($all, 0, 6)
+				'all'			=> $return['all'],
+				'six'			=> $return['six']
 			);
 		}
 
-		$this->send(array('report' => $attendence, 'report_name' => 'student_attendance'));
-		return $attendence;
+		$this->send(array('report' => $report, 'report_name' => $report_name));
+		return $report;
+	}
+
+	/// Returns the absenteeism report for all students who are in the given level
+	function teacher_report_student_attendance() {
+		return $this->_getStudentData('teacher', 'student_attendance', function($carry, $item) {
+						return $carry + $item['present'];
+					}, 0);
 	}
 
 
 	/// Get all the students in the given level - and see how their check for understanding has been for the last 6 classes - and all the classes.
 	function teacher_report_check_for_understanding() {
-		$level_id = $this->input('level_id');
-
-		$students = $this->level_model->get_kids_in_level($level_id);
-
-		$check_for_understanding = array();
-		foreach ($students as $student_id => $student_name) {
-			$all = $this->kids_model->get_understanding($student_id, 0);
-			$all = $this->_rateReports($all, 'teacher', 'check_for_understanding');
-
-			$check_for_understanding[$student_id] = array(
-				'id'			=> $student_id,
-				'name'			=> $student_name,
-				'all'			=> $all,
-				'six'			=> array_slice($all, 0, 6)
-			);
-		}
-
-		$this->send(array('report' => $check_for_understanding, 'report_name' => 'check_for_understanding'));
-		return $check_for_understanding;
+		return $this->_getStudentData('teacher', 'check_for_understanding', function($carry, $item) {
+						return $carry + $item['check_for_understanding'];
+					}, 0);
 	}
 
 	/// Get all the students in the given level - and see how their participation has been for the last 6 classes - and all the classes.
 	function teacher_report_child_participation() {
-		$level_id = $this->input('level_id');
-
-		$students = $this->level_model->get_kids_in_level($level_id);
-
-		$child_participation = array();
-		foreach ($students as $student_id => $student_name) {
-			$all = $this->kids_model->get_participation($student_id, 0);
-			$all = $this->_rateReports($all, 'teacher', 'child_participation');
-
-			$child_participation[$student_id] = array(
-				'id'			=> $student_id,
-				'name'			=> $student_name,
-				'all'			=> $all,
-				'six'			=> array_slice($all, 0, 6)
-			);
-		}
-
-		$this->send(array('report' => $child_participation, 'report_name' => 'child_participation'));
-		return $child_participation;
+		return $this->_getStudentData('teacher', 'child_participation', function($carry, $item) {
+						$add = 0;
+						if($item['participation'] >=3) $add = 1;
+						return $carry + $add;
+					}, 0);
 	}
 
 	// Get aggregate for all mentor reports. 
 	function mentor_report_aggregate() {
 		$batch_id = $this->input('batch_id');
-		$result = array(
-				'zero_hour_attendance' 		=> 0,
-				'class_satisfaction'		=> 0,
-				'child_participation'		=> 0,
-				'check_for_understanding' 	=> 0,
-			);
 		$data = array();
 		$this->send_data = false;
+		$result = array();
 		$data['zero_hour_attendance'] = $this->mentor_report_zero_hour_attendance();
 		$data['class_satisfaction'] = $this->mentor_class_satisfaction();
 		$data['child_participation'] = $this->mentor_child_participation();
-		$data['check_for_understanding'] = $this->mentor_child_cfu();
+		$data['check_for_understanding'] = $this->mentor_child_check_for_understanding();
 
 		foreach ($data as $report_key => $report_data) {
+			if(!isset($result[$report_key])) $result[$report_key] = 0; // Initialize.
+
 			foreach($report_data as $level) {
 				if(isset($level['teachers'])) {
 					foreach ($level['teachers'] as $teacher_id => $teacher_data) {
-						if(isset($teacher_data['six'][0]) and $teacher_data['six'][0]->rating == 'red') {
+						if(isset($teacher_data['six']) and $teacher_data['six']['rating'] == 'red') {
 							$result[$report_key]++;
 						}
 					}
@@ -648,138 +626,88 @@ class Api extends Controller {
 	}
 
 
-	/// Get Zero Hour Attendance for everyone in the given batch
-	function mentor_report_zero_hour_attendance() {
+	function _getBatchData($report_name, $reduce_function) {
 		$batch_id = $this->input('batch_id');
 
 		$teachers = $this->batch_model->get_batch_teachers($batch_id);
 		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
-		// print json_encode($teachers); exit;
 
-		$zero_hour_attendance = array();
+		$report = array();
+		$max_class_count = 0;
 		foreach ($teachers as $teach) {
 			$teacher_id = $teach->id;
-			$all = $this->class_model->get_zero_hour_attendance($teacher_id, 0);
-			$all = $this->_rateReports($all, 'mentor', 'zero_hour_attendance');
+			$data = array();
 
-			if(!isset($zero_hour_attendance[$teach->level_id])) {
-				$zero_hour_attendance[$teach->level_id] = array(
+			// Teacher Reports.
+			if($report_name == 'zero_hour_attendance' or $report_name == 'class_satisfaction') {
+				$data['all'] = $this->class_model->get_teacher_class_details($teacher_id, $batch_id, 0, 0);
+
+			// Student reports
+			} else {
+				$data['all'] = $this->class_model->get_student_class_details($teacher_id, $batch_id, 0, 0);
+			}
+			// if(stripos($teach->name, 'Bhumi') !== false) dump($teach->name, $data['all']);
+
+			$data['six'] = array_slice($data['all'], 0, 6);
+
+			if($max_class_count < count($data['all'])) $max_class_count = count($data['all']);
+
+			if(!isset($report[$teach->level_id])) {
+				$report[$teach->level_id] = array(
 					'id' 	=> $teach->level_id,
-					'name'	=> $all_levels[$teach->level_id]
+					'name'	=> isset($all_levels[$teach->level_id]) ? $all_levels[$teach->level_id] : ''
 				);
 			}
+			foreach ($data as $key => $value) {
+				$return[$key] = array(
+					'total' => count($data[$key]),
+					'sum'	=> array_reduce($data[$key], $reduce_function),
+				);
+			}
+			$return = $this->_rateReportsArray($return, 'mentor', $report_name);
 
-			$zero_hour_attendance[$teach->level_id]['teachers'][$teacher_id] = array(
+			$report[$teach->level_id]['teachers'][] = array(
 				'id'			=> $teacher_id,
 				'name'			=> $teach->name,
-				'level'			=> $all_levels[$teach->level_id],
-				'all'			=> $all,
-				'six'			=> array_slice($all, 0, 6)
+				'level'			=> isset($all_levels[$teach->level_id]) ? $all_levels[$teach->level_id] : '',
+				'all'			=> $return['all'],
+				'six'			=> $return['six']
 			);
 		}
 
-		$this->send(array('report' => $zero_hour_attendance, 'levels' => $all_levels));
-		return $zero_hour_attendance;
+		$this->send(array('report' => $report, 'levels' => $all_levels, 'max_class_count' => $max_class_count));
+		return $report;
+	}
+
+
+	/// Get Zero Hour Attendance for everyone in the given batch
+	function mentor_report_zero_hour_attendance() {
+		return $this->_getBatchData('zero_hour_attendance', function($carry, $item) {
+						return $carry + $item['zero_hour_attendance'];
+					}, 0);
 	}
 
 	/// Get Class Satisfaction for everyone in the given batch
 	function mentor_class_satisfaction() {
-		$batch_id = $this->input('batch_id');
-
-		$teachers = $this->batch_model->get_batch_teachers($batch_id);
-		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
-		// print json_encode($teachers); exit;
-
-		$class_satisfaction = array();
-		foreach ($teachers as $teach) {
-			$teacher_id = $teach->id;
-			$all = $this->class_model->get_class_satisfaction($teacher_id, 0);
-			$all = $this->_rateReports($all, 'mentor', 'class_satisfaction');
-
-			if(!isset($class_satisfaction[$teach->level_id])) {
-				$class_satisfaction[$teach->level_id] = array(
-					'id' 	=> $teach->level_id,
-					'name'	=> $all_levels[$teach->level_id]
-				);
-			}
-
-			$class_satisfaction[$teach->level_id]['teachers'][$teacher_id] = array(
-				'id'			=> $teacher_id,
-				'name'			=> $teach->name,
-				'level'			=> $all_levels[$teach->level_id],
-				'all'			=> $all,
-				'six'			=> array_slice($all, 0, 6)
-			);
-		}
-
-		$this->send(array('report' => $class_satisfaction, 'levels' => $all_levels));
-		return $class_satisfaction;
+		return $this->_getBatchData('class_satisfaction', function($carry, $item) {
+						$add = 0;
+						if($item['class_satisfaction'] >= 3) $add = 1;
+						return $carry + $add;
+					}, 0);
 	}
 
 	function mentor_child_participation() {
-		$batch_id = $this->input('batch_id');
-
-		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
-
-		$class_participation = array();
-		foreach ($all_levels as $level_id => $level) {
-			$students = $this->level_model->get_kids_in_level($level_id);
-
-			foreach ($students as $student_id => $student_name) {
-				$all = $this->kids_model->get_participation($student_id, 0);
-				$all = $this->_rateReports($all, 'mentor', 'child_participation');
-
-				if(!isset($child_participation[$level_id])) {
-					$child_participation[$level_id] = array(
-						'id' 	=> $level_id,
-						'name'	=> $all_levels[$level_id]
-					);
-				}
-
-				$child_participation[$level_id]['students'][$student_id] = array(
-					'id'			=> $student_id,
-					'name'			=> $student_name,
-					'all'			=> $all,
-					'six'			=> array_slice($all, 0, 6)
-				);
-			}
-		}
-
-		$this->send(array('report' => $child_participation, 'levels' => $all_levels));
-		return $child_participation;
+		return $this->_getBatchData('child_participation', function($carry, $item) {
+						$add = 0;
+						if($item['participation'] >= 3) $add = 1;
+						return $carry + $add;
+					}, 0);
 	}
 
-	function mentor_child_cfu() {
-		$batch_id = $this->input('batch_id');
-
-		$all_levels = idNameFormat($this->batch_model->get_levels_in_batch($batch_id));
-
-		$class_participation = array();
-		foreach ($all_levels as $level_id => $level) {
-			$students = $this->level_model->get_kids_in_level($level_id);
-
-			foreach ($students as $student_id => $student_name) {
-				$all = $this->kids_model->get_understanding($student_id, 0);
-				$all = $this->_rateReports($all, 'mentor', 'child_participation');
-
-				if(!isset($child_participation[$level_id])) {
-					$child_participation[$level_id] = array(
-						'id' 	=> $level_id,
-						'name'	=> $all_levels[$level_id]
-					);
-				}
-
-				$child_participation[$level_id]['students'][$student_id] = array(
-					'id'			=> $student_id,
-					'name'			=> $student_name,
-					'all'			=> $all,
-					'six'			=> array_slice($all, 0, 6)
-				);
-			}
-		}
-
-		$this->send(array('report' => $child_participation, 'levels' => $all_levels));
-		return $child_participation;
+	function mentor_child_check_for_understanding() {
+		return $this->_getBatchData('check_for_understanding', function($carry, $item) {
+						return $carry + $item['check_for_understanding'];
+					}, 0);
 	}
 
 
@@ -902,6 +830,21 @@ class Api extends Controller {
 
 		return $data;
 	}
+
+	function _rateReportsArray($data, $report_type, $report_name) {
+		foreach($data as $i => $value) {
+			if(!$data[$i]['sum']) $data[$i]['sum'] = 0;
+			if($data[$i]['total'] == 0 and $data[$i]['sum'] == 0) $data[$i]['percentage'] = 0;
+			else $data[$i]['percentage'] = intval($data[$i]['sum'] / $data[$i]['total'] * 100);
+
+			$data[$i]['rating'] = 'red';
+			if($data[$i]['percentage'] >= $this->report_level_config[$report_type][$report_name][0]) $data[$i]['rating'] = 'green';
+			else if($data[$i]['percentage'] >= $this->report_level_config[$report_type][$report_name][1]) $data[$i]['rating'] = 'yellow';
+		}
+
+		return $data;
+	}
+
 	///////////////////////////////////////// Internal ////////////////////////////////
 	function input($name) {
 		$return = '';

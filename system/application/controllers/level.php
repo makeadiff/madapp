@@ -134,18 +134,19 @@ class Level extends Controller {
 	
 	function delete($level_id) {
 		$this->user_auth->check_permission('level_delete');
+		$this->load->model('batch_model');
 		
 		//Make sure the level don't have any batches under it.
-		$batches = $this->db->where('level_id', $level_id)->get('UserBatch')->result();
+		$batches = $this->batch_model->get_batches_in_level($level_id);
 		if($batches) {
-			show_error("This class section has batches under it. You can only delete class sections that have no batches");
+			show_error("This class section has batches under it. You can only delete class sections that have no batches. Go to Manage Center > Batch/Class Assignment page to remove connections to this level before trying to delete again.");
 		}
 		$level_center = $this->db->select('center_id')->where('id', $level_id)->get('Level')->row();
 		
  		$this->db->delete('Level', array('id'=>$level_id));
  		$this->db->delete('StudentLevel', array('level_id'=>$level_id));
 		$this->session->set_flashdata('success', 'The class section has been deleted successfully');
-		redirect('level/index/center/' . $this->input->post('center_id'));
+		redirect('level/index/center/' . $level_center->id);
 	}
 	
 	/**

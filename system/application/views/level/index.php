@@ -27,7 +27,7 @@
 <td><?php echo $level->grade . ' ' . $level->name; ?></td>
 <td><?php echo $all_mediums[$level->medium_id]; ?></td>
 <td><a href="<?php echo base_url() ?>index.php/level/edit/<?php echo $level->id ?>" class="thickbox  primary popup edit with-icon" >Edit</a></td>
-<td><a href="<?php echo base_url() ?>index.php/level/delete/<?php echo $level->id ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($level->name) ?>">Delete</a></td>
+<td><a href="<?php echo base_url() ?>index.php/level/delete/<?php echo $level->id ?>" class="confirm delete with-icon" title="Delete <?php echo addslashes($level->grade . ' ' . $level->name) ?>">Delete</a></td>
 </tr>
 <?php } ?>
 </table>

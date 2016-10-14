@@ -485,6 +485,7 @@ class Users_model extends Model {
 
 		// Find the sunday after the start_date
 		$current_date = date('Y-m-d', strtotime('next sunday', strtotime($start_date)));
+		$this->db->query("DELETE FROM User_Credit_Archive WHERE user_id=$user_id AND credit_on>'{$this->year}-04-01 00:00:00'"); // Clear existing credit archive. We are going to re-insert it. 
 
 		foreach($classes_so_far as $row) {
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	

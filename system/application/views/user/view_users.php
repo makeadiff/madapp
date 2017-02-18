@@ -191,6 +191,7 @@ $.tablesorter.addParser({
 <thead>
 <tr>
 	<th class="col-select"><input type="checkbox" name="select-all" id="select-all" value="0" /></th>
+	<th>#</th>
 	<th>Actions</th>
 	<th>Name</th>
     <th>Contact Details</th>
@@ -224,6 +225,7 @@ foreach($all_users as $id => $user) {
 	<td class="col-select"><input type="checkbox" name="users[]" class="user-select" value="<?php echo $user->id ?>" />
 	<input type="hidden" name="email[<?php echo $user->id ?>]" value="<?php echo $user->email ?>" />
 	<input type="hidden" name="phone[<?php echo $user->id ?>]" value="<?php echo $user->phone ?>" /></td>
+	<td><?php echo $count ?></td>
 	<td class="col-actions"> 
 	<?php if($this->user_auth->get_permission('user_edit')) { ?><a href="<?php echo site_url('user/popupEditusers/'.$user->id); ?>" class="thickbox icon edit popup" name="Edit User : <?php echo $user->name ?>">Edit</a><?php } ?>
     <?php if($this->user_auth->get_permission('user_delete')) { ?><a class="delete confirm icon" href="<?php echo site_url('user/delete/'.$user->id) ?>" title="Delete <?php echo $user->name ?>">Delete</a><?php } ?>

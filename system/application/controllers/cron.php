@@ -180,7 +180,6 @@ class Cron extends Controller  {
 								$actual_teachers[] = $class->user_id; // So that we won't have to delete this user all over again. The parent if condition will prevent that.
 								print $class->user_id . " is missing - deleted his/her future classes.\n";
 							}
-							
 						}
 					}
 				}

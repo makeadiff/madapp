@@ -52,19 +52,25 @@ class City_model extends Model {
 			));
 		$volunteer_count = count($all_users);
 		$teacher_count = 0;
+		$mentor_count = 0;
 		$mapped_teachers_count = 0;
+
+		define("TEACHER_GROUP_ID",9);
+		define("MENTOR_GROUP_ID", 8);
 
 		foreach ($all_users as $u) {
 			$groups = array_keys($u->groups);
-			if(in_array(9, $groups)) $teacher_count++;
+			if(in_array(TEACHER_GROUP_ID, $groups)) $teacher_count++; 
+			if(in_array(MENTOR_GROUP_ID, $groups)) $mentor_count++; 
 			if($u->batch) $mapped_teachers_count++;
 		}
 
 		return array(
 			'center_count' 			=> $center_count, 
 			'kids_count' 			=> $kids_count, 
-			'volunteer_count' 		=> $volunteer_count, 
-			'teacher_count' 		=> $teacher_count, 
+			'volunteer_count' 		=> $volunteer_count,
+			'teacher_count' 		=> $teacher_count,
+			'mentor_count'			=> $mentor_count,
 			'mapped_teachers_count' => $mapped_teachers_count,
 			'alloted_kids_count'	=> $alloted_kids_count,
 			'five_to_ten_kids_count'=> $five_to_ten_kids_count,

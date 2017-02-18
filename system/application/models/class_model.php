@@ -11,7 +11,8 @@ class Class_model extends Model {
 	}
 	
 	function get_all($user_id) {
-		return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, Level.name AS level_name, Class.class_on, Center.name AS center_name
+		return $this->db->query("SELECT Class.id AS class_id, UserClass.user_id, UserClass.substitute_id, UserClass.status, Class.batch_id, Class.level_id, 
+				Level.grade AS level_grade, Level.name AS level_name, Class.class_on, Center.name AS center_name
 			FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id
 				INNER JOIN Level ON Class.level_id=Level.id
 				INNER JOIN Center ON Level.center_id=Center.id

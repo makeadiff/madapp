@@ -73,7 +73,7 @@ jQuery(document).ready(function () {
 					if(!empty($this->validation->city_id) and $this->validation->city_id == $id) echo 'selected="selected"'; 
 				?>><?php echo $name ?></option>
 				<?php } ?>
-				<option value="0">Other</option>
+				<!-- <option value="0">Other</option> -->
 			</select><?php 
 				if(!empty($this->validation->city_id_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>

@@ -513,7 +513,7 @@ class Classes extends Controller {
 				'center_name'=>$center->name,
 			);
 			$batches = $this->batch_model->get_class_days($center->id);
-			$all_levels[$center->id] = $this->level_model->get_all_levels_in_center($center->id);
+			$all_levels[$center->id] = $this->level_model->get_all_level_names_in_center($center->id);
 			
 			$data[$center->id]['batches'] = array();
 			foreach($batches as $batch_id => $batch_name) {

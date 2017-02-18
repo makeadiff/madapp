@@ -26,6 +26,7 @@
 <dl>
 <dt>Total Volunteers</dt><dd><?php echo $volunteer_count ?></dd>
 <dt>Teacher Count</dt><dd><?php echo $teacher_count ?></dd>
+<dt>Mentor Count</dt><dd><?php echo $mentor_count ?></dd>
 <dt>Assigned Teachers</dt><dd><?php echo $mapped_teachers_count ?></dd>
 </dl>
 </div>

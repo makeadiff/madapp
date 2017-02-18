@@ -197,11 +197,10 @@ class User extends Controller  {
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload($key)) {
                     $errors[] = $this->upload->display_errors();
-                    
                 } else {
                     $flag1=$this->users_model->process_pic($data);
                 }
-             }
+            }
         }
 		
 		if($flag || $returnFlag ) $this->session->set_flashdata('success', 'User Updated successfully');
@@ -217,12 +216,12 @@ class User extends Controller  {
 
 		$bank_details_all = $this->users_model->get_user_data($user_id, 'bank_%');
 		$bank_details = array(
-			'bank_name' => '',
-			'bank_address' => '',
-			'bank_account_number' => '',
-			'bank_ifsc_code' => '',
-			'bank_account_type' => '',
-			'user_id' => $user_id
+			'bank_name' 			=> '',
+			'bank_address' 			=> '',
+			'bank_account_number'	=> '',
+			'bank_ifsc_code' 		=> '',
+			'bank_account_type' 	=> '',
+			'user_id' 				=> $user_id
 		);
 
 		foreach ($bank_details_all as $detail) {

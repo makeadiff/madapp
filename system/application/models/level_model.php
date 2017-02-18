@@ -47,7 +47,7 @@ class Level_model extends Model {
 	}
 	
 	function get_level_details($level_id) {
-    	return $this->db->query("SELECT Center.name AS center_name, Level.name 
+    	return $this->db->query("SELECT Center.name AS center_name, Level.grade, Level.name 
     		FROM Level INNER JOIN Center ON Center.id=Level.center_id 
     		WHERE Level.id=$level_id")->row();
     }

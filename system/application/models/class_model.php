@@ -427,17 +427,19 @@ class Class_model extends Model {
 	}
 
 	function get_class_by_batch_level_and_date($batch_id, $level_id, $class_on) {
-		$level_check = '';
-		$batch_check = '';
+		$checks = array();
 
-		if($level_id) $level_check = " AND Class.level_id=$level_id";
-		if($batch_id) $batch_check = " AND Class.batch_id=$batch_id";
+		if($class_on) $checks[] = "DATE(Class.class_on) = '$class_on'";
+		if($level_id) $checks[] = "Class.level_id=$level_id";
+		if($batch_id) $checks[] = "Class.batch_id=$batch_id";
 
 		$query = "SELECT Class.id, Class.class_on, Class.level_id, Class.batch_id FROM Class
-						WHERE DATE(Class.class_on) = '$class_on' $level_check $batch_check
-						ORDER BY Class.class_on DESC LIMIT 0,1";
+						WHERE " . implode(" AND ", $checks)
+						. " ORDER BY Class.class_on DESC LIMIT 0,1";
 
-		return $this->db->query($query)->row();
+		$classes = $this->db->query($query)->row();
+
+		return $classes;
 	}
 
 	

@@ -211,8 +211,9 @@ class Api extends Controller {
 		if(!$batch_id) $batch_id = $this->input('batch_id');
 		if(!$level_id) $level_id = $this->input('level_id');
 		if(!$from_date) $from_date = $this->input('class_on');
+		if(!$direction or $this->input('direction')) $direction = $this->input('direction');
 
-		if(!$from_date) {
+		if(!$from_date and $direction != 'l') { // If from_date is empty and $direction is '=' it should return the latest class.
 			$class_from = $this->input('class_from');
 			$direction = $this->input('direction');
 

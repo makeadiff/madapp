@@ -283,21 +283,6 @@ class User extends Controller  {
 			
 			$this->session->set_flashdata('success', "Emails sent to ".count($users)." people.");
 			redirect('user/view_users/'.$this->input->post('query_string'));
-		
-		} elseif($this->input->post('action') == 'Send SMSs') {
-			$this->user_auth->check_permission('user_bulk_sms');
-			$this->load->library('sms');
-				
-			$users = $this->input->post('users');
-			$all_phones = $this->input->post('phone');
-			$phone = array();
-			
-			foreach($users as $user_id) $phone[] = $all_phones[$user_id];
-			$data = $this->sms->send($phone, $this->input->post('sms-content'));
-			
-			$this->session->set_flashdata('success', "Texts sent to ".count($users)." people.");
-			redirect('user/view_users/'.$this->input->post('query_string'));
-		
 
 		} elseif($this->input->post('action') == 'Update') {
 			$this->user_auth->check_permission('user_bulk_edit');

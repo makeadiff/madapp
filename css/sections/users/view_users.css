@@ -10,3 +10,49 @@ label {
 	text-align: right;
 	padding: 0 5px;
 }
+
+.above {
+	text-align: left;
+}
+
+.controls {
+	margin-top: 20px;
+}
+#actions {
+	text-align: right;
+}
+
+#tabs {
+	list-style: none;
+	margin:10px 0 0 0;
+	padding: 0;
+	line-height: 24px;
+	position: relative;
+}
+
+#tabs:after {
+	position: absolute;
+	content: "";
+	width: 100%;
+	bottom: -24;
+	left: 0;
+	border-top: 1px solid #aaa;
+	z-index: 1;
+}
+#tabs li {
+	display: inline-block;
+	border:1px solid #aaa;
+	border-top: 0px;
+	padding:5px 5px 0 5px;
+	border-radius: 0 0 3px 3px;
+	position: relative;
+	background-color: #e3e5e5;
+}
+#tabs li.selected {
+	/*border-bottom: 2px solid #fff;*/
+	z-index: 10;
+}
+#tabs li a {
+	border-bottom: 0;
+	color: #000;
+}

@@ -376,7 +376,7 @@ class User extends Controller  {
 		elseif($current_page) $data['current_page'] = $current_page;
 		else $data['current_page'] = 1;
 
-		$data['items_per_page'] = 10;
+		$data['items_per_page'] = 500;
 
 		// This will be passed to the export page...
 		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type'] . '/' . $search_id . '/' . $email . '/' . $phone . '/' . $current_page; 

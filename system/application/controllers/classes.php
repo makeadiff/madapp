@@ -271,7 +271,11 @@ class Classes extends Controller {
 	}
 
 	/// One place to do all the Teacher - Batch - Level - Subject Assignment.
-	function assign($center_id) {
+	/// This function has 2 modes 
+	/// 		center mode - where all the batches in the center are shown. ($show_only_batch = 0)
+	/// 		batch mode - where only one batch is shown. ($show_only_batch = x)
+	/// 	The mode is decided by the $show_only_batch argument
+	function assign($center_id, $show_only_batch=0) {
 		$this->load->model('subject_model');
 		$this->user_auth->check_permission('classes_assign');
 
@@ -279,10 +283,15 @@ class Classes extends Controller {
 		$all_batches = $this->batch_model->get_class_days($center_id); // All batches in the given center.
 		$all_levels = array();
 		foreach ($all_batches as $batch_id => $batch_name) {
-			// Get all levels assigned to the said batch.
+			// Get all levels asigned to the said batch.
 			$all_level_in_batch = idNameFormat($this->level_model->get_all_level_names_in_center_and_batch($center_id, $batch_id));
 			$all_levels[$batch_id] = $all_level_in_batch;
 		}
+
+		// Get all teachers in the current city.
+		$teacher_group_id = 9;
+		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group' => $teacher_group_id)), array('id'));
+		$assigned_teacher_count = 0;
 
 		$action = $this->input->post("action");
 
@@ -308,7 +317,7 @@ class Classes extends Controller {
 				$subject_id = $subject_ids[$user_id];
 
 				// Batch is not set. That means no class.
-				if(!$batch_id) {
+				if(!$batch_id or !$level_id) {
 					// See if it was assigned earlier. If so, we must delete the assignments.
 					if(isset($old_volunteers[$level_id]) and in_array($user_id, $old_volunteers[$level_id])) {
 						// If someone removes a volunteer from a batch, make sure his future classes are deleted
@@ -316,21 +325,15 @@ class Classes extends Controller {
 						// Delete this users classes.
 						$this->class_model->delete_user_classes($user_id, $batch_id, $level_id);
 					}
-				} else {
+				} else if($batch_id and $level_id) {
 					// Set the assigment with the data provided by the user.
 					$insert_id = $this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
 					$this->user_model->set_user_subject($user_id, $subject_id);
 				}
 			}
-			print 
 
 			$this->session->set_flashdata('success','Saved the new assignments.');
-		} 
-
-		// Get all teachers in the current city.
-		$teacher_group_id = 9;
-		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group' => $teacher_group_id)), array('id'));
-		$assigned_teacher_count = 0;
+		}
 
 		// Yes. We are creating two different data represtation...
 		$batch_level_user_hirarchy = array(); // On with a Batch -> Level -> User hirarchy.
@@ -382,6 +385,12 @@ class Classes extends Controller {
 
 		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 		$all_subjects[0] = "None";
+
+		$title = 'Assign Everything';
+		if($show_only_batch) {
+			$batch_details = $this->batch_model->get_batch($show_only_batch);
+			$title = "Assign Teachers to '" . $batch_details->name . "' Batch";
+		}
 	
 		$this->load->view('classes/assign', array(
 				'all_users'		=> $all_users, 
@@ -392,7 +401,9 @@ class Classes extends Controller {
 				'all_assigned_teachers'		=> $all_assigned_teachers,
 				'assigned_teacher_count'	=> $assigned_teacher_count,
 				'batch_level_user_hirarchy'	=> $batch_level_user_hirarchy,
-				'title'			=> 'Assign Everything'));
+				'title'			=> $title,
+				'show_only_batch'=>$show_only_batch
+		));
 	}
 	
 	/// MADSheet in User mode.

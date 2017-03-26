@@ -29,10 +29,26 @@
 <tr><th>Teacher</th><th>Batch</th><th>Class Section</th><th>Subject</th></tr>
 <?php foreach($all_users as $user_id => $user_name) { 
 	$show_level = 0;
-	$show_level_of_batch = 0;
+	$show_level_of_batch = $show_only_batch;
+
+	// If we are in the batch assignment mode, If the volunteer is a teacher, make sure they teaches at the right batch - any other batch, don't show.
+	if($show_only_batch and isset($user_mapping[$user_id])) {
+		$teaches_given_batch = false;
+		foreach($user_mapping[$user_id] as $batch_level_info) {
+			if(i($batch_level_info, 'batch_id') == $show_only_batch) {
+				$show_level = i($batch_level_info, 'level_id');	
+				$teaches_given_batch = true;
+			}
+		}
+
+		if(!$teaches_given_batch) continue; // Don't show this user.
+	}
 ?>
 <tr>
-<td <?php if(isset($all_assigned_teachers[$user_id])) echo 'style="font-weight:bold;" class="assigned"' ?>><?php echo $user_name->name ?></td>
+<td <?php if(isset($all_assigned_teachers[$user_id])) echo 'style="font-weight:bold;" class="assigned"' ?>><?php echo $user_name->name ?>
+	<?php if($show_only_batch) { ?><input type="hidden" name="batch_id[<?php echo $user_id ?>]" value="<?php echo $show_only_batch ?>" /><?php } ?></td>
+
+<?php if(!$show_only_batch) { // Show batch selection only if we are NOT in batch edit mode ?>
 <td><select name="batch_id[<?php echo $user_id ?>]" id="batch-<?php echo $user_id ?>" class="batch">
 <option value="0">None</option>
 <?php foreach($all_batches as $batch_id => $batch_name) { ?>
@@ -48,17 +64,18 @@
 	?>><?php echo $batch_name ?></option>
 <?php } ?>
 </select></td>
+<?php } ?>
 
 <td><select name="level_id[<?php echo $user_id ?>]" id="level-<?php echo $user_id ?>">
-<?php if(!$show_level) { ?>
 <option value="0">None</option>
-<?php } else { ?>
-<?php foreach($all_levels[$show_level_of_batch] as $level_id => $level_name) { ?>
+<?php 
+if($all_levels[$show_level_of_batch]) {
+foreach($all_levels[$show_level_of_batch] as $level_id => $level_name) { ?>
 <option value="<?php echo $level_id ?>" <?php
 		if($show_level == $level_id) echo 'selected="selected"';
 	?>><?php echo $level_name ?></option>
-<?php } ?>
-<?php } ?>
+<?php } 
+} ?>
 </select></td>
 
 <td><select name="subject_id[<?php echo $user_id ?>]">

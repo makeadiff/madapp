@@ -301,7 +301,7 @@ class Api extends Controller {
 		}
 
 		$this->class_model->save_attendence($class_id, $all_students, $participation, $check_for_understanding);
-		$this->class_model->save_class_satisfaction($class_id, $class_satisfaction);
+		$this->class_model->save_class_satisfaction($class_id, $class_satisfaction, $user_id);
 
 		$this->send(array('status' => "Class saved."));
 	}
@@ -546,6 +546,7 @@ class Api extends Controller {
 		$this->check_key();
 
 		$class_data = json_decode($this->input('class_data'));
+		$user_id = $this->input('user_id');
 
 		foreach ($class_data as $class_info) {
 			$class_id = $class_info->id;
@@ -562,12 +563,12 @@ class Api extends Controller {
 				$zero_hour_attendance = ($teacher_info->zero_hour_attendance) ? '1' : '0';
 
 				$this->class_model->save_class_teachers(0, array(
-					'user_id'	=> $teacher_id,
-					'class_id'	=> $class_id,
-					'substitute_id'=> $substitute_id,
-					'status'	=> $status,
+					'user_id'		=> $teacher_id,
+					'class_id'		=> $class_id,
+					'substitute_id'	=> $substitute_id,
+					'status'		=> $status,
 					'zero_hour_attendance'	=> $zero_hour_attendance,
-				));
+				), $user_id);
 			}
 		}
 

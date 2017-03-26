@@ -290,9 +290,6 @@ class Batch extends Controller {
 				$this->model->save_batch_level_connection($batch_id, $level_id);
 			}
 		}
-		
-
-
 
 		$this->message['success'] = 'Level Batch assignment has been saved.';
 		redirect('batch/level_assignment/'.$center_id);

@@ -322,7 +322,7 @@ class User extends Controller  {
 	}
 	
 	/// The User index is handled by this action
-	function view_users($city_id='', $user_groups='', $name='',$user_type='volunteer', $search_id='', $email='', $phone='') {
+	function view_users($city_id='', $user_groups=0, $name=0,$user_type='volunteer', $search_id=0, $email=0, $phone=0, $current_page=1) {
 		$this->user_auth->check_permission('user_index');
 		set_city_year($this);
 		
@@ -343,6 +343,7 @@ class User extends Controller  {
 		elseif($search_id) $data['search_id'] = $search_id;
 		else $data['search_id'] = '';
 		$data['id'] = $data['search_id'];
+		// dump($search_id, $data['search_id']);
 
 		// Name selection
 		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
@@ -369,7 +370,16 @@ class User extends Controller  {
 		if(!$group) $group = 0;
 		$name = $data['name'];
 		if(!$name) $name = 0;
-		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type'] . '/' . $search_id . '/' . $email . '/' . $phone; // This will be passed to the export page...
+
+		// Paging
+		if($this->input->post('current_page') !== false) $data['current_page'] = $this->input->post('current_page');
+		elseif($current_page) $data['current_page'] = $current_page;
+		else $data['current_page'] = 1;
+
+		$data['items_per_page'] = 10;
+
+		// This will be passed to the export page...
+		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type'] . '/' . $search_id . '/' . $email . '/' . $phone . '/' . $current_page; 
 		
 		// If we don't have a query_string yet, get the necessary data from the hidden field.
 		if(empty($data['query_string'])) {
@@ -386,8 +396,13 @@ class User extends Controller  {
 		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
 		$data['get_user_groups'] = true;
 		$data['get_user_class'] = true;
-		$data['all_users'] = $this->users_model->search_users($data);
 
+		$users_data = $this->users_model->search_users($data, true);
+
+		$data['all_users'] = $users_data['all_users'];
+		$data['total_items'] = $users_data['total_items'];
+		$data['total_pages'] = $users_data['total_pages'];
+		
 		$this->load->view('user/view_users', $data);
 	}
 	

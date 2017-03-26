@@ -134,9 +134,9 @@ $.tablesorter.addParser({
 <textarea id="email-content" name="email-content" rows="15" cols="80" style="width: 75%" class="tinymce"></textarea><br />
 
 <label for="email-subject">Subject</label>
-<input type="text" id="email-subject" name="email-subject" value="" /><br />
+<input type="text" id="email-subject" name="email-subject" value="" />
 
-<input type="submit" name="action" value="Send Emails" />
+<input type="submit" name="action" value="Send Emails" class="button primary" />
 </div><?php } ?>
 
 
@@ -206,7 +206,7 @@ $.tablesorter.addParser({
 <tbody>
 
 <?php 
-$count = 0;
+$count = ($current_page - 1) * $items_per_page;
 $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 foreach($all_users as $id => $user) {
 	$count++;
@@ -243,9 +243,34 @@ foreach($all_users as $id => $user) {
 <?php } ?>
 </tbody>
 </table>
+
 </form>
 
-<?php if(!$count) echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>"; ?>
+<?php 
+if(!$total_items) {
+	echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
+}
+
+if($total_pages > 1) {
+	$query_parts = explode("/", $query_string);
+	$final_part = count($query_parts) - 1;
+	echo '<div class="pager"><span>Page: </span> ';
+	if($current_page > 1) {
+		$query_parts[$final_part] = $current_page - 1;
+		echo "<a class='icon previous' href='".site_url('user/view_users/'.implode("/", $query_parts))."'>&lt;</a> ";
+	}
+	for($page = 1; $page <= $total_pages; $page++) {
+		$query_parts[$final_part] = $page;
+		if($page == $current_page) echo "<span class='page'>$page</span> ";
+		else echo "<a class='page' href='".site_url('user/view_users/'.implode("/", $query_parts))."'>$page</a> ";
+	}
+	if($current_page < $total_pages) {
+		$query_parts[$final_part] = $current_page + 1;
+		echo "<a class='icon next' href='".site_url('user/view_users/'.implode("/", $query_parts))."'>&gt;</a> ";
+	}
+	echo "</div>";
+}
+?>
 
 </div>
 </div>

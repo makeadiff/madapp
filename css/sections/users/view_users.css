@@ -56,3 +56,11 @@ label {
 	border-bottom: 0;
 	color: #000;
 }
+
+.pager a {
+	line-height: 24px;
+}
+.pager .icon {
+	border: 0;
+	line-height: 10px;
+}

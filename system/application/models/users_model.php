@@ -844,13 +844,12 @@ class Users_model extends Model {
     }
 	
 
-	function search_users($data) {
+	function search_users($data, $return_info = false) {
+		$this->db->start_cache();
 		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,
 							User.joined_on,User.left_on,User.user_type,User.address,User.sex,User.source,User.birthday,
 							User.job_status,User.preferred_day,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving');
-		$this->db->from('User');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
-		
 		
 		if(!isset($data['status'])) $data['status'] = 1;
 		if($data['status'] !== false) $this->db->where('User.status', $data['status']); // Setting status as 'false' gets you even the deleted users
@@ -892,7 +891,8 @@ class Users_model extends Model {
 			$this->db->join('Level', 'Class.level_id = Level.id' ,'join');
 			$this->db->where_in('Level.center_id', $data['center']);
 		}
-		
+
+		// Sorting
 		if(!empty($data['user_type'])) {
 			if($data['user_type'] == 'applicant') {
 				$this->db->orderby('User.joined_on DESC');
@@ -901,9 +901,21 @@ class Users_model extends Model {
 			}
 		}
 		$this->db->orderby('User.name');
-		
-		$all_users = $this->db->get()->result();
-		// echo $this->db->last_query();
+	    $this->db->stop_cache();
+				
+		// Paging 
+		$current_page = $data['current_page'];
+		$items_per_page = $data['items_per_page'];
+		$total_items = $this->db->count_all_results('User');
+		$total_pages = ceil($total_items / $items_per_page);
+		$offset = ($current_page - 1) * $items_per_page;
+
+		$this->db->limit($items_per_page, $offset);	
+
+
+		// Done - execute the query.		
+		$all_users = $this->db->get('User')->result();
+		// echo $this->db->last_query(); // :DEBUG: See the query if ther are any issues.
 
 		$return = array();
 		foreach($all_users as $user) {
@@ -923,7 +935,13 @@ class Users_model extends Model {
 			
 			$return[$user->id] = $user;
 		}
-		return $return;
+
+		if(!$return_info) return $return;
+		else return array(
+				'total_items'	=> $total_items,
+				'total_pages'	=> $total_pages,
+				'all_users'		=> $return
+			);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

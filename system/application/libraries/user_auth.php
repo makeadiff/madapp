@@ -54,29 +54,25 @@ Class User_auth {
 	}
 	
     /**
-    * Function to logged_in
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : [Boolean]
-    *
-    **/    
+     * This function will make sure that the user gets logged in automatically. And there are 3 different ways - userdata(), $_SESSION and cookie.
+     */    
 	function logged_in() {
 		if ( $this->ci->session->userdata('id') ) {
 			return $this->ci->session->userdata('id');
 
 		} elseif(!empty($_SESSION['user_id'])) {
-			$user_data = $this->ci->users_model->db->query("SELECT email,password FROM User WHERE id=".$_SESSION['user_id'])->row();
-			$status = $this->login($user_data->email, $user_data->password);
+			$user_data = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE id=".$_SESSION['user_id'])->row();
+			$user_details = $this->login($user_data->email, $user_data->password);
 
-			return $status['id'];
+			return $user_details['id'];
 
 		} elseif(get_cookie('email') and get_cookie('password_hash')) {
 			//This is a User who have enabled the 'Remember me' Option - so there is a cookie in the users system
 			$email = get_cookie('email');
 			$password_hash = get_cookie('password_hash');
 
-			$user_details = $this->ci->users_model->db->query("SELECT email,password FROM User WHERE email='$email' AND MD5(CONCAT(password,'{$this->hash}'))='$password_hash'")->row();
-
+			$user_details = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE email='$email' AND MD5(CONCAT(password,'{$this->hash}'))='$password_hash'")->row();
+	
 			if($user_details) {
 				$status = $this->login($user_details->email, $user_details->password);
 				return $status['id'];
@@ -89,7 +85,7 @@ Class User_auth {
     *
     * Function to getUser
     * @author : Rabeesh
-    * @param  : []
+    * @param  : [] 
     * @return : type : [Boolean]
     *
     **/

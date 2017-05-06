@@ -4,8 +4,12 @@ class Classes extends Controller {
 	
 	function Classes() {
 		parent::Controller();
+
+		$this->load->library('session');
+		$this->load->library('user_auth');
+
 		$this->load->model('Users_model','user_model');
-		$this->load->model('Class_model','class_model');
+   		$this->load->model('Class_model','class_model');
 		$this->load->model('Level_model','level_model');
 		$this->load->model('Center_model','center_model');
 		$this->load->model('city_model');
@@ -14,15 +18,14 @@ class Classes extends Controller {
 		
 		$this->load->helper('url');
 		$this->load->helper('misc');
-		
-		$this->load->library('session');
-		$this->load->library('user_auth');
-        
-        $logged_user_id = $this->user_auth->logged_in();
+
+		$logged_user_id = $this->user_auth->logged_in();
 		if(!$logged_user_id) {
 			redirect('auth/login');
 		}
         $this->user_details = $this->user_auth->getUser();
+
+		set_city_year_from_session($this);
 	}
 	
 	/// Shows all the classes the current user is resposible for.
@@ -291,6 +294,7 @@ class Classes extends Controller {
 		// Get all teachers in the current city.
 		$teacher_group_id = 9;
 		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group' => $teacher_group_id)), array('id'));
+		// dump($all_users);
 		$assigned_teacher_count = 0;
 
 		$action = $this->input->post("action");
@@ -329,6 +333,7 @@ class Classes extends Controller {
 					// Set the assigment with the data provided by the user.
 					$insert_id = $this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
 					$this->user_model->set_user_subject($user_id, $subject_id);
+					$all_users[$user_id]->subject_id = $subject_id;
 				}
 			}
 

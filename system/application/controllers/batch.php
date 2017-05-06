@@ -4,7 +4,7 @@ class Batch extends Controller {
 	
 	function Batch() {
 		parent::Controller();
-		$this-> message = array('success'=>false, 'error'=>false);
+		$this->message = array('success'=>false, 'error'=>false);
 		
 		$this->load->library('session');
         $this->load->library('user_auth');

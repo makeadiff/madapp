@@ -19,6 +19,9 @@ class Level_model extends Model {
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
 		$this->year = $this->ci->session->userdata('year');
+		if(!$this->project_id) $this->project_id = 1;
+		if(!$this->year) $this->year = get_year();
+		if(!$this->city_id and isset($_SESSION['city_id'])) $this->city_id = $_SESSION['city_id'];
     }
 
     function get_all_medium() {

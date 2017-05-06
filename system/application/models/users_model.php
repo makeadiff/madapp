@@ -246,14 +246,14 @@ class Users_model extends Model {
 		}
 
 		$user_array = array(
-			'name'		=>$data['name'],
+			'name'		=> $data['name'],
 			'email'		=> $data['email'],
 			'phone'		=> $this->_correct_phone_number($data['phone']),
 			'password'	=> $data['password'],
 			'address'	=> $data['address'],
 			'sex'		=> $data['sex'],
 			'city_id'	=> $data['city'],
-			'project_id'=> $data['project'],
+			'project_id'=> 1,
 			'user_type' => $data['type'],
 		);
 		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
@@ -351,23 +351,17 @@ class Users_model extends Model {
 	function updateuser($data) {
 		$user_id = $data['rootId'];
 
-		$user_array = array(
-			'name'  			=> $data['name'],
-			'email' 			=> $data['email'],
-			'phone' 			=> $this->_correct_phone_number($data['phone']),
-			'address'			=> $data['address'],
-			'sex'				=> $data['sex'],
-		);
-		
-		if(!$user_array['name'] or !$user_array['email'] or !$user_array['phone']) {
-			return 0;
-		}
-
-		if(!empty($data['city'])) $user_array['city_id'] = $data['city'];
-		if(!empty($data['project'])) $user_array['project_id'] = $data['project'];
-		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
-		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
-		if(isset($data['password'])) $user_array['password'] = $data['password'];
+		if(!empty($data['name'])) 		$user_array['name'] 		= $data['name'];
+		if(!empty($data['email'])) 		$user_array['email'] 		= $data['email'];
+		if(!empty($data['phone'])) 		$user_array['phone'] 		= $this->_correct_phone_number($data['phone']);
+		if(!empty($data['address'])) 	$user_array['address'] 		= $data['address'];
+		if(!empty($data['sex'])) 		$user_array['sex'] 			= $data['sex'];
+		if(!empty($data['city'])) 		$user_array['city_id'] 		= $data['city'];
+		elseif(!empty($data['city_id']))$user_array['city_id'] 		= $data['city_id'];
+		if(!empty($data['project'])) 	$user_array['project_id'] 	= $data['project'];
+		if(!empty($data['joined_on'])) 	$user_array['joined_on'] 	= $data['joined_on'];
+		if(!empty($data['left_on'])) 	$user_array['left_on'] 		= $data['left_on'];
+		if(isset($data['password'])) 	$user_array['password'] 	= $data['password'];
 		if(!empty($data['reason_for_leaving'])) $user_array['reason_for_leaving'] = $data['reason_for_leaving'];
 		
 		if(!empty($data['type'])) {
@@ -430,6 +424,22 @@ class Users_model extends Model {
 	
 	function get_user($user_id) {
 		return $this->db->where('id', $user_id)->get('User')->row();
+	}
+
+	// Used for unique check via API.
+	function find_user($user_data) {
+		if(isset($user_data['id']) and $user_data['id']) $this->db->where('id', $user_data['id']);
+		if(isset($user_data['user_id']) and $user_data['user_id']) $this->db->where('id', $user_data['user_id']);
+		if(isset($user_data['phone']) and $user_data['phone']) $this->db->where('phone', $user_data['phone']);
+		if(isset($user_data['email']) and $user_data['email']) $this->db->where('email', $user_data['email']);
+
+		$user = $this->db->get('User')->row();
+
+		// Find city name for this volunteer.
+		$city = $this->db->query("SELECT name FROM City WHERE id=".$user->city_id)->row();
+		$user->city_name = $city->name;
+
+		return $user;
 	}
 	
 	function getUsersById() {
@@ -904,17 +914,20 @@ class Users_model extends Model {
 	    $this->db->stop_cache();
 				
 		// Paging 
-		$current_page = $data['current_page'];
-		$items_per_page = $data['items_per_page'];
-		$total_items = $this->db->count_all_results('User');
-		$total_pages = ceil($total_items / $items_per_page);
-		$offset = ($current_page - 1) * $items_per_page;
+		$current_page = isset($data['current_page']) ? $data['current_page'] : 1;
+		$items_per_page = isset($data['items_per_page']) ? $data['items_per_page'] : 10000;
 
-		$this->db->limit($items_per_page, $offset);	
+		if(isset($data['items_per_page'])) {
+			$total_items = $this->db->count_all_results('User');
+			$total_pages = ceil($total_items / $items_per_page);
+			$offset = ($current_page - 1) * $items_per_page;
 
+			$this->db->limit($items_per_page, $offset);
+		}
 
 		// Done - execute the query.		
 		$all_users = $this->db->get('User')->result();
+		$this->db->flush_cache();
 		// echo $this->db->last_query(); // :DEBUG: See the query if ther are any issues.
 
 		$return = array();

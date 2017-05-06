@@ -110,6 +110,51 @@ class Api extends Controller {
 		header('Access-Control-Allow-Origin: *');
 	}
 
+	/// Returns the user details with the given id/email/phone. 
+	function check_user_exists() {
+		$this->check_key();
+
+		$user_id = $this->input('user_id');
+		$phone = $this->input('phone');
+		$email = $this->input('email');
+
+		$user = $this->user_model->find_user(array(
+				'user_id'	=> $user_id,
+				'phone'		=> $phone,
+				'email'		=> $email
+			));
+
+		if($user) {
+			$user->groups = $this->user_model->get_user_groups_of_user($user->id);
+		}
+
+		$this->send(array('user' => $user));
+		return $user;
+	}
+
+	/// Add a user as a teacher.
+	function user_add() {
+		$name = $this->input('name');
+		$phone = $this->input('phone');
+		$email = $this->input('email');
+		$city_id = $this->input('city_id');
+		$groups = explode(",", $this->input('groups'));
+
+		$user_id = $this->user_model->adduser(array(
+			'name'		=> $name,
+			'email'		=> $email,
+			'phone'		=> $phone,
+			'password'	=> 'pass',
+			'address'	=> '',
+			'city'		=> $city_id,
+			'sex'		=> 'f',
+			'type'		=> 'volunteer',
+			));
+		$this->user_model->adduser_to_group($user_id, $groups);
+		$this->send(array('user_id' => $user_id, 'name' => $name, 'email' => $email, 'phone' => $phone));
+		return $user_id;
+	}
+
 	/// Returns the details of the user who's ID is provided as a get parameter. 
 	function user_details() {
 		$this->check_key();
@@ -169,6 +214,28 @@ class Api extends Controller {
 			'connections'=>$connections,
 			'groups'	=> array_values($status['groups']),
 		));
+	}
+
+	/// Convert this user to a teacher - user_type becomes 'volunteer', add to the Teacher User Group
+	function user_convert_to_teacher() {
+		$this->check_key();
+		$user_id = $this->input('user_id');
+		$city_id = $this->input('city_id');
+		$user = $this->user_model->user_details($user_id);
+		if(!$user) $this->error("User($user_id) not found.");
+
+		// Make this user a volunteer
+		$data = array(
+				'rootId'	=> $user_id,
+				'type'		=> 'volunteer'
+			);
+		if($city_id) $data['city_id'] = $city_id;
+		$this->user_model->updateuser($data);
+		// Add to teacher user group
+		$this->user_model->adduser_to_group($user_id, array(9));
+
+		$this->send(array('user_id' => $user_id, 'name' => $user->name, 'email' => $user->email, 'phone' => $user->phone));
+		return true;
 	}
 
 	/**
@@ -410,14 +477,20 @@ class Api extends Controller {
 		$class_date = '';
 		if(isset($data[0]->class_on)) {
 			$class_on = date('Y-m-d', strtotime($data[0]->class_on));
-			$class_date = date('dS M, Y', strtotime($data[0]->class_on));
+			$class_date = date('j M', strtotime($data[0]->class_on));
 		}
+
+		// Make the batch name smaller
+		$batch_name = str_replace(
+			array('Sunday','Monday','Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', ':00', ' 0'), 
+			array('Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', '', ' '), $batch->name);
 
 		$this->send(array(
 				'classes'		=> $classes, 
-				'center_name'	=> $center_name, 
+				'center_name'	=> $center_name,
+				'center_id'		=> $center_id,
 				'batch_id'		=> $batch_id, 
-				'batch_name'	=> $batch->name,
+				'batch_name'	=> $batch_name,
 				'class_on' 		=> $class_on,
 				'class_date'	=> $class_date,
 			));

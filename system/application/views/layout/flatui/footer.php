@@ -1,6 +1,9 @@
 
 <script type="text/javascript">$('body').fadeIn(1000);</script>
 
+<script type="text/javascript">
+var base_url = "<?php echo base_url(); ?>";
+</script>
 <script type="text/javascript" src="<?php echo base_url() ?>js/application.js"></script>
 <?php
 $url = site_url(); 

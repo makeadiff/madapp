@@ -22,11 +22,19 @@ function showBulkEdit() {
 	$(".col-select").show();
 }
 
+function activateTab(e) {
+	var li  = this.parentNode;
+	$("#tabs li").removeClass("selected");
+	$(li).addClass("selected");
+}
+
 $().ready(function() {
 	$('#select-all').click(function () {
 		if(this.checked) $(".user-select").attr('checked', "checked");
 		else $(".user-select").removeAttr('checked');
 	});
+
+	$("#tabs li a").click(activateTab);
 
 	$('textarea.tinymce').tinymce({
 		// Location of TinyMCE script

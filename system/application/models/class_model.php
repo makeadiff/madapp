@@ -130,8 +130,10 @@ class Class_model extends Model {
 		$this->db->where('id', $class_id)->update('Class',array('lesson_id'=>$lesson_id));
 	}
 
-	function save_class_satisfaction($class_id, $class_satisfaction) {
-		$this->db->where('id', $class_id)->update('Class',array('class_satisfaction'=>$class_satisfaction));
+	function save_class_satisfaction($class_id, $class_satisfaction, $user_id = 0) {
+		$this->db->where('id', $class_id)->update('Class',array(
+													'class_satisfaction' => $class_satisfaction, 
+													'updated_by_teacher' => $user_id));
 	}
 	
 	/// Get just the class information for the current level
@@ -249,7 +251,7 @@ class Class_model extends Model {
 		return $class_details;
 	}
 	
-	function save_class_teachers($user_class_id, $data) {
+	function save_class_teachers($user_class_id, $data, $mentor_id = 0) {
 		if(!$user_class_id) { // Sometimes, the UserClass.id is not provided. Then we find the unique row using UserClass.class_id and UserClass.user_id. Then cache its UserClass.id
 			$user_class_id = $this->db->where(array('class_id'=>$data['class_id'],'user_id'=>$data['user_id']))->get('UserClass')->row()->id;
 		}
@@ -270,7 +272,7 @@ class Class_model extends Model {
 		$status = $data['status'];
 		if($status == 'confirmed' or $status == 'attended' or $status == 'absent') $status = 'happened';
 		if($class_status == '0') $status = 'cancelled';
-		$this->db->update('Class', array('status' => $status), array('id'=>$data['class_id']));
+		$this->db->update('Class', array('status' => $status, 'updated_by_mentor' => $mentor_id), array('id'=>$data['class_id']));
 
 		$this->calculate_users_class_credit($user_class_id, $data);
 		return $this->db->affected_rows();
@@ -427,17 +429,19 @@ class Class_model extends Model {
 	}
 
 	function get_class_by_batch_level_and_date($batch_id, $level_id, $class_on) {
-		$level_check = '';
-		$batch_check = '';
+		$checks = array();
 
-		if($level_id) $level_check = " AND Class.level_id=$level_id";
-		if($batch_id) $batch_check = " AND Class.batch_id=$batch_id";
+		if($class_on) $checks[] = "DATE(Class.class_on) = '$class_on'";
+		if($level_id) $checks[] = "Class.level_id=$level_id";
+		if($batch_id) $checks[] = "Class.batch_id=$batch_id";
 
 		$query = "SELECT Class.id, Class.class_on, Class.level_id, Class.batch_id FROM Class
-						WHERE DATE(Class.class_on) = '$class_on' $level_check $batch_check
-						ORDER BY Class.class_on DESC LIMIT 0,1";
+						WHERE " . implode(" AND ", $checks)
+						. " ORDER BY Class.class_on DESC LIMIT 0,1";
 
-		return $this->db->query($query)->row();
+		$classes = $this->db->query($query)->row();
+
+		return $classes;
 	}
 
 	

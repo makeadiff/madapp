@@ -4,7 +4,7 @@ class Batch extends Controller {
 	
 	function Batch() {
 		parent::Controller();
-		$this-> message = array('success'=>false, 'error'=>false);
+		$this->message = array('success'=>false, 'error'=>false);
 		
 		$this->load->library('session');
         $this->load->library('user_auth');
@@ -290,9 +290,6 @@ class Batch extends Controller {
 				$this->model->save_batch_level_connection($batch_id, $level_id);
 			}
 		}
-		
-
-
 
 		$this->message['success'] = 'Level Batch assignment has been saved.';
 		redirect('batch/level_assignment/'.$center_id);

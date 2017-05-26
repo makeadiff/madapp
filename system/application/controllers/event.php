@@ -215,7 +215,7 @@ class Event extends controller{
 				$this->session->set_flashdata('success', 'Users attendance marked.');
 				redirect('event/index'); 
 			} else {
-				$this->session->set_flashdata('success', 'Please Select One user.');
+				$this->session->set_flashdata('success', 'Please select at least one user.');
 				redirect('event/index'); 
 			}
 		}

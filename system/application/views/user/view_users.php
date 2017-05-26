@@ -26,7 +26,6 @@ $.tablesorter.addParser({
 			var date = year + "-" + month_names[month] + "-" + day;
 			return date;
 		});
-		console.log(date);
 		return date;
 	}, 
 	// set type, either numeric or text 
@@ -41,11 +40,6 @@ $.tablesorter.addParser({
 <div id="head" class="clear">
 <h1><?php echo $title; ?></h1>
 
-<div id="actions">
-<?php if($this->user_auth->get_permission('user_add')) { ?>
-<a href="<?php echo site_url('user/popupAdduser')?>" class="thickbox button green primary popup" name="Add User">Add User</a>
-<?php } ?>
-</div><br class="clear" />
 </div>
 <?php if($this->user_auth->get_permission('center_edit')) { ?>
 <div id="train-nav">
@@ -61,13 +55,21 @@ $.tablesorter.addParser({
 <?php } ?>
 </ul>
 </div><br />
+<?php } ?><br />
+
+<div id="actions">
+<?php if($this->user_auth->get_permission('user_add')) { ?>
+<a href="<?php echo site_url('user/popupAdduser')?>" class="thickbox button green primary popup" name="Add User">Add User</a><br /><br />
+<a class="with-icon add" href="<?php echo site_url('user/import'); ?>">Import Users...</a> | 
+<?php if($this->user_auth->get_permission('user_export')) { ?><a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;<?php } ?>
 <?php } ?>
+</div>
 
 <form action="<?php echo site_url('user/view_users'); ?>" method="post" id="filters" class="area">
-<table style="margin-bottom:25px;">
+<table>
 <tr>
 <td style="vertical-align:top;"><div class="field clear">
-	<label for="city_id">Select City </label>
+	<label for="city_id" class="above">City </label><br />
 	<select name="city_id" id="city_id">
 	<option value="0">Any City</option>
 	<?php
@@ -82,7 +84,7 @@ $.tablesorter.addParser({
 
 	<?php if($this->user_auth->get_permission('see_applicants')) { ?><br />
 	<div class="field clear">
-	<label for="user_type">User Type</label>
+	<label for="user_type" class="above">User Type</label><br />
 	<select name="user_type" id="user_type">
 	<option value="0">All Type</option>
 	<?php
@@ -99,9 +101,9 @@ $.tablesorter.addParser({
 </td>
 		
 <td style="vertical-align:top;"><div  class="field clear" style="margin-left:20px; margin-bottom:10px;">
-	<label for="user_group">Group </label>
+	<label for="user_group"  class="above">Group </label><br />
 	
-	<select name="user_group[]" id="user_group" style="width:150px; height:100px;" multiple>
+	<select name="user_group[]" id="user_group" style="width:200px; height:130px;" multiple>
 	<?php
 	foreach($all_user_group as $id=>$gname) { ?>
 	<option value="<?php echo $id; ?>"<?php 
@@ -117,13 +119,10 @@ $.tablesorter.addParser({
 <label for="search_id">ID</label><?php echo form_input('search_id', $search_id); ?><br />
 <label for="name">Name</label><?php echo form_input('name', $name); ?><br />
 <label for="email">Email</label><?php echo form_input('email', $email); ?><br />
-<label for="phone">Phone</label><?php echo form_input('phone', $phone); ?><br />
+<label for="phone">Phone</label><?php echo form_input('phone', $phone); ?><br /><br />
+<input type="submit"  class="button green" style="float:right;" value="Get Users"/>
 </div>
 </td>
-<td style="vertical-align:bottom;"><div  class="field clear" style="margin-left:20px;">
-<input type="submit"  class="button green" value="Get Users"/>
-</div>
-</td>                                     
 </tr>
 </table>
 </form>
@@ -132,20 +131,12 @@ $.tablesorter.addParser({
 <input type="hidden" name="query_string" value="<?php echo $query_string ?>" />
 <?php if($this->user_auth->get_permission('user_bulk_email')) { ?>
 <div id="email-area" class="area">
+<textarea id="email-content" name="email-content" rows="15" cols="80" style="width: 75%" class="tinymce"></textarea><br />
+
 <label for="email-subject">Subject</label>
-<input type="text" id="email-subject" name="email-subject" value="" /><br />
+<input type="text" id="email-subject" name="email-subject" value="" />
 
-<label for="email-content">Content</label><br />
-<textarea id="email-content" name="email-content" rows="15" cols="80" style="width: 95%" class="tinymce"></textarea>
-<input type="submit" name="action" value="Send Emails" />
-</div><?php } ?>
-
-
-<?php if($this->user_auth->get_permission('user_bulk_sms')) { ?>
-<div id="sms-area" class="area">
-<label for="sms-content">Content</label><br />
-<textarea name="sms-content" rows="5" cols="70" style="width: 95%"></textarea><br />
-<input type="submit" name="action" value="Send SMSs" />
+<input type="submit" name="action" value="Send Emails" class="button primary" />
 </div><?php } ?>
 
 
@@ -162,7 +153,7 @@ $.tablesorter.addParser({
 	<option value="" selected="selected">Leave Unchanged</option>
 </select><br />
 
-<label for="group-bulk">Select Group</label> 
+<label for="group-bulk">Group</label> 
 <select id="group-bulk" name="group-bulk[]" multiple="multiple"> 
 	<?php
 	foreach($all_user_group as $id => $name) {
@@ -171,20 +162,21 @@ $.tablesorter.addParser({
 	<option value="<?php echo $id; ?>"><?php echo $name; ?></option> 
 	<?php } ?>
 </select><br />
+<label>&nbsp;</label><input type="submit" name="action" class="button green" value="Update" /><br />
 </td><td valign="top" style="padding-left:30px;">
 <?php if($this->user_auth->get_permission('user_delete')) { ?><br /><input type="submit" name="action"  class="button primary" value="Delete Selected Users" /><?php } ?>
 </td>
 </tr></table>
-<input type="submit" name="action" class="button green" value="Update" /><br />
 </div><?php } ?>
 
-<a class="with-icon settings" href="#" onclick="showFilters()">Filters</a> &nbsp; &nbsp;
-<?php if($this->user_auth->get_permission('user_bulk_email')) { ?><a class="with-icon email" href="#" onclick="showEmail();">EMail...</a> &nbsp; &nbsp;<?php } ?>
-<!-- <?php if($this->user_auth->get_permission('user_bulk_sms')) { ?><a class="with-icon sms" href="#" onclick="showSms();">SMS...</a> &nbsp; &nbsp;<?php } ?> -->
-<?php if($this->user_auth->get_permission('user_bulk_edit')) { ?><a class="with-icon edit" href="#" onclick="showBulkEdit();">Bulk Edit Users...</a> &nbsp; <?php } ?>
-| &nbsp; <a class="with-icon add" href="<?php echo site_url('user/import'); ?>">Import Users...</a> &nbsp; &nbsp;
-<?php if($this->user_auth->get_permission('user_export')) { ?><a class="with-icon save" href="<?php echo site_url('user/export/'.$query_string); ?>">Export</a> &nbsp; &nbsp;<?php } ?>
+<div class="controls">
+<ul id="tabs">
+<li class="selected"><a class="with-icon settings" href="#" onclick="showFilters()">Filters</a></li>
+<?php if($this->user_auth->get_permission('user_bulk_email')) { ?><li><a class="with-icon email" href="#" onclick="showEmail();">EMail...</a></li><?php } ?>
+<?php if($this->user_auth->get_permission('user_bulk_edit')) { ?><li><a class="with-icon edit" href="#" onclick="showBulkEdit();">Bulk Edit Users...</a></li><?php } ?>
+</ul>
 
+</div>
 <br /><br />
 
 <table cellpadding="0"  cellspacing="0" class="clear data-table">
@@ -213,9 +205,9 @@ $.tablesorter.addParser({
 </thead>
 <tbody>
 
-<?php
 
-$count = 0;
+<?php 
+$count = ($current_page - 1) * $items_per_page;
 $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 foreach($all_users as $id => $user) {
 	$count++;
@@ -255,9 +247,34 @@ foreach($all_users as $id => $user) {
 <?php } ?>
 </tbody>
 </table>
+
 </form>
 
-<?php if(!$count) echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>"; ?>
+<?php 
+if(!$total_items) {
+	echo "<div style='background-color: #FFFF66;height:30px;text-align:center;padding-top:10px;font-weight:bold;' >- no records found -</div>";
+}
+
+if($total_pages > 1) {
+	$query_parts = explode("/", $query_string);
+	$final_part = count($query_parts) - 1;
+	echo '<div class="pager"><span>Page: </span> ';
+	if($current_page > 1) {
+		$query_parts[$final_part] = $current_page - 1;
+		echo "<a class='icon previous' href='".site_url('user/view_users/'.implode("/", $query_parts))."'>&lt;</a> ";
+	}
+	for($page = 1; $page <= $total_pages; $page++) {
+		$query_parts[$final_part] = $page;
+		if($page == $current_page) echo "<span class='page'>$page</span> ";
+		else echo "<a class='page' href='".site_url('user/view_users/'.implode("/", $query_parts))."'>$page</a> ";
+	}
+	if($current_page < $total_pages) {
+		$query_parts[$final_part] = $current_page + 1;
+		echo "<a class='icon next' href='".site_url('user/view_users/'.implode("/", $query_parts))."'>&gt;</a> ";
+	}
+	echo "</div>";
+}
+?>
 
 </div>
 </div>

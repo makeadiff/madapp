@@ -164,6 +164,27 @@ function set_city_year($that) {
 	}
 }
 
+/// Set the city, year and project from session if its not already set. 
+function set_city_year_from_session(&$that) {
+	if(isset($that->class_model)) {
+		if(!$that->class_model->project_id) $that->class_model->project_id = 1;
+		if(!$that->class_model->year) $that->class_model->year = get_year();
+		if(!$that->class_model->city_id and isset($_SESSION['city_id'])) $that->class_model->city_id = $_SESSION['city_id'];
+	}
+
+	if(isset($that->batch_model)) {
+		if(!$that->batch_model->project_id) $that->batch_model->project_id = 1;
+		if(!$that->batch_model->year) $that->batch_model->year = get_year();
+		if(!$that->batch_model->city_id and isset($_SESSION['city_id'])) $that->batch_model->city_id = $_SESSION['city_id'];
+	}
+
+	if(isset($that->user_model)) {
+		if(!$that->user_model->project_id) $that->user_model->project_id = 1;
+		if(!$that->user_model->year) $that->user_model->year = get_year();
+		if(!$that->user_model->city_id and isset($_SESSION['city_id'])) $that->user_model->city_id = $_SESSION['city_id'];
+	}
+}
+
 function get_all_cycles() {
 	$year = date('Y', strtotime(get_mad_year_starting_date()));
 	return array(
@@ -326,3 +347,4 @@ function sendEmailWithAttachment($to_email, $subject, $body, $from=false, $login
     if(PEAR::isError($send)) echo $send->getMessage();
     finfo_close($finfo);
 }
+

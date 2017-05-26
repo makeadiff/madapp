@@ -8,6 +8,9 @@ class Batch_model extends Model {
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
 		$this->year = $this->ci->session->userdata('year');
+		if(!$this->project_id) $this->project_id = 1;
+		if(!$this->year) $this->year = get_year();
+		if(!$this->city_id and isset($_SESSION['city_id'])) $this->city_id = $_SESSION['city_id'];
 	}
 	
 	function get_batch($batch_id) {
@@ -101,7 +104,7 @@ class Batch_model extends Model {
 	}
 	
 	function get_class_days($center_id) {
-		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} ORDER BY day")->result();
+		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND year={$this->year} ORDER BY day")->result();
 		$return = array();
 		foreach($class_days as $batch) {
 			$return[$batch->id] = $this->create_batch_name($batch->day, $batch->class_time);
@@ -201,7 +204,11 @@ class Batch_model extends Model {
 			return $x->id;
 		},$all_batchs);
 
-		$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
+		$batch_level_connections = array();
+
+		if($batch_ids) {
+			$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
+		}
 
 		return $batch_level_connections;
 	}

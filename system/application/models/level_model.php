@@ -19,6 +19,9 @@ class Level_model extends Model {
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
 		$this->year = $this->ci->session->userdata('year');
+		if(!$this->project_id) $this->project_id = 1;
+		if(!$this->year) $this->year = get_year();
+		if(!$this->city_id and isset($_SESSION['city_id'])) $this->city_id = $_SESSION['city_id'];
     }
 
     function get_all_medium() {
@@ -36,9 +39,10 @@ class Level_model extends Model {
 	}
 
 	function get_all_level_names_in_center_and_batch($center_id, $batch_id) {
+		// $center_id is not used anymore.
 		return $this->db->query("SELECT L.id,CONCAT(grade,' ',name) AS name FROM Level L
 				INNER JOIN BatchLevel BL ON L.id=BL.level_id
-				WHERE center_id='$center_id' AND L.year='{$this->year}' AND status='1' AND BL.batch_id=$batch_id
+				WHERE L.year='{$this->year}' AND status='1' AND BL.batch_id=$batch_id
 				ORDER BY grade,name")->result();
 	}
 	

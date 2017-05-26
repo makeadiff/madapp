@@ -1,0 +1,32 @@
+table { color: #fff; }
+select,input { color: #000; }
+
+.form-area label {
+	width:100px;
+	display:block;
+	float:left;
+	text-align:right;
+	padding-right:5px;
+}
+.form-area input, .form-area select, .form-area textarea {
+	float:left;
+}
+.form-area p.info {
+	float:left;
+}
+br {
+	clear:both;
+}
+.form-info {
+	display:none;
+}
+
+#new-teacher-area {
+	display: none;
+	margin-left: 10px;
+	border-left: 1px solid #fff;
+	padding-left: 10px;
+}
+.assigned {
+	font-weight: bold;
+}

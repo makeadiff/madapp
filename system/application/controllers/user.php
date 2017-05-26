@@ -284,21 +284,6 @@ class User extends Controller  {
 			
 			$this->session->set_flashdata('success', "Emails sent to ".count($users)." people.");
 			redirect('user/view_users/'.$this->input->post('query_string'));
-		
-		} elseif($this->input->post('action') == 'Send SMSs') {
-			$this->user_auth->check_permission('user_bulk_sms');
-			$this->load->library('sms');
-				
-			$users = $this->input->post('users');
-			$all_phones = $this->input->post('phone');
-			$phone = array();
-			
-			foreach($users as $user_id) $phone[] = $all_phones[$user_id];
-			$data = $this->sms->send($phone, $this->input->post('sms-content'));
-			
-			$this->session->set_flashdata('success', "Texts sent to ".count($users)." people.");
-			redirect('user/view_users/'.$this->input->post('query_string'));
-		
 
 		} elseif($this->input->post('action') == 'Update') {
 			$this->user_auth->check_permission('user_bulk_edit');
@@ -338,7 +323,9 @@ class User extends Controller  {
 	}
 	
 	/// The User index is handled by this action
-	function view_users($city_id='', $user_groups='', $name='',$user_type='volunteer', $search_id='', $email='', $phone='', $mad_email='') {
+
+	function view_users($city_id='', $user_groups=0, $name=0,$user_type='volunteer', $search_id=0, $email=0, $phone=0, $current_page=1) {
+
 		$this->user_auth->check_permission('user_index');
 		set_city_year($this);
 		
@@ -359,6 +346,7 @@ class User extends Controller  {
 		elseif($search_id) $data['search_id'] = $search_id;
 		else $data['search_id'] = '';
 		$data['id'] = $data['search_id'];
+		// dump($search_id, $data['search_id']);
 
 		// Name selection
 		if($this->input->post('name') !== false) $data['name'] = $this->input->post('name');
@@ -369,6 +357,11 @@ class User extends Controller  {
 		if($this->input->post('email') !== false) $data['email'] = $this->input->post('email');
 		elseif($email) $data['email'] = $email;
 		else $data['email'] = '';
+
+        // MAD Email selection
+        if($this->input->post('mad_email') !== false) $data['mad_email'] = $this->input->post('mad_email');
+        elseif($email) $data['mad_email'] = $email;
+        else $data['mad_email'] = '';
 
 
 		// Phone selection
@@ -386,7 +379,16 @@ class User extends Controller  {
 		if(!$group) $group = 0;
 		$name = $data['name'];
 		if(!$name) $name = 0;
-		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type'] . '/' . $search_id . '/' . $email . '/' . $phone; // This will be passed to the export page...
+
+		// Paging
+		if($this->input->post('current_page') !== false) $data['current_page'] = $this->input->post('current_page');
+		elseif($current_page) $data['current_page'] = $current_page;
+		else $data['current_page'] = 1;
+
+		$data['items_per_page'] = 500;
+
+		// This will be passed to the export page...
+		$data['query_string'] = $data['city_id'] . '/' . $group . '/' . $name . '/' . $data['user_type'] . '/' . $search_id . '/' . $email . '/' . $phone . '/' . $current_page; 
 		
 		// If we don't have a query_string yet, get the necessary data from the hidden field.
 		if(empty($data['query_string'])) {
@@ -403,8 +405,13 @@ class User extends Controller  {
 		$data['all_user_group'] = idNameFormat($this->users_model->get_all_groups());
 		$data['get_user_groups'] = true;
 		$data['get_user_class'] = true;
-		$data['all_users'] = $this->users_model->search_users($data);
 
+		$users_data = $this->users_model->search_users($data, true);
+
+		$data['all_users'] = $users_data['all_users'];
+		$data['total_items'] = $users_data['total_items'];
+		$data['total_pages'] = $users_data['total_pages'];
+		
 		$this->load->view('user/view_users', $data);
 	}
 	

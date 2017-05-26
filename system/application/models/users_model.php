@@ -33,8 +33,12 @@ class Users_model extends Model {
 	function login($data) {
       	$username= $data['username'];
         $password = $data['password'];
+
+
+		//Check for personal email and mad email when logging in
+		$where = "(`email` = '$username' or `mad_email` = '$username')";
 		
-		$query = $this->db->where('email', $username)->where('password',$password)->where('status','1')->where('user_type', 'volunteer')->get("User");
+		$query = $this->db->where($where)->where('password',$password)->where('status','1')->where('user_type', 'volunteer')->get("User");
         if($query->num_rows() > 0) {
 			$user = $query->first_row();
 			
@@ -246,8 +250,9 @@ class Users_model extends Model {
 		}
 
 		$user_array = array(
-			'name'		=>$data['name'],
+			'name'		=> $data['name'],
 			'email'		=> $data['email'],
+			'mad_email'	=> $data['mad_email'],
 			'phone'		=> $this->_correct_phone_number($data['phone']),
 			'password'	=> $data['password'],
 			'address'	=> $data['address'],
@@ -354,6 +359,7 @@ class Users_model extends Model {
 		$user_array = array(
 			'name'  			=> $data['name'],
 			'email' 			=> $data['email'],
+			'mad_email'			=> $data['mad_email'],
 			'phone' 			=> $this->_correct_phone_number($data['phone']),
 			'address'			=> $data['address'],
 			'sex'				=> $data['sex'],
@@ -845,7 +851,7 @@ class Users_model extends Model {
 	
 
 	function search_users($data) {
-		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,
+		$this->db->select('User.id,User.name,User.photo,User.email,User.mad_email,User.password,User.phone,User.credit,
 							User.joined_on,User.left_on,User.user_type,User.address,User.sex,User.source,User.birthday,
 							User.job_status,User.preferred_day,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving');
 		$this->db->from('User');

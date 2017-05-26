@@ -6,6 +6,7 @@ $root_id	= $user->id;
 $name		= $user->name;
 $title		= $user->title;
 $email		= $user->email;
+$mad_email	= $user->mad_email;
 $phone		= $user->phone;
 $address	= $user->address;
 $center_id	= $user->center_id;
@@ -51,9 +52,15 @@ jQuery(document).ready(function () {
 </li>
 
 <li>
-	<label for="emails">Email : </label>
+	<label for="emails">Personal Email : </label>
 	<input id="emails" name="emails"  type="text"  value="<?php echo $email; ?>"/> 
 </li>
+
+<li>
+	<label for="mad_email">MAD Email : </label>
+	<input id="mad_email" name="mad_email"  type="text"  value="<?php echo $mad_email; ?>"/>
+</li>
+
 <li>
 	<label for="spassword">Password : </label>
 	<input id="spassword" name="spassword"  type="password"   /> 

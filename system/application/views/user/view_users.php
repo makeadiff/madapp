@@ -213,14 +213,17 @@ $.tablesorter.addParser({
 </thead>
 <tbody>
 
-<?php 
+<?php
+
 $count = 0;
 $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 foreach($all_users as $id => $user) {
 	$count++;
 	$shadeClass = 'even';
 	if($count % 2) $shadeClass = 'odd';
-?> 
+?>
+
+
 <tr class="<?php echo $shadeClass; ?>" id="group"><!-- <?php print $count ?> -->
 	<td class="col-select"><input type="checkbox" name="users[]" class="user-select" value="<?php echo $user->id ?>" />
 	<input type="hidden" name="email[<?php echo $user->id ?>]" value="<?php echo $user->email ?>" />
@@ -231,7 +234,8 @@ foreach($all_users as $id => $user) {
     <?php if($this->user_auth->get_permission('user_delete')) { ?><a class="delete confirm icon" href="<?php echo site_url('user/delete/'.$user->id) ?>" title="Delete <?php echo $user->name ?>">Delete</a><?php } ?>
     </td>
     <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>
-    <td class="col-email"><?php echo $user->email; ?><br /><?php echo $user->phone; ?></td>
+    <td class="col-email"><?php echo $user->email;  if(!empty($user->mad_email)) echo "<br />" . $user->mad_email;?>
+		<br /><?php echo $user->phone; ?></td>
 	<?php if($this->input->post('city_id') === '0') { ?><td class="col-city"><?php echo $user->city_name; ?></td><?php } ?>
 	<?php if($this->input->post('user_type') == 'applicant') { ?>
 	<td class="col-joined_on"><?php echo date('d\<\s\u\p\>S\<\/\s\u\p\> M, Y', strtotime($user->joined_on)); ?></td>

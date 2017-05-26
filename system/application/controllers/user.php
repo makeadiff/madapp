@@ -612,9 +612,11 @@ class User extends Controller  {
 		else $for_user = ' of ' . $this->users_model->get_user($current_user_id)->name;
 		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
 
+		$user_details = $this->users_model->user_details($current_user_id);
+
 		$credit_log = $this->users_model->get_credit_history($current_user_id);
 		
-		$this->load->view('user/usercredit', array('credit_log'=>$credit_log));
+		$this->load->view('user/usercredit', array('credit_log'=>$credit_log, 'user_details' => $user_details));
 		$this->load->view('layout/footer');
 	}	
 }	

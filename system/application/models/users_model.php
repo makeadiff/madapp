@@ -310,9 +310,10 @@ class Users_model extends Model {
 	}
 	
 	/// Add the user given as the first argument to all the groups specified in the second argument.
-	function adduser_to_group($user_id, $group_ids)
-	{
+	function adduser_to_group($user_id, $group_ids) {
+		$existing_groups = $this->get_user_groups_of_user($user_id);
 		foreach($group_ids as $group_id) {
+			if(isset($existing_groups[$group_id])) continue; // User already the given group already
 			$user_array=array('user_id'=>$user_id, 'group_id'=> $group_id, 'year' => $this->year);
 			$this->db->insert('UserGroup',$user_array);
 		}

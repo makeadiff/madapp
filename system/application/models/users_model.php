@@ -464,8 +464,6 @@ class Users_model extends Model {
     }
     
     function update_credit($user_id, $change) {
-		//if($change == 0) return;
-		
     	if($change == 1) $change = '+1';
     	if($change == 2) $change = '+2';
 		if($change == .5) $change = '+.5';
@@ -473,6 +471,20 @@ class Users_model extends Model {
     }
     function set_credit($user_id, $credit) {
 		$this->db->query("UPDATE User SET credit=$credit WHERE id=$user_id");
+    }
+    function manually_edit_credit($user_id, $credit, $comment, $credit_assigned_by_user_id) {
+    	// Set a row to make sure the edited credit is used in history calculation.
+    	$this->db->insert("UserCredit", array(
+    							'user_id'	=> $user_id,
+    							'credit'	=> $credit,
+    							'credit_assigned_by_user_id' => $credit_assigned_by_user_id,
+    							'comment'	=> $comment,
+    							'added_on'	=> date('Y-m-d H:i:s'),
+    							'year'		=> $this->year
+				    		));
+
+    	// Set the credit.
+    	$this->set_credit($user_id, $credit);
     }
     
     function recalculate_user_credit($user_id, $update_if_wrong=false, $debug=false) {
@@ -496,9 +508,22 @@ class Users_model extends Model {
 
 		// Find the sunday after the start_date
 		$current_date = date('Y-m-d', strtotime('next sunday', strtotime($start_date)));
-		$this->db->query("DELETE FROM User_Credit_Archive WHERE user_id=$user_id AND credit_on>'{$this->year}-04-01 00:00:00'"); // Clear existing credit archive. We are going to re-insert it. 
+		$this->db->query("DELETE FROM User_Credit_Archive WHERE user_id=$user_id AND credit_on>'{$this->year}-04-01 00:00:00'"); // Clear existing credit archive. We are going to re-insert it.
 
+		// Find all the instances where this user's credit was manually edited.
+		$credit_edits = $this->db->query("SELECT DATE(added_on) AS added_on, credit, comment FROM UserCredit 
+											WHERE user_id=$user_id AND year={$this->year} ORDER BY added_on")->result_array();
 		foreach($classes_so_far as $row) {
+			// If there is a manual credit edit entry just before this class, make sure that is factored in.
+			if($credit_edits) {
+				$edit = reset($credit_edits); // Get the first edit,
+				if($edit['added_on'] < $row['class_on']) {
+					$credit = $edit['credit'];
+					if($debug) print "Credit was manually edited to $credit : " . $edit['comment'];
+					array_shift($credit_edits); // Remove the done edit.
+				}
+			}
+
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
 				$credit = $credit + $credit_lost_for_missing_class;
 				if($debug) print "User missed class: $credit_lost_for_missing_class<br />\n";
@@ -513,12 +538,6 @@ class Users_model extends Model {
 				
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
 				$credit_sub_gets = $credit_for_substituting;
-				// If the sub is from the same level, give him/her 1 credits. Because we are SO generous.
-				$substitute_levels = $this->ci->level_model->get_user_level($row['substitute_id']);
-				$current_class_level = $this->ci->level_model->get_class_level($row['class_id']);
-				if(in_array($current_class_level, $substitute_levels)) {
-					$credit_sub_gets = $credit_for_substituting_in_same_level;
-				}
 				
 				if($credit_max_credit_threshold >= ($credit + $credit_sub_gets)) {
 					$credit = $credit + $credit_sub_gets;
@@ -526,7 +545,6 @@ class Users_model extends Model {
 				} else {
 					if($debug) print "Credit for subbing not got - as upper limit is hit.<br />\n";
 				}
-				
 				
 				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
@@ -560,6 +578,12 @@ class Users_model extends Model {
 			$avm_count++; // You can miss one AVM without any credit loss.
 			if($avm_count > 1);
 			$credit = $credit + $credit_lost_for_missing_avm;
+		}
+
+		// If there is a manual credit edit entry just before this class, make sure that is factored in.
+		if($credit_edits) {
+			$edit = end($credit_edits); // Get the last edit - since this is after all the classes, we'll just get the final one.
+			$credit = $edit['credit'];
 		}
 		
 		if($update_if_wrong) {
@@ -647,20 +671,38 @@ class Users_model extends Model {
 		$i = 0;
 		$credit_log = array(array(
 			'class_on' 		=> get_year() . '-04-01 00:00:00',
-			'Substitutedby' => 'Start of year',
-			'lost'			=> 'Started with '.$credit.' credits',
+			'action' 		=> 'Start of year',
+			'change'		=> 'Started with '.$credit.' credits',
 			'credit'		=> $credit,
 			'i'				=> $i,
 		));
+
+		// Find all the instances where this user's credit was manually edited.
+		$credit_edits = $this->db->query("SELECT added_on, credit, comment FROM UserCredit 
+											WHERE user_id=$user_id AND year={$this->year} ORDER BY added_on")->result_array();
 		
 		foreach($details as $row) {
 			$data = array();
+
+			// If there is a manual credit edit entry just before this class, make sure that is factored in.
+			if($credit_edits) {
+				$edit = reset($credit_edits); // Get the first edit,
+				dump($edit, $edit['added_on'], $row['class_on']);
+				if($edit['added_on'] < $row['class_on']) {
+					$credit = $edit['credit'];
+					$data['class_on'] = $edit['added_on'];
+					$data['change'] = "Credit was manually edited to $credit : " . $edit['comment'];
+					$data['credit']= $credit;
+
+					array_shift($credit_edits); // Remove the done edit.
+				}
+			}
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
 				$credit = $credit + $credit_lost_for_missing_class;
 				$data['class_on'] = $row['class_on'];
-				$data['Substitutedby'] = 'Absent';
-				$data['lost'] = "Lost $credit_lost_for_missing_class credits";
-				$data['credit']= $credit;
+				$data['action'] = 'Absent';
+				$data['change'] = "Lost $credit_lost_for_missing_class credits";
+				$data['credit'] = $credit;
 				
 			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$substitute_id = $row['substitute_id'];
@@ -670,16 +712,16 @@ class Users_model extends Model {
 				
 				$credit = $credit + $credit_lost_for_getting_substitute;
 				$data['class_on']= $row['class_on'];
-				$data['Substitutedby']="Substituted by ".$name_of_substitute." ";
-				$data['lost'] = "Lost $credit_lost_for_getting_substitute credit";
+				$data['action']="Substituted by ".$name_of_substitute." ";
+				$data['change'] = "Lost $credit_lost_for_getting_substitute credit";
 				$data['credit'] = $credit;
 			
 			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
 				$data['class_on']= $row['class_on'];
 				$teacher_name = $this->get_name_of_substitute($row['user_id']);
-				$data['Substitutedby'] = "Absent for " . $teacher_name->name . "'s substitute class";
-				$data['lost'] = "Lost $credit_lost_for_missing_class credit";
+				$data['action'] = "Absent for " . $teacher_name->name . "'s substitute class";
+				$data['change'] = "Lost $credit_lost_for_missing_class credit";
 				$data['credit'] = $credit;
 				
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
@@ -694,14 +736,14 @@ class Users_model extends Model {
 				
 				$data['class_on'] = $row['class_on'];
 				$teacher_name = $this->get_name_of_Substitute($row['user_id']);
-				$data['Substitutedby'] = "Substituted for " . $teacher_name->name;
-				$data['lost'] = "Gained $sub_get_credits credit.";
+				$data['action'] = "Substituted for " . $teacher_name->name;
+				$data['change'] = "Gained $sub_get_credits credit.";
 
 				// Did we hit the upper limit?
 				if($credit_max_credit_threshold >= ($credit + $sub_get_credits)) {
 					$credit = $credit + $sub_get_credits;
 				} else {
-					$data['lost'] .= " Upper credit limit hit! You Rock!";
+					$data['change'] .= " Upper credit limit hit! You Rock!";
 				}
 				
 				$data['credit'] = $credit;
@@ -714,8 +756,8 @@ class Users_model extends Model {
 
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
 					$data['class_on'] = $row['class_on'];
-					$data['Substitutedby'] = "Missed Zero Hour";
-					$data['lost'] = "Lost $credit_lost_for_missing_zero_hour credit";
+					$data['action'] = "Missed Zero Hour";
+					$data['change'] = "Lost $credit_lost_for_missing_zero_hour credit";
 					$data['credit'] = $credit;
 				}
 			}
@@ -724,8 +766,8 @@ class Users_model extends Model {
 				if(!$row['zero_hour_attendance']) { // Teacher didn't reach in time for zero hour. Loses a credit. 
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
 					$data['class_on'] = $row['class_on'];
-					$data['Substitutedby'] = "Missed Zero Hour";
-					$data['lost'] = "Lost $credit_lost_for_missing_zero_hour credit";
+					$data['action'] = "Missed Zero Hour";
+					$data['change'] = "Lost $credit_lost_for_missing_zero_hour credit";
 					$data['credit'] = $credit;
 				}
 			}
@@ -742,14 +784,30 @@ class Users_model extends Model {
 			$i++;
 			if($i > 1) {
 				$data = array(
-					'i' 	=> $i,
-					'credit'=> $credit + $credit_lost_for_missing_avm,
-					'class_on'=> $event->starts_on,
-					'Substitutedby' => 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
-					'lost'	=> "Lost $credit_lost_for_missing_avm credit"
+					'i' 		=> $i,
+					'credit'	=> $credit + $credit_lost_for_missing_avm,
+					'class_on'	=> $event->starts_on,
+					'action'	=> 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
+					'change'	=> "Lost $credit_lost_for_missing_avm credit"
 				);
 				$credit_log[] = $data;
 			}
+		}
+
+		// If there is a manual credit edit entry just before this class, make sure that is factored in.
+		if($credit_edits) {
+			$i++;
+			$edit = end($credit_edits); // Get the last edit - since this is after all the classes, we'll just get the final one.
+			$data = array(
+				'i' 		=> $i,
+				'class_on'	=> $edit['added_on'],
+				'action'	=> 'Manual Credit Edit',
+				'change'	=> "Credit was manually edited to $credit : " . $edit['comment'],
+				'credit'	=> $credit
+			);
+
+			array_shift($credit_edits); // Remove the done edit.
+			$credit_log[] = $data;
 		}
 
 		return $credit_log;

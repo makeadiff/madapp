@@ -1,4 +1,6 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * CodeIgniter
  *
@@ -607,12 +609,23 @@ class User extends Controller  {
     * @return: type: [Boolean, Array()]
     **/
 	function credithistory($current_user_id = 0) {
+		$action = $this->input->post('action');
+		$user_details = $this->users_model->user_details($current_user_id);
+
+		if($action) {
+			$credit = $this->input->post('credit');
+			$comment = $this->input->post('reason');
+			if($user_details->credit != $credit) {
+				// Save to UserCredit - use this when doing the history and for calculations.
+				$this->users_model->manually_edit_credit($current_user_id, $credit, $comment, $_SESSION['user_id']);
+				$user_details->credit = $credit;
+			}
+		}
+
 		$for_user = '';
 		if(!$current_user_id) $current_user_id = $this->session->userdata('id');
 		else $for_user = ' of ' . $this->users_model->get_user($current_user_id)->name;
 		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
-
-		$user_details = $this->users_model->user_details($current_user_id);
 
 		$credit_log = $this->users_model->get_credit_history($current_user_id);
 		

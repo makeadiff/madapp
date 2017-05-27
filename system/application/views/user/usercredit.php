@@ -25,6 +25,7 @@ label {
 function init() {
 	$("#update-warning").click(function() {
 		$("#update-credit-warning").toggle();
+		$("#update-warning").toggle();
 	});
 
 	$("#credit-update").submit(validate);
@@ -42,11 +43,13 @@ function validate(e) {
 		error.push("No change in credits");
 	}
 
-	if(error) {
+	if(error.length) {
 		$("#error").html("<ul><li>" + error.join("</li><li>") + "</li></ul>");
 		e.stopPropagation();
 		return false;
 	}
+
+	return true;
 }
 </script>
 <form action="" method="post" id="credit-update">
@@ -74,8 +77,8 @@ What are your reason for doing this?</p>
 <tr>
 <td><?php echo $credit['i'] + 1 ?></td>
 <td><?php echo date('d M, Y h:i A', strtotime($credit['class_on'])); ?></td>
-<td><?php echo $credit['Substitutedby'] ?></td>
-<td><?php echo $credit['lost'] ?></td>
+<td><?php echo $credit['action'] ?></td>
+<td><?php echo $credit['change'] ?></td>
 <td><?php echo $credit['credit'] ?></td>   
 </tr>   
 <?php } ?>

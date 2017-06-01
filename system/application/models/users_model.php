@@ -332,8 +332,8 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function user_details($user_id)
-	{
+	function user_details($user_id) {
+		if(!$user_id) $user_id = $this->ci->session->userdata('user_id');
 		$this->db->from('User');
 		$this->db->where('User.id',$user_id);//->where('User.status','1');
 		
@@ -511,15 +511,16 @@ class Users_model extends Model {
 		$this->db->query("DELETE FROM User_Credit_Archive WHERE user_id=$user_id AND credit_on>'{$this->year}-04-01 00:00:00'"); // Clear existing credit archive. We are going to re-insert it.
 
 		// Find all the instances where this user's credit was manually edited.
-		$credit_edits = $this->db->query("SELECT DATE(added_on) AS added_on, credit, comment FROM UserCredit 
+		$credit_edits = $this->db->query("SELECT added_on, credit, comment FROM UserCredit 
 											WHERE user_id=$user_id AND year={$this->year} ORDER BY added_on")->result_array();
+
 		foreach($classes_so_far as $row) {
 			// If there is a manual credit edit entry just before this class, make sure that is factored in.
 			if($credit_edits) {
 				$edit = reset($credit_edits); // Get the first edit,
 				if($edit['added_on'] < $row['class_on']) {
 					$credit = $edit['credit'];
-					if($debug) print "Credit was manually edited to $credit : " . $edit['comment'];
+					if($debug) print "Credit was manually edited to $credit : " . $edit['comment'] . "\n";
 					array_shift($credit_edits); // Remove the done edit.
 				}
 			}
@@ -584,6 +585,7 @@ class Users_model extends Model {
 		if($credit_edits) {
 			$edit = end($credit_edits); // Get the last edit - since this is after all the classes, we'll just get the final one.
 			$credit = $edit['credit'];
+			if($debug) print "Credit was manually edited to $credit : " . $edit['comment'] . "\n";
 		}
 		
 		if($update_if_wrong) {
@@ -687,14 +689,20 @@ class Users_model extends Model {
 			// If there is a manual credit edit entry just before this class, make sure that is factored in.
 			if($credit_edits) {
 				$edit = reset($credit_edits); // Get the first edit,
-				dump($edit, $edit['added_on'], $row['class_on']);
 				if($edit['added_on'] < $row['class_on']) {
 					$credit = $edit['credit'];
 					$data['class_on'] = $edit['added_on'];
 					$data['change'] = "Credit was manually edited to $credit : " . $edit['comment'];
-					$data['credit']= $credit;
+					$data['action'] = 'Manual Edit';
+					$data['credit'] = $credit;
 
 					array_shift($credit_edits); // Remove the done edit.
+
+					$i++;
+					$data['i'] = $i;
+					$credit_log[] = $data;
+					$data = array();
+					// dump($credit_edits);
 				}
 			}
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
@@ -802,8 +810,8 @@ class Users_model extends Model {
 				'i' 		=> $i,
 				'class_on'	=> $edit['added_on'],
 				'action'	=> 'Manual Credit Edit',
-				'change'	=> "Credit was manually edited to $credit : " . $edit['comment'],
-				'credit'	=> $credit
+				'change'	=> "Credit was manually edited to $edit[credit] : " . $edit['comment'],
+				'credit'	=> $edit['credit']
 			);
 
 			array_shift($credit_edits); // Remove the done edit.

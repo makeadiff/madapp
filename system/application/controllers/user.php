@@ -609,6 +609,7 @@ class User extends Controller  {
     * @return: type: [Boolean, Array()]
     **/
 	function credithistory($current_user_id = 0) {
+		if(!$current_user_id) $current_user_id = $this->session->userdata('user_id');
 		$action = $this->input->post('action');
 		$user_details = $this->users_model->user_details($current_user_id);
 

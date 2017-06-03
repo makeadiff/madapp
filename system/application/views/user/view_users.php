@@ -206,6 +206,7 @@ $.tablesorter.addParser({
 </thead>
 <tbody>
 
+
 <?php 
 $count = ($current_page - 1) * $items_per_page;
 $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
@@ -213,7 +214,9 @@ foreach($all_users as $id => $user) {
 	$count++;
 	$shadeClass = 'even';
 	if($count % 2) $shadeClass = 'odd';
-?> 
+?>
+
+
 <tr class="<?php echo $shadeClass; ?>" id="group"><!-- <?php print $count ?> -->
 	<td class="col-select"><input type="checkbox" name="users[]" class="user-select" value="<?php echo $user->id ?>" />
 	<input type="hidden" name="email[<?php echo $user->id ?>]" value="<?php echo $user->email ?>" />

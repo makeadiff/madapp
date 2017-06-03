@@ -173,6 +173,7 @@ class User extends Controller  {
 		$data['group'] = array();
 		if(!empty($_POST['group'])) $data['group'] = $_POST['group'];
 		$data['email'] = $this->input->post('emails');
+		$data['mad_email'] = $this->input->post('mad_email');
 		
 		if($this->input->post('spassword')) $data['password'] = $this->input->post('spassword');
 		
@@ -324,7 +325,9 @@ class User extends Controller  {
 	}
 	
 	/// The User index is handled by this action
+
 	function view_users($city_id='', $user_groups=0, $name=0,$user_type='volunteer', $search_id=0, $email=0, $phone=0, $current_page=1) {
+
 		$this->user_auth->check_permission('user_index');
 		set_city_year($this);
 		
@@ -352,10 +355,16 @@ class User extends Controller  {
 		elseif($name) $data['name'] = $name;
 		else $data['name'] = '';
 
-		// Email selection
+		// Personal Email selection
 		if($this->input->post('email') !== false) $data['email'] = $this->input->post('email');
 		elseif($email) $data['email'] = $email;
 		else $data['email'] = '';
+
+        // MAD Email selection
+        if($this->input->post('mad_email') !== false) $data['mad_email'] = $this->input->post('mad_email');
+        elseif($email) $data['mad_email'] = $email;
+        else $data['mad_email'] = '';
+
 
 		// Phone selection
 		if($this->input->post('phone') !== false) $data['phone'] = $this->input->post('phone');

@@ -33,8 +33,12 @@ class Users_model extends Model {
 	function login($data) {
       	$username= $data['username'];
         $password = $data['password'];
+
+
+		//Check for personal email and mad email when logging in
+		$where = "(`email` = '$username' or `mad_email` = '$username')";
 		
-		$query = $this->db->where('email', $username)->where('password',$password)->where('status','1')->where('user_type', 'volunteer')->get("User");
+		$query = $this->db->where($where)->where('password',$password)->where('status','1')->where('user_type', 'volunteer')->get("User");
         if($query->num_rows() > 0) {
 			$user = $query->first_row();
 			
@@ -248,6 +252,7 @@ class Users_model extends Model {
 		$user_array = array(
 			'name'		=> $data['name'],
 			'email'		=> $data['email'],
+			'mad_email'	=> $data['mad_email'],
 			'phone'		=> $this->_correct_phone_number($data['phone']),
 			'password'	=> $data['password'],
 			'address'	=> $data['address'],
@@ -354,6 +359,7 @@ class Users_model extends Model {
 
 		if(!empty($data['name'])) 		$user_array['name'] 		= $data['name'];
 		if(!empty($data['email'])) 		$user_array['email'] 		= $data['email'];
+		if(!empty($data['mad_email'])) 		$user_array['mad_email'] 		= $data['mad_email'];
 		if(!empty($data['phone'])) 		$user_array['phone'] 		= $this->_correct_phone_number($data['phone']);
 		if(!empty($data['address'])) 	$user_array['address'] 		= $data['address'];
 		if(!empty($data['sex'])) 		$user_array['sex'] 			= $data['sex'];
@@ -921,9 +927,10 @@ class Users_model extends Model {
     }
 	
 
+
 	function search_users($data, $return_info = false) {
 		$this->db->start_cache();
-		$this->db->select('User.id,User.name,User.photo,User.email,User.password,User.phone,User.credit,
+		$this->db->select('User.id,User.name,User.photo,User.email,User.mad_email,User.password,User.phone,User.credit,
 							User.joined_on,User.left_on,User.user_type,User.address,User.sex,User.source,User.birthday,
 							User.job_status,User.preferred_day,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');

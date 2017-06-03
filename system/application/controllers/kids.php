@@ -53,7 +53,6 @@ class Kids extends Controller  {
 		$this->load->view('layout/footer');
 	}
 
-
 	/**
     *
     * Function to popupaddKids
@@ -62,8 +61,7 @@ class Kids extends Controller  {
     * @return : type : []
     *
     **/
-	function popupaddKids()
-	{	
+	function popupaddKids() {	
 		$this->user_auth->check_permission('kids_add');
 		
 		$data['center']= $this->center_model->get_all();
@@ -97,7 +95,6 @@ class Kids extends Controller  {
 		$this->load->view('kids/popups/kids_delete_view', $data);
 	}
 
-
 	/**
     *
     * Function to update_kids
@@ -106,8 +103,7 @@ class Kids extends Controller  {
     * @return : type : []
     *
     **/
-	function update_kids()
-	{
+	function update_kids() {
 		$this->user_auth->check_permission('kids_edit');
 		
 		$flag='';
@@ -126,20 +122,16 @@ class Kids extends Controller  {
 		$config['upload_path'] = './uploads/kids/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size']    = '1000'; //2 meg
-		foreach($_FILES as $key => $value)
-        {
-            if( ! empty($key['name']))
-            {
+
+		foreach($_FILES as $key => $value) {
+            if( ! empty($key['name'])) {
                 $this->upload->initialize($config);
-                if ( ! $this->upload->do_upload($key))
-                {
+                if ( ! $this->upload->do_upload($key)) {
                     $errors[] = $this->upload->display_errors();
-                }    
-                else
-                {
-                    $flag=$this->users_model->process_pic($data, 'kids');
+                } else {
+                    $flag = $this->users_model->process_pic($data, 'kids');
                 }
-             }
+            }
         }
 		if($returnFlag != '') {
 			$this->session->set_flashdata('success', 'Student updated successfully.');

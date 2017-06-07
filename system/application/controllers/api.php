@@ -272,6 +272,7 @@ class Api extends Controller {
 		$this->open_class($class_info->id, $class_info, $user_id);
 	}
 
+	/// Figures out the next or previous class from the given batch, level, and class date.
 	function browse_class($batch_id = 0, $level_id = 0, $from_date = '', $direction = '+') {
 		$this->check_key();
 

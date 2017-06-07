@@ -78,7 +78,7 @@ foreach($content as $row) {
 <tr class="<?php echo $shadeClass; ?>" id="group">
     <td class="colName left"><?php echo $row['name']; ?></td>
     <td><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row['sex']) echo $the_sexes[$row['sex']]; ?></td>
-    <td><?php echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
+    <td><?php if($row['birthday'] != '0000-00-00' and $row['birthday'] != '1970-01-01') echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
     <td><?php echo $row['center_name'];?></td>
     <td><?php if($row['added_on'] != '0000-00-00 00:00:00') echo date('dS M, Y', strtotime($row['added_on'])); ?></td>
 	<!-- <td><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td> -->

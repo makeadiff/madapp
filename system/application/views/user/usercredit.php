@@ -52,23 +52,11 @@ function validate(e) {
 	return true;
 }
 </script>
-<form action="" method="post" id="credit-update">
-<label for="credit">Current Credit</label>
-<input type="hidden" name="original_credit" id="original_credit" value="<?php echo $user_details->credit ?>" />
-<input type="text" name="credit" id="credit" size="3" value="<?php echo $user_details->credit ?>" />
-<input type="button" id="update-warning" class="btn" name="action" value="Update" /><br />
 
-<div id="update-credit-warning">
-<p>You are manually editing the credits of <?php echo $user_details->name ?>. This should only be done as the last resort.
-What are your reason for doing this?</p>
-<textarea name="reason" id="reason" rows="5" cols="70"></textarea><br />
-<input type="submit" class="button green" name="action" value="Update" /><br />
-<div id="error"></div>
-</div>
-</form>
 
 <table class="clear data-table">
 <thead>
+<tr><th colspan="5">Credit History</th></tr>
 <tr><th>#</th><th>Class Time</th><th>Class Status</th><th>Credit Change</th><th>Credit</th></tr>
 </thead>
 <tbody>
@@ -83,6 +71,32 @@ What are your reason for doing this?</p>
 </tr>   
 <?php } ?>
 </tbody>
+</table>
+<br><br>
+
+<table class="data-table">
+    <thead>
+    <tr>
+        <th>
+            Update Credit
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr><td>
+        <form action="" method="post" id="credit-update">
+            <label>Current Credit: </label><?php echo $user_details->credit ?><br>
+            <label for="credit">Change Credit To: </label>
+            <input type="text" name="credit" id="credit" size="3" value="<?php echo $user_details->credit ?>" />
+            <input type="hidden" name="original_credit" id="original_credit" value="<?php echo $user_details->credit ?>" />
+            <br><br>
+            <p>Manually changing the credit should only be done as a last resort. What is your reason for doing this?</p>
+            <textarea name="reason" id="reason" rows="5" cols="70" placeholder="Reason?"></textarea><br /><br>
+            <input type="submit" class="button green " name="action" value="Update" /><br />
+            <div id="error"></div>
+        </form>
+    </td></tr>
+    </tbody>
 </table>
 
 </div>

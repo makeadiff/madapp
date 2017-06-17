@@ -283,6 +283,12 @@ class Cron extends Controller  {
 			$this->users_model->db->query("INSERT IGNORE INTO BatchLevel (batch_id, level_id, year) VALUES('" . $batch_mapping[$ub->batch_id] . "','" . $level_mapping[$ub->level_id] . "', '{$this->year}')");
 		}
 
+
+		/// In case you want to delete the data after you tried to insert it and something went wrong, use these queries to set it right...
+		// DELETE FROM Batch WHERE year=2017
+		// DELETE FROM Level WHERE year=2017
+		// DELETE FROM StudentLevel WHERE level_id IN (SELECT id FROM Level WHERE year=2017)
+		// DELETE FROM BatchLevel WHERE level_id IN (SELECT id FROM Level WHERE year=2017)
 	}
                
 }

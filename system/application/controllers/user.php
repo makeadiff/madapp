@@ -99,6 +99,7 @@ class User extends Controller  {
 		$data['name'] = $_POST['names'];
 		$data['group'] = $this->input->post('group');
 		$data['email'] = $_POST['emails'];
+		$data['mad_email'] = $_POST['mad_email'];
 		$data['password'] = $_POST['spassword'];
 		$data['phone'] = $_POST['phone'];
 		$data['address'] = $_POST['address'];

@@ -79,6 +79,10 @@ jQuery(document).ready(function () {
 	<input id="emails" name="emails"  type="text" /><br />
 </li>
 <li>
+	<label for="mad_email">MAD Email : </label>
+	<input id="mad_email" name="mad_email"  type="text"  value=""/>
+</li>
+<li>
 	<label for="password">Password : </label>
 	<input id="spassword" name="spassword"  type="password" /><br />	 
 </li>			

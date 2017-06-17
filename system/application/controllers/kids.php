@@ -24,10 +24,22 @@ class Kids extends Controller  {
 		if($this->input->get_post('center_id')) $center_id = $this->input->get_post('center_id', true);
 
 		set_city_year($this); // This page can get a change city request.
+
+		$student_list = $this->kids_model->get_all(0, $center_id);
+		$student_level_mapping = array();
+		$all_levels = array();
+
+		if($center_id) {
+			$student_level_mapping_raw = $this->level_model->get_student_level_mapping($center_id);
+			$student_level_mapping = idNameFormat($student_level_mapping_raw, array('student_id', 'level_id'));
+			$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
+		}
 	
 		$data = array(
-			'details' 		=> $this->kids_model->get_all(0, $center_id),
+			'details' 		=> $student_list,
 			'center_list'	=> $this->center_model->get_all(),
+			'all_levels'	=> $all_levels,
+			'student_level_mapping'	=> $student_level_mapping,
 			'page'			=> 'index',
 			'center_id'		=> $center_id,
 		);

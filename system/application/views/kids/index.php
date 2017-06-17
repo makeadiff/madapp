@@ -56,11 +56,13 @@
 <tr>
 	<th class="colName left sortable">Name</th>
 	<th class="colStatus sortable">Sex</th>
-    <th class="colStatus sortable">Birth Day</th>
-    <th class="colStatus">Center</th>
-    <th class="colStatus">Added On</th>
-	<!-- <th class="colStatus">Image</th> -->
-   <th class="colActions">Actions</th>
+    <th class="colStatus sortable">Birth Day</th>    
+    <?php if($center_id) { ?>
+        <th class="colStatus">Level</th>
+    <?php } else { ?>
+        <th class="colStatus">Center</th>
+    <?php } ?>
+	<th class="colActions">Actions</th>
 </tr>
 </thead>
 <tbody>
@@ -79,10 +81,12 @@ foreach($content as $row) {
     <td class="colName left"><?php echo $row['name']; ?></td>
     <td><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row['sex']) echo $the_sexes[$row['sex']]; ?></td>
     <td><?php if($row['birthday'] != '0000-00-00' and $row['birthday'] != '1970-01-01') echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
-    <td><?php echo $row['center_name'];?></td>
-    <td><?php if($row['added_on'] != '0000-00-00 00:00:00') echo date('dS M, Y', strtotime($row['added_on'])); ?></td>
-	<!-- <td><?php if($row['photo']) { ?><img src="<?php echo base_url().'uploads/kids/thumbnails/'.$row['photo']; ?>" width="50" height="50" /><?php } ?></td> -->
-    
+    <?php if($center_id) { ?>
+        <td><?php echo $all_levels[$student_level_mapping[$row['id']]] ?></td>
+    <?php } else { ?>
+        <td><?php echo $row['center_name'];?></td>
+    <?php } ?>
+
     <td class="colActions right"> 
     <?php if($this->user_auth->get_permission('kids_edit') and $page == 'index') { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
     <?php if($this->user_auth->get_permission('kids_delete') and $page == 'index') { ?><a class="actionDelete icon delete popup" href="<?php echo site_url('kids/popupDelete_kid/'.$row['id']); ?>">Delete</a><?php } ?>

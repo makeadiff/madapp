@@ -263,7 +263,7 @@ class Cron extends Controller  {
 			$name = $alphabets[$uniqizer[$b->center_id][$new_grade]];
 			$uniqizer[$b->center_id][$new_grade]++;
 
-			$this->users_model->db->query("INSERT INTO Level (name,grade,center_id,project_id, year, status) 
+			$this->users_model->db->query("INSERT IGNORE INTO Level (name,grade,center_id,project_id, year, status) 
 				VALUES('$name','$new_grade','{$b->center_id}','{$b->project_id}','$current_year', '{$status}')");
 
 			$level_mapping[$b->id] = mysql_insert_id();
@@ -273,14 +273,14 @@ class Cron extends Controller  {
 		$student_levels = $this->users_model->db->query("SELECT * FROM StudentLevel WHERE level_id IN (" . implode(",", array_keys($level_mapping)) .")")->result();
 		print "Copying " . count($student_levels) . " student level connections<br />\n";
 		foreach($student_levels as $sl) {
-			$this->users_model->db->query("INSERT INTO StudentLevel (student_id, level_id) VALUES('{$sl->student_id}','" . $level_mapping[$sl->level_id] . "')");
+			$this->users_model->db->query("INSERT IGNORE INTO StudentLevel (student_id, level_id) VALUES('{$sl->student_id}','" . $level_mapping[$sl->level_id] . "')");
 		}
 
 		// Create BatchLevel table data using the data in UserBatch table
 		$user_batch = $this->users_model->db->query("SELECT * FROM UserBatch WHERE level_id IN (" . implode(",", array_keys($level_mapping)) .")")->result();
 		print "Copying " . count($user_batch) . " Batch Level connections<br />\n";
 		foreach($user_batch as $ub) {
-			$this->users_model->db->query("INSERT INTO BatchLevel (batch_id, level_id, year) VALUES('" . $batch_mapping[$ub->batch_id] . "','" . $level_mapping[$ub->level_id] . "', '{$this->year}')");
+			$this->users_model->db->query("INSERT IGNORE INTO BatchLevel (batch_id, level_id, year) VALUES('" . $batch_mapping[$ub->batch_id] . "','" . $level_mapping[$ub->level_id] . "', '{$this->year}')");
 		}
 
 	}

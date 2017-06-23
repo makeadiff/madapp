@@ -70,26 +70,26 @@
 <?php
 $statusIco = '';
 $statusText = '';
-$content = $details->result_array();
 $count = 0;
-foreach($content as $row) {	
+foreach($details as $row) {	
 	$count++;
 	$shadeClass = 'even';
 	if($count % 2) $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
-    <td class="colName left"><?php echo $row['name']; ?></td>
-    <td><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row['sex']) echo $the_sexes[$row['sex']]; ?></td>
-    <td><?php if($row['birthday'] != '0000-00-00' and $row['birthday'] != '1970-01-01') echo date('dS M, Y', strtotime($row['birthday'])); ?></td>
+    <td class="colName left"><?php echo $row->name; ?></td>
+    <td><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row->sex) echo $the_sexes[$row->sex]; ?></td>
+    <td><?php if($row->birthday != '0000-00-00' and $row->birthday != '1970-01-01') echo date('dS M, Y', strtotime($row->birthday)); ?></td>
     <?php if($center_id) { ?>
-        <td><?php echo $all_levels[$student_level_mapping[$row['id']]] ?></td>
+        <td><?php if(isset($student_level_mapping[$row->id]) and isset($all_levels[$student_level_mapping[$row->id]])) 
+                        echo $all_levels[$student_level_mapping[$row->id]] ?></td>
     <?php } else { ?>
-        <td><?php echo $row['center_name'];?></td>
+        <td><?php echo $row->center_name;?></td>
     <?php } ?>
 
     <td class="colActions right"> 
-    <?php if($this->user_auth->get_permission('kids_edit') and $page == 'index') { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row['id'])?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row['name'] ?>">Edit</a><?php } ?>
-    <?php if($this->user_auth->get_permission('kids_delete') and $page == 'index') { ?><a class="actionDelete icon delete popup" href="<?php echo site_url('kids/popupDelete_kid/'.$row['id']); ?>">Delete</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_edit') and $page == 'index') { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row->id)?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row->name ?>">Edit</a><?php } ?>
+    <?php if($this->user_auth->get_permission('kids_delete') and $page == 'index') { ?><a class="actionDelete icon delete popup" href="<?php echo site_url('kids/popupDelete_kid/'.$row->id); ?>">Delete</a><?php } ?>
     </td>
 </tr>
 

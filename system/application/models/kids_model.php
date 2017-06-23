@@ -25,20 +25,38 @@ class Kids_model extends Model {
 	function get_all($city_id = 0, $center_id = 0) {
 		if(!$city_id) $city_id = $this->city_id;
 		
-		$this->db->select('Student.*,Center.name as center_name, CONCAT(Level.grade, Level.name ) AS level');
+		$this->db->select('Student.*,Center.name as center_name	');
 		$this->db->from('Student');
 		$this->db->join('Center', 'Center.id = Student.center_id' ,'join');
-		$this->db->join('StudentLevel', 'Student.id = StudentLevel.student_id' ,'join');
-		$this->db->join('Level', 'Level.id = StudentLevel.level_id' ,'join');
+		// $this->db->join('StudentLevel', 'Student.id = StudentLevel.student_id' ,'join');
+		// $this->db->join('Level', 'Level.id = StudentLevel.level_id' ,'join');
 		$this->db->where('Center.city_id', $city_id);
 
 		if($center_id) $this->db->where('Student.center_id', $center_id);
 		$this->db->where('Center.status', 1);
 		$this->db->where('Student.status', 1);
-		$this->db->where('Level.year', $this->year);
+		// $this->db->where('Level.year', $this->year);
 
 		$this->db->orderby('Student.center_id, Student.name');
-		$result = $this->db->get();
+		$result = $this->db->get()->result();
+
+		// Attach the levels of the students to the result without resorting to a join - which will hide the students without a level.
+		$student_level_mapping_raw = $this->ci->level_model->get_student_level_mapping($center_id);
+		$student_level_mapping = idNameFormat($student_level_mapping_raw, array('student_id', 'level_id'));
+		$all_levels = idNameFormat($this->ci->level_model->get_all_level_names_in_center($center_id));
+
+		for($i=0; $i<count($result); $i++) {
+			$student_id = $result[$i]->id;
+			$result[$i]->level = "";
+
+			if(isset($student_level_mapping[$student_id])) {
+				$student_level_id = $student_level_mapping[$student_id];
+				if(isset($all_levels[$student_level_id])) {
+					$result[$i]->level = $all_levels[$student_level_id];
+					$result[$i]->level_id = $student_level_id;
+				}
+			}
+		}
 
 		return $result;
 	}

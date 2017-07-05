@@ -9,11 +9,11 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <h2><?php echo $user->name ?></h2>
 
 <h3>Ed Support Credit : <?php echo $user->credit ?></h3>
-<h3>Intern Credit : <?php echo $user->intern_credit ?></h3>
 
 <h3>Contact Details...</h3>
 
-<p>Email: <a href="mailto:<?php echo $user->email ?>;"><?php echo $user->email ?></a></p>
+<p>Personal Email: <a href="mailto:<?php echo $user->email ?>;"><?php echo $user->email ?></a></p>
+<p>MAD Email: <a href="mailto:<?php echo $user->mad_email ?>;"><?php echo $user->mad_email ?></a></p>
 <p>Phone: <strong><?php echo $user->phone ?></strong></p>
 <?php if($user->address) { ?><p>Address...<br /><?php echo nl2br($user->address); ?></p><?php } ?>
 
@@ -22,7 +22,7 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 
 <p>Chapter : <strong><?php echo $all_cities[$user->city_id] ?></strong></p>
 <p>User Type : <strong><?php echo ucfirst(str_replace('_',' ',$user->user_type)); ?></strong></p>
-<p>Roles: <strong><?php echo implode(',', $user->groups_name); ?></strong></p>
+<p>Roles: <strong><?php echo implode(', ', $user->groups_name); ?></strong></p>
 <?php if(in_array('ES Volunteer', $user->groups_name)) { ?>
 
 <?php if($user->batch) { ?>
@@ -32,8 +32,6 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <p>Credit: <strong><?php echo $user->credit; ?></strong></p>
 <a href="<?php echo site_url('classes/index/'.$user->id); ?>">View Class History</a><br />
 <a href="<?php echo site_url('user/credithistory/'.$user->id); ?>">View Credit History</a><br />
-<?php } elseif(in_array('Intern', $user->groups_name)) { ?>
-<p>Admin Credit: <strong><?php echo $user->admin_credit; ?></strong></p>
 <?php } ?>
 <p>Joined On : <strong><?php echo date("d\<\s\u\p\>S\<\/\s\u\p\> M, Y", strtotime($user->joined_on)); ?></strong></p> 
 <?php if($user->left_on != '0000-00-00') { ?><p> Left : <strong><?php echo $user->left_on; ?></strong></p><?php } ?>

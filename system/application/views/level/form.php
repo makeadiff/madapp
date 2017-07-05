@@ -17,6 +17,7 @@ if(!isset($level)) $level = array(
 	<?php for($i=1;$i<=12;$i++) { ?>
 	<option value="<?php echo $i ?>" <?php if($level['grade'] == $i) echo 'selected'; ?>><?php echo $i ?></option>
 	<?php } ?>
+	<option value="13" <?php if($level['grade'] == 13) echo 'selected'; ?>>Aftercare</option>
 </select>
 
 <select name="name" style="width:100px;">

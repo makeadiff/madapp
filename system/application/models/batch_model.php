@@ -39,6 +39,10 @@ class Batch_model extends Model {
 			INNER JOIN UserGroup ON UserBatch.user_id=UserGroup.user_id 
 				WHERE batch_id={$batch_id} AND UserBatch.user_id!=0 AND UserGroup.group_id=9")->result();
 	}
+
+	function get_batches_connected_to_user($user_id) {
+		return colFormat($this->db->query("SELECT id FROM Batch WHERE batch_head_id=$user_id AND year={$this->year}")->result());
+	}
 	
 	function get_all_batches($class_starts_check=false) {
 		$start_check = '';

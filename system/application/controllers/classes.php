@@ -299,16 +299,21 @@ class Classes extends Controller {
 
 		$action = $this->input->post("action");
 
+		// Save button was clicked.
 		if($action) {
 			$batch_ids = $this->input->post('batch_id');
 			$level_ids = $this->input->post('level_id');
 			$subject_ids = $this->input->post('subject_id');
+			$old_volunteers = array();
 
 			foreach ($all_batches as $batch_id => $batch_name) {
 				foreach ($all_levels[$batch_id] as $level_id => $level_name) {
 					// Get old assignment data before unseting.
 					// Save the details of the old volunteers in the batch/level
-					$old_volunteers[$level_id] = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id);
+					$users_who_used_to_be_in_this_class = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id);
+					foreach ($users_who_used_to_be_in_this_class as $user_id) {
+						$old_volunteers[$user_id] = array('batch_id' => $batch_id, 'level_id' => $level_id);
+					}
 
 					// Unset existing connection. We'll reset them later.
 					$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
@@ -323,11 +328,9 @@ class Classes extends Controller {
 				// Batch is not set. That means no class.
 				if(!$batch_id or !$level_id) {
 					// See if it was assigned earlier. If so, we must delete the assignments.
-					if(isset($old_volunteers[$level_id]) and in_array($user_id, $old_volunteers[$level_id])) {
+					if(isset($old_volunteers[$user_id]) and !empty($old_volunteers[$user_id]['batch_id']) and !empty($old_volunteers[$user_id]['level_id'])) {
 						// If someone removes a volunteer from a batch, make sure his future classes are deleted
-						// $this->class_model->delete_future_classes($user_id, $batch_id, $level_id);
-						// Delete this users classes.
-						$this->class_model->delete_user_classes($user_id, $batch_id, $level_id);
+						$this->class_model->delete_user_classes($user_id, $old_volunteers[$user_id]['batch_id'], $old_volunteers[$user_id]['level_id']);
 					}
 				} else if($batch_id and $level_id) {
 					// Set the assigment with the data provided by the user.

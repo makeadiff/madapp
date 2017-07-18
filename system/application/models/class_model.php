@@ -20,6 +20,46 @@ class Class_model extends Model {
 			AND Class.class_on BETWEEN '{$this->year}-04-01 00:00:00' AND '".($this->year + 1)."-03-31 23:59:59'
 			ORDER BY Class.class_on DESC")->result();
 	}
+
+	/// Returns classes taken by the given teacher - where student attendance is not marked 
+	function get_classes_where_student_data_is_not_updated($user_id) {
+		$classes_taught_by_user = idNameFormat($this->db->query("SELECT C.id, C.class_on AS name FROM Class C 
+					INNER JOIN UserClass UC ON UC.class_id = C.id
+					INNER JOIN Level L ON L.id=C.level_id
+					WHERE UC.user_id=$user_id AND L.year=2017")->result());
+		$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
+													. implode(",", array_keys($classes_taught_by_user)) . ")")->result());
+		$classes_unmarked_ids = array_diff(array_keys($classes_taught_by_user), $classes_marked);
+		$classes_unmarked = array();
+		foreach($classes_unmarked_ids as $id) {
+			$classes_unmarked[$id] = $classes_taught_by_user[$id];
+		}
+
+		return $classes_unmarked;
+	}
+
+	/// Returns classes where student attendance is not marked in the given batch
+	function get_classes_where_student_data_is_not_updated_in_batch($batch_id) {
+		$classes_taught_by_user = idNameFormat($this->db->query("SELECT C.id, C.class_on AS name FROM Class C 
+					INNER JOIN Level L ON L.id=C.level_id
+					WHERE C.batch_id=$batch_id AND L.year=2017")->result());
+		$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
+													. implode(",", array_keys($classes_taught_by_user)) . ")")->result());
+		$classes_unmarked_ids = array_diff(array_keys($classes_taught_by_user), $classes_marked);
+		$classes_unmarked = array();
+		foreach($classes_unmarked_ids as $id) {
+			$classes_unmarked[$id] = $classes_taught_by_user[$id];
+		}
+
+		return $classes_unmarked;
+	}
+
+	function get_classes_where_teacher_data_is_not_updated($user_id) {
+		return colFormat($this->db->query("SELECT DISTINCT(DATE(C.class_on)) FROM Class C 
+												INNER JOIN Batch B ON B.id=C.batch_id
+												WHERE C.status='projected' AND B.year={$this->year} AND B.batch_head_id=$user_id 
+												ORDER BY C.class_on DESC")->result());
+	}
 	
 	/// Get all the classes of the given batch.
 	function get_all_by_batch($batch_id) {

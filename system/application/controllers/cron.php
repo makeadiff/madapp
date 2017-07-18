@@ -250,7 +250,7 @@ class Cron extends Controller  {
 		foreach($levels as $b) {
 			$status = $b->status;
 			$new_grade = intval($b->grade) + 1;
-			if($new_grade == 11) $status = 0;
+			if($new_grade == 14) $status = 0; // If people over 13 is upgraded to a deleted level.  
 
 			$name = addslashes($b->name);
 			if(!isset($uniqizer[$b->center_id])) {

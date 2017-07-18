@@ -228,7 +228,10 @@ foreach($all_users as $id => $user) {
     </td>
     <td class="col-name"><a href="<?php echo site_url('user/view/'.$user->id) ?>"><?php echo $user->name; ?></a></td>
     <td class="col-credit"><a href="<?php echo site_url('user/credithistory/'.$user->id) ?>"><?php echo $user->credit; ?></a></td>
-    <td class="col-email"><?php echo $user->email; ?><br /><?php echo $user->phone; ?></td>
+    <td class="col-email"><?php 
+    	echo $user->email; 
+    	if($user->mad_email) echo "<br />{$user->mad_email}";  ?><br />
+    	<?php echo $user->phone; ?></td>
 	<?php if($this->input->post('city_id') === '0') { ?><td class="col-city"><?php echo $user->city_name; ?></td><?php } ?>
 	<?php if($this->input->post('user_type') == 'applicant') { ?>
 	<td class="col-joined_on"><?php echo date('d\<\s\u\p\>S\<\/\s\u\p\> M, Y', strtotime($user->joined_on)); ?></td>

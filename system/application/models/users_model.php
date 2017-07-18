@@ -42,18 +42,19 @@ class Users_model extends Model {
         if($query->num_rows() > 0) {
 			$user = $query->first_row();
 			
-   			$memberCredentials['id'] = $user->id;
-			$memberCredentials['email'] = $user->email;
-			$memberCredentials['name'] = $user->name;
-			$memberCredentials['project_id'] = $user->project_id;
-			$memberCredentials['city_id'] = $user->city_id;
-			$memberCredentials['permissions'] = $this->get_user_permissions($user->id);
-			$memberCredentials['groups'] = $this->get_user_groups($user->id);
+   			$user_data['id']		= $user->id;
+			$user_data['email']		= $user->email;
+			$user_data['name']		= $user->name;
+			$user_data['project_id']= $user->project_id;
+			$user_data['city_id']	= $user->city_id;
+			$user_data['credit']	= $user->credit;
+			$user_data['permissions']= $this->get_user_permissions($user->id);
+			$user_data['groups']	= $this->get_user_groups($user->id);
 			$all_positions = $this->get_user_groups_of_user($user->id, 'type');
 			
-			$memberCredentials['positions'] = array_unique(array_values($all_positions));
+			$user_data['positions'] = array_unique(array_values($all_positions));
 
-            return $memberCredentials;
+            return $user_data;
         
         } else {
            return false;
@@ -359,7 +360,7 @@ class Users_model extends Model {
 
 		if(!empty($data['name'])) 		$user_array['name'] 		= $data['name'];
 		if(!empty($data['email'])) 		$user_array['email'] 		= $data['email'];
-		if(!empty($data['mad_email'])) 		$user_array['mad_email'] 		= $data['mad_email'];
+		if(!empty($data['mad_email'])) 	$user_array['mad_email'] 	= $data['mad_email'];
 		if(!empty($data['phone'])) 		$user_array['phone'] 		= $this->_correct_phone_number($data['phone']);
 		if(!empty($data['address'])) 	$user_array['address'] 		= $data['address'];
 		if(!empty($data['sex'])) 		$user_array['sex'] 			= $data['sex'];
@@ -825,6 +826,20 @@ class Users_model extends Model {
 		}
 
 		return $credit_log;
+    }
+
+    function get_user_class_history($user_id) {
+    	$all_classes = $this->class_model->get_all($user_id);
+    	$status_counts = array(
+    			'attended'	=> 0,
+    			'absent'	=> 0,
+    			'projected'	=> 0
+    		);
+    	foreach ($all_classes as $cls) {
+    		$status_counts[$cls->status]++;
+    	}
+
+    	return array('all_classes' => $all_classes, 'status_counts' => $status_counts);
     }
 
     /// Returns all the class connections of this user - all the classes they are a teacher at and all they are a mentor at.

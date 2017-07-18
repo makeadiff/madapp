@@ -23,6 +23,7 @@
 
 <form action="" method="post">
 <input type="hidden" name="submit" value="true" />
+<input type="submit" name="action" value="Save" class="btn btn-primary" />
 <table class="table">
 <tr><th>Teacher</th><?php if(!$show_only_batch) { ?><th>Batch</th><?php } ?><th>Class Section</th><th>Subject</th></tr>
 <?php foreach($all_users as $user_id => $user_name) { 

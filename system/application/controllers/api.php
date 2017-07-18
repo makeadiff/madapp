@@ -174,6 +174,48 @@ class Api extends Controller {
 		return $user_data;
 	}
 
+	// Returns the things needed for the connection/home page. So far, class history, class counts, unmarked classes.
+	function user_class_info() {
+		$this->check_key();
+
+		$user_id = $this->input("user_id");
+		$class_info = $this->user_model->get_user_class_history($user_id);
+
+		// Remove all the projected classes from the list.
+		foreach ($class_info['all_classes'] as $i => $class) {
+			if($class->status == 'projected') unset($class_info['all_classes'][$i]);
+		}
+		$class_info['all_classes'] = array_values($class_info['all_classes']);
+		// unset($class_info['all_classes']);
+		$class_info['student_data_not_updated'] = $this->class_model->get_classes_where_student_data_is_not_updated($user_id);
+
+		$this->send($class_info);
+		return $class_info;
+	}
+
+	function user_batch_info() {
+		$this->check_key();
+
+		$user_id = $this->input("user_id");
+		$batch_id = reset($this->batch_model->get_batches_connected_to_user($user_id)); // Gets just one batch connected to this user.
+		$volunteer_data_not_updated = $this->class_model->get_classes_where_teacher_data_is_not_updated($user_id);
+		$student_data_not_updated = $this->class_model->get_classes_where_student_data_is_not_updated_in_batch($batch_id);
+
+		$all_teachers_in_batch = array_values(array_unique(colFormat($this->batch_model->get_teachers_in_batch($batch_id))));
+		$teachers_with_negative_credits = $this->db->query("SELECT id,name,credit FROM User WHERE credit < 0 AND id IN (" 
+																		. implode(",", $all_teachers_in_batch) . ")")->result();
+		// $substitution_percentage
+		
+		$batch_info = array(
+				'batch_id'		=> $batch_id,
+				'volunteer_data_not_updated'	=> $volunteer_data_not_updated,
+				'student_data_not_updated'		=> $student_data_not_updated,
+				'teachers_with_negative_credits'=> $teachers_with_negative_credits
+			);
+		$this->send($batch_info);
+		return $batch_info;
+	}
+
 	/**
 	 * This will login the user into the system. 
 	 * Arguments : 	email - The username of the user to be logged in
@@ -209,10 +251,13 @@ class Api extends Controller {
 			'user_id'	=> $status['id'],
 			'key'		=> $this->key,
 			'name'		=> $status['name'],
+			'email'		=> $status['email'],
 			'city_id'	=> $status['city_id'],
+			'credit'	=> $status['credit'],
 			'mentor'	=> $mentor,
 			'connections'=>$connections,
 			'groups'	=> array_values($status['groups']),
+			'positions' => $status['positions']
 		));
 	}
 

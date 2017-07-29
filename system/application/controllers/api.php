@@ -202,8 +202,10 @@ class Api extends Controller {
 		$student_data_not_updated = $this->class_model->get_classes_where_student_data_is_not_updated_in_batch($batch_id);
 
 		$all_teachers_in_batch = array_values(array_unique(colFormat($this->batch_model->get_teachers_in_batch($batch_id))));
-		$teachers_with_negative_credits = $this->db->query("SELECT id,name,credit FROM User WHERE credit < 0 AND id IN (" 
+		if($all_teachers_in_batch) {
+			$teachers_with_negative_credits = $this->db->query("SELECT id,name,credit FROM User WHERE credit < 0 AND id IN (" 
 																		. implode(",", $all_teachers_in_batch) . ")")->result();
+		}
 		// $substitution_percentage
 		
 		$batch_info = array(

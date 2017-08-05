@@ -337,6 +337,31 @@ class Classes extends Controller {
 					$insert_id = $this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
 					$this->user_model->set_user_subject($user_id, $subject_id);
 					$all_users[$user_id]->subject_id = $subject_id;
+
+					// Make future classes...
+					$batch = $this->batch_model->get_batch($batch_id);
+					list($hour, $min, $secs) = explode(":", $batch->class_time);
+				
+					// This is how we find the next sunday, monday(whatever is in the $batch->day).
+					$date_interval = intval($batch->day) - date('w');
+					if($date_interval < 0) $date_interval += 7;
+					$day = date('d') + $date_interval;
+					
+					$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
+					$date = date("Y-m-d H:i:s", $time);
+
+					// Make sure its not already inserted.
+					if(!$this->class_model->get_by_teacher_time($user_id, $date, $batch_id, $level_id)) {
+						$class_data = array(
+							'batch_id'	=> $batch_id,
+							'level_id'	=> $level_id,
+							'teacher_id'=> $user_id,
+							'substitute_id'=>0,
+							'class_on'	=> $date,
+							'status'	=> 'projected'
+						);
+						$this->class_model->save_class($class_data);
+					}
 				}
 			}
 

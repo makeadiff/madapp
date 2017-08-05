@@ -207,13 +207,49 @@ class Api extends Controller {
 			$teachers_with_negative_credits = $this->db->query("SELECT id,name,credit FROM User WHERE credit < 0 AND id IN (" 
 																		. implode(",", $all_teachers_in_batch) . ")")->result();
 		}
-		// $substitution_percentage
+		// Subsitution Card
+		$total_classes = oneFormat($this->db->query("SELECT COUNT(C.id) FROM Class C
+			INNER JOIN UserClass UC ON UC.class_id=C.id
+			WHERE C.status='happened' AND C.batch_id=$batch_id")->row());
+
+		$substituted_classes = oneFormat($this->db->query("SELECT COUNT(C.id) FROM Class C
+			INNER JOIN UserClass UC ON UC.class_id=C.id
+			WHERE UC.substitute_id!=0 AND C.status='happened' AND C.batch_id=$batch_id")->row());
+
+		$substituted_in_last_5_classes = idNameFormat($this->db->query("SELECT C.class_on AS id, COUNT(C.id) AS name FROM Class C
+			INNER JOIN UserClass UC ON UC.class_id=C.id
+			WHERE UC.substitute_id!=0 AND C.status='happened' AND C.batch_id=$batch_id
+			GROUP BY C.class_on
+			ORDER BY C.class_on DESC
+			LIMIT 0,5")->result());
+
+		$total_in_last_5_classes = idNameFormat($this->db->query("SELECT C.class_on AS id, COUNT(C.id) AS name FROM Class C
+			INNER JOIN UserClass UC ON UC.class_id=C.id
+			WHERE C.status='happened' AND C.batch_id=$batch_id
+			GROUP BY C.class_on
+			ORDER BY C.class_on DESC
+			LIMIT 0,5")->result());
+
+		$last_5_classes = array();
+		foreach ($substituted_in_last_5_classes as $key => $value) {
+			$last_5_classes[] = array(
+				'date'			=> $key, 
+				'total'			=> $total_in_last_5_classes[$key],
+				'substitution'	=> $substituted_in_last_5_classes[$key], 
+				'percentage'	=> intval(($substituted_in_last_5_classes[$key] / $total_in_last_5_classes[$key]) * 100)
+			);
+		}
+		$substitution_info = array(
+					'substitution_percentage'	=> intval(($substituted_classes / $total_classes) * 100),
+					'last_5_classes'			=> $last_5_classes
+			);
 		
 		$batch_info = array(
-				'batch_id'		=> $batch_id,
+				'batch_id'						=> $batch_id,
 				'volunteer_data_not_updated'	=> $volunteer_data_not_updated,
 				'student_data_not_updated'		=> $student_data_not_updated,
-				'teachers_with_negative_credits'=> $teachers_with_negative_credits
+				'teachers_with_negative_credits'=> $teachers_with_negative_credits,
+				'substitution_info'				=> $substitution_info
 			);
 		$this->send($batch_info);
 		return $batch_info;

@@ -290,6 +290,14 @@ class Cron extends Controller  {
 		// DELETE FROM StudentLevel WHERE level_id IN (SELECT id FROM Level WHERE year=2017)
 		// DELETE FROM BatchLevel WHERE level_id IN (SELECT id FROM Level WHERE year=2017)
 	}
+
+	/// This will send an reminder to all teahers/mentors who havne't updated their madapp attendance after 2 hours of the eclass ending.
+	function send_sms_reminder_to_update_madapp() {
+		// Find classes that was sceduled to happen 4 hours ago - 2 hour class + 2 hours buffer
+		// WHERE C.class_on BETWEEN DATE_SUB(NOW(), INTERVAL 5 HOUR) AND DATE_SUB(NOW(), INTERVAL 4 HOUR)
+		
+		// :TODO:
+	}
                
 }
 

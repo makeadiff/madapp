@@ -379,6 +379,25 @@ class Debug extends Controller {
 		print "<br />\nDeleted $delete_count spam applicants.";
 	}
 
+	function delete_future_classes_where_assignment_is_removed($batch_id) {
+		// Find all classes scheduled to happen in said Batch
+		$classes = $this->batch_model->db->query("SELECT C.id,UC.user_id,C.batch_id,C.level_id,C.class_on FROM Class C
+				INNER JOIN UserClass UC ON UC.class_id=C.id 
+				WHERE C.batch_id=$batch_id AND DATE(C.class_on) >= CURDATE()")->result();
 
+		$done_things = array();
+
+		// See if this user is still assigned to this batch.
+		foreach($classes as $c) {
+			$batch_assignment = $this->batch_model->db->query("SELECT UB.* FROM UserBatch UB 
+				WHERE batch_id=$c->batch_id AND level_id=$c->level_id AND user_id=$c->user_id")->result();
+
+			// dump($batch_assignment);
+			if(!$batch_assignment) {
+				echo "Deleting Class ID : $c->id<br />\n";
+				$this->batch_model->db->query("DELETE FROM Class WHERE id=$c->id");
+			}
+		}
+	}
 }
 

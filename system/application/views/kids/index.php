@@ -4,7 +4,7 @@
 
 <form action="<?php echo site_url('kids/index'); ?>" method="post">
 <select name="center_id">
-<option value="0">All Kids</option>
+<option value="0">All Children</option>
 <?php foreach($center_list as $row){ ?>
 <option value="<?php echo $row->id; ?>" <?php if($center_id == $row->id) { echo 'selected'; } ?>><?php echo $row->name; ?></option>
 <?php } ?>
@@ -17,7 +17,7 @@
 
 <div id="actions">
 <?php if($this->user_auth->get_permission('kids_add') and $page == 'index') { ?>
-<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button green primary popup" name="Add Kids">Add Kids</a>
+<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button green primary popup" name="Add Children">Add Children</a>
 <?php } ?>
 </div><br class="clear" />
 
@@ -38,15 +38,15 @@
 
 <div id="kids_list">
 <?php if($this->user_auth->get_permission('kids_add') and $page == 'index') { ?>
-<a class="add with-icon" href="<?php echo site_url('kids/import'); ?>">Import Kids</a>
+<a class="add with-icon" href="<?php echo site_url('kids/import'); ?>">Import Children</a>
 <?php } ?>
 
 <?php if($this->user_auth->get_permission('kids_show_deleted') and $page == 'index') { ?>
-<a class="delete with-icon" href="<?php echo site_url('kids/show_deleted'); ?>">Show Deleted Kids</a>
+<a class="delete with-icon" href="<?php echo site_url('kids/show_deleted'); ?>">Show Deleted Children</a>
 <?php } ?>
 
 <?php if($page == 'show_deleted') { ?>
-<a class="done with-icon" href="<?php echo site_url('kids/manageaddkids'); ?>">Show Actual Kids</a>
+<a class="done with-icon" href="<?php echo site_url('kids/manageaddkids'); ?>">Show Actual Children</a>
 <?php } ?>
 
 

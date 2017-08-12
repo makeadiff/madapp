@@ -12,8 +12,8 @@ if(((strpos($url, 'localhost') === false) and (strpos($url, '192.168') === false
 <script>
   window.intercomSettings = {
     app_id: "xnngu157",
-    name: $_SESSION['name'], // Full name
-    email: $_SESSION['email'], // Email address
+    name: "<?php echo $_SESSION['name'] ?>", // Full name
+    email: "<?php echo $_SESSION['email'] ?>", // Email address
     // created_at: 0 // Signup date as a Unix timestamp
   };
   </script>

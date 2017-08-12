@@ -15,10 +15,12 @@ class Class_model extends Model {
 				Level.grade AS level_grade, Level.name AS level_name, Class.class_on, Center.name AS center_name
 			FROM Class INNER JOIN UserClass ON UserClass.class_id=Class.id
 				INNER JOIN Level ON Class.level_id=Level.id
+				INNER JOIN Batch ON Class.batch_id=Batch.id
 				INNER JOIN Center ON Level.center_id=Center.id
 			WHERE Class.project_id={$this->project_id} AND (UserClass.user_id=$user_id OR UserClass.substitute_id=$user_id)
-			AND Class.class_on BETWEEN '{$this->year}-04-01 00:00:00' AND '".($this->year + 1)."-03-31 23:59:59'
+			AND Level.year={$this->year} AND Batch.status='1'
 			ORDER BY Class.class_on DESC")->result();
+			// AND Class.class_on BETWEEN '{$this->year}-04-01 00:00:00' AND '".($this->year + 1)."-03-31 23:59:59'
 	}
 
 	/// Returns classes taken by the given teacher - where student attendance is not marked 

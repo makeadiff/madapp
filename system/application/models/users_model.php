@@ -1232,11 +1232,14 @@ class Users_model extends Model {
 		$this->db->select('UserClass.*,Class.class_on');
 		$this->db->from('UserClass');
 		$this->db->join('Class','Class.id=UserClass.class_id','join');
-		$this->db->where("Class.class_on BETWEEN '{$this->year}-04-01 00:00:00' AND '".($this->year + 1)."-03-31 23:59:59'");
+		$this->db->join('Batch','Batch.id=Class.batch_id','join');
+		// $this->db->where("Class.class_on BETWEEN '{$this->year}-04-01 00:00:00' AND '".($this->year + 1)."-03-31 23:59:59'");
+		$this->db->where("Batch.year", $this->year);
+		$this->db->where("Batch.status", '1');
 		$this->db->where("(UserClass.user_id=$current_user_id OR UserClass.substitute_id=$current_user_id)");
 		$this->db->orderby('Class.class_on');
 		$result = $this->db->get();
-		
+
 		if($result) return $result->result_array();
 		return array();
 	}

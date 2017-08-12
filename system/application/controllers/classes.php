@@ -34,6 +34,7 @@ class Classes extends Controller {
 		
 		if(!$user_id) $user_id = $this->user_details->id;
 		$all_classes = $this->class_model->get_all($user_id);
+
 		$users = $this->user_model->search_users(array('not_user_type'=>array('applicant','well_wisher'),'status'=>false, 'city_id'=>0));
  		$all_users = idNameFormat($users);
 		

@@ -48,7 +48,7 @@ if(!empty($message['error'])) { ?>
     </label>
     <a class="small" href="<?php echo site_url('auth/forgotpassword') ?>">Forgot Password?</a>
     <br><br>
-    <?php echo form_submit('submit', 'Login', 'class="btn btn-lg btn-primary btn-block"');?></li>
+    <?php echo form_submit('submit', 'Login', 'class="btn btn-lg btn-primary btn-block"');?>
     <input type="hidden" name='redirect_url' value="<?php if(!empty($redirect_url)) echo $redirect_url; ?>" />
 </form>
 
@@ -63,9 +63,10 @@ if(!empty($message['error'])) { ?>
 <script>
   window.intercomSettings = {
     app_id: "xnngu157",
-    name: "", // Full name
-    email: "", // Email address
-    // created_at: 0 // Signup date as a Unix timestamp
+    <?php 
+      if(!empty($_SESSION['name'])) echo " name: '$_SESSION[name]',\n";
+      if(!empty($_SESSION['email'])) echo " email: '$_SESSION[email]'\n";
+    ?>
   };
   </script>
 <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/xnngu157';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>

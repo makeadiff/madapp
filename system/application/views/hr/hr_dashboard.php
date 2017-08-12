@@ -19,21 +19,6 @@
                         <img src="<?php echo base_url()?>/images/flat_ui/volunteer_request.png" alt="" /><br>National<br>Requirements</a></div>
             <?php } ?>
 
-            <?php if($this->user_auth->get_permission('admincredit_index')) { ?>
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/intern_credits.php">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/credit_history.png" alt="" /> <br>Assign Volunteer<br /> Credits</a></div>
-            <?php } ?><br />
-
-            <?php if($this->user_auth->get_permission('admincredit_index')) { // :PERMISSION_RESET: ?>
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/intern_monthly_report.php">
-                        <img src="http://makeadiff.in/apps/prism/public/img/reports.png" alt="" /> <br>Volunteer Credits<br /> Monthly Report</a></div>
-            <?php } ?><br />
-
-            <?php if($this->user_auth->get_permission('admincredit_index')) { // :PERMISSION_RESET: ?>
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/intern_aggregate.php">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/credit_aggregator.png" height="64" alt="" /> <br>Volunteer Credits<br /> Aggregator</a></div>
-            <?php } ?><br />
-
             <?php if($this->user_auth->get_permission('admincredit_index')) { // :PERMISSION_RESET: ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/attrition.php">
                         <img src="<?php echo base_url(); ?>images/flat_ui/happiness_index_response.png" height="64" alt="" /> <br>Volunteer Attrition<br /> Tracker</a></div>

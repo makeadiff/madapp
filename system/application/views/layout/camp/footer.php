@@ -20,8 +20,8 @@ if(((strpos($url, 'localhost') === false) and (strpos($url, '192.168') === false
   window.intercomSettings = {
     app_id: "xnngu157",
     <?php 
-      if(!empty($_SESSION['name'])) echo " name: '$_SESSION[name]',\n";
-      if(!empty($_SESSION['email'])) echo " email: '$_SESSION[email]'\n";
+      if(!empty($_SESSION['user_id']) and !empty($_SESSION['name'])) echo " name: '$_SESSION[name]',\n";
+      if(!empty($_SESSION['user_id']) and !empty($_SESSION['email'])) echo " email: '$_SESSION[email]'\n";
     ?>
   };
   </script>

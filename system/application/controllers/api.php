@@ -60,6 +60,7 @@ Use the right HTTP status codes
  */
 class Api extends Controller {
 	private $send_data = true;
+	private $_input_data = false;
 
 	public $key = 'am3omo32hom4lnv32vO';
 
@@ -1090,11 +1091,21 @@ class Api extends Controller {
 		if(!$return) $this->input->get($name);
 		if(!$return and isset($_REQUEST[$name])) $return = $_REQUEST[$name];
 
+		if(!$return) { // Sometimes when data is passed as post, and went content type is application/json it can't be handled by _POST or _GET. Hence...
+		// For more details : https://stackoverflow.com/questions/15485354/angular-http-post-to-php-and-undefined
+			if(empty($this->_input_data)) {
+				$post_data = file_get_contents("php://input");
+				$this->_input_data = json_decode($post_data, true);
+			}
+			$return = $this->_input_data[$name];
+		}
+
 		return $return;
 	}
 
 	function check_key() {
 		$key = $this->input('key');
+		
 		if($key != $this->key) {
 			$this->error("Invalid Key");
 			exit;

@@ -379,6 +379,7 @@ class Debug extends Controller {
 		print "<br />\nDeleted $delete_count spam applicants.";
 	}
 
+	/// Sometimes there are future classes made by old deleted assignments. This will remove those orphan classes.
 	function delete_future_classes_where_assignment_is_removed($batch_id) {
 		// Find all classes scheduled to happen in said Batch
 		$classes = $this->batch_model->db->query("SELECT C.id,UC.user_id,C.batch_id,C.level_id,C.class_on FROM Class C

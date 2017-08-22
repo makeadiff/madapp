@@ -114,26 +114,21 @@ class User extends Controller  {
 		$data['id']= $this->users_model->adduser($data);
 		
 		$config['upload_path'] = dirname(BASEPATH) . '/uploads/users/';
-                $config['allowed_types'] = 'gif|jpg|png';
-                $config['max_size']    = '1000'; //2 meg
-		foreach($_FILES as $key => $value)
-        {
-            if( ! empty($key['name']))
-            {
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size']    = '1000'; //2 meg
+
+		foreach($_FILES as $key => $value) {
+            if( ! empty($key['name'])) {
                 $this->upload->initialize($config);
         
-                if ( ! $this->upload->do_upload($key))
-                {
+                if ( ! $this->upload->do_upload($key)) {
                     $errors[] = $this->upload->display_errors();
-                }    
-                else
-                {
+                } else {
                     $flag=$this->users_model->process_pic($data);
                 }
-             }
+            }
         }
-		if($data['id'] !='')
-		{
+		if($data['id'] !='') {
 			$returnFlag= $this->users_model->adduser_to_group($data['id'], $data['group']);
 			if($returnFlag) {
 				$this->session->set_flashdata('success', 'User Inserted successfully');

@@ -74,13 +74,10 @@ function validate(e) {
 </table>
 <br><br>
 
+<?php if($this->user_auth->get_permission('user_edit')) { ?>
 <table class="data-table">
     <thead>
-    <tr>
-        <th>
-            Update Credit
-        </th>
-    </tr>
+    <tr><th>Update Credit</th></tr>
     </thead>
     <tbody>
     <tr><td>
@@ -98,6 +95,7 @@ function validate(e) {
     </td></tr>
     </tbody>
 </table>
+<?php } ?>
 
 </div>
 </div>

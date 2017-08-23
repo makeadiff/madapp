@@ -833,7 +833,8 @@ class Users_model extends Model {
     	$status_counts = array(
     			'attended'	=> 0,
     			'absent'	=> 0,
-    			'projected'	=> 0
+    			'projected'	=> 0,
+    			'cancelled'	=> 0,
     		);
     	foreach ($all_classes as $cls) {
     		$status_counts[$cls->status]++;

@@ -326,14 +326,15 @@ class Classes extends Controller {
 				$level_id = $level_ids[$user_id];
 				$subject_id = $subject_ids[$user_id];
 
-				// Batch is not set. That means no class.
-				if(!$batch_id or !$level_id) {
-					// See if it was assigned earlier. If so, we must delete the assignments.
-					if(isset($old_volunteers[$user_id]) and !empty($old_volunteers[$user_id]['batch_id']) and !empty($old_volunteers[$user_id]['level_id'])) {
-						// If someone removes a volunteer from a batch, make sure his future classes are deleted
-						$this->class_model->delete_user_classes($user_id, $old_volunteers[$user_id]['batch_id'], $old_volunteers[$user_id]['level_id']);
-					}
-				} else if($batch_id and $level_id) {
+				// See if it was assigned earlier.
+				if(isset($old_volunteers[$user_id]) and !empty($old_volunteers[$user_id]['batch_id']) and !empty($old_volunteers[$user_id]['level_id'])) {
+					// If the assignments have been changed/removed, we must delete the assignments for the future...
+					if(($old_volunteers[$user_id]['batch_id'] != $batch_id) or ($old_volunteers[$user_id]['level_id'] != $level_id))
+					// If someone removes a volunteer from a batch, make sure his future classes are deleted
+					$this->class_model->delete_future_classes($user_id, $old_volunteers[$user_id]['batch_id'], $old_volunteers[$user_id]['level_id']);
+				}
+
+				if($batch_id and $level_id) {
 					// Set the assigment with the data provided by the user.
 					$insert_id = $this->user_model->set_user_batch_and_level($user_id, $batch_id, $level_id);
 					$this->user_model->set_user_subject($user_id, $subject_id);

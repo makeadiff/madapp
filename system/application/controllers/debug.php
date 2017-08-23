@@ -27,6 +27,8 @@ class Debug extends Controller {
 		$this->load->model('batch_model');
 		$this->load->model('level_model');
 		$this->load->model('class_model');
+
+		$this->year = get_year();
 	}
 
 
@@ -395,9 +397,38 @@ class Debug extends Controller {
 
 			// dump($batch_assignment);
 			if(!$batch_assignment) {
-				echo "Deleting Class ID : $c->id<br />\n";
-				$this->batch_model->db->query("DELETE FROM Class WHERE id=$c->id");
+				// Find all teachers assigned to the class - if there is only one teacher, delete the class itself. If more than one teacher, delete the UserClass row.
+				$user_class = $this->batch_model->db->query("SELECT * FROM UserClass WHERE class_id=$c->id")->result();
+
+				if(count($user_class) == 1) {
+					echo "Deleting Class ID : $c->id<br />\n";
+					$this->batch_model->db->query("DELETE FROM UserClass WHERE class_id=$c->id");
+					$this->batch_model->db->query("DELETE FROM Class WHERE id=$c->id");
+				} else {
+					$user_class_row = reset($user_class);
+					echo "Deleting Class/User ID : {$c->id} / {$c->user_id}  -  {$user_class_row->id}<br />";
+					$this->batch_model->db->query("DELETE FROM UserClass WHERE class_id={$c->id} AND user_id={$c->user_id}");
+				}
 			}
+		}
+	}
+
+	/*
+	repeat_call($function_name, $item, $under_item=false, $under_item_id=0)
+	repeat_call('delete_future_classes_where_assignment_is_removed', 'batch_id', 'center', 18)
+	 */
+	function repeat_call($function_name, $item, $under_item=false, $under_item_id=0) {
+		if($item == 'batch') {
+			if(!$under_item) {
+				$all_items = $this->batch_model->db->query("SELECT B.id FROM Batch B 
+						INNER JOIN Center C ON C.id=B.center_id
+						WHERE B.year={$this->year} AND B.status='1' AND C.status='1'")->result();
+			}
+		}
+
+
+		foreach ($all_items as $item) {
+			$this->$function_name($item->id);
 		}
 	}
 }

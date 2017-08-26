@@ -178,10 +178,9 @@ Class User_auth {
 	public function forgotten_password($identity)    
 	{
 		$this->ci->load->model('users_model');
-		$users = $this->ci->users_model->search_users(array('email'=>$identity, 'city_id'=>0));
+		$user = $this->ci->users_model->db->query("SELECT * FROM User WHERE (email='$identity' OR mad_email='$identity') AND status='1' AND user_type='volunteer'")->row();
 		
-		if($users) {
-			$user = reset($users);
+		if($user) {
 			$password_message = <<<END
 Hey {$user->name},
 
@@ -200,7 +199,7 @@ END;
 			// $this->ci->email->subject('MADApp Password Reminder');
 			// $this->ci->email->message($password_message);
 			// $this->ci->email->send();
-			sendEmailWithAttachment($user->email, 'MADApp Password Reminder', $password_message, "MADApp <madapp@makeadiff.in>");
+			sendEmailWithAttachment($identity, 'MADApp Password Reminder', $password_message, "MADApp <madapp@makeadiff.in>");
 
 			return true;
 		}

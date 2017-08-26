@@ -329,8 +329,8 @@ function sendEmailWithAttachment($to_email, $subject, $body, $from=false, $login
     if(!$from) $from = '"Binny V A" <me@binnyva.com>';
     if(!$login_details) $login_details = array(
         'host'      => "smtp.gmail.com",
-        'username'  => "ecs@makeadiff.in",
-        'password'  => "mad4ever"
+        'username'  => "madapp@makeadiff.in",
+        'password'  => "madappgonemad"
     );
     
     //do not ever try to call these lines in reverse order

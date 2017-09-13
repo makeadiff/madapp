@@ -211,7 +211,7 @@ class Debug extends Controller {
 	// For some reason I havent figured out yet, there are duplicate users in madsheet. This deletes them. Have to figured out why later.
 	function delete_duplicate_class_entries() {
 		// Find users with multiple levels in this year.
-		$teachers = $this->users_model->db->query("SELECT U.id FROM User U INNER JOIN UserGroup UG ON U.id=UG.user_id WHERE UG.group_id=9 AND UG.year='2015'")->result();
+		$teachers = $this->users_model->db->query("SELECT U.id FROM User U INNER JOIN UserGroup UG ON U.id=UG.user_id WHERE UG.group_id=9 AND UG.year='2017'")->result();
 
 		foreach ($teachers as $t) {
 			// Find the actual levels

@@ -536,7 +536,7 @@ class Classes extends Controller {
 				$days_with_classes = array();
 			}
 		}
-		
+
 		$this->load->view('classes/madsheet', array(
 			'data'=>$data, 'all_lessons'=>$all_lessons,
 			'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));

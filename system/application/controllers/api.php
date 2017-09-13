@@ -1055,6 +1055,39 @@ class Api extends Controller {
 		$this->send(array('batches' => $batches, 'levels' => $levels, 'connection' => $connection));
 	}
 
+
+	///////////////////////////// Impact Survey Calls /////////////////////////
+	// Creating some static calls for the time being.
+	function is_questions($vertical_id) {
+		$this->send(json_decode('{
+				"questions": [
+					{
+						"id": 1,
+						"question": "Grit"
+					},
+					{
+						"id": 2,
+						"question": "Confidence"
+					},
+					{
+						"id": 3,
+						"question": "Motivation"
+					},
+					{
+						"id": 4,
+						"question": "Effort"
+					}
+				]
+			}', true));
+	}
+
+	function is_save() {
+		$data = file_get_contents("php://input");
+		// $data = $this->input('data');
+		$json = json_decode($data, true);
+		$this->send(array("user_response_id" => 1, 'data' => $json));
+	}
+
 	function _rateReports($data, $report_type, $report_name) {
 		for($i = 0; $i < count($data); $i++) {
 			if(!$data[$i]->sum) $data[$i]->sum = 0;

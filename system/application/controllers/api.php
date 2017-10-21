@@ -297,7 +297,7 @@ class Api extends Controller {
 			'mentor'	=> $mentor,
 			'connections'=>$connections,
 			'groups'	=> array_values($status['groups']),
-			'positions' => $status['positions']
+			'positions' => $status['positions'],
 		));
 	}
 
@@ -734,6 +734,17 @@ class Api extends Controller {
 		$this->send(array('success' => "Class Attendance Updated", 'status'=>'1'));
 	}
 
+	function get_students() {
+		$this->check_key();
+
+		$level_id = $this->input('level_id');
+		// $user_id = $this->input('user_id');
+		$students = $this->level_model->get_kids_in_level($level_id);
+
+		$this->send(array('students' => $students));
+		return $students;
+	}
+
 	////////////////////////////////////////// Reports ////////////////////////////////
 
 	function teacher_report_aggregate() {
@@ -1057,35 +1068,45 @@ class Api extends Controller {
 
 
 	///////////////////////////// Impact Survey Calls /////////////////////////
+	function active_is_event() {
+		$teacher_id = $this->input('teacher_id');
+		$this->load->model("Impact_survey_model");
+		$is_event = $this->Impact_survey_model->get_active_event($teacher_id);
+
+		// :TODO: Event should not come up even if the co-teacher of the current user took the survey.
+
+		$this->send(array('is_event' => $is_event));
+		return $is_event;
+	}
 	// Creating some static calls for the time being.
-	function is_questions($vertical_id) {
-		$this->send(json_decode('{
-				"questions": [
-					{
-						"id": 1,
-						"question": "Grit"
-					},
-					{
-						"id": 2,
-						"question": "Confidence"
-					},
-					{
-						"id": 3,
-						"question": "Motivation"
-					},
-					{
-						"id": 4,
-						"question": "Effort"
-					}
-				]
-			}', true));
+	function is_questions() {
+		$vertical_id = $this->input('vertical_id');
+		if(!$vertical_id) $vertical_id = 9;
+
+		$this->load->model('impact_survey_model');
+
+		$questions = $this->impact_survey_model->get_questions($vertical_id);
+
+		$this->send(array('questions' => $questions));
 	}
 
 	function is_save() {
-		$data = file_get_contents("php://input");
-		// $data = $this->input('data');
-		$json = json_decode($data, true);
-		$this->send(array("user_response_id" => 1, 'data' => $json));
+		$this->load->model('impact_survey_model');
+
+		$data = array(
+			'is_event_id' => $this->input('is_event_id'),
+			'question_id' => $this->input('question_id'),
+			'response' => $this->input('response'),
+			'student_id' => $this->input('student_id'),
+			'user_id' => $this->input('teacher_id')
+		);
+
+		$user_response_id = $this->impact_survey_model->save_response($data);
+
+		$this->send(array(
+						'user_response_id' => $user_response_id,
+						'data' => $data,
+					));
 	}
 
 	function _rateReports($data, $report_type, $report_name) {

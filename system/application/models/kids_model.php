@@ -117,6 +117,8 @@ class Kids_model extends Model {
 		$this->db->update('Student', array('status' => '0'));
 		$affected = $this->db->affected_rows();
 
+		// :TODO: Remove Level association of this student if any.
+
 		//Disabling deleting student level associations until we figure out how to convert student to alumni when they leave the center
 		/*$this->db->where('student_id',$id);
 		$this->db->delete('StudentLevel');*/

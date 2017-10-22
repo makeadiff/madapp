@@ -1069,9 +1069,9 @@ class Api extends Controller {
 
 	///////////////////////////// Impact Survey Calls /////////////////////////
 	function active_is_event() {
-		$teacher_id = $this->input('teacher_id');
+		$level_id = $this->input('level_id');
 		$this->load->model("Impact_survey_model");
-		$is_event = $this->Impact_survey_model->get_active_event($teacher_id);
+		$is_event = $this->Impact_survey_model->get_active_event($level_id);
 
 		// :TODO: Event should not come up even if the co-teacher of the current user took the survey.
 
@@ -1088,6 +1088,26 @@ class Api extends Controller {
 		$questions = $this->impact_survey_model->get_questions($vertical_id);
 
 		$this->send(array('questions' => $questions));
+	}
+
+	function is_existing_responses() {
+		$is_event_id = $this->input('is_event_id');
+		$student_ids = $this->input('student_ids');
+
+		$this->load->model('impact_survey_model');
+
+		$all_responses = array();
+		foreach ($student_ids as $student_id) {
+			$responses = $this->impact_survey_model->get_response($is_event_id, $student_id);
+
+			$student_responses = array();
+			foreach ($responses as $res) {
+				$student_responses[$res->question_id] = intval($res->response);
+			}
+			$all_responses[$student_id] = $student_responses;
+		}
+
+		$this->send(array('response' => $all_responses));
 	}
 
 	function is_save() {

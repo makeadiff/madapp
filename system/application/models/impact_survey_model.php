@@ -20,6 +20,9 @@ class Impact_survey_model extends Model {
     function save_response($data) {
     	$data['added_on'] = date('Y-m-d H:i:s');
 
+        // Delete existing response if any.
+        $this->db->delete("IS_Response", array('is_event_id' => $data['is_event_id'], 'student_id' => $data['student_id'], 'question_id' => $data['question_id']));
+
 		$this->db->insert("IS_Response", $data);
 		return $this->db->insert_id();
 	}
@@ -30,19 +33,32 @@ class Impact_survey_model extends Model {
 		return $result->result();
     }
 
-    function get_active_event($user_id) {
+    function get_response($is_event_id, $student_id) {
+        $this->db->select('id,user_id,student_id,question_id,response')->from("IS_Response")->where('is_event_id', $is_event_id)->where('student_id', $student_id);
+        $result = $this->db->get();
+        return $result->result();
+    }
+
+    function get_active_event($level_id) {
     	$unentered_events = array();
 
     	// :TODO: Show only events that happen in the last month?
     	$active_events = $this->db->query("SELECT id, name FROM IS_Event WHERE status='1'")->result();
     	if(!$active_events) return $unentered_events;
 
-    	foreach ($active_events as $e) {
-    		// Find if the current user has responded to the survey event.
-    		$response_count = oneFormat($this->db->query("SELECT COUNT(id) FROM IS_Response WHERE is_event_id={$e->id} AND user_id=$user_id")->row());
+        $this->load->model("Level_model");
 
-    		// :TODO: Should the user have responded to all the qusetions for all their students? If so, change the line to $response_count >= $possible_responses.
-    		if(!$response_count) {
+        $question_count = oneFormat($this->db->query("SELECT COUNT(id) FROM IS_Question")->row());
+        $students_in_level = $this->level_model->get_kids_in_level($level_id);
+        $possible_responses = count($students_in_level) * $question_count;
+
+    	foreach ($active_events as $e) {
+    		// Find the count of student's data that we have for this survey.
+    		$response_count = oneFormat($this->db->query("SELECT COUNT(id) FROM IS_Response 
+                    WHERE is_event_id={$e->id} AND student_id IN (" . implode(",", array_keys($students_in_level)) . ")")->row());
+
+    		// Do we have responses to all the qusetions for all their students? 
+    		if($response_count < $possible_responses) {
     			$unentered_events[$e->id] = $e->name;
     		}
     	}

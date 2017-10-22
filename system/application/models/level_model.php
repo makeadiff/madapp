@@ -150,7 +150,10 @@ class Level_model extends Model {
 	
 	/// Returs all the ids of the levels the given user teachs at.
 	function get_user_level($user_id) {
-		$levels = $this->db->query("SELECT level_id FROM UserBatch WHERE user_id=$user_id")->result();
+		$levels = $this->db->query("SELECT level_id 
+			FROM UserBatch UB
+			INNER JOIN Level L ON UB.level_id=L.id
+			WHERE user_id=$user_id AND L.year={$this->year}")->result();
 		$return = array();
 		foreach($levels as $l) $return[] = $l->level_id;
 		

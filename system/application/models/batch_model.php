@@ -53,8 +53,10 @@ class Batch_model extends Model {
 	}
 	
 	function get_batches_in_level($level_id) {
-		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id 
-		 	WHERE UserBatch.level_id=$level_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year}")->result();
+		return $this->db->query("SELECT Batch.* FROM Batch
+			INNER JOIN BatchLevel BL ON BL.batch_id=Batch.id
+			INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id
+		 	WHERE UserBatch.level_id=$level_id AND BL.level_id=$level_id AND Batch.year={$this->year}")->result();
 	}
 	function get_batches_connected_to_level($level_id) {
 		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN BatchLevel ON Batch.id=BatchLevel.batch_id 

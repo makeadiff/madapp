@@ -40,7 +40,8 @@ class Auth extends Controller {
 	//log the user in
 	function login($redirect_url = '') {
 		if($this->user_auth->logged_in()) {
-			if($redirect_url) redirect(base64_decode($redirect_url));
+			if($redirect_url and $redirect_url != 'aHR0cDovL21ha2VhZGlmZi5pbi9jZnIv') // For some reason, google indexed this link. So if people search for madapp, they go to CFR page. Fixing that. 
+				redirect(base64_decode($redirect_url));
 			else redirect('dashboard/dashboard_view');
 			exit;
 		}

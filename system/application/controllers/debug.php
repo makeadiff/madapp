@@ -416,6 +416,7 @@ class Debug extends Controller {
 	/*
 	repeat_call($function_name, $item, $under_item=false, $under_item_id=0)
 	repeat_call('delete_future_classes_where_assignment_is_removed', 'batch_id', 'center', 18)
+	/debug/repeat_call/delete_future_classes_where_assignment_is_removed/batch
 	 */
 	function repeat_call($function_name, $item, $under_item=false, $under_item_id=0) {
 		if($item == 'batch') {
@@ -430,6 +431,33 @@ class Debug extends Controller {
 		foreach ($all_items as $item) {
 			$this->$function_name($item->id);
 		}
+	}
+
+
+	function restore_assignment($batch_id) {
+		// Find the latest class for this batch.
+		$date = oneFormat($this->batch_model->db->query("SELECT class_on FROM Class WHERE batch_id=$batch_id ORDER BY class_on DESC LIMIT 0,1")->row());
+		$classes = $this->batch_model->db->query("SELECT * FROM Class WHERE class_on='$date' AND batch_id=$batch_id")->result();
+		foreach($classes as $cls) {
+			$teachers = colFormat($this->batch_model->db->query("SELECT user_id FROM UserClass WHERE class_id={$cls->id}")->result());
+			$level_id = $cls->level_id;
+
+			// Does this assignment exist?
+			foreach ($teachers as $user_id) {
+				$assignment_exists = $this->batch_model->db->query("SELECT id FROM UserBatch WHERE user_id=$user_id AND batch_id=$batch_id AND level_id=$level_id")->row();
+				$ub_id = 0;
+				if($assignment_exists) $ub_id = $assignment_exists->id;
+				print "User: $user_id , Level: $level_id , Batch: $batch_id , Exists : $ub_id";
+
+				if(!$ub_id) {
+					$this->batch_model->db->query("INSERT INTO UserBatch(user_id,batch_id,level_id) VALUES($user_id,$batch_id,$level_id)");
+					$insert_id = $this->batch_model->db->insert_id();
+					print " INSERTED - $insert_id";
+				}
+				print "\n<br />";
+			}
+		}
+
 	}
 }
 

@@ -586,7 +586,7 @@ class Api extends Controller {
 	 * Get the enter Mentor view data in one call - just specify which Batch ID should be shown
 	 * Arguments:	$batch_id
 	 * Returns 	: 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
-	 * Example	: 	http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
+	 * Example	: 	http://makeadiff.in/madapp/index.php/api/class_get_batch?&key=am3omo32hom4lnv32vO
 	 */	
 	function class_get_batch($batch_id = 0, $class_on = false) {
 		$this->check_key();

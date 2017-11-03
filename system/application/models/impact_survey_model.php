@@ -21,7 +21,12 @@ class Impact_survey_model extends Model {
     	$data['added_on'] = date('Y-m-d H:i:s');
 
         // Delete existing response if any.
-        $this->db->delete("IS_Response", array('is_event_id' => $data['is_event_id'], 'student_id' => $data['student_id'], 'question_id' => $data['question_id']));
+        $this->db->delete("IS_Response", array(
+            'is_event_id' => $data['is_event_id'], 
+            'student_id' => $data['student_id'], 
+            'question_id' => $data['question_id'],
+            'user_id' => $data['user_id']
+        ));
 
 		$this->db->insert("IS_Response", $data);
 		return $this->db->insert_id();
@@ -33,13 +38,14 @@ class Impact_survey_model extends Model {
 		return $result->result();
     }
 
-    function get_response($is_event_id, $student_id) {
-        $this->db->select('id,user_id,student_id,question_id,response')->from("IS_Response")->where('is_event_id', $is_event_id)->where('student_id', $student_id);
+    function get_response($is_event_id, $student_id, $user_id) {
+        $this->db->select('id,user_id,student_id,question_id,response')->from("IS_Response");
+        $this->db->where('is_event_id', $is_event_id)->where('student_id', $student_id)->where('user_id', $user_id);
         $result = $this->db->get();
         return $result->result();
     }
 
-    function get_active_event($level_id) {
+    function get_active_event($level_id, $user_id) {
     	$unentered_events = array();
 
     	// :TODO: Show only events that happen in the last month?
@@ -55,7 +61,7 @@ class Impact_survey_model extends Model {
     	foreach ($active_events as $e) {
     		// Find the count of student's data that we have for this survey.
     		$response_count = oneFormat($this->db->query("SELECT COUNT(id) FROM IS_Response 
-                    WHERE is_event_id={$e->id} AND student_id IN (" . implode(",", array_keys($students_in_level)) . ")")->row());
+                    WHERE is_event_id={$e->id} AND user_id=$user_id AND student_id IN (" . implode(",", array_keys($students_in_level)) . ")")->row());
 
     		// Do we have responses to all the qusetions for all their students? 
     		if($response_count < $possible_responses) {

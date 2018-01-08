@@ -233,8 +233,8 @@ class Api extends Controller {
 
 		$last_5_classes = array();
 		foreach ($substituted_in_last_5_classes as $key => $value) {
-			$last_5_classes[] = array(
-				'date'			=> $key, 
+			@$last_5_classes[] = array(
+				'date'			=> $key,
 				'total'			=> $total_in_last_5_classes[$key],
 				'substitution'	=> $substituted_in_last_5_classes[$key], 
 				'percentage'	=> intval(($substituted_in_last_5_classes[$key] / $total_in_last_5_classes[$key]) * 100)

@@ -295,9 +295,112 @@ class Cron extends Controller  {
 	function send_sms_reminder_to_update_madapp() {
 		// Find classes that was sceduled to happen 4 hours ago - 2 hour class + 2 hours buffer
 		// WHERE C.class_on BETWEEN DATE_SUB(NOW(), INTERVAL 5 HOUR) AND DATE_SUB(NOW(), INTERVAL 4 HOUR)
+		$this->load->database();
+		$this->load->library('sms');
+		date_default_timezone_set('Asia/Calcutta');
+		$this->debug = false;
+		$now = new DateTime("now");
+		$timestamp= time();
+		//On Monday, it resets the message_sent feild to 0
+		if(date('D', $timestamp) === 'Mon')
+			$this->db->update('UserMessage')->set('message_sent', 0 ); 
 		
-		// :TODO:
+		//extracting the phone number of TEACHERS who havent updated the child attendance in the next 5 hours, add center slot and class_time to this table.
+		$teacher_message_record=$this->db->query("SELECT  U.id as user_id, U.phone, U.name, 
+CASE
+WHEN B.day= 1 THEN "Sunday"
+WHEN B.day= 2 THEN "Monday"
+WHEN B.day= 3 THEN "Tuesday"
+WHEN B.day= 4 THEN "Wednesday"
+WHEN B.day= 5 THEN "Thursday"
+WHEN B.day= 6 THEN "Friday"
+ELSE "Saturday"
+end AS week_day, 
+B.class_time, C.name as center From User U
+INNER JOIN UserBatch S on U.id = S.user_id 
+INNER JOIN Batch B on S.batch_id = B.id
+INNER JOIN Center C on C.id = B.center_id  
+WHERE user_id IN (SELECT user_id FROM UserClass
+             								  WHERE class_id IN (SELECT id FROM Class 
+                            									 WHERE class_on < Date_Add(SYSDATE(),INTERVAL 5 HOUR) AND class_on >CURDATE() AND updated_by_teacher=0
+            								  					)
+                  );"
+                                );
+
+		// SELECT phone, user_id, name, center, week_day, class_time FROM UserMessage
+		// 						 WHERE user_id IN (SELECT user_id FROM UserClass
+  //            								  WHERE class_id IN (SELECT id FROM Class 
+  //                           									 WHERE class_on < Date_Add(SYSDATE(),INTERVAL 5 HOUR) AND class_on >CURDATE() AND updated_by_teacher=0
+  //           								  					)				
+  //                               			  )
+		foreach($teacher_message_record->result() as $teacher_message_record_row){
+			$name= $teacher_message_record_row->name;
+            $center= $teacher_message_record_row->center;
+            $slot= $teacher_message_record_row->week_day;
+            $time= $teacher_message_record_row->class_time;
+
+			//Message for teachers can be edited from here
+			$teacher_message = "Hi $name,\n\nThe student attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/makeadiff-madapp";
+			if($teacher_message_record_row->message_sent == 0){
+			
+					
+				if($this->debug == true){
+					echo "Message to $teacher_message_record_row->phone: $teacher_message<br>";
+				}
+				else{
+					$this->sms->send($teacher_message_record_row->phone,$teacher_message);
+					$this->db->update('UserMessage')->where('id',$teacher_message_record_row->user_id)->set('message_sent', 1 ); 
+				}
+				
+				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
+				
+			}
+		}
+		//extracting the phone number of MENTORS who havent updaed the teacher attendance in the next 5 hours.
+		$mentor_message_record=$this->db->query("SELECT  U.id as user_id, U.phone, U.name, 
+CASE
+WHEN B.day= 1 THEN "Sunday"
+WHEN B.day= 2 THEN "Monday"
+WHEN B.day= 3 THEN "Tuesday"
+WHEN B.day= 4 THEN "Wednesday"
+WHEN B.day= 5 THEN "Thursday"
+WHEN B.day= 6 THEN "Friday"
+ELSE "Saturday"
+end AS week_day, 
+B.class_time, C.name as center From User U
+INNER JOIN UserBatch S on U.id = S.user_id 
+INNER JOIN Batch B on S.batch_id = B.id
+INNER JOIN Center C on C.id = B.center_id;");
+
+
+		// SELECT phone,user_id, name, center, week_day, class_time, message_sent FROM UserMessage WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL 5 HOUR) AND class_on >CURDATE() ) )
+  //                               				
+		foreach($mentor_message_record->result() as $mentor_message_record_row){
+            $name= $mentor_message_record_row->name;
+            $center= $mentor_message_record_row->center;
+            $slot= $mentor_message_record_row->week_day;
+            $time= $mentor_message_record_row->class_time;
+            
+			//Message for MENTORS can be edited from here
+			$mentor_message = "Hi $name,\n\nThe teacher attendance for younr class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
+
+			if($mentor_message_record_row->message_sent == 0){
+				if($this->debug == true){
+					echo "Message to $mentor_message_record_row->phone: $mentor_message<br>";
+				}
+				else{//$mentor_message_record_row->phone
+					$this->sms->send('7042335885',$mentor_message);
+					$this->db->update('UserMessage')->where('id',$mentor_message_record_row->user_id)->set('message_sent', 1 );	
+				}
+
+				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
+				
+			}	
+		}
 	}
+
+		// :TODO:
+	
                
 }
 

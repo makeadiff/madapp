@@ -338,7 +338,7 @@ class Cron extends Controller  {
 
 			//Message for teachers can be edited from here
 			$teacher_message = "Hi $name,\n\nThe student attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/makeadiff-madapp";
-			if($teacher_message_record_row->message_sent == 0){
+			if(1){
 			
 					
 				if($this->debug == true){
@@ -383,7 +383,7 @@ class Cron extends Controller  {
 			//Message for MENTORS can be edited from here
 			$mentor_message = "Hi $name,\n\nThe teacher attendance for younr class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
 
-			if($mentor_message_record_row->message_sent == 0){
+			if(1){
 				if($this->debug == true){
 					echo "Message to $mentor_message_record_row->phone: $mentor_message<br>";
 				}

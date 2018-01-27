@@ -398,7 +398,7 @@ class Cron extends Controller  {
 		}
 	}
 
-	echo "hi";// :TODO:
+	// :TODO:
 	
                
 }

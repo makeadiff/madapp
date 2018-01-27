@@ -306,26 +306,23 @@ class Cron extends Controller  {
 			$this->db->update('UserMessage')->set('message_sent', 0 ); 
 		
 		//extracting the phone number of TEACHERS who havent updated the child attendance in the next 5 hours, add center slot and class_time to this table.
-		$teacher_message_record=$this->db->query("SELECT  U.id as user_id, U.phone, U.name, 
-CASE
-WHEN B.day= 1 THEN "Sunday"
-WHEN B.day= 2 THEN "Monday"
-WHEN B.day= 3 THEN "Tuesday"
-WHEN B.day= 4 THEN "Wednesday"
-WHEN B.day= 5 THEN "Thursday"
-WHEN B.day= 6 THEN "Friday"
-ELSE "Saturday"
-end AS week_day, 
-B.class_time, C.name as center From User U
-INNER JOIN UserBatch S on U.id = S.user_id 
-INNER JOIN Batch B on S.batch_id = B.id
-INNER JOIN Center C on C.id = B.center_id  
-WHERE user_id IN (SELECT user_id FROM UserClass
-             								  WHERE class_id IN (SELECT id FROM Class 
-                            									 WHERE class_on < Date_Add(SYSDATE(),INTERVAL 5 HOUR) AND class_on >CURDATE() AND updated_by_teacher=0
-            								  					)
-                  );"
-                                );
+		$teacher_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name, 
+														CASE 
+														WHEN B.day= 1 THEN 'Sunday' 
+														WHEN B.day= 2 THEN 'Monday'
+														WHEN B.day= 3 THEN 'Tuesday'
+														WHEN B.day= 4 THEN 'Wednesday' 
+														WHEN B.day= 5 THEN 'Thursday' 
+														WHEN B.day= 6 THEN 'Friday' 
+														ELSE 'Saturday' end AS week_day, 
+														B.class_time, C.name as center From 
+														User U INNER JOIN UserBatch S on U.id = S.user_id 
+														INNER JOIN Batch B on S.batch_id = B.id 
+														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN 
+														(SELECT user_id FROM UserClass WHERE class_id IN 
+														 (SELECT id FROM Class WHERE class_on < Date_Add(SYSDATE(),INTERVAL -5 HOUR) AND DATE(class_on) = CURDATE() AND class_on <= NOW() AND updated_by_teacher=0)
+														);"
+														                                );
 
 		// SELECT phone, user_id, name, center, week_day, class_time FROM UserMessage
 		// 						 WHERE user_id IN (SELECT user_id FROM UserClass
@@ -357,20 +354,22 @@ WHERE user_id IN (SELECT user_id FROM UserClass
 			}
 		}
 		//extracting the phone number of MENTORS who havent updaed the teacher attendance in the next 5 hours.
-		$mentor_message_record=$this->db->query("SELECT  U.id as user_id, U.phone, U.name, 
-CASE
-WHEN B.day= 1 THEN "Sunday"
-WHEN B.day= 2 THEN "Monday"
-WHEN B.day= 3 THEN "Tuesday"
-WHEN B.day= 4 THEN "Wednesday"
-WHEN B.day= 5 THEN "Thursday"
-WHEN B.day= 6 THEN "Friday"
-ELSE "Saturday"
-end AS week_day, 
-B.class_time, C.name as center From User U
-INNER JOIN UserBatch S on U.id = S.user_id 
-INNER JOIN Batch B on S.batch_id = B.id
-INNER JOIN Center C on C.id = B.center_id;");
+		$mentor_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name, 
+														CASE 
+														WHEN B.day= 1 THEN 'Sunday' 
+														WHEN B.day= 2 THEN 'Monday'
+														WHEN B.day= 3 THEN 'Tuesday'
+														WHEN B.day= 4 THEN 'Wednesday' 
+														WHEN B.day= 5 THEN 'Thursday' 
+														WHEN B.day= 6 THEN 'Friday' 
+														ELSE 'Saturday' end AS week_day, 
+														B.class_time, C.name as center From 
+														User U INNER JOIN UserBatch S on U.id = S.user_id 
+														INNER JOIN Batch B on S.batch_id = B.id 
+														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL -5 HOUR) AND class_on >CURDATE() AND class_on<NOW()) );
+														");
+
+
 
 
 		// SELECT phone,user_id, name, center, week_day, class_time, message_sent FROM UserMessage WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL 5 HOUR) AND class_on >CURDATE() ) )
@@ -399,7 +398,7 @@ INNER JOIN Center C on C.id = B.center_id;");
 		}
 	}
 
-		// :TODO:
+	echo "hi";// :TODO:
 	
                
 }

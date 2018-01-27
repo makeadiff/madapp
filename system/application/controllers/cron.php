@@ -386,7 +386,7 @@ class Cron extends Controller  {
 					echo "Message to $mentor_message_record_row->phone: $mentor_message<br>";
 				}
 				else{//$mentor_message_record_row->phone
-					$this->sms->send('7042335885',$mentor_message);
+					$this->sms->send($mentor_message_record_row->phone,$mentor_message);
 				}
 
 				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	

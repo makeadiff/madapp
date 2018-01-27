@@ -302,8 +302,6 @@ class Cron extends Controller  {
 		$now = new DateTime("now");
 		$timestamp= time();
 		//On Monday, it resets the message_sent feild to 0
-		if(date('D', $timestamp) === 'Mon')
-			$this->db->update('UserMessage')->set('message_sent', 0 ); 
 		
 		//extracting the phone number of TEACHERS who havent updated the child attendance in the next 5 hours, add center slot and class_time to this table.
 		$teacher_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name, 
@@ -346,7 +344,7 @@ class Cron extends Controller  {
 				}
 				else{
 					$this->sms->send($teacher_message_record_row->phone,$teacher_message);
-					$this->db->update('UserMessage')->where('id',$teacher_message_record_row->user_id)->set('message_sent', 1 ); 
+					
 				}
 				
 				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
@@ -389,7 +387,6 @@ class Cron extends Controller  {
 				}
 				else{//$mentor_message_record_row->phone
 					$this->sms->send('7042335885',$mentor_message);
-					$this->db->update('UserMessage')->where('id',$mentor_message_record_row->user_id)->set('message_sent', 1 );	
 				}
 
 				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	

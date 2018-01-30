@@ -967,6 +967,7 @@ class Users_model extends Model {
 		if(!empty($data['phone'])) $this->db->where('User.phone', $data['phone']);
 		if(!empty($data['email'])) $this->db->where('User.email', $data['email']);
 		if(!empty($data['left_on'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m") = ', date('Y-m', strtotime($data['left_on'])));
+		if(!empty($data['left_on_after'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m-%d") > ', date('Y-m-d', strtotime($data['left_on_after'])))->or_where("User.left_on = '0000-00-00'");
 		
 		if(!empty($data['user_group'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');

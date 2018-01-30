@@ -56,7 +56,8 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 		}
 		?><td nowrap='nowrap'><a href="<?php echo site_url('/user/view/'.$teacher['id']); ?>"<?php
 			if($teacher['user_type'] == 'let_go') echo ' class="let_go"';
-		?>><?php echo $teacher['name']; ?></a></td>
+		?>><?php if(!$teacher['name']) echo '[Volunteer Let Go]';
+				else echo $teacher['name']; ?></a></td>
 		<td nowrap='nowrap'><?php echo $teacher['credit']; ?></td>
 		
 		<?php

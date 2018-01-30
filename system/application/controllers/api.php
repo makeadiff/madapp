@@ -1112,20 +1112,40 @@ class Api extends Controller {
 
 	function is_save() {
 		$this->load->model('impact_survey_model');
+		$is_event_id = $this->input('is_event_id');
+		$question_id = $this->input('question_id');
+		$student_id = $this->input('student_id');
+		$user_id = $this->input('teacher_id');
 
 		$data = array(
-			'is_event_id' => $this->input('is_event_id'),
-			'question_id' => $this->input('question_id'),
+			'is_event_id' => $is_event_id,
+			'question_id' => $question_id,
 			'response' => $this->input('response'),
-			'student_id' => $this->input('student_id'),
-			'user_id' => $this->input('teacher_id')
+			'student_id' => $student_id,
+			'user_id' => $user_id
 		);
 
 		$user_response_id = $this->impact_survey_model->save_response($data);
 
+		// Find the last survey event
+		$last_is_event_id = $this->impact_survey_model->previous_event_id($is_event_id);
+
+		// Find this user's response for that survey for the same student. 
+		$last_responses = $this->impact_survey_model->get_response($last_is_event_id, $student_id, $user_id);
+		
+		// Return the data to client - so that it can be shown.
+		$previous_response_to_this_question = 0;
+		foreach ($last_responses as $response) {
+			if($question_id == $response->question_id) {
+				$previous_response_to_this_question = $response->response;
+				break;
+			}
+		}
+
 		$this->send(array(
-						'user_response_id' => $user_response_id,
-						'data' => $data,
+						'last_response' 	=> $previous_response_to_this_question,
+						'user_response_id'	=> $user_response_id,
+						'data'				=> $data,
 					));
 	}
 

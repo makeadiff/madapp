@@ -72,5 +72,12 @@ class Impact_survey_model extends Model {
     	return $unentered_events;
     }
 
+    function previous_event_id($current_event_id) {
+        $previous_event = $this->db->query("SELECT id, name FROM IS_Event WHERE id < $current_event_id ORDER BY id DESC LIMIT 0, 1")->row();
+
+        if($previous_event) return $previous_event->id;
+        return 0;
+    }
+
 }
 

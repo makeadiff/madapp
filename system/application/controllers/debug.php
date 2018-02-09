@@ -434,10 +434,11 @@ class Debug extends Controller {
 	}
 
 
-	function restore_assignment($batch_id) {
+	function restore_assignment($batch_id, $date = '') {
 		// Find the latest class for this batch.
-		$date = oneFormat($this->batch_model->db->query("SELECT class_on FROM Class WHERE batch_id=$batch_id ORDER BY class_on DESC LIMIT 0,1")->row());
-		$classes = $this->batch_model->db->query("SELECT * FROM Class WHERE class_on='$date' AND batch_id=$batch_id")->result();
+		if(!$date) $date = oneFormat($this->batch_model->db->query("SELECT class_on FROM Class WHERE batch_id=$batch_id ORDER BY class_on DESC LIMIT 0,1")->row());
+		$classes = $this->batch_model->db->query("SELECT * FROM Class WHERE DATE(class_on)=DATE('$date') AND batch_id=$batch_id")->result();
+		print "Found " . count($classes) . " classes on $date.<br />";
 		foreach($classes as $cls) {
 			$teachers = colFormat($this->batch_model->db->query("SELECT user_id FROM UserClass WHERE class_id={$cls->id}")->result());
 			$level_id = $cls->level_id;

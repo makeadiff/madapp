@@ -316,8 +316,9 @@ class Classes extends Controller {
 						$old_volunteers[$user_id] = array('batch_id' => $batch_id, 'level_id' => $level_id);
 					}
 
-					// Unset existing connection. We'll reset them later.
-					$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
+					if($show_only_batch == 0 or $show_only_batch == $batch_id) // If we are on a single batch view, reset just that batch.
+						// Unset existing connection. We'll reset them later.
+						$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
 				}
 			}
 
@@ -330,8 +331,8 @@ class Classes extends Controller {
 				if(isset($old_volunteers[$user_id]) and !empty($old_volunteers[$user_id]['batch_id']) and !empty($old_volunteers[$user_id]['level_id'])) {
 					// If the assignments have been changed/removed, we must delete the assignments for the future...
 					if(($old_volunteers[$user_id]['batch_id'] != $batch_id) or ($old_volunteers[$user_id]['level_id'] != $level_id))
-					// If someone removes a volunteer from a batch, make sure his future classes are deleted
-					$this->class_model->delete_future_classes($user_id, $old_volunteers[$user_id]['batch_id'], $old_volunteers[$user_id]['level_id']);
+						// If someone removes a volunteer from a batch, make sure his future classes are deleted
+						$this->class_model->delete_future_classes($user_id, $old_volunteers[$user_id]['batch_id'], $old_volunteers[$user_id]['level_id']);
 				}
 
 				if($batch_id and $level_id) {

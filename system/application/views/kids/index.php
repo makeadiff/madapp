@@ -54,6 +54,7 @@
 <table id="tableItems" class="clear data-table" cellpadding="0" cellspacing="0">
 <thead>
 <tr>
+    <th class="colID">ID</th>
 	<th class="colName left sortable">Name</th>
 	<th class="colStatus sortable">Sex</th>
     <th class="colStatus sortable">Birth Day</th>    
@@ -77,6 +78,7 @@ foreach($details as $row) {
 	if($count % 2) $shadeClass = 'odd';
 ?> 
 <tr class="<?php echo $shadeClass; ?>" id="group">
+    <td><?php echo $row->id ?></td>
     <td class="colName left"><?php echo $row->name; ?></td>
     <td><?php $the_sexes = array('m'=>'Male','f'=>'Female', 'u' => 'Unknown'); if($row->sex) echo $the_sexes[$row->sex]; ?></td>
     <td><?php if($row->birthday != '0000-00-00' and $row->birthday != '1970-01-01') echo date('dS M, Y', strtotime($row->birthday)); ?></td>

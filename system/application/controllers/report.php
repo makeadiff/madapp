@@ -114,9 +114,6 @@ class Report extends Controller {
 			foreach ($data as $user) {
 				$user_ids[] = intval($user->user_id);
 			}
-
-			$devcon_data = $this->hr_user_model->get_people_status($user_ids, $count_field);
-			$view_data += array('devcon'=>$devcon_data, "devcon_title"=>"Develomental Conversation Count");
 		}
 
 		$this->load->view('report/report', $view_data);

@@ -3,8 +3,8 @@
 <h1 class="title">MADApp</h1>
 <br />
 
-	<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/fellowship-signup/">
-			<img src="<?php echo base_url(); ?>images/flat_ui/rock-and-roll.png" width="64" alt="" /> <br>Apply for<br />Fellowship!</a></div>
+<!-- 	<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/fellowship-signup/">
+			<img src="<?php echo base_url(); ?>images/flat_ui/rock-and-roll.png" width="64" alt="" /> <br>Apply for<br />Fellowship!</a></div> -->
 
 	<?php if($this->user_auth->get_permission('user_index')) { ?>
 		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('user/view_users') ?>">

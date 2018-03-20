@@ -137,20 +137,23 @@ class Auth extends Controller {
 	{
 		$reset = $this->user_auth->find_reset_code($code);
 
-		if ($reset)
-		{  
+		if ($reset) {  
 			$password = $this->input->post('password');
 			if($password != $this->input->post('password_confirm')) {
 				$this->session->set_flashdata('message', 'Password and confirmation doesn\'t match - try again');
 				redirect('auth/reset_password/' . $code);
 				return;
 			}
+
 			if($password) {
 				$this->load->model('users_model');
+				$password_hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
+
 				$changed = $this->users_model->updateuser([
 					'rootId' => $reset->id, 
 					'password' => $password
 				]);
+				$this->user_auth->disable_reset_code($code);
 
 				$this->session->set_flashdata('success', "Password for {$reset->email} has been reset.");
 				redirect("auth/login", 'refresh');

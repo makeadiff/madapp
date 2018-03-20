@@ -376,7 +376,7 @@ class Users_model extends Model {
 		if(isset($data['password'])) 	{
 			$password = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 10]);
 			$user_array['password_hash'] = $password;
-			// $user_array['password_hash'] = $data['password'];
+			$user_array['password'] = $data['password'];
 		}
 		if(!empty($data['reason_for_leaving'])) $user_array['reason_for_leaving'] = $data['reason_for_leaving'];
 		

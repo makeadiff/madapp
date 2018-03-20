@@ -177,6 +177,10 @@ Class User_auth {
 		return $existing_code;
 	}
 
+	public function disable_reset_code($code) {
+		$this->ci->users_model->db->query("DELETE FROM UserData WHERE data='$code'");
+	}
+
 	/**
     * Function to forgotten_password
     * @author : Rabeesh

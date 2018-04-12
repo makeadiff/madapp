@@ -46,7 +46,9 @@ Class User_auth {
 			
 			if($remember_me) {
 				setcookie('email', $status['email'], time() + (10 * 365 * 24 * 60 * 60), '/'); // Expires in 10 years
-				setcookie('password_hash', md5($password . $this->hash), time() + (10 * 365 * 24 * 60 * 60), '/');
+				// setcookie('password_hash', md5($password . $this->hash), time() + (10 * 365 * 24 * 60 * 60), '/');
+				$token = $this->ci->users_model->setAuthToken($status['id']);
+				setcookie('auth_token', $token, time() + (10 * 365 * 24 * 60 * 60), '/');
 			}
 		}
 		
@@ -66,12 +68,12 @@ Class User_auth {
 
 			return $user_details['id'];
 
-		} elseif(get_cookie('email') and get_cookie('password_hash')) {
+		} elseif(get_cookie('email') and get_cookie('auth_token')) {
 			//This is a User who have enabled the 'Remember me' Option - so there is a cookie in the users system
 			$email = get_cookie('email');
-			$password_hash = get_cookie('password_hash');
+			$auth_token = get_cookie('auth_token');
 
-			$user_details = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE email='$email' AND MD5(CONCAT(password,'{$this->hash}'))='$password_hash'")->row();
+			$user_details = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE email='$email' AND auth_token='$auth_token'")->row();
 	
 			if($user_details) {
 				$status = $this->login($user_details->email, $user_details->password);

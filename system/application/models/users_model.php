@@ -61,6 +61,17 @@ class Users_model extends Model {
            return false;
         }
     }
+
+    function setAuthToken($user_id, $token = false) {
+    	if(!$token) {
+    		$length = 20; 
+    		// Create a random string.
+    		$token = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+    	}
+    	$this->db->where('id', $user_id)->update("User", ['auth_token' => $token]);
+
+    	return $token;
+    }
     
 	/**
     * Function to getgroup_details
@@ -973,7 +984,10 @@ class Users_model extends Model {
 		if(!empty($data['id'])) $this->db->where('User.id', $data['id']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
 		if(!empty($data['phone'])) $this->db->where('User.phone', $data['phone']);
-		if(!empty($data['email'])) $this->db->where('User.email', $data['email']);
+		if(!empty($data['email'])) {
+			$this->db->where('(User.email', "'" . $data['email'] . "'", false); // false prevents the fieldnames getting enclosed by ` backticks.
+			$this->db->or_where('User.mad_email', "'" . $data['email'] . "')", false);
+		}
 		if(!empty($data['left_on'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m") = ', date('Y-m', strtotime($data['left_on'])));
 		if(!empty($data['left_on_after'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m-%d") > ', date('Y-m-d', strtotime($data['left_on_after'])))->or_where("User.left_on = '0000-00-00'");
 		

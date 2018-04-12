@@ -33,6 +33,8 @@ class Users_model extends Model {
 	function login($data) {
       	$username= $data['username'];
         $password = $data['password'];
+        $auth_token = '';
+        if(isset($data['auth_token'])) $auth_token = $data['auth_token'];
 
 		//Check for personal email and mad email when logging in
 		$where = "(`email` = '$username' or `mad_email` = '$username' or `phone` = '$username')";
@@ -40,7 +42,14 @@ class Users_model extends Model {
 		$query = $this->db->where($where)->where('status','1')->where('user_type', 'volunteer')->get("User");
 		$user = $query->first_row();
 
-		$correct_password = password_verify($password, $user->password_hash);
+		$correct_password = false;
+		
+		if($password)
+			$correct_password = password_verify($password, $user->password_hash);
+		if($auth_token) {
+			$query = $this->db->where('id', $user->id)->where('auth_token', $auth_token)->get("User");
+			$correct_password = $query->first_row();
+		}
 
         if($user and $correct_password) {
    			$user_data['id']		= $user->id;

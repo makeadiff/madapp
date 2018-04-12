@@ -25,9 +25,10 @@ Class User_auth {
     * @return : type : [Array()]
     *
     **/
- 	 function login($username, $password, $remember_me=false) {
+ 	 function login($username, $password, $remember_me=false, $auth_token='') {
 		$data['username'] = $username;
 		$data['password'] = $password;
+		$data['auth_token']=$auth_token;
 		$status = $this->ci->users_model->login($data);
 
 		if($status) {
@@ -63,8 +64,8 @@ Class User_auth {
 			return $this->ci->session->userdata('id');
 
 		} elseif(!empty($_SESSION['user_id'])) {
-			$user_data = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE id=".$_SESSION['user_id'])->row();
-			$user_details = $this->login($user_data->email, $user_data->password);
+			$user_data = $this->ci->users_model->db->query("SELECT email,password,city_id,auth_token FROM User WHERE id=".$_SESSION['user_id'])->row();
+			$user_details = $this->login($user_data->email, '', false, $user_data->auth_token);
 
 			return $user_details['id'];
 
@@ -76,7 +77,7 @@ Class User_auth {
 			$user_details = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE email='$email' AND auth_token='$auth_token'")->row();
 	
 			if($user_details) {
-				$status = $this->login($user_details->email, $user_details->password);
+				$status = $this->login($user_details->email, $user_details->password, true, $auth_token);
 				return $status['id'];
 			}
 		}

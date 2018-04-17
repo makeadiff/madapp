@@ -165,13 +165,15 @@ class City_model extends Model {
 	function get_all($happenning = 1) {
 		if($happenning) $this->db->where('classes_happening',1);
 
-		$data = idNameFormat($this->db->order_by('name')->get('City')->result());
+		$city_data = $this->db->order_by('name')->get('City')->result();
+		$data = idNameFormat($city_data);
 
 		return $data;
 	}
 	
 	function get_unique_cities() {
 		$cities = $this->get_all();
+
 		foreach($cities as $id => $name) {
 			if(preg_match('/^(.+) (\d+)$/', $name, $matches)) {
 				if($matches[2] == '1') $cities[$id] = $matches[1];

@@ -31,6 +31,36 @@ class Debug extends Controller {
 		$this->year = get_year();
 	}
 
+	public function test()
+	{
+		// Send Data to Zoho
+		$response = load('https://creator.zoho.com/api/jithincn1/json/recruitment-management/form/Registration/record/add', [
+			'method'	=> 'post',
+			'post_data'    => [
+                'authtoken'    		=> '205aee93fdc5f6d2d61b5833625f86ce',
+                'scope'       		=> 'creatorapi',
+                'campaign_id'       => '23',
+                'Applicant_Name'    => 'Binny V A',
+                'Gender'            => 'Male',
+                'Date_of_Birth'     => '01-Jan-1984',
+                'Email'             => 'binnyva@gmail.com',
+                'Address_for_correspondence'    => " data['address']",
+                'Mobile_Number'     => "974658214",
+                'Occupation'        => "None",
+                'Reason_for_choosing_to_volunteer_at_MAD'    => "Making the world a better place",
+                'Unique_Applicant_ID'    => "1",
+            ]
+		]);
+
+		print $response;
+
+		$data = json_decode($response);
+
+		$zoho_user_id = $data->formname[1]->operation[1]->values->ID;
+
+		dump($data, $zoho_user_id);
+	}
+
 
 	/// An easy way to delete a lot of students in the given centers. USE WITH CARE!
 	function delete_students_in_center() {

@@ -20,6 +20,8 @@ foreach($details as $row) {
 	$name=$row['name'];
 	$city_id=$row['city_id'];
 	$user_id=$row['center_head_id'];
+	$medium = $row['medium'];
+	$preferred_gender = $row['preferred_gender'];
 	$class_starts_on = $row['class_starts_on'];
 }
 
@@ -33,14 +35,25 @@ foreach($details as $row) {
 </li>
 
 <li>
-<label for="user_id">Select Head:</label> 
+<label for="user_id">Shelter Operations Fellow:</label> 
 <?php echo form_dropdown('user_id', idNameFormat($all_users), $user_id); ?>
 </li>
 
 <li>
-<label for="user_id">Class Starts on: </label>
+<label for="class_starts_on">Class Starts on: </label>
 <input type="text" id="class_starts_on" name="class_starts_on" value="<?php echo $class_starts_on; ?>" />
 </li>
+
+<li>
+<label for="medium">Medium: </label>
+<?php echo form_dropdown('medium', ['vernacular' => 'Vernacular','english' => 'English'], $medium); ?>
+</li>
+
+<li>
+<label for="preferred_gender">Preferred Gender: </label>
+<?php echo form_dropdown('preferred_gender', ['male' => 'Male','female' => 'Female', 'any' => 'Any'], $preferred_gender); ?>
+</li>
+
 </ul>
 
 <ul>

@@ -86,6 +86,8 @@ class Center_model extends Model
 			'name' => $data['center'],
 			'center_head_id' => $data['user_id'],
 			'class_starts_on'=> $data['class_starts_on'],
+			'medium'	=> $data['medium'],
+			'preferred_gender' => $data['preferred_gender']
 		);
 						  
 	    $this->db->insert('Center',$data);  
@@ -121,10 +123,20 @@ class Center_model extends Model
 		if(!empty($data['center'])) $new_data['name'] = $data['center'];
 		if(!empty($data['user_id'])) $new_data['center_head_id'] = $data['user_id'];
 		if(!empty($data['class_starts_on'])) $new_data['class_starts_on'] = $data['class_starts_on'];
+		if(!empty($data['medium'])) $new_data['medium'] = $data['medium'];
+		if(!empty($data['preferred_gender'])) $new_data['preferred_gender'] = $data['preferred_gender'];
 
 		$this->db->where('id', $center_id);
 		$this->db->update('Center', $new_data);
 		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
+
+		if($affected_rows) { // If center has been update, 
+			if($new_data['medium'] != 'english')
+				$this->db->where('center_id', $center_id)->where('medium', 'english')->update('Level', ['medium' => $new_data['medium']]);
+
+			if($new_data['preferred_gender'] != 'any')
+				$this->db->where('center_id', $center_id)->where('preferred_gender', 'any')->update('Level', ['preferred_gender' => $new_data['preferred_gender']]);
+		}
 		
 		if(!empty($data['center_head_id']) and $data['center_head_id'] > 0) {
 			$this->load->model('users_model');

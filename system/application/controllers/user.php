@@ -356,12 +356,6 @@ class User extends Controller  {
 		elseif($email) $data['email'] = $email;
 		else $data['email'] = '';
 
-        // MAD Email selection
-        if($this->input->post('mad_email') !== false) $data['mad_email'] = $this->input->post('mad_email');
-        elseif($email) $data['mad_email'] = $email;
-        else $data['mad_email'] = '';
-
-
 		// Phone selection
 		if($this->input->post('phone') !== false) $data['phone'] = $this->input->post('phone');
 		elseif($phone) $data['phone'] = $phone;

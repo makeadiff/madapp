@@ -18,7 +18,7 @@ $user_id=$row['center_head_id'];
 <form id="formEditor" class="mainForm clear" action="<?=site_url('admin/update_Center')?>" method="post" style="width:500px;" >
 <fieldset class="clear" style="margin-top:70px;width:500px;margin-left:-30px;">
 			<div class="field clear" style="width:500px;">
-            <label for="selBulkActions">Select city:</label> 
+            <label for="selBulkActions">City:</label> 
             <select id="city" name="city" > 
             <option selected="selected" >- choose action -</option> 
 				<?php 
@@ -35,7 +35,7 @@ $user_id=$row['center_head_id'];
             </div>
             
             <div class="field clear" style="width:500px;">
-            <label for="selBulkActions">Select Head:</label> 
+            <label for="selBulkActions">Shelter Operations Fellow:</label> 
             <select id="user_id" name="user_id" > 
             <option selected="selected" >- choose action -</option> 
 				<?php 
@@ -52,9 +52,9 @@ $user_id=$row['center_head_id'];
             </div>
            
             <div class="field clear" style="width:500px;"> 
-                        <label for="txtName">Center : </label>
-                        <input id="center" name="center"  type="text" value="<?php echo $name; ?> " /> 
-                      
+                <label for="txtName">Center : </label>
+                <input id="center" name="center"  type="text" value="<?php echo $name; ?> " /> 
+              
             </div>
             
             <div class="field clear" style="width:550px;"> 

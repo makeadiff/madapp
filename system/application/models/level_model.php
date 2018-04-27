@@ -71,7 +71,8 @@ class Level_model extends Model {
 			array(
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
-				'medium_id'	=>	$data['medium_id'],
+				'medium'	=>	$data['medium'],
+				'preferred_gender'	=>	$data['preferred_gender'],
 				'grade'		=>  $data['grade'],
 				'year'		=> 	$this->year,
 				'project_id'=>	$this->project_id,
@@ -95,7 +96,8 @@ class Level_model extends Model {
 			array(
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
-				'medium_id'	=>	$data['medium_id'],
+				'medium'	=>	$data['medium'],
+				'preferred_gender'	=>	$data['preferred_gender'],
 				'grade'		=>  $data['grade'],
 			));
 			

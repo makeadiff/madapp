@@ -22,13 +22,24 @@ jQuery(document).ready(function () {
 </li>
 
 <li>
-<label for="user_id">Select Head:</label> 
+<label for="user_id">Shelter Operations Fellow:</label> 
 <?php echo form_dropdown('user_id', idNameFormat($all_users)); ?>
 </li>
 
 <li>
 <label for="user_id">Class Starts on: </label>
 <input type="text" id="class_starts_on" name="class_starts_on" />
+</li>
+
+
+<li>
+<label for="medium">Medium: </label>
+<?php echo form_dropdown('medium', ['vernacular' => 'Vernacular','english' => 'English']); ?>
+</li>
+
+<li>
+<label for="preferred_gender">Preferred Gender: </label>
+<?php echo form_dropdown('preferred_gender', ['male' => 'Male','female' => 'Female', 'any' => 'Any']); ?>
 </li>
 </ul>
 <ul>

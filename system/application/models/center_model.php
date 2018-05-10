@@ -131,10 +131,10 @@ class Center_model extends Model
 		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
 
 		if($affected_rows) { // If center has been update, 
-			if($new_data['medium'] != 'english')
+			if(isset($new_data['medium']) and $new_data['medium'] != 'english')
 				$this->db->where('center_id', $center_id)->where('medium', 'english')->update('Level', ['medium' => $new_data['medium']]);
 
-			if($new_data['preferred_gender'] != 'any')
+			if(isset($new_data['preferred_gender']) and $new_data['preferred_gender'] != 'any')
 				$this->db->where('center_id', $center_id)->where('preferred_gender', 'any')->update('Level', ['preferred_gender' => $new_data['preferred_gender']]);
 		}
 		

@@ -81,6 +81,11 @@ class Users_model extends Model {
 
     	return $token;
     }
+
+    public function setZohoId($user_id, $zoho_user_id)
+    {
+    	$this->db->where('id', $user_id)->update("User", ['zoho_user_id' => $zoho_user_id]);
+    }
     
 	/**
     * Function to getgroup_details
@@ -1198,6 +1203,7 @@ class Users_model extends Model {
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
 										'why_mad'	=> $data['why_mad'],
 										'source'	=> $data['source'],
+										'campaign'	=> $data['campaign'],
 										'user_type'	=> 'applicant',
 										'status'	=> '1',
 										'password_hash'  => $password_hash,

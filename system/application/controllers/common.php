@@ -1,4 +1,7 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+error_reporting(0);
+ini_set('display_errors', 0);
 /**
  * CodeIgniter
  *
@@ -31,8 +34,9 @@ class Common extends Controller {
     * @param  : []
     * @return : type : []
     **/
-    function register($user_id_encoded='')
+    function register($user_id_encoded='', $campaign='')
     {
+    	$data = [];
 		if(Navigation::isPost()){
 			$data = $_POST;
 			$data['phone'] = $_POST['phone'] = preg_replace('/[^+\d]/','', $_POST['phone']);
@@ -89,6 +93,34 @@ class Common extends Controller {
 
 				list($status, $message) = $this->user_auth->register($data);
 				if($status)	{
+					// Send Data to Zoho
+					$all_sexes = [
+						'm'		=> 'Male',
+						'f'		=> 'Female',
+						'u'		=> 'Other'
+					];
+					$response = load('https://creator.zoho.com/api/jithincn1/json/recruitment-management/form/Registration/record/add', [
+						'method'	=> 'post',
+						'post_data'	=> [
+							'authtoken'	=> '205aee93fdc5f6d2d61b5833625f86ce',
+							'scope'		=> 'creatorapi',
+							'campaign_id' 		=> $data['campaign'],
+							'Applicant_Name'	=> $data['name'],
+							'Gender'			=> $all_sexes[$data['sex']],
+							'Date_of_Birth'		=> date('d-M-Y', strtotime($data['birthday'])),
+							'Email'				=> $data['email'],
+							'Address_for_correspondence'	=> $data['address'],
+							'Mobile_Number'		=> $data['phone'],
+							'Occupation'		=> $data['job_status'],
+							'Reason_for_choosing_to_volunteer_at_MAD'	=> $data['why_mad'],
+							'Unique_Applicant_ID'	=> $status['id'],
+						]
+					]);
+					$zoho_response = json_decode($response);
+					$zoho_user_id = @$zoho_response->formname[1]->operation[1]->values->ID;
+
+					if($zoho_user_id) $this->users_model->setZohoId($status['id'], $zoho_user_id);
+
 					redirect('common/thank_you');
 				
 				} else {
@@ -109,10 +141,14 @@ class Common extends Controller {
 					$this->validation = $user_data;
 				}
 			}
+
+			$data['campaign'] = '';
+			if($campaign) $data['campaign'] = $campaign;
+
 			$data['cities'] = $this->city_model->get_unique_cities();
 			unset($data['cities'][26]); // remove Leadership
 			unset($data['cities'][28]); // remove Test 
-			//print_r($data['cities']);
+
 			$this->load->view('user/register_view', $data);
 		}
     }

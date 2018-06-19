@@ -6,18 +6,18 @@
 	<div class="alert">Fellowship Signups are out. Sign up for fellowships 2018 here</div>
 
 	<?php if($this->user_auth->get_permission('user_index')) { ?>
-		<div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('user/view_users') ?>">
+		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('user/view_users') ?>">
 			<img src="<?php echo base_url(); ?>images/flat_ui/volunteers.png" alt="" /> <br>Volunteer<br>Management</a></div>
 	<?php } ?>
 
 	<?php if($this->user_auth->get_permission('center_index')) { ?>
-		<div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('center/manageaddcenters') ?>">
+		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('center/manageaddcenters') ?>">
 			<img src="<?php echo base_url(); ?>images/flat_ui/centers.png" alt="" /> <br>Center<br>Management</a>
 		</div>
 	<?php } ?>
 
-	<?php if($this->user_auth->get_permission('classes_madsheet')) { ?>
-		<div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('classes/madsheet') ?>">
+	<?php if($this->user_auth->get_permission('classes_madsheet') and 0) { ?>
+		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('classes/madsheet') ?>">
 			<img src="<?php echo base_url(); ?>images/flat_ui/mad_sheet.png" alt="" /> <br>MAD Sheet</a>
 		</div>
 	<?php } ?>

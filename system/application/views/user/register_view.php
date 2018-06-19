@@ -105,6 +105,7 @@ jQuery(document).ready(function () {
             </div>
 
             <input type="hidden" name="password" value="pass" />
+            <input type="hidden" name="campaign" value="<?php if(!empty($campaign)) echo $campaign; ?>" />
             <input type="hidden" name="center" value="0" />
             <input type="hidden" name="position" value="" />
             <?php if(!empty($user_id)) { ?><input type="hidden" name="user_id" value="<?php echo $user_id ?>" /><?php } ?>

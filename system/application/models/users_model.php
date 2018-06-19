@@ -33,15 +33,25 @@ class Users_model extends Model {
 	function login($data) {
       	$username= $data['username'];
         $password = $data['password'];
-
+        $auth_token = '';
+        if(isset($data['auth_token'])) $auth_token = $data['auth_token'];
 
 		//Check for personal email and mad email when logging in
-		$where = "(`email` = '$username' or `mad_email` = '$username')";
+		$where = "(`email` = '$username' or `mad_email` = '$username' or `phone` = '$username')";
 		
-		$query = $this->db->where($where)->where('password',$password)->where('status','1')->where('user_type', 'volunteer')->get("User");
-        if($query->num_rows() > 0) {
-			$user = $query->first_row();
-			
+		$query = $this->db->where($where)->where('status','1')->where('user_type', 'volunteer')->get("User");
+		$user = $query->first_row();
+
+		$correct_password = false;
+		
+		if($password)
+			$correct_password = password_verify($password, $user->password_hash);
+		if($auth_token) {
+			$query = $this->db->where('id', $user->id)->where('auth_token', $auth_token)->get("User");
+			$correct_password = $query->first_row();
+		}
+
+        if($user and $correct_password) {
    			$user_data['id']		= $user->id;
 			$user_data['email']		= $user->email;
 			$user_data['name']		= $user->name;
@@ -50,7 +60,7 @@ class Users_model extends Model {
 			$user_data['credit']	= $user->credit;
 			$user_data['permissions']= $this->get_user_permissions($user->id);
 			$user_data['groups']	= $this->get_user_groups($user->id);
-			$all_positions = $this->get_user_groups_of_user($user->id, 'type');
+			$all_positions 			= $this->get_user_groups_of_user($user->id, 'type');
 			
 			$user_data['positions'] = array_unique(array_values($all_positions));
 
@@ -59,6 +69,22 @@ class Users_model extends Model {
         } else {
            return false;
         }
+    }
+
+    function setAuthToken($user_id, $token = false) {
+    	if(!$token) {
+    		$length = 20; 
+    		// Create a random string.
+    		$token = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+    	}
+    	$this->db->where('id', $user_id)->update("User", ['auth_token' => $token]);
+
+    	return $token;
+    }
+
+    public function setZohoId($user_id, $zoho_user_id)
+    {
+    	$this->db->where('id', $user_id)->update("User", ['zoho_user_id' => $zoho_user_id]);
     }
     
 	/**
@@ -250,12 +276,15 @@ class Users_model extends Model {
 			return false;
 		}
 
+		$password = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 10]);
+
 		$user_array = array(
 			'name'		=> $data['name'],
 			'email'		=> $data['email'],
 			'mad_email'	=> $data['mad_email'],
 			'phone'		=> $this->_correct_phone_number($data['phone']),
-			'password'	=> $data['password'],
+			// 'password'	=> $data['password'],
+			'password_hash' => $password,
 			'address'	=> $data['address'],
 			'sex'		=> $data['sex'],
 			'city_id'	=> $data['city'],
@@ -369,7 +398,11 @@ class Users_model extends Model {
 		if(!empty($data['project'])) 	$user_array['project_id'] 	= $data['project'];
 		if(!empty($data['joined_on'])) 	$user_array['joined_on'] 	= $data['joined_on'];
 		if(!empty($data['left_on'])) 	$user_array['left_on'] 		= $data['left_on'];
-		if(isset($data['password'])) 	$user_array['password'] 	= $data['password'];
+		if(isset($data['password'])) 	{
+			$password = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 10]);
+			$user_array['password_hash'] = $password;
+			$user_array['password'] = $data['password'];
+		}
 		if(!empty($data['reason_for_leaving'])) $user_array['reason_for_leaving'] = $data['reason_for_leaving'];
 		
 		if(!empty($data['type'])) {
@@ -965,7 +998,10 @@ class Users_model extends Model {
 		if(!empty($data['id'])) $this->db->where('User.id', $data['id']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);
 		if(!empty($data['phone'])) $this->db->where('User.phone', $data['phone']);
-		if(!empty($data['email'])) $this->db->where('User.email', $data['email']);
+		if(!empty($data['email'])) {
+			$this->db->where('(User.email', "'" . $data['email'] . "'", false); // false prevents the fieldnames getting enclosed by ` backticks.
+			$this->db->or_where('User.mad_email', "'" . $data['email'] . "')", false);
+		}
 		if(!empty($data['left_on'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m") = ', date('Y-m', strtotime($data['left_on'])));
 		if(!empty($data['left_on_after'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m-%d") > ', date('Y-m-d', strtotime($data['left_on_after'])))->or_where("User.left_on = '0000-00-00'");
 		
@@ -1126,7 +1162,7 @@ class Users_model extends Model {
 	
 	function user_registration($data)
 	{
-		if(!empty($data['user_id'])) {
+		if(!empty($data['user_id'])) { // Handle registeration of exisitng applicants(Adding more details, re-doing application, etc.)
 			$user_type = $this->db->query("SELECT user_type FROM User WHERE id=$data[user_id]")->row();
 			if($user_type->user_type != 'applicant') {
 				$this->session->set_flashdata('error', 'Only Applicants can use this form.');
@@ -1156,6 +1192,7 @@ class Users_model extends Model {
 
         $debug .= print_r($result, 1);
         if(!$result) {
+        	$password_hash = password_hash('pass', PASSWORD_BCRYPT, ['cost' => 10]); // 'pass' is the default password.
 			$userdetailsArray = array(	'name'		=> $data['name'],
 										'email'		=> $data['email'],
 										'phone'		=> $this->_correct_phone_number($data['phone']),
@@ -1166,19 +1203,20 @@ class Users_model extends Model {
 										'birthday'	=> date('Y-m-d', strtotime($data['birthday'])),
 										'why_mad'	=> $data['why_mad'],
 										'source'	=> $data['source'],
+										'campaign'	=> $data['campaign'],
 										'user_type'	=> 'applicant',
 										'status'	=> '1',
-										'password'  => 'pass',
+										'password_hash'  => $password_hash,
 										'joined_on' => date('Y-m-d H:i:s'),
 										'project_id'=> 1
-										);
+									);
 			$this->db->insert('User', $userdetailsArray);
 			$debug .= $this->db->last_query();
 			
 			$userdetailsArray['id'] = $this->db->insert_id();
 			
 			$debug .= print_r($userdetailsArray, 1);
-			$this->db->where('name','registeration_debug_info')->update('Setting', array('data'=>$debug));
+			// $this->db->where('name','registeration_debug_info')->update('Setting', array('data'=>$debug)); // :DEBUG:
 			
 			return array($userdetailsArray, "Success");
 		} else {

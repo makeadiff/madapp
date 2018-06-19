@@ -25,9 +25,10 @@ Class User_auth {
     * @return : type : [Array()]
     *
     **/
- 	 function login($username, $password, $remember_me=false) {
-		$data['username']=$username;
-		$data['password']=$password;
+ 	 function login($username, $password, $remember_me=false, $auth_token='') {
+		$data['username'] = $username;
+		$data['password'] = $password;
+		$data['auth_token']=$auth_token;
 		$status = $this->ci->users_model->login($data);
 
 		if($status) {
@@ -46,7 +47,9 @@ Class User_auth {
 			
 			if($remember_me) {
 				setcookie('email', $status['email'], time() + (10 * 365 * 24 * 60 * 60), '/'); // Expires in 10 years
-				setcookie('password_hash', md5($password . $this->hash), time() + (10 * 365 * 24 * 60 * 60), '/');
+				// setcookie('password_hash', md5($password . $this->hash), time() + (10 * 365 * 24 * 60 * 60), '/');
+				$token = $this->ci->users_model->setAuthToken($status['id']);
+				setcookie('auth_token', $token, time() + (10 * 365 * 24 * 60 * 60), '/');
 			}
 		}
 		
@@ -61,20 +64,20 @@ Class User_auth {
 			return $this->ci->session->userdata('id');
 
 		} elseif(!empty($_SESSION['user_id'])) {
-			$user_data = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE id=".$_SESSION['user_id'])->row();
-			$user_details = $this->login($user_data->email, $user_data->password);
+			$user_data = $this->ci->users_model->db->query("SELECT email,password,city_id,auth_token FROM User WHERE id=".$_SESSION['user_id'])->row();
+			$user_details = $this->login($user_data->email, '', false, $user_data->auth_token);
 
 			return $user_details['id'];
 
-		} elseif(get_cookie('email') and get_cookie('password_hash')) {
+		} elseif(get_cookie('email') and get_cookie('auth_token')) {
 			//This is a User who have enabled the 'Remember me' Option - so there is a cookie in the users system
 			$email = get_cookie('email');
-			$password_hash = get_cookie('password_hash');
+			$auth_token = get_cookie('auth_token');
 
-			$user_details = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE email='$email' AND MD5(CONCAT(password,'{$this->hash}'))='$password_hash'")->row();
+			$user_details = $this->ci->users_model->db->query("SELECT email,password,city_id FROM User WHERE email='$email' AND auth_token='$auth_token'")->row();
 	
 			if($user_details) {
-				$status = $this->login($user_details->email, $user_details->password);
+				$status = $this->login($user_details->email, $user_details->password, true, $auth_token);
 				return $status['id'];
 			}
 		}
@@ -166,8 +169,21 @@ Class User_auth {
 			
 		}
 		return array($status, $message);
-		
 	}
+
+	public function find_reset_code($code) {
+		// See if there is a existing change request.
+		$existing_code = $this->ci->users_model->db->query("SELECT U.id, U.email, U.phone,UD.data AS code FROM UserData UD
+													INNER JOIN User U ON U.id=UD.user_id
+													WHERE UD.value=1 AND UD.name='password_reset_code' AND UD.data='$code' AND U.status='1' AND U.user_type='volunteer'")->row();
+
+		return $existing_code;
+	}
+
+	public function disable_reset_code($code) {
+		$this->ci->users_model->db->query("DELETE FROM UserData WHERE data='$code'");
+	}
+
 	/**
     * Function to forgotten_password
     * @author : Rabeesh
@@ -175,19 +191,35 @@ Class User_auth {
     * @return : type : []
     *
     **/
-	public function forgotten_password($identity)    
+	public function send_password_reset_link($identity)    
 	{
 		$this->ci->load->model('users_model');
-		$user = $this->ci->users_model->db->query("SELECT * FROM User WHERE (email='$identity' OR mad_email='$identity') AND status='1' AND user_type='volunteer'")->row();
-		
+		$user = $this->ci->users_model->db->query("SELECT id,name,email,mad_email,phone FROM User 
+													WHERE (email='$identity' OR mad_email='$identity' OR phone='$identity') AND status='1' AND user_type='volunteer'")->row();
+
 		if($user) {
+			// See if there is a existing change request.
+			$existing_code = $this->ci->users_model->db->query("SELECT id,data,value FROM UserData 
+													WHERE user_id=$user->id AND value=1 AND name='password_reset_code'")->row();
+			if(!$existing_code) {
+				$code = md5(uniqid() . time());
+				$this->ci->users_model->db->insert('UserData', [
+					'user_id' 	=> $user->id,
+					'name'		=> 'password_reset_code',
+					'value'		=> 1,
+					'data'		=> $code,
+				]);
+			} else {
+				$code = $existing_code->data;
+			}
+
 			$password_message = <<<END
 Hey {$user->name},
 
-MADApp password reminder...
-Username: {$user->email}
-Password: {$user->password}
-Login At: http://makeadiff.in/madapp/
+Someone, hopefully you, has requested to change your MADApp Password. If you wish to do that, go to this URL and set the new password...
+http://makeadiff.in/madapp/index.php/auth/reset_password/{$code}
+
+If you did not make this request, just ignore this email.
 
 Thanks.
 --
@@ -199,7 +231,7 @@ END;
 			// $this->ci->email->subject('MADApp Password Reminder');
 			// $this->ci->email->message($password_message);
 			// $this->ci->email->send();
-			sendEmailWithAttachment($identity, 'MADApp Password Reminder', $password_message, "MADApp <madapp@makeadiff.in>");
+			sendEmailWithAttachment($identity, 'MADApp Password Reset', $password_message, "MADApp <madapp@makeadiff.in>");
 
 			return true;
 		}

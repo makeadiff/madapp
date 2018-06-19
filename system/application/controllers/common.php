@@ -102,11 +102,12 @@ class Common extends Controller {
 					$response = load('https://creator.zoho.com/api/jithincn1/json/recruitment-management/form/Registration/record/add', [
 						'method'	=> 'post',
 						'post_data'	=> [
-							'authtoken'	=> '205aee93fdc5f6d2d61b5833625f86ce',
-							'scope'		=> 'creatorapi',
+							'authtoken'			=> '205aee93fdc5f6d2d61b5833625f86ce',
+							'scope'				=> 'creatorapi',
 							'campaign_id' 		=> $data['campaign'],
 							'Applicant_Name'	=> $data['name'],
 							'Gender'			=> $all_sexes[$data['sex']],
+							'City'				=> $data['cities'][$data['city_id']],
 							'Date_of_Birth'		=> date('d-M-Y', strtotime($data['birthday'])),
 							'Email'				=> $data['email'],
 							'Address_for_correspondence'	=> $data['address'],

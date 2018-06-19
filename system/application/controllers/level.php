@@ -27,14 +27,11 @@ class Level extends Controller {
 		}
 		$all_levels = $this->model->get_all_levels_in_center($center_id);
 		$center_name = $this->model->db->where('id',$center_id)->get('Center')->row();
-		$all_mediums = idNameFormat($this->model->get_all_medium());
-		$all_mediums['0'] = 'None';
-		
+
 		$this->load->view('level/index', array(
 				'all_levels'	=> $all_levels,
 				'center_name'	=> $center_name->name, 
 				'center_id'		=> $center_id,
-				'all_mediums'	=> $all_mediums,
 			));
 	}
 	
@@ -45,7 +42,8 @@ class Level extends Controller {
 			$this->model->create(array(
 					'name'		=>	$this->input->post('name'),
 					'center_id'	=>	$this->input->post('center_id'),
-					'medium_id'	=>	$this->input->post('medium_id'),
+					'medium'	=>	$this->input->post('medium'),
+					'preferred_gender'	=>	$this->input->post('preferred_gender'),
 					'students'	=>	$this->input->post('students'),
 					'grade'		=>  $this->input->post('grade'),
 				));
@@ -60,21 +58,19 @@ class Level extends Controller {
 			
 			$center_name = $this->center_model->get_center_name($center_id);
 			$kids = idNameFormat($this->kids_model->getkids_name_incenter($center_id)->result());
-			$all_mediums = idNameFormat($this->model->get_all_medium());
-			$all_mediums['0'] = 'None';
 
 			$this->load->view('level/form.php', array(
 				'action'	=> 'Create',
 				'center_id'	=> $center_id,
 				'center_name'=>$center_name,
 				'title'		=> 'Class Section',
-				'all_mediums'=> $all_mediums,
 				'level'	=> array(
 					'id'		=> 0,
 					'name'		=> '',
 					'center_id'	=> $center_id,
 					'kids'		=> $kids,
-					'medium_id'	=> 0,
+					'medium'	=> 'english',
+					'preferred_gender' => 'any',
 					'selected_students'=> array(),
 					'grade'		=> 5,
 					)
@@ -89,9 +85,9 @@ class Level extends Controller {
 			$this->model->edit($level_id, array(
 				'name'		=>	$this->input->post('name'),
 				'center_id'	=>	$this->input->post('center_id'),
-				'medium_id'	=>	$this->input->post('medium_id'),
+				'medium'	=>	$this->input->post('medium'),
+				'preferred_gender'	=>	$this->input->post('preferred_gender'),
 				'students'	=>	$this->input->post('students'),
-				'subjects'	=>	$this->input->post('subjects'),
 				'grade'		=>  $this->input->post('grade')
 			));
 
@@ -105,8 +101,6 @@ class Level extends Controller {
 			$level = $this->db->where('id',$level_id)->get('Level')->row_array();
 			$center_id = $level['center_id'];
 			$center_name = $this->center_model->get_center_name($center_id);
-			$all_mediums = idNameFormat($this->model->get_all_medium());
-			$all_mediums['0'] = 'None';
 			
 			$all_kids = idNameFormat($this->kids_model->get_kids_name($center_id)->result());
 			$level['selected_students'] = array_keys($this->model->get_kids_in_level($level_id));
@@ -126,7 +120,6 @@ class Level extends Controller {
 				'title'		=> 'Class Section',
 				'center_id'	=> $center_id,
 				'center_name'=> $center_name,
-				'all_mediums'=> $all_mediums,
 				'level'		=> $level,
 				));
 		}
@@ -162,13 +155,9 @@ class Level extends Controller {
 		$agents = str_replace("on,","",$agents);
 		$agents = substr($agents,0,strlen($agents)-1);
 		$explode_agents_array = explode(",",trim($agents));
-		for($i=0;$i<sizeof($explode_agents_array);$i++)
-		   {
-				$agent_id = $explode_agents_array[$i];				
-				$this->kids_model->kids_level_update($agent_id,$level);
-		   }
-	
+		for($i=0;$i<sizeof($explode_agents_array);$i++) {
+			$agent_id = $explode_agents_array[$i];				
+			$this->kids_model->kids_level_update($agent_id,$level);
+	   }
 	}
-
-
 }

@@ -124,6 +124,7 @@ class Cron extends Controller  {
 					'data'	=> json_encode(array('class_starts_on' => $center->class_starts_on, 'center_head_id'=> $center->center_head_id))
 				));
 			$this->center_model->update_center(array('rootId' => $center->id, 'class_starts_on'=>'0000-00-00'));
+			
 			print "Archived {$center->name} - start date - {$center->class_starts_on}\n";
 		}
 	}
@@ -221,7 +222,12 @@ class Cron extends Controller  {
 		$current_year = get_year();
 		$last_year = $current_year - 1;
 
-		$this->user_model->db->query("INSERT INTO UserGroup(user_id, group_id, year) SELECT user_id, group_id, '$current_year' FROM UserGroup WHERE year='$last_year'");
+		// Copy all user groups other than fellow/strat ones. Those change every year.
+		$fellow_strat_group_ids = colFormat($this->users_model->db->query("SELECT id FROM `Group` WHERE (type='fellow' OR type='strat') AND group_type='normal' AND status='1'")->result());
+
+		$this->users_model->db->query("INSERT INTO UserGroup(user_id, group_id, year) 
+										SELECT user_id, group_id, '$current_year' FROM UserGroup 
+											WHERE year='$last_year' AND group_id NOT IN (" . implode(",", $fellow_strat_group_ids) . ")");
 	}
 
 	/// Copy over last year's Class structure. Rename all fancy name to ABC, and increment their grade by one. '7 Rainbow class' becomes '8 A'
@@ -238,7 +244,7 @@ class Cron extends Controller  {
 		foreach($batches as $b) {
 			$this->users_model->db->query("INSERT INTO Batch (day,class_time,batch_head_id,center_id,project_id, year, status) 
 				VALUES('{$b->day}','{$b->class_time}','{$b->batch_head_id}','{$b->center_id}','{$b->project_id}','$current_year', '{$b->status}')");
-			$batch_mapping[$b->id] = mysql_insert_id();
+			$batch_mapping[$b->id] = $this->users_model->db->insert_id();
 		}
 
 		// Copy over levels to the new year
@@ -266,7 +272,7 @@ class Cron extends Controller  {
 			$this->users_model->db->query("INSERT IGNORE INTO Level (name,grade,center_id,project_id, year, status) 
 				VALUES('$name','$new_grade','{$b->center_id}','{$b->project_id}','$current_year', '{$status}')");
 
-			$level_mapping[$b->id] = mysql_insert_id();
+			$level_mapping[$b->id] = $this->users_model->db->insert_id();
 		}
 
 		// Copy over StudentLevel table. Just relations.

@@ -5,6 +5,8 @@ if(!isset($level)) $level = array(
 	'name'		=> '',
 	'center_id'	=> 0,
 	'grade'		=> 5,
+	'medium'	=> 'english',
+	'preferred_gender' => 'any'
 	);
 
 ?>
@@ -31,23 +33,22 @@ if(!isset($level)) $level = array(
 <label for="selBulkActions">Kids:</label>
 <select id="students" name="students[]" multiple>
 <?php foreach($level['kids'] as $id=>$name) { ?>
-<option value="<?php echo $id; ?>" <?php 
-	if(in_array($id, $level['selected_students'])) echo 'selected'; 
-?>><?php echo $name; ?></option> 
+<option value="<?php echo $id; ?>" <?php if(in_array($id, $level['selected_students'])) echo 'selected'; ?>><?php echo $name; ?></option> 
 <?php } ?>
-</select>
+</select><br />
+
+<label>&nbsp;</label>
+<input id="students-filter" class="filter-multiselect" type="text" value="" target-field="students" placeholder="Filter..." />
 </li>
+
 <li>
-	<label>&nbsp;</label>
-	<input id="students-filter" class="filter-multiselect" type="text" value="" target-field="students" placeholder="Filter..." />
+<label for="medium">Medium: </label>
+<?php echo form_dropdown('medium', ['vernacular' => 'Vernacular','english' => 'English'], $level['medium']); ?>
 </li>
+
 <li>
-<label for="medium_id">Medium</label>
-<select name="medium_id">
-	<?php foreach($all_mediums as $medium_id => $medium_name) { ?>
-	<option value="<?php echo $medium_id ?>" <?php if($level['medium_id'] == $medium_id) echo 'selected'; ?>><?php echo $medium_name ?></option>
-	<?php } ?>
-</select>
+<label for="preferred_gender">Preferred Gender: </label>
+<?php echo form_dropdown('preferred_gender', ['male' => 'Male','female' => 'Female', 'any' => 'Any'], $level['preferred_gender']); ?>
 </li>
 
 <?php

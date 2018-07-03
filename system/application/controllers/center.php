@@ -18,6 +18,7 @@ class Center extends Controller  {
 		$this->load->model('batch_model');
 		$this->load->model('users_model');
 		$this->load->model('subject_model');
+		$this->load->model('comment_model');
     }
 
     /// Show all centers in the current city
@@ -141,6 +142,7 @@ class Center extends Controller  {
 		$issues = $this->center_model->find_issues($center_id);
 		$issues['center_name'] = $this->center_model->get_center_name($center_id);
 		$issues['center_id'] = $center_id;
+		$issues['comments'] = $this->comment_model->get_all('Center', $center_id);
 		$this->session->set_userdata("active_center", $center_id);
 		
 		$this->load->view('center/manage', $issues);

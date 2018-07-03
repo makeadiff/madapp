@@ -71,10 +71,16 @@ function showMessage($count, $message, $threshold=1) {
 <td><a href="<?php echo site_url('center/info/'.$center_id); ?>">View All Center Assignment</a></td>
 <td>&nbsp;</td></tr><?php } ?>
 
+<tr><td>10</td>
+<td><a href="<?php echo MAD_APPS_FOLDER ?>comments/?item=Center&item_id=<?php echo $center_id ?>">Comments</a></td>
+<td><?php echo count($comments) ?></td></tr>
 </table>
 
-<br /><br />
-<?php if($this->user_auth->get_permission('center_delete')) { ?><a href="<?php echo site_url("center/deletecenter/".$center_id); ?>" class="confirm delete with-icon">Delete <?php echo $center_name ?> Center</a><?php } ?>
+<!-- <br /><br />
+<?php if($this->user_auth->get_permission('center_delete')) { ?><a href="<?php echo site_url("center/deletecenter/".$center_id); ?>" class="confirm delete with-icon">Delete <?php echo $center_name ?> Center</a><?php } ?> -->
+
+<iframe src="<?php echo MAD_APPS_FOLDER ?>comments/?item=Center&item_id=<?php echo $center_id ?>&layout=0" style="width:100%;" height="400" title="Comments"></iframe>
+
 </div>
 
 <?php

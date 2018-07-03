@@ -23,7 +23,7 @@ class Center_model extends Model
 		$this->year = $this->ci->session->userdata('year');
     }
 	
-	 /**
+	/**
     * Function to getcenter_count
     * @author:Rabeesh
     * @param :[$data]

@@ -4,8 +4,8 @@ $this->load->view('layout/header',array('title'=>$title));
 
 function showMessage($count, $message, $threshold=1) {
 	if($message) $message = "($message)";
-	
-	if($count >= $threshold) echo '<span class="success with-icon" style="color:darkgreen;" title="'.$count.'/'.$threshold.'">Completed ' . $message . '</span>'; 
+
+	if($count >= $threshold) echo '<span class="success with-icon" style="color:darkgreen;" title="'.$count.'/'.$threshold.'">Completed ' . $message . '</span>';
 	else echo '<span class="error with-icon" title="'.$count.'/'.$threshold.'">Incomplete ' . $message . '</span>';
 }
 
@@ -42,32 +42,32 @@ function showMessage($count, $message, $threshold=1) {
 <td><?php showMessage($details['kids_count'], $details['kids_count'] . " Kids", 12); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('level_index')) { ?>
-<tr><td>4</td>	
+<tr><td>4</td>
 <td><a href="<?php echo site_url('level/index/center/'.$center_id); ?>">Manage Class Sections</a></td>
 <td><?php showMessage($details['level_count'], $details['level_count'] . " Class Sections"); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { // :PERMISSION_RESET: ?>
-<tr><td>5</td>	
+<tr><td>5</td>
 <td><a href="<?php echo site_url('classes/assign_students/'.$center_id); ?>">Assign Students to Class Sections</a></td>
 <td><?php showMessage($details['assigned_student_count'], $details['assigned_student_count'] . " students assigned.", $details['kids_count']); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { ?>
-<tr><td>6</td>	
+<tr><td>6</td>
 <td><a href="<?php echo site_url('batch/index/center/'.$center_id); ?>">Manage Batches</a></td>
 <td><?php showMessage($details['batch_count'], $details['batch_count'] . " Batchs"); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { // :PERMISSION_RESET: ?>
-<tr><td>7</td>	
+<tr><td>7</td>
 <td><a href="<?php echo site_url('batch/level_assignment/'.$center_id); ?>">Batch/Class Assignment</a></td>
 <td>&nbsp;</td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { // :PERMISSION_RESET: ?>
-<tr><td>8</td>	
+<tr><td>8</td>
 <td><a href="<?php echo site_url('classes/assign/'.$center_id); ?>">Assign Teachers</a></td>
 <td><?php showMessage($details['teacher_count'], $details['teacher_count'] . " volunteers assigned.", ($details['batch_count'] * $details['level_count'])); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { // :PERMISSION_RESET: ?>
-<tr><td>9</td>	
+<tr><td>9</td>
 <td><a href="<?php echo site_url('center/info/'.$center_id); ?>">View All Center Assignment</a></td>
 <td>&nbsp;</td></tr><?php } ?>
 

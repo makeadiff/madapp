@@ -23,6 +23,8 @@ foreach($details as $row) {
 	$medium = $row['medium'];
 	$preferred_gender = $row['preferred_gender'];
 	$class_starts_on = $row['class_starts_on'];
+	// $year_undertaking = $row['class_starts_on'];
+	// $address = $row['address'];
 }
 
 ?>
@@ -30,12 +32,22 @@ foreach($details as $row) {
 <fieldset class="clear">
 <ul class="form city-form">
 <li>
-<label for="center">Center : </label>
-<input id="center" name="center"  type="text" value="<?php echo $name; ?>" /> 
+<label for="center">Shelter Name </label>
+<input id="center" name="center"  type="text" value="<?php echo $name; ?>" />
 </li>
 
 <li>
-<label for="user_id">Shelter Operations Fellow:</label> 
+<label for="user_id">Shelter Type</label>
+<?php echo form_dropdown('user_id', idNameFormat($all_users), $user_id); ?>
+</li>
+
+<li>
+<label for="center">Shelter Address </label>
+<textarea id="center" name="address"  type="text"></textarea>
+</li>
+
+<li>
+<label for="user_id">Shelter Operations Fellow:</label>
 <?php echo form_dropdown('user_id', idNameFormat($all_users), $user_id); ?>
 </li>
 
@@ -47,6 +59,11 @@ foreach($details as $row) {
 <li>
 <label for="medium">Medium: </label>
 <?php echo form_dropdown('medium', ['vernacular' => 'Vernacular','english' => 'English'], $medium); ?>
+</li>
+
+<li>
+<label for="preferred_gender">Year of Undertaking </label>
+<input type="number" min="2006" id="year_undertaking" name="year_undertaking" value="<?php echo $class_starts_on; ?>" />
 </li>
 
 <li>

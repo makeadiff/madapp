@@ -45,10 +45,16 @@ class Batch extends Controller {
 			
 			$item_name = $level->name .  ' at ' . $this->center_model->get_center_name($center_id);
 		}
-		$user_data = $this->users_model->search_users(array());
+		$user_data = $this->users_model->search_users(['city_id' => $this->model->city_id]);
 		$all_users = idNameFormat($user_data);
 		
-		$this->load->view('batch/index', array('all_batches' => $all_batches,'center_name'=>$item_name, 'center_id'=>$center_id, 'all_users'=>$all_users));
+		$this->load->view('batch/index', [
+			'all_batches'	=> $all_batches,
+			'center_name'	=> $item_name, 
+			'center_id'		=> $center_id, 
+			'all_users'		=> $all_users,
+			'project_id'	=> $this->model->project_id
+		]);
 	}
 	
 	/**
@@ -169,7 +175,7 @@ class Batch extends Controller {
 					'batch_head_id' =>	$this->input->post('batch_head_id'),
 					'subjects'		=>  $this->input->post('subjects'),
 					'center_id'		=>	$this->input->post('center_id'),
-					'project_id'	=>	$this->input->post('project_id'),
+					'project_id'	=>	$this->model->project_id,
 				));
 
 		$batch_level_connection = $this->input->post('batch_level_connection');
@@ -219,7 +225,7 @@ class Batch extends Controller {
 				'class_time'	=>	$this->input->post('class_time'),
 				'batch_head_id' =>	$this->input->post('batch_head_id'),
 				'center_id'		=>	$this->input->post('center_id'),
-				'project_id'	=>	$this->input->post('project_id'),
+				'project_id'	=>	$this->model->project_id,
 			));
 
 		$batch_level_connection = $this->input->post('batch_level_connection');

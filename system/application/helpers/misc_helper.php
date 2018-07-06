@@ -161,6 +161,13 @@ function set_city_year($that) {
 		if(isset($that->batch_model)) $that->batch_model->year = $year;
 		if(isset($that->level_model)) $that->level_model->year = $year;
 		if(isset($that->users_model)) $that->users_model->year = $year;
+
+		$project_id = $that->input->post('project_id');
+		$that->session->set_userdata('project_id', $project_id);
+		if(isset($that->center_model)) $that->center_model->project_id = $project_id;
+		if(isset($that->batch_model)) $that->batch_model->project_id = $project_id;
+		if(isset($that->level_model)) $that->level_model->project_id = $project_id;
+		if(isset($that->users_model)) $that->users_model->project_id = $project_id;
 	}
 }
 

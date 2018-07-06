@@ -221,11 +221,16 @@ class Center_model extends Model
 		$batch_count = $this->db->query("SELECT COUNT(id) AS batch_count FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year}")->row()->batch_count;
 		$requirement_count = $this->db->query("SELECT SUM(UserBatch.requirement) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year}")->row()->count;
 		$kids_count = $this->db->query("SELECT COUNT(id) AS count FROM Student WHERE center_id=$center_id AND status='1'")->row()->count;
-		$total_volunteer_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id={$this->city_id} AND user_type='volunteer' AND project_id={$this->project_id} AND status='1'")->row()->count;
-		$assigned_student_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS student_count FROM Student S INNER JOIN StudentLevel SL ON SL.student_id=S.id INNER JOIN Level L ON L.id=SL.level_id WHERE L.year={$this->year} AND SL.level_id!=0 AND S.status='1' AND S.center_id=$center_id")->row()->student_count;
+		$total_volunteer_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id={$this->city_id} AND user_type='volunteer' AND status='1'")->row()->count;
+		$assigned_student_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS student_count FROM Student S 
+					INNER JOIN StudentLevel SL ON SL.student_id=S.id 
+					INNER JOIN Level L ON L.id=SL.level_id 
+					WHERE L.year={$this->year} AND SL.level_id!=0 AND S.status='1' AND S.center_id=$center_id AND L.project_id={$this->project_id}")->row()->student_count;
 
 		if($total_volunteer_count) {
-			$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year}")->row()->count;
+			$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch 
+					INNER JOIN Batch ON UserBatch.batch_id=Batch.id 
+					WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year} AND Batch.project_id={$this->project_id}")->row()->count;
 		}
 
 		if($assigned_student_count < $kids_count) {
@@ -251,7 +256,7 @@ class Center_model extends Model
 			$information[] = "Batch in this center: $batch_count";
 		}
 		
-		if($teacher_count < 30) {
+		if($teacher_count < 20) {
 			$information[] = "Too few teachers added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {
@@ -268,6 +273,11 @@ class Center_model extends Model
 			$problem_flag++;
 		} else {
 			$information[] = "Kids in this center: $kids_count";
+		}
+
+		if($total_volunteer_count < $level_count) {
+			$information[] = "Not enough teachers assigned.  <span class='warning icon'>!</span>";
+			$problem_flag++;
 		}
 		
 		$details = array(

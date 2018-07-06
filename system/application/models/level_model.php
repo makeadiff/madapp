@@ -29,12 +29,12 @@ class Level_model extends Model {
     }
     
 	function get_all_levels_in_center($center_id) {
-		return $this->db->where('center_id',$center_id)->where('year', $this->year)->where('status','1')->orderby('grade,name')->get('Level')->result();
+		return $this->db->where('center_id',$center_id)->where('year', $this->year)->where('project_id', $this->project_id)->where('status','1')->orderby('grade,name')->get('Level')->result();
 	}
 
 	function get_all_level_names_in_center($center_id) {
 		return $this->db->query("SELECT id,CONCAT(grade,' ',name) AS name FROM Level 
-				WHERE center_id='$center_id' AND year='{$this->year}' AND status='1' 
+				WHERE center_id='$center_id' AND year='{$this->year}' AND project_id='{$this->project_id}' AND status='1' 
 				ORDER BY grade,name")->result();
 	}
 
@@ -42,7 +42,7 @@ class Level_model extends Model {
 		// $center_id is not used anymore.
 		return $this->db->query("SELECT L.id,CONCAT(grade,' ',name) AS name FROM Level L
 				INNER JOIN BatchLevel BL ON L.id=BL.level_id
-				WHERE L.year='{$this->year}' AND status='1' AND BL.batch_id=$batch_id
+				WHERE L.year='{$this->year}' AND project_id='{$this->project_id}' AND status='1' AND BL.batch_id=$batch_id
 				ORDER BY grade,name")->result();
 	}
 	
@@ -67,8 +67,7 @@ class Level_model extends Model {
     }
     
     function create($data) {
-		$this->db->insert('Level', 
-			array(
+		$this->db->insert('Level', [
 				'name'		=>	$data['name'],
 				'center_id'	=>	$data['center_id'],
 				'medium'	=>	$data['medium'],
@@ -76,7 +75,7 @@ class Level_model extends Model {
 				'grade'		=>  $data['grade'],
 				'year'		=> 	$this->year,
 				'project_id'=>	$this->project_id,
-			));
+			]);
 			
 		$level_id = $this->db->insert_id();
 		$this->db->delete("StudentLevel", array('level_id'=>$level_id));
@@ -171,7 +170,7 @@ class Level_model extends Model {
 	function get_student_level_mapping($center_id) {
 		return $this->db->query("SELECT SL.student_id, SL.level_id FROM StudentLevel SL 
 				INNER JOIN Level L ON L.id=SL.level_id 
-				WHERE L.year={$this->year} AND L.center_id=$center_id AND L.status='1'")->result();
+				WHERE L.year={$this->year} AND L.project_id={$this->project_id} AND L.center_id=$center_id AND L.status='1'")->result();
 	}
 
 	function get_all_kids_in_level($level_id) {
@@ -179,12 +178,13 @@ class Level_model extends Model {
 	}
 
 	function get_all_kidsname_in_level($level_id) {
-		return $this->db->query("SELECT Student.id,Student.name FROM Student JOIN 
-			StudentLevel ON StudentLevel.student_id = Student.id WHERE StudentLevel.level_id=$level_id")->result();
+		return $this->db->query("SELECT Student.id,Student.name FROM Student 
+			JOIN StudentLevel ON StudentLevel.student_id = Student.id WHERE StudentLevel.level_id=$level_id")->result();
 	}
 	
 	function get_only_levels_in_center($center_id) {
-		return $this->db->query("SELECT DISTINCT(Level.id), Level.name FROM Level JOIN 
-			Exam_Event ON Level.id = Exam_Event.level_id WHERE Exam_Event.center_id=$center_id AND Level.year={$this->year}")->result();
+		return $this->db->query("SELECT DISTINCT(Level.id), Level.name FROM Level 
+			JOIN Exam_Event ON Level.id = Exam_Event.level_id 
+			WHERE Exam_Event.center_id=$center_id AND Level.year={$this->year} AND project_id='{$this->project_id}'")->result();
 	}
 }

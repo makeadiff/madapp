@@ -1,5 +1,6 @@
 <?php 
 $title = 'Batches in ' . $center_name;
+if($project_id == '2') $title .= ' (Fondational Program)';
 $this->load->view('layout/header', array('title'=>$title)); ?>
 
 <div id="head" class="clear">

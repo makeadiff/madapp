@@ -25,7 +25,7 @@ class Batch_model extends Model {
 	function get_batch_teachers($batch_id) {
 		return $this->db->query("SELECT User.id, User.name, UserBatch.level_id FROM User 
 					INNER JOIN UserBatch ON User.id=UserBatch.user_id 
-					WHERE UserBatch.batch_id={$batch_id} AND User.project_id={$this->project_id}")->result();
+					WHERE UserBatch.batch_id={$batch_id}")->result();
 	}
 	
 	function get_teachers_in_batch_and_level($batch_id, $level_id) {
@@ -34,10 +34,10 @@ class Batch_model extends Model {
 				INNER JOIN UserGroup ON UB.user_id=UserGroup.user_id 
 				WHERE batch_id={$batch_id} AND level_id={$level_id} AND UB.user_id!=0 AND UserGroup.group_id=9 AND B.year={$this->year}")->result());
 	}
-	function get_teachers_in_batch($batch_id) {
+	function get_teachers_in_batch($batch_id, $teacher_group_id = 9) {
 		return $this->db->query("SELECT UserBatch.user_id AS id FROM UserBatch 
 			INNER JOIN UserGroup ON UserBatch.user_id=UserGroup.user_id 
-				WHERE batch_id={$batch_id} AND UserBatch.user_id!=0 AND UserGroup.group_id=9")->result();
+				WHERE batch_id={$batch_id} AND UserBatch.user_id!=0 AND UserGroup.group_id=$teacher_group_id")->result();
 	}
 
 	function get_batches_connected_to_user($user_id) {
@@ -110,7 +110,7 @@ class Batch_model extends Model {
 	}
 	
 	function get_class_days($center_id) {
-		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND year={$this->year} ORDER BY day")->result();
+		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} ORDER BY day")->result();
 		$return = array();
 		foreach($class_days as $batch) {
 			$return[$batch->id] = $this->create_batch_name($batch->day, $batch->class_time);

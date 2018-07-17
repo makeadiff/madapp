@@ -240,8 +240,10 @@ class Api extends Controller {
 				'percentage'	=> intval(($substituted_in_last_5_classes[$key] / $total_in_last_5_classes[$key]) * 100)
 			);
 		}
+		$substitution_percentage = 0;
+		if($total_classes) $substitution_percentage = intval(($substituted_classes / $total_classes) * 100);
 		$substitution_info = array(
-					'substitution_percentage'	=> intval(($substituted_classes / $total_classes) * 100),
+					'substitution_percentage'	=> $substitution_percentage,
 					'last_5_classes'			=> $last_5_classes
 			);
 		
@@ -733,7 +735,8 @@ class Api extends Controller {
 
 		$this->send(array('success' => "Class Attendance Updated", 'status'=>'1'));
 	}
-
+	
+	///	/levels/{level_id}/students
 	function get_students() {
 		$this->check_key();
 

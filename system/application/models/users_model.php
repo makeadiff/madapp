@@ -987,13 +987,15 @@ class Users_model extends Model {
 		if(!isset($data['status'])) $data['status'] = 1;
 		if($data['status'] !== false) $this->db->where('User.status', $data['status']); // Setting status as 'false' gets you even the deleted users
 		
-		if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
-		elseif($this->project_id) $this->db->where('User.project_id', $this->project_id);
+		// if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
+		// elseif($this->project_id) $this->db->where('User.project_id', $this->project_id);
 		
 		if(isset($data['city_id']) and $data['city_id'] != 0) $this->db->where('User.city_id', $data['city_id']);
 		else if(!isset($data['city_id']) and $this->city_id) $this->db->where('User.city_id', $this->city_id);
 		
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
+		else if(!isset($data['user_type'])) $this->db->where('user_type', 'volunteer');
+
 		if(!empty($data['not_user_type'])) $this->db->where_not_in('user_type', $data['not_user_type']);
 		if(!empty($data['id'])) $this->db->where('User.id', $data['id']);
 		if(!empty($data['name'])) $this->db->like('User.name', $data['name']);

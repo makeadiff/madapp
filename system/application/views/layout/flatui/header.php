@@ -37,6 +37,7 @@
 
                 if($this->user_auth and $this->user_auth->get_permission('change_city')) {
                     $all_cities = idNameFormat($this->db->query("SELECT id, name FROM City ORDER BY name")->result());
+                    $all_projects = ['1' => 'Ed Support', '2' => 'Foundation'];
                     $url = site_url('dashboard/dashboard_view');
 
                     if($this->uri->segment(1) == 'kids') $url = site_url('kids/manageaddkids');
@@ -52,6 +53,7 @@
                         for($y = 2011; $y <= get_year(); $y++) $years[$y] = $y;
            
                         echo form_dropdown('city_id', $all_cities, $this->session->userdata('city_id'));
+                        echo form_dropdown('project_id', $all_projects, $this->session->userdata('project_id'));
                         echo form_dropdown('year', $years, $this->session->userdata('year'));
                         echo form_submit('action', "Change");
                         ?>

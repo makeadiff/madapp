@@ -293,7 +293,9 @@ class Classes extends Controller {
 		}
 
 		// Get all teachers in the current city.
-		$teacher_group_id = 9;
+		$teacher_group_id = 9; // Ed support teachers
+		if($this->level_model->project_id == 2) $teacher_group_id = 376; // Fondational teachers
+
 		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group' => $teacher_group_id)), array('id'));
 		// dump($all_users);
 		$assigned_teacher_count = 0;

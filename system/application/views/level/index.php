@@ -1,7 +1,9 @@
-<?php $this->load->view('layout/header', array('title'=>'Class Names in ' . $center_name)); ?>
+<?php 
+if($project_id == '2') $center_name .= ' (Fondational Program)';
+$this->load->view('layout/header', array('title'=>'Class Names in ' . $center_name)); ?>
 
 <div id="head" class="clear">
-<h1>Class Names in <?php echo $center_name ?></h1>
+<h1>Class Names in <?php echo $center_name; ?></h1>
 
 <div id="actions">
 <a  id="example" class="thickbox button green primary popup" href="<?php echo site_url('level/create/center/'.$center_id); ?>">Create New Class Name</a>

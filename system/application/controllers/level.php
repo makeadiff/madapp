@@ -32,6 +32,7 @@ class Level extends Controller {
 				'all_levels'	=> $all_levels,
 				'center_name'	=> $center_name->name, 
 				'center_id'		=> $center_id,
+				'project_id'	=> $this->model->project_id
 			));
 	}
 	

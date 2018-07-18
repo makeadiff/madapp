@@ -138,11 +138,14 @@ class Center extends Controller  {
 	
 	function manage($center_id) {
 		$this->user_auth->check_permission('center_edit');
-		
+		set_city_year($this); // Will take care of Program change.
+
 		$issues = $this->center_model->find_issues($center_id);
+		$issues['centers_with_fondation_program'] = [115,207,222,122,113,181,208,153,206,210,4, 	154,184]; // All the Shelters that has the fondation program. :HARDCODE:
 		$issues['center_name'] = $this->center_model->get_center_name($center_id);
 		$issues['center_id'] = $center_id;
 		$issues['comments'] = $this->comment_model->get_all('Center', $center_id);
+		$issues['all_projects'] = ['1' => 'Ed Support', '2' => 'Foundation'];
 		$this->session->set_userdata("active_center", $center_id);
 		
 		$this->load->view('center/manage', $issues);

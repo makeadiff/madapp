@@ -59,7 +59,7 @@ class Users_model extends Model {
 			$user_data['city_id']	= $user->city_id;
 			$user_data['credit']	= $user->credit;
 			$user_data['permissions']= $this->get_user_permissions($user->id);
-			$user_data['groups']	= $this->get_user_groups($user->id);
+			$user_data['groups']	= $this->get_user_groups_of_user($user->id);
 			$all_positions 			= $this->get_user_groups_of_user($user->id, 'type');
 			
 			$user_data['positions'] = array_unique(array_values($all_positions));

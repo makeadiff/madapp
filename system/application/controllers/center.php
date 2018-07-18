@@ -18,19 +18,21 @@ class Center extends Controller  {
 		$this->load->model('batch_model');
 		$this->load->model('users_model');
 		$this->load->model('subject_model');
+		$this->load->model('comment_model');
+    $this->load->model('project_model');
     }
 
     /// Show all centers in the current city
 	function index() {
 		$this->user_auth->check_permission('center_index');
-		
+
 		set_city_year($this);
-		
+
 		$data = array(
 			'title' 	=> 'Manage Centers',
 			'details'	=> $this->center_model->get_all_info(),
 		);
-		
+
 		$this->load->view('layout/header',$data);
 		$this->load->view('center/index',$data);
 		$this->load->view('layout/footer');
@@ -59,7 +61,7 @@ class Center extends Controller  {
 		$data['center']=$_REQUEST['center'];
 		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
 		$returnFlag= $this->center_model->add_center($data);
-	
+
 		if($returnFlag) {
 			$this->session->set_flashdata('success', 'The Center has been added successfully');
 			redirect('center/manageaddcenters');
@@ -67,9 +69,9 @@ class Center extends Controller  {
 			$this->session->set_flashdata('error', 'Insertion Failed.');
 			redirect('center/manageaddcenters');
 		}
-	
+
 	}
-	
+
 	/**
     *
     * Function to popupEdit_center
@@ -83,9 +85,11 @@ class Center extends Controller  {
 		$this->user_auth->check_permission('center_edit');
 		$data['details']= $this->center_model->edit_center($center_id);
 		$data['all_users']= $this->users_model->get_users_in_city();
+    $data['center_types'] = $this->center_model->center_type();
+    $data['programmes'] = $this->project_model->get_all_projects();
 		$this->load->view('center/popups/center_edit_view',$data);
 	}
-	
+
 	/**
     *
     * Function to update_Center
@@ -101,21 +105,31 @@ class Center extends Controller  {
 		$data['user_id']= $_REQUEST['user_id'];
 		$data['center']= $_REQUEST['center'];
 		$data['medium'] = $_REQUEST['medium'];
+    $data['year_undertaking'] = $_REQUEST['year_undertaking'];
+    $data['type'] = $_REQUEST['shelter_type'];
 		$data['preferred_gender'] = $_REQUEST['preferred_gender'];
 		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
+    $data['address'] = $_REQUEST['address'];
+    $data['programmes'] = $_REQUEST['programmes'];
+    $data['authority_id'] = $_REQUEST['authority_id'];
+
+    $data['sa_name'] = $_REQUEST['sa_name'];
+    $data['sa_email'] = $_REQUEST['sa_email'];
+    $data['sa_phone'] = $_REQUEST['sa_phone'];
+
 		$returnFlag= $this->center_model->update_center($data);
-		
+
 		if($returnFlag == true) {
 			$this->session->set_flashdata('success', 'The Center has been updated successfully');
-			redirect('center/manage/'.$data['rootId']);		  
+			redirect('center/manage/'.$data['rootId']);
 		} else {
 			$this->session->set_flashdata('error', 'The Center updation failed.');
-			redirect('center/manage/'.$data['rootId']);	  
+			redirect('center/manage/'.$data['rootId']);
 		}
-	
+
 	}
-	
-	
+
+
 	/**
     *
     * Function to ajax_deletecenter
@@ -127,22 +141,23 @@ class Center extends Controller  {
 	function deletecenter($center_id)
 	{
 		$this->user_auth->check_permission('center_delete');
-				
+
 		if($this->center_model->delete_center($center_id)) $this->session->set_flashdata("success", "Center deleted");
 		else $this->session->set_flashdata("error", "Error deleting center.");
-		
+
 		redirect("center/manageaddcenters");
 	}
-	
-	
+
+
 	function manage($center_id) {
 		$this->user_auth->check_permission('center_edit');
-		
+
 		$issues = $this->center_model->find_issues($center_id);
 		$issues['center_name'] = $this->center_model->get_center_name($center_id);
 		$issues['center_id'] = $center_id;
+		$issues['comments'] = $this->comment_model->get_all('Center', $center_id);
 		$this->session->set_userdata("active_center", $center_id);
-		
+
 		$this->load->view('center/manage', $issues);
 	}
 

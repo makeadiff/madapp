@@ -14,18 +14,27 @@ jQuery(document).ready(function () {
 
 <h2>Edit Center</h2>
 <?php
+
 $details=$details->result_array();
+
 foreach($details as $row) {
 	$root_id=$row['id'];
 	$name=$row['name'];
 	$city_id=$row['city_id'];
 	$user_id=$row['center_head_id'];
 	$medium = $row['medium'];
+	$authority_id = $row['authority_id'];
+	$type = $row['type'];
 	$preferred_gender = $row['preferred_gender'];
 	$class_starts_on = $row['class_starts_on'];
+	$year_undertaking = $row['year_undertaking'];
+	$shelter_authority_name = '';
+	$shelter_authority_email = '';
 	// $year_undertaking = $row['class_starts_on'];
 	// $address = $row['address'];
 }
+
+
 
 ?>
 <form id="formEditor" class="mainForm clear" action="<?php echo site_url('center/update_Center')?>" method="post" style="width:500px;"  onsubmit="return validate();">
@@ -38,17 +47,48 @@ foreach($details as $row) {
 
 <li>
 <label for="user_id">Shelter Type</label>
-<?php echo form_dropdown('user_id', idNameFormat($all_users), $user_id); ?>
+<?php echo form_dropdown('shelter_type', $center_types, $type); ?>
 </li>
 
 <li>
 <label for="center">Shelter Address </label>
-<textarea id="center" name="address"  type="text"></textarea>
+<textarea id="center" name="address"  type="text" required></textarea>
 </li>
+
+<li>
+<label for="center">Shelter Contact </label>
+<input id="shelter_contact" name="shelter_contact"  type="text" value="<?php echo $name; ?>" />
+</li>
+
 
 <li>
 <label for="user_id">Shelter Operations Fellow:</label>
 <?php echo form_dropdown('user_id', idNameFormat($all_users), $user_id); ?>
+</li>
+
+<li>
+	<hr class="hr-light">
+</li>
+
+<input type="hidden" name="authority_id" value="<?php echo $authority_id ?>" />
+
+<li>
+<label for="user_id">Shelter Authority Name:</label>
+<input type="text" id="sa_name" name="sa_name" value="<?php echo $shelter_authority_name; ?>" />
+</li>
+
+<li>
+<label for="user_id">Shelter Authority Email:</label>
+<input type="text" id="sa_email" name="sa_email" value="<?php echo $shelter_authority_email; ?>" />
+</li>
+
+<li>
+<label for="user_id">Shelter Authority Phone:</label>
+<input type="text" id="sa_email" name="sa_email" value="<?php echo $shelter_authority_email; ?>" />
+</li>
+
+<li>
+	<hr class="hr-light">
 </li>
 
 <li>
@@ -57,13 +97,20 @@ foreach($details as $row) {
 </li>
 
 <li>
-<label for="medium">Medium: </label>
+<label for="class_starts_on">Programmes in Shelter:</label>
+<?php foreach ($programmes as $key => $value): ?>
+		<label class="right" for="prog_<?php echo $key ?>"><input id="prog_<?php echo $key ?>" name="programmes[]" type="checkbox" value="<?php echo $key ?>"> <?php echo $value; ?>  </label> <br>
+<?php endforeach; ?>
+</li>
+
+<li>
+<label for="medium">Medium of Instruction: </label>
 <?php echo form_dropdown('medium', ['vernacular' => 'Vernacular','english' => 'English'], $medium); ?>
 </li>
 
 <li>
 <label for="preferred_gender">Year of Undertaking </label>
-<input type="number" min="2006" id="year_undertaking" name="year_undertaking" value="<?php echo $class_starts_on; ?>" />
+<input type="number" min="2006" id="year_undertaking" name="year_undertaking" value="<?php echo $year_undertaking; ?>" />
 </li>
 
 <li>

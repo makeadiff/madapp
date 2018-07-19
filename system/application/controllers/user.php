@@ -325,7 +325,7 @@ class User extends Controller  {
 	function view_users($city_id='', $user_groups=0, $name=0,$user_type='volunteer', $search_id=0, $email=0, $phone=0, $current_page=1) {
 
 		$this->user_auth->check_permission('user_index');
-		set_city_year($this);
+		if($this->input->post('action') == 'Change') set_city_year($this);
 		
 		$data = array('title'=>'Manage Volunteers');
 		

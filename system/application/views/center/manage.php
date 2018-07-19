@@ -43,7 +43,7 @@ if($this->user_auth->get_permission('center_edit')) { ?>
 <td><a href="<?php echo site_url('kids/index/'.$center_id); ?>">Manage Kids</a></td>
 <td><?php showMessage($details['kids_count'], $details['kids_count'] . " Kids", 12); ?></td></tr><?php } ?>
 
-<?php if($this->user_auth->get_permission('batch_index') and in_array($center_id, $centers_with_fondation_program)) { // :PERMISSION_RESET: ?>
+<?php if($this->user_auth->get_permission('batch_index') and in_array($center_id, $centers_with_foundation_program)) { // :PERMISSION_RESET: ?>
 <tr><td><?php echo $row++; ?></td>
 <td>Select Program</td>
 <td><?php 

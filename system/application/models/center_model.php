@@ -165,9 +165,6 @@ class Center_model extends Model
     }
 
 
-
-
-
 		$new_data = array();
 		if(!empty($data['center'])) $new_data['name'] = $data['center'];
 		if(!empty($data['user_id'])) $new_data['center_head_id'] = $data['user_id'];
@@ -176,6 +173,17 @@ class Center_model extends Model
 		if(!empty($data['preferred_gender'])) $new_data['preferred_gender'] = $data['preferred_gender'];
     if(!empty($data['year_undertaking'])) $new_data['year_undertaking'] = $data['year_undertaking'];
     if(!empty($data['type'])) $new_data['type'] = $data['type'];
+
+    //Updating Shelter Address
+    if(!empty($data['address'])){
+      $address = $data['type'];
+      $check_addr_q = 'SELECT value FROM CenterData
+                        WHERE name="address"
+                        AND center_id = '.$center_id.'';
+      $check_addr = $this->db->query($check_addr_q);
+
+      // dump($check_addr);
+    }
 
 
 		$this->db->where('id', $center_id);

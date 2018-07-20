@@ -97,7 +97,7 @@ foreach($details as $row) {
 </li>
 
 <li>
-<label for="class_starts_on">Programmes in Shelter:</label>
+Programmes in <br> Shelter: <br/>
 <?php foreach ($programmes as $key => $value): ?>
 		<label class="right" for="prog_<?php echo $key ?>"><input id="prog_<?php echo $key ?>" name="programmes[]" type="checkbox" value="<?php echo $key ?>"> <?php echo $value; ?>  </label> <br>
 <?php endforeach; ?>

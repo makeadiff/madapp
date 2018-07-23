@@ -1,4 +1,4 @@
-\<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * CodeIgniter
  * An open source application development framework for PHP 4.3.2 or newer

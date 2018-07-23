@@ -28,7 +28,7 @@ class Class_model extends Model {
 		$classes_taught_by_user = idNameFormat($this->db->query("SELECT C.id, C.class_on AS name FROM Class C 
 					INNER JOIN UserClass UC ON UC.class_id = C.id
 					INNER JOIN Level L ON L.id=C.level_id
-					WHERE UC.user_id=$user_id AND L.year=2017")->result());
+					WHERE UC.user_id=$user_id AND L.year={$this->year}")->result());
 		$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
 													. implode(",", array_keys($classes_taught_by_user)) . ")")->result());
 		$classes_unmarked_ids = array_diff(array_keys($classes_taught_by_user), $classes_marked);
@@ -44,7 +44,8 @@ class Class_model extends Model {
 	function get_classes_where_student_data_is_not_updated_in_batch($batch_id) {
 		$classes_taught_by_user = idNameFormat($this->db->query("SELECT C.id, C.class_on AS name FROM Class C 
 					INNER JOIN Level L ON L.id=C.level_id
-					WHERE C.batch_id=$batch_id AND L.year=2017")->result());
+					WHERE C.batch_id=$batch_id AND L.year={$this->year}")->result());
+
 		$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
 													. implode(",", array_keys($classes_taught_by_user)) . ")")->result());
 		$classes_unmarked_ids = array_diff(array_keys($classes_taught_by_user), $classes_marked);

@@ -240,8 +240,10 @@ class Api extends Controller {
 				'percentage'	=> intval(($substituted_in_last_5_classes[$key] / $total_in_last_5_classes[$key]) * 100)
 			);
 		}
+		$substitution_percentage = 0;
+		if($total_classes) $substitution_percentage = intval(($substituted_classes / $total_classes) * 100);
 		$substitution_info = array(
-					'substitution_percentage'	=> intval(($substituted_classes / $total_classes) * 100),
+					'substitution_percentage'	=> $substitution_percentage,
 					'last_5_classes'			=> $last_5_classes
 			);
 		
@@ -287,6 +289,10 @@ class Api extends Controller {
 		$mentor = "0";
 		if($connections['mentor_at']) $mentor = "1";
 
+		$project_id = 1;
+		$foundation_program_teacher_group_id = 376;
+		if(isset($status['groups'][$foundation_program_teacher_group_id])) $project_id = 2;
+
 		$this->send(array(
 			'user_id'	=> $status['id'],
 			'key'		=> $this->key,
@@ -298,6 +304,7 @@ class Api extends Controller {
 			'connections'=>$connections,
 			'groups'	=> array_values($status['groups']),
 			'positions' => $status['positions'],
+			'project_id'=> $project_id
 		));
 	}
 
@@ -733,7 +740,8 @@ class Api extends Controller {
 
 		$this->send(array('success' => "Class Attendance Updated", 'status'=>'1'));
 	}
-
+	
+	///	/levels/{level_id}/students
 	function get_students() {
 		$this->check_key();
 

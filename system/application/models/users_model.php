@@ -2,7 +2,7 @@
 /**
  * CodeIgniter
  * An open source application development framework for PHP 4.3.2 or newer
- * 
+ *
  * @package		MadApp
  * @author		Rabeesh
  * @copyright	Copyright (c) 2008 - 2010, OrisysIndia, LLP.
@@ -23,10 +23,10 @@ class Users_model extends Model {
 
         $this->load->model('Class_model','class_model');
     }
-    
+
     /**
     * Function to login
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
@@ -38,12 +38,12 @@ class Users_model extends Model {
 
 		//Check for personal email and mad email when logging in
 		$where = "(`email` = '$username' or `mad_email` = '$username' or `phone` = '$username')";
-		
+
 		$query = $this->db->where($where)->where('status','1')->where('user_type', 'volunteer')->get("User");
 		$user = $query->first_row();
 
 		$correct_password = false;
-		
+
 		if($password)
 			$correct_password = password_verify($password, $user->password_hash);
 		if($auth_token) {
@@ -59,13 +59,13 @@ class Users_model extends Model {
 			$user_data['city_id']	= $user->city_id;
 			$user_data['credit']	= $user->credit;
 			$user_data['permissions']= $this->get_user_permissions($user->id);
-			$user_data['groups']	= $this->get_user_groups($user->id);
+			$user_data['groups']	= $this->get_user_groups_of_user($user->id);
 			$all_positions 			= $this->get_user_groups_of_user($user->id, 'type');
-			
+
 			$user_data['positions'] = array_unique(array_values($all_positions));
 
             return $user_data;
-        
+
         } else {
            return false;
         }
@@ -73,7 +73,7 @@ class Users_model extends Model {
 
     function setAuthToken($user_id, $token = false) {
     	if(!$token) {
-    		$length = 20; 
+    		$length = 20;
     		// Create a random string.
     		$token = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
     	}
@@ -86,10 +86,10 @@ class Users_model extends Model {
     {
     	$this->db->where('id', $user_id)->update("User", ['zoho_user_id' => $zoho_user_id]);
     }
-    
+
 	/**
     * Function to getgroup_details
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Array()]
     **/
@@ -98,7 +98,7 @@ class Users_model extends Model {
 		$group_type = "";
 		if(!$show_hirachy_groups) $group_type = " AND group_type='normal'";
 
-		$data = $this->db->query("SELECT * FROM `Group` WHERE status='1' $group_type 
+		$data = $this->db->query("SELECT * FROM `Group` WHERE status='1' $group_type
 			ORDER BY type='national' DESC,type='strat' DESC,type='fellow' DESC,type='volunteer' DESC, name");
 
 		return $data;
@@ -115,10 +115,10 @@ class Users_model extends Model {
 
 		return $this->db->order_by('type','name')->get()->result();
 	}
-	
+
 	/**
     * Function to add_group_name
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
@@ -130,7 +130,7 @@ class Users_model extends Model {
 	}
 	/**
     * Function to add_group_permission
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
 	* @return: type: [Boolean,]
     **/
@@ -144,11 +144,11 @@ class Users_model extends Model {
 				$this->db->insert('GroupPermission');
 			}
 		return ($this->db->affected_rows() > 0) ? true : false;
-		
+
 	}
 	/**
     * Function to edit_group
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [ Array()]
     **/
@@ -162,7 +162,7 @@ class Users_model extends Model {
 	}
 	/**
     * Function to update_group
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
@@ -175,7 +175,7 @@ class Users_model extends Model {
 	}
 	/**
     * Function to update_permission
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean,]
     **/
@@ -183,7 +183,7 @@ class Users_model extends Model {
 	{
 		$this->db->where('group_id',$group_id);
 		$this->db->delete('GroupPermission');
-		
+
 		$count=count($permission);
 		for($j=0;$j<$count;$j++) {
 			$data = array('group_id'=> $group_id, 'permission_id'=>$permission[$j]);
@@ -195,7 +195,7 @@ class Users_model extends Model {
 	}
 	/**
     * Function to delete_group
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, ]
     **/
@@ -204,24 +204,24 @@ class Users_model extends Model {
 		$id = $data['entry_id'];
 		$this->db->where('id',$id);
 		$this->db->update('Group', array('status' => '0'));
-		
-			
+
+
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
-	
+
 	/// Returns the groups the current user belongs to...
 	function get_user_groups_of_user($user_id, $data='name') {
-		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group` 
-				INNER JOIN UserGroup ON Group.id=UserGroup.group_id 
+		$groups = $this->db->query("SELECT Group.id, Group.$data AS name FROM `Group`
+				INNER JOIN UserGroup ON Group.id=UserGroup.group_id
 				WHERE UserGroup.user_id=$user_id AND UserGroup.year='{$this->year}' AND `Group`.status='1'")->result();
 		$all_groups = idNameFormat($groups);
 
 		return $all_groups;
 	}
-	
+
 	/**
     * Function to getuser_details
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
@@ -232,18 +232,18 @@ class Users_model extends Model {
 		$this->db->where('User.status','1');
 		if(!empty($where['city_id'])) $this->db->where('User.city_id', $where['city_id']);
 		else $this->db->where('User.city_id', $this->city_id);
-		
+
 		$this->db->join('City', 'City.id = User.city_id' ,'join');
 		$this->db->orderby('User.name');
-		
+
 		$result = $this->db->get();
-		
+
 		return $result;
 	}
-	
+
 	/**
     * Function to getuser_details
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
@@ -256,11 +256,11 @@ class Users_model extends Model {
 		$this->db->where('User.status','1');
 		$result = $this->db->get();
 		return $result;
-	
+
 	}
 	/**
     * Function to adduser
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, int]
     **/
@@ -293,9 +293,9 @@ class Users_model extends Model {
 		);
 		if(!empty($data['joined_on'])) $user_array['joined_on'] = $data['joined_on'];
 		else $user_array['joined_on'] = date('Y-m-d H:i:s');
-		
+
 		if(!empty($data['left_on'])) $user_array['left_on'] = $data['left_on'];
-		
+
 		$this->db->insert('User',$user_array);
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
@@ -303,22 +303,22 @@ class Users_model extends Model {
 	function undelete($user_id) {
 		return $this->db->where('id',$user_id)->update('User', array('status'=>1));
 	}
-	
+
 	function process_pic($data, $type='users')
-    {   
+    {
       	$id=$data['id'];
         //Get File Data Info
         $uploads = array($this->upload->data());
         $this->load->library('image_lib');
         $this->load->library('imageResize');
-        
+
         //Move Files To User Folder
         foreach($uploads as $key[] => $value)
         {
             $newimagename = $id.$value['file_ext'];
 			$image_path = "uploads/$type/$newimagename";
 			rename($value['full_path'], $image_path);
-			
+
             $nwidth='100';
 	        $nheight='90';
 			$fileSavePath= dirname(BASEPATH). "/uploads/$type/thumbnails/$newimagename";
@@ -328,11 +328,11 @@ class Users_model extends Model {
 			$this->db->where('id',$id);
             if($type=='users') $this->db->update('User');
 			else $this->db->update('Student');
-			
+
 			return ($this->db->affected_rows() > 0) ? true: false ;
         }
  	}
-	
+
 	function check_email_availability($insert)
 	{
 		$email=$insert['email'];
@@ -343,7 +343,7 @@ class Users_model extends Model {
 		if($result->num_rows() > 0) return true;
 		return false;
 	}
-	
+
 	/// Add the user given as the first argument to all the groups specified in the second argument.
 	function adduser_to_group($user_id, $group_ids) {
 		$existing_groups = $this->get_user_groups_of_user($user_id);
@@ -352,18 +352,18 @@ class Users_model extends Model {
 			$user_array=array('user_id'=>$user_id, 'group_id'=> $group_id, 'year' => $this->year);
 			$this->db->insert('UserGroup',$user_array);
 		}
-		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;		
+		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
-	
+
 	/// Removes the given user from the given group.
 	function remove_user_from_group($user_id, $group_id) {
 		$this->db->delete('UserGroup', array('user_id'=>$user_id, 'group_id'=>$group_id, 'year' => $this->year));
-		return ($this->db->affected_rows() > 0) ? true : false;		
+		return ($this->db->affected_rows() > 0) ? true : false;
 	}
-	
+
 	/**
     * Function to user_details
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
@@ -371,15 +371,15 @@ class Users_model extends Model {
 		if(!$user_id) $user_id = $this->ci->session->userdata('user_id');
 		$this->db->from('User');
 		$this->db->where('User.id',$user_id);//->where('User.status','1');
-		
+
 		$result = $this->db->get()->row();
 		$result->groups = $this->get_user_groups_of_user($user_id, 'id');
 		$result->groups_name= $this->get_user_groups_of_user($user_id, 'name');
-		$result->batch = $this->db->query("SELECT Batch.day, Batch.class_time, Center.name 
-					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
-					INNER JOIN Center ON Batch.center_id=Center.id 
+		$result->batch = $this->db->query("SELECT Batch.day, Batch.class_time, Center.name
+					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id
+					INNER JOIN Center ON Batch.center_id=Center.id
 					WHERE UserBatch.user_id={$user_id} AND year='{$this->year}'")->row();
-		
+
 		return $result;
 	}
 
@@ -404,7 +404,7 @@ class Users_model extends Model {
 			$user_array['password'] = $data['password'];
 		}
 		if(!empty($data['reason_for_leaving'])) $user_array['reason_for_leaving'] = $data['reason_for_leaving'];
-		
+
 		if(!empty($data['type'])) {
 			$user_array['user_type'] = $data['type'];
 
@@ -417,13 +417,13 @@ class Users_model extends Model {
 
 			if($user_array['user_type'] == 'let_go' || $user_array['user_type'] == 'alumni') { // Remove user from his classes when he is let go.
 				if(!$user_array['left_on'] or $user_array['left_on'] == '0000-00-00') $user_array['left_on'] = date('Y-m-d');
-			
+
 				$this->db->delete('UserBatch', array('user_id'=>$user_id));
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'projected'));
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'confirmed'));
 			}
 		}
-			
+
 		$this->db->where('id', $user_id);
 		$this->db->update('User', $user_array);
 
@@ -436,9 +436,9 @@ class Users_model extends Model {
 		$this->db->update('User', array('subject_id' => $subject_id));
 	}
 
-	
+
 	function updateuser_to_group($data)
-	{	
+	{
 		$rootId=$data['rootId'];
 		$this->db->where('user_id',$rootId);
 		$this->db->delete('UserGroup');
@@ -451,18 +451,18 @@ class Users_model extends Model {
 		}
 		return ($this->db->affected_rows() > 0) ? true: false ;
 	}
-	
+
 	function delete($user_id) {
 		$this->db->where('id',$user_id)->update('User',array('status'=>'0'));
 		$affected = $this->db->affected_rows();
-		
+
 		if($affected) {
 			$this->db->delete('UserBatch',array('user_id'=>$user_id));
 			return true;
 		}
 		return false;
 	}
-	
+
 	function get_user($user_id) {
 		return $this->db->where('id', $user_id)->get('User')->row();
 	}
@@ -482,27 +482,32 @@ class Users_model extends Model {
 
 		return $user;
 	}
-	
+
 	function getUsersById() {
 		$this->load->helper('misc');
 		return getById("SELECT id, name FROM User WHERE city_id={$this->city_id} AND project_id={$this->project_id} AND user_type='volunteer' AND status='1'", $this->db);
 	}
-		
+
 	function get_users_in_city($city_id=false) {
 		if($city_id === false) $city_id = $this->city_id;
 		return $this->db->where('city_id', $city_id)->where('user_type','volunteer')->where('status','1')->orderby('name')->get('User')->result();
 	}
-	
+
+  function get_sofs_in_city($city_id=false){
+    if($city_id === false) $city_id = $this->city_id;
+		return $this->db->query("SELECT User.id as id, User.name as name FROM User INNER JOIN UserGroup ON UserGroup.user_id = User.id WHERE city_id={$this->city_id} AND UserGroup.group_id=269 AND UserGroup.year={$this->year} AND user_type='volunteer' AND status='1'")->result();
+  }
+
 	function set_user_batch_and_level($user_id, $batch_id, $level_id) {
     	$this->db->insert("UserBatch", array('user_id'=>$user_id, 'batch_id'=>$batch_id, 'level_id'=>$level_id));
     	return $this->db->insert_id();
     }
-    
+
 	function unset_user_batch_and_level($batch_id, $level_id) {
     	$this->db->delete("UserBatch", array('batch_id'=>$batch_id, 'level_id'=>$level_id));
     	return $this->db->affected_rows();
     }
-    
+
     function update_credit($user_id, $change) {
     	if($change == 1) $change = '+1';
     	if($change == 2) $change = '+2';
@@ -526,12 +531,12 @@ class Users_model extends Model {
     	// Set the credit.
     	$this->set_credit($user_id, $credit);
     }
-    
+
     function recalculate_user_credit($user_id, $update_if_wrong=false, $debug=false) {
 		$this->ci->load->model('level_model');
 		$this->ci->load->model('event_model');
 		$this->ci->load->model('settings_model');
-		
+
 		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
 		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
 		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
@@ -540,7 +545,7 @@ class Users_model extends Model {
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
 		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
-		
+
 		$classes_so_far = $this->get_usercredits($user_id);
 
 		$start_date = get_year() . '-04-01';
@@ -551,7 +556,7 @@ class Users_model extends Model {
 		$this->db->query("DELETE FROM User_Credit_Archive WHERE user_id=$user_id AND credit_on>'{$this->year}-04-01 00:00:00'"); // Clear existing credit archive. We are going to re-insert it.
 
 		// Find all the instances where this user's credit was manually edited.
-		$credit_edits = $this->db->query("SELECT added_on, credit, comment FROM UserCredit 
+		$credit_edits = $this->db->query("SELECT added_on, credit, comment FROM UserCredit
 											WHERE user_id=$user_id AND year={$this->year} ORDER BY added_on")->result_array();
 
 		foreach($classes_so_far as $row) {
@@ -565,34 +570,34 @@ class Users_model extends Model {
 				}
 			}
 
-			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
+			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
 				if($debug) print "User missed class: $credit_lost_for_missing_class<br />\n";
-				
+
 			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and  ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$credit = $credit + $credit_lost_for_getting_substitute;
 				if($debug) print "Had to get a substitute: $credit_lost_for_getting_substitute<br />\n";
-				
+
 			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
 				if($debug) print "Missed a substitution class: $credit_lost_for_missing_class<br />\n";
-				
+
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
 				$credit_sub_gets = $credit_for_substituting;
-				
+
 				if($credit_max_credit_threshold >= ($credit + $credit_sub_gets)) {
 					$credit = $credit + $credit_sub_gets;
 					if($debug) print "Credit for subbing: $credit_sub_gets<br />\n";
 				} else {
 					if($debug) print "Credit for subbing not got - as upper limit is hit.<br />\n";
 				}
-				
-				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit.
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
 					if($debug) print "Missed Zero Hour: $credit_lost_for_missing_zero_hour<br />\n";
 				}
 			} elseif($row['substitute_id'] == '0' and $row['status'] == 'attended') {
-				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit.
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
 					if($debug) print "Missed Zero Hour: $credit_lost_for_missing_zero_hour<br />\n";
 				}
@@ -612,7 +617,7 @@ class Users_model extends Model {
 				));
 			}
 		}
-		
+
 		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
 		$avm_count = 0;
 		foreach($event_attendence as $event) {
@@ -627,10 +632,10 @@ class Users_model extends Model {
 			$credit = $edit['credit'];
 			if($debug) print "Credit was manually edited to $credit : " . $edit['comment'] . "\n";
 		}
-		
+
 		if($update_if_wrong) {
 			$user = $this->get_user($user_id);
-			
+
 			$existing_credits = $user->credit;
 			if($debug) print "\t\t\t\tActual Credit: $credit\t\tExisting: $existing_credits";
 			if($existing_credits != $credit) {
@@ -638,13 +643,13 @@ class Users_model extends Model {
 				$this->set_credit($user_id, $credit);
 			}
 		}
-		
+
 		return $credit;
     }
 
     /*
-	 * How it Works: There is two fields in the User Table - credit and consecutive_credit. Credit holds the total credit of the volunteer. consecutive_credit holds the credit they got by doing consecutive classes. 
-	 *	credit field is other type of credit + consecutive_credit. What the function does is basically get the list of all volunteers, go thru each one, find how many consecutive credits they deserve, then if there 
+	 * How it Works: There is two fields in the User Table - credit and consecutive_credit. Credit holds the total credit of the volunteer. consecutive_credit holds the credit they got by doing consecutive classes.
+	 *	credit field is other type of credit + consecutive_credit. What the function does is basically get the list of all volunteers, go thru each one, find how many consecutive credits they deserve, then if there
 	 *	is ANY change(credits should be more that what it is currently - or should be less than what it is), then the script updates the table with the accurate number.
 	 *	The rest of MADApp just have to worry about the credit field as it holds the full credit. Only the script that deals with consecutive credit will use the other field.
 	 */
@@ -681,7 +686,7 @@ class Users_model extends Model {
     	$user_data = $this->users_model->get_user($user_id);
     	if($user_data->consecutive_credit == $consecutive_credit) return $consecutive_credit;
 
-    	// Else, first decrease the preset credit from the 'credit' field: credit = credit  - consecutive_credit. Then set the consecutive_credit with the new value. Then, increment user credit 
+    	// Else, first decrease the preset credit from the 'credit' field: credit = credit  - consecutive_credit. Then set the consecutive_credit with the new value. Then, increment user credit
     	//		with the new consecutive_credit: credit = credit + consecutive_credit
     	$credit_info = array();
     	$user_data->credit = $user_data->credit - $user_data->consecutive_credit;
@@ -700,7 +705,7 @@ class Users_model extends Model {
 		$this->load->model('settings_model');
 
     	$details = $this->get_usercredits($user_id);
-		
+
 		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
 		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
 		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
@@ -709,7 +714,7 @@ class Users_model extends Model {
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
 		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
-		
+
 		$i = 0;
 		$credit_log = array(array(
 			'class_on' 		=> get_year() . '-04-01 00:00:00',
@@ -720,9 +725,9 @@ class Users_model extends Model {
 		));
 
 		// Find all the instances where this user's credit was manually edited.
-		$credit_edits = $this->db->query("SELECT added_on, credit, comment FROM UserCredit 
+		$credit_edits = $this->db->query("SELECT added_on, credit, comment FROM UserCredit
 											WHERE user_id=$user_id AND year={$this->year} ORDER BY added_on")->result_array();
-		
+
 		foreach($details as $row) {
 			$data = array();
 
@@ -745,25 +750,25 @@ class Users_model extends Model {
 					// dump($credit_edits);
 				}
 			}
-			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {	
+			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
 				$data['class_on'] = $row['class_on'];
 				$data['action'] = 'Absent';
 				$data['change'] = "Lost $credit_lost_for_missing_class credits";
 				$data['credit'] = $credit;
-				
+
 			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$substitute_id = $row['substitute_id'];
 				$name_of_substitute = $this->get_name_of_substitute($substitute_id);
 				if(sizeof($name_of_substitute) >0) $name_of_substitute = $name_of_substitute->name;
 				else $name_of_substitute ='No Name';
-				
+
 				$credit = $credit + $credit_lost_for_getting_substitute;
 				$data['class_on']= $row['class_on'];
 				$data['action']="Substituted by ".$name_of_substitute." ";
 				$data['change'] = "Lost $credit_lost_for_getting_substitute credit";
 				$data['credit'] = $credit;
-			
+
 			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
 				$data['class_on']= $row['class_on'];
@@ -771,17 +776,17 @@ class Users_model extends Model {
 				$data['action'] = "Absent for " . $teacher_name->name . "'s substitute class";
 				$data['change'] = "Lost $credit_lost_for_missing_class credit";
 				$data['credit'] = $credit;
-				
+
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
 				$sub_get_credits = $credit_for_substituting;
-				
+
 				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
 				$substitute_levels = $this->ci->level_model->get_user_level($row['substitute_id']);
 				$current_class_level = $this->ci->level_model->get_class_level($row['class_id']);
 				if(in_array($current_class_level, $substitute_levels)) {
 					$sub_get_credits = $credit_for_substituting_in_same_level;
 				}
-				
+
 				$data['class_on'] = $row['class_on'];
 				$teacher_name = $this->get_name_of_Substitute($row['user_id']);
 				$data['action'] = "Substituted for " . $teacher_name->name;
@@ -793,10 +798,10 @@ class Users_model extends Model {
 				} else {
 					$data['change'] .= " Upper credit limit hit! You Rock!";
 				}
-				
+
 				$data['credit'] = $credit;
-				
-				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit. 
+
+				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit.
 					$i++;
 					$data['i'] = $i;
 					$credit_log[] = $data;
@@ -809,9 +814,9 @@ class Users_model extends Model {
 					$data['credit'] = $credit;
 				}
 			}
-			
+
 			if ($row['substitute_id'] == 0 and $row['status'] == 'attended') {
-				if(!$row['zero_hour_attendance']) { // Teacher didn't reach in time for zero hour. Loses a credit. 
+				if(!$row['zero_hour_attendance']) { // Teacher didn't reach in time for zero hour. Loses a credit.
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
 					$data['class_on'] = $row['class_on'];
 					$data['action'] = "Missed Zero Hour";
@@ -819,14 +824,14 @@ class Users_model extends Model {
 					$data['credit'] = $credit;
 				}
 			}
-			
+
 			if(isset($data['credit'])) {
 				$i++;
 				$data['i'] = $i;
 				$credit_log[] = $data;
 			}
 		}
-		
+
 		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
 		foreach($event_attendence as $event) {
 			$i++;
@@ -879,13 +884,13 @@ class Users_model extends Model {
     /// Returns all the class connections of this user - all the classes they are a teacher at and all they are a mentor at.
 	function get_class_connections($user_id) {
 		$mentor_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.class_on, Ctr.id AS center_id, Ctr.name AS center_name
-			FROM Batch B 
+			FROM Batch B
 			INNER JOIN Class C ON C.batch_id=B.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
-			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}' 
+			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}'
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
 
-		$teacher_at = $this->db->query("SELECT B.id AS batch_id, UB.level_id, CONCAT(L.grade, ' ', L.name) AS level, B.day, B.class_time, C.id AS class_id, C.class_on, 
+		$teacher_at = $this->db->query("SELECT B.id AS batch_id, UB.level_id, CONCAT(L.grade, ' ', L.name) AS level, B.day, B.class_time, C.id AS class_id, C.class_on,
 												Ctr.id AS center_id, Ctr.name AS center_name
 			FROM UserBatch UB
 			INNER JOIN Batch B ON B.id=UB.batch_id
@@ -894,8 +899,8 @@ class Users_model extends Model {
 			INNER JOIN UserClass UC ON UC.class_id=C.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
 			WHERE B.status='1' AND UB.user_id='$user_id' AND UC.user_id=$user_id AND B.year='{$this->year}' AND L.year={$this->year}
-				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND level_id=L.id AND class_on < NOW() 
-									ORDER BY class_on 
+				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND level_id=L.id AND class_on < NOW()
+									ORDER BY class_on
 									DESC LIMIT 0,1)")->result();
 
 		// Find and put the batch name(Sunday, 4 PM) using the day and class time.
@@ -906,18 +911,18 @@ class Users_model extends Model {
 		for($i=0; $i<count($teacher_at);$i++) {
 			$teacher_at[$i]->batch_name = $weekdays[$teacher_at[$i]->day] . ', ' . date('g A', strtotime('2016-07-28 ' . $teacher_at[$i]->class_time));
 		}
-		
+
 		return array('teacher_at' => $teacher_at, 'mentor_at' => $mentor_at);
 	}
 
-    
+
     /// Given a user id, get the batch they are mentoring. If there such a batch.
     function get_mentoring_batch($user_id) {
     	$users_batch = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.class_on, Ctr.name AS center_name
-			FROM Batch B 
+			FROM Batch B
 			INNER JOIN Class C ON C.batch_id=B.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
-			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}' 
+			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}'
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->row();
 		if($users_batch) return $users_batch->batch_id;
 		else return 0;
@@ -928,7 +933,7 @@ class Users_model extends Model {
     function get_assigned_teachers($city_id = 0) {
     	if(!$city_id) $city_id = $this->city_id;
 
-    	$all_assigned_teachers = $this->db->query("SELECT UB.* FROM UserBatch UB 
+    	$all_assigned_teachers = $this->db->query("SELECT UB.* FROM UserBatch UB
     		INNER JOIN User U ON U.id=UB.user_id
     		INNER JOIN Batch B ON UB.batch_id=B.id
     		WHERE U.user_type='volunteer' AND U.status='1' AND B.year='{$this->year}' AND U.city_id=$city_id")->result();
@@ -937,8 +942,8 @@ class Users_model extends Model {
     }
 
     function get_users_batch($user_id) {
-		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch 
-			INNER JOIN Batch ON Batch.id=UserBatch.batch_id 
+		$users_batch = $this->db->query("SELECT UserBatch.batch_id FROM UserBatch
+			INNER JOIN Batch ON Batch.id=UserBatch.batch_id
 			WHERE UserBatch.user_id=$user_id AND Batch.year={$this->year}")->row();
 		if($users_batch) return $users_batch->batch_id;
 		else return 0;
@@ -974,7 +979,7 @@ class Users_model extends Model {
 
     	return $fellows;
     }
-	
+
 
 
 	function search_users($data, $return_info = false) {
@@ -983,16 +988,16 @@ class Users_model extends Model {
 							User.joined_on,User.left_on,User.user_type,User.address,User.sex,User.source,User.birthday,
 							User.job_status,User.preferred_day,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
-		
+
 		if(!isset($data['status'])) $data['status'] = 1;
 		if($data['status'] !== false) $this->db->where('User.status', $data['status']); // Setting status as 'false' gets you even the deleted users
-		
+
 		// if(!empty($data['project_id'])) $this->db->where('User.project_id', $data['project_id']);
 		// elseif($this->project_id) $this->db->where('User.project_id', $this->project_id);
-		
+
 		if(isset($data['city_id']) and $data['city_id'] != 0) $this->db->where('User.city_id', $data['city_id']);
 		else if(!isset($data['city_id']) and $this->city_id) $this->db->where('User.city_id', $this->city_id);
-		
+
 		if(!empty($data['user_type'])) $this->db->where('user_type', $data['user_type']);
 		else if(!isset($data['user_type'])) $this->db->where('user_type', 'volunteer');
 
@@ -1006,7 +1011,7 @@ class Users_model extends Model {
 		}
 		if(!empty($data['left_on'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m") = ', date('Y-m', strtotime($data['left_on'])));
 		if(!empty($data['left_on_after'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m-%d") > ', date('Y-m-d', strtotime($data['left_on_after'])))->or_where("User.left_on = '0000-00-00'");
-		
+
 		if(!empty($data['user_group'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
 			$this->db->where_in('UserGroup.group_id', $data['user_group']);
@@ -1041,8 +1046,8 @@ class Users_model extends Model {
 		}
 		$this->db->orderby('User.name');
 	    $this->db->stop_cache();
-				
-		// Paging 
+
+		// Paging
 		$current_page = isset($data['current_page']) ? $data['current_page'] : 1;
 		$items_per_page = isset($data['items_per_page']) ? $data['items_per_page'] : 10000;
 
@@ -1054,7 +1059,7 @@ class Users_model extends Model {
 			$this->db->limit($items_per_page, $offset);
 		}
 
-		// Done - execute the query.		
+		// Done - execute the query.
 		$all_users = $this->db->get('User')->result();
 		$this->db->flush_cache();
 		// echo $this->db->last_query(); // :DEBUG: See the query if ther are any issues.
@@ -1063,18 +1068,18 @@ class Users_model extends Model {
 		foreach($all_users as $user) {
 			// Get the batches for this User. An user can have two batches. That's why I don't do join to get this date.
 			//$user->batches = colFormat($this->db->where('user_id',$user->id)->get('UserBatch')->result_array()); // :SLOW:
-			
+
 			// Gets the UserGroup of the users...
 			if(!empty($data['get_user_groups'])) $user->groups = $this->get_user_groups_of_user($user->id);
-			if(!empty($data['get_user_class'])) $user->batch = $this->db->query("SELECT Batch.day, Batch.class_time, Center.name 
-					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
-					INNER JOIN Center ON Batch.center_id=Center.id 
+			if(!empty($data['get_user_class'])) $user->batch = $this->db->query("SELECT Batch.day, Batch.class_time, Center.name
+					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id
+					INNER JOIN Center ON Batch.center_id=Center.id
 					WHERE UserBatch.user_id={$user->id} AND Batch.year={$this->year}")->row();
 
 			if(!empty($data['user_type']) and ($data['user_type'] == 'let_go' or $data['user_type'] == 'alumni')) {
 				$user->exit_interview = $this->db->query("SELECT COUNT(id) AS count FROM SurveyResponse WHERE user_id={$user->id}")->row()->count;
 			}
-			
+
 			$return[$user->id] = $user;
 		}
 
@@ -1086,42 +1091,42 @@ class Users_model extends Model {
 			);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/// Returns all the permissions for the given user as an array.
 	function get_user_permissions($user_id) {
-		$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission 
-			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id  
-			INNER JOIN UserGroup ON GroupPermission.group_id=UserGroup.group_id 
+		$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission
+			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id
+			INNER JOIN UserGroup ON GroupPermission.group_id=UserGroup.group_id
 			WHERE UserGroup.user_id=$user_id")->result();
-		
+
 		if(!count($permissions)) { // If he has no group, he is volunteer group.
 			$default_group = 9; //:HARD-CODE: 9 is the teacher group.
-			$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission 
-				INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id  
+			$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission
+				INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id
 				WHERE GroupPermission.group_id=$default_group")->result();
 		}
-		
+
 		$all_permissions = array();
 		foreach($permissions as $permission) {
 			$all_permissions[] = $permission->name;
 		}
-		
+
 		return $all_permissions;
 	}
-	
+
 	/// Returns all the groups for the given user as an associative array with group id as the key.
 	function get_user_groups($user_id, $details = false) {
 		$groups = $this->db->query("SELECT * FROM `Group`
-			INNER JOIN `UserGroup` ON `Group`.id=`UserGroup`.group_id 
+			INNER JOIN `UserGroup` ON `Group`.id=`UserGroup`.group_id
 			WHERE `UserGroup`.user_id=$user_id AND UserGroup.year='{$this->year}'")->result();
 
 		if($details) return $groups;
-		
+
 		$all_groups = array();
 		foreach($groups as $group) {
 			$all_groups[$group->id] = $group->name;
 		}
-		
+
 		return $all_groups;
 	}
 
@@ -1146,8 +1151,8 @@ class Users_model extends Model {
 		}
 
 		// No vertical info. National someone, possibly. Check again without the NON Vertical Check.
-		if(!$highest_group_info 
-				or (count($groups) > 1 and $highest_group == 'volunteer')) { // A peorson without a vertical who is a teacher. 
+		if(!$highest_group_info
+				or (count($groups) > 1 and $highest_group == 'volunteer')) { // A peorson without a vertical who is a teacher.
 			foreach($groups as $g) {
 				if($order[$g->type] > $highest_number) {
 					$highest_number = $order[$g->type];
@@ -1161,7 +1166,7 @@ class Users_model extends Model {
 
 		return $highest_group;
 	}
-	
+
 	function user_registration($data)
 	{
 		if(!empty($data['user_id'])) { // Handle registeration of exisitng applicants(Adding more details, re-doing application, etc.)
@@ -1185,7 +1190,7 @@ class Users_model extends Model {
 			$userdetailsArray['id'] = $data['user_id'];
 			return array($userdetailsArray, 'Success');
 		}
-	
+
 		$email = $data['email'];
 		$debug = "";
 
@@ -1214,12 +1219,12 @@ class Users_model extends Model {
 									);
 			$this->db->insert('User', $userdetailsArray);
 			$debug .= $this->db->last_query();
-			
+
 			$userdetailsArray['id'] = $this->db->insert_id();
-			
+
 			$debug .= print_r($userdetailsArray, 1);
 			// $this->db->where('name','registeration_debug_info')->update('Setting', array('data'=>$debug)); // :DEBUG:
-			
+
 			return array($userdetailsArray, "Success");
 		} else {
 			foreach($result as $r) {
@@ -1228,7 +1233,7 @@ class Users_model extends Model {
 				} elseif($r->phone == $data['phone']) {
 					$current_status = 'Phone number already in database.';
 				}
-				
+
 				// If a user with pre existing email id or phone number tries to register again, we check what kind of user they are - and if they are well_wisher, alumni or let_go, we make them an applicant once again.
 				$more = 'You are already registered. ';
 				if($r->user_type != 'volunteer') {
@@ -1240,18 +1245,18 @@ class Users_model extends Model {
 					$this->db->where('id', $r->id)->update('User', array('status'=>'1', 'joined_on'=>date('Y-m-d H:i:s')));
 					$more = 'You have been added back to the applicant list. Thank you.';
 				}
-					
+
 				return array(false, $current_status .' ' . $more);
 			}
-			
+
 			return array(false, "");
 		}
 		return array(true, '');
     }
-	
+
 	/**
     * Function to get password
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
@@ -1287,7 +1292,7 @@ class Users_model extends Model {
 	}
 	/**
     * Function to  get_name_of_substitute
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
@@ -1325,10 +1330,10 @@ class Users_model extends Model {
 			INNER JOIN City ON U.city_id=City.id
 			WHERE G.type IN (".$allowed[$level].")
 			AND U.status='1' AND U.user_type='volunteer' "
-			. (($where) ? " AND " : "") . implode(" AND ", $where) 
+			. (($where) ? " AND " : "") . implode(" AND ", $where)
 			. " GROUP BY UG.user_id ORDER BY City.region_id, City.name")->result();
 
-		return $subordinates;		
+		return $subordinates;
 	}
 
 
@@ -1351,7 +1356,7 @@ class Users_model extends Model {
 		if($user->id == 17383)	$user->region_id = 3;	// Vrishi
 
 		$teacher_info = idNameFormat($this->db->query("SELECT Batch.id, Batch.center_id AS name
-					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id 
+					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id
 					WHERE UserBatch.user_id={$user_id}")->result());
 
 		$user->batches = array_keys($teacher_info);
@@ -1379,7 +1384,7 @@ class Users_model extends Model {
 
 		return $subordinates;
 	}
-	
+
 	/// Changes the phone number format from +91976068565 to 9746068565. Remove the 91 at the starting.
 	private function _correct_phone_number($phone) {
 		if(strlen($phone) > 10) {

@@ -6,7 +6,7 @@
 	<h1><?php echo $title; ?></h1>
 
 	<?php if($this->user_auth->get_permission('center_add')) { ?>
-	<div id="actions"> 
+	<div id="actions">
 	<a href="<?php echo site_url('center/popupaddCenter'); ?>" class="thickbox button green primary popup" style="margin-bottom:10px;" id="example" name="Add New Center">Add New Center</a>
 	</div>
 	<?php } ?>
@@ -17,7 +17,7 @@
 <tr>
 	<th class="colCheck1">ID</th>
 	<th class="colName left sortable">Center Name</th>
-    
+
     <th class="colStatus sortable">City</th>
     <th class="colStatus">Center Head</th>
    <th class="colActions">Actions</th>
@@ -25,23 +25,23 @@
 </thead>
 <tbody>
 
-<?php 
-$shadeClass = 'even'; 
+<?php
+$shadeClass = 'even';
 $statusIco = '';
 $statusText = '';
 foreach($details as $row) {
 
 	if($shadeClass == 'odd') $shadeClass = 'even';
 	else $shadeClass = 'odd';
-?> 
+?>
 <tr class="<?php echo $shadeClass; ?>" id="group">
 	<td class="colCheck1"><?php echo $row->id; ?></td>
-	<td class="colName left"><?php echo $row->name; 
+	<td class="colName left"><?php echo $row->name;
 	if($row->problem_count) print "<span class='warning icon'>!</span>";
 	?><div class="center-info info-box"><ul><li><?php
 		print implode('</li><li>', $row->information);
 	?></li></ul></div></td>
-	<td class="colCount"><?php echo $row->city_name; ?></td> 
+	<td class="colCount"><?php echo $row->city_name; ?></td>
 	<td class="colStatus" style="text-align:left"><?php echo $row->user_name;?></td>
 	<td class="colActions right">
 	<?php if($this->user_auth->get_permission('center_edit')) { ?><a href="<?php echo site_url('center/manage/'.$row->id); ?>" class="with-icon edit" name="Manage Center: <?php echo $row->name ?>">Manage</a><?php } ?>
@@ -57,4 +57,3 @@ foreach($details as $row) {
 <?php } ?>
 </div>
 </div>
-

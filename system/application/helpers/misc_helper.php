@@ -147,21 +147,24 @@ function get_month_list() {
 
 /// Set the City and Year if someone changes it. Save it to a cookie.
 function set_city_year($that) {
-	if($that->input->post('city_id') and $that->input->post('year') 
-			and $that->user_auth->check_permission('change_city')) {
+	if($that->input->post('city_id') and $that->user_auth->check_permission('change_city')) {
 		$city_id = $that->input->post('city_id');
 		$that->session->set_userdata('city_id', $city_id);
 		if(isset($that->center_model)) $that->center_model->city_id = $city_id;
 		if(isset($that->users_model)) $that->users_model->city_id = $city_id;
 		if(isset($that->city_model)) $that->city_model->city_id = $city_id;
+	}
 
+	if($that->input->post('year') and $that->user_auth->check_permission('change_city')) {
 		$year = $that->input->post('year');
 		$that->session->set_userdata('year', $year);
 		if(isset($that->center_model)) $that->center_model->year = $year;
 		if(isset($that->batch_model)) $that->batch_model->year = $year;
 		if(isset($that->level_model)) $that->level_model->year = $year;
 		if(isset($that->users_model)) $that->users_model->year = $year;
+	}
 
+	if($that->input->post('project_id')) {
 		$project_id = $that->input->post('project_id');
 		$that->session->set_userdata('project_id', $project_id);
 		if(isset($that->center_model)) $that->center_model->project_id = $project_id;

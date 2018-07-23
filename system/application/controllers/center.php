@@ -85,6 +85,7 @@ class Center extends Controller  {
 		$this->user_auth->check_permission('center_edit');
 		$data['details']= $this->center_model->edit_center($center_id);
 		$data['all_users']= $this->users_model->get_users_in_city();
+    $data['all_sofs']= $this->users_model->get_sofs_in_city();
     $data['center_types'] = $this->center_model->center_type();
     $data['programmes'] = $this->project_model->get_all_projects();
 		$this->load->view('center/popups/center_edit_view',$data);
@@ -100,6 +101,7 @@ class Center extends Controller  {
     **/
 	function update_Center()
 	{
+
 		$this->user_auth->check_permission('center_edit');
 		$data['rootId'] = $_REQUEST['rootId'];
 		$data['user_id']= $_REQUEST['user_id'];
@@ -108,14 +110,18 @@ class Center extends Controller  {
     $data['year_undertaking'] = $_REQUEST['year_undertaking'];
     $data['type'] = $_REQUEST['shelter_type'];
 		$data['preferred_gender'] = $_REQUEST['preferred_gender'];
+    $data['phone'] = $_REQUEST['shelter_contact'];
 		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
     $data['address'] = $_REQUEST['address'];
     $data['programmes'] = $_REQUEST['programmes'];
+    $data['medium_of_instruction'] = $_REQUEST['medium_hidden'];
     $data['authority_id'] = $_REQUEST['authority_id'];
 
     $data['sa_name'] = $_REQUEST['sa_name'];
     $data['sa_email'] = $_REQUEST['sa_email'];
     $data['sa_phone'] = $_REQUEST['sa_phone'];
+
+    dump($data);
 
 		$returnFlag= $this->center_model->update_center($data);
 
@@ -151,11 +157,16 @@ class Center extends Controller  {
 
 	function manage($center_id) {
 		$this->user_auth->check_permission('center_edit');
+		set_city_year($this); // Will take care of Program change.
+
 
 		$issues = $this->center_model->find_issues($center_id);
+		$issues['centers_with_foundation_program'] = [115,207,222,122,113,181,208,153,206,210,4, 	154,184]; // All the Shelters that has the fondation program. :HARDCODE:
+
 		$issues['center_name'] = $this->center_model->get_center_name($center_id);
 		$issues['center_id'] = $center_id;
 		$issues['comments'] = $this->comment_model->get_all('Center', $center_id);
+		$issues['all_projects'] = ['1' => 'Ed Support', '2' => 'Foundation'];
 		$this->session->set_userdata("active_center", $center_id);
 
 		$this->load->view('center/manage', $issues);

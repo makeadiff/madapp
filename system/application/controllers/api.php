@@ -284,14 +284,15 @@ class Api extends Controller {
 			return $this->error("Invalid Username or password.");
 		}
 
-		$connections = $this->user_model->get_class_connections($status['id']);
+		$project_id = 1;
+		$fp_teacher_group_id = 376;
+		$fp_mentor_group_id = 375;
+		if(isset($status['groups'][$fp_teacher_group_id])) $project_id = 2;
+		if(isset($status['groups'][$fp_mentor_group_id])) $project_id = 2;
 
+		$connections = $this->user_model->get_class_connections($status['id']);
 		$mentor = "0";
 		if($connections['mentor_at']) $mentor = "1";
-
-		$project_id = 1;
-		$foundation_program_teacher_group_id = 376;
-		if(isset($status['groups'][$foundation_program_teacher_group_id])) $project_id = 2;
 
 		$this->send(array(
 			'user_id'	=> $status['id'],
@@ -485,12 +486,13 @@ class Api extends Controller {
 	}
 
 	/// Open a specific Class based on the Batch ID and the date that class has happened
-	function open_batch($batch_id='', $from_date='') {
+	function open_batch($batch_id='', $from_date='', $project_id='') {
 		$this->check_key();
 
 		// $from_date = '2015-01-11';
 		if(!$batch_id) $batch_id = $this->input('batch_id');
 		if(!$from_date) $from_date = $this->input('class_on');
+		if(!$project_id) $project_id = $this->input('project_id');
 
 		if(!$from_date) {
 			$class_from = $this->input('class_from');
@@ -508,10 +510,17 @@ class Api extends Controller {
 		$center_name = $center->name;
 		$city_id = $center->city_id;
 
-		$groups = array(
+		if($project_id == 2) { // Foundation
+			$groups = array(
+				'teacher'	=> 376,
+				'mentor'	=> 375,
+			);
+		} else { // Ed Support
+			$groups = array(
 				'teacher'	=> 9,
 				'trained'	=> 368,
 			);
+		}
 
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date));
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>$groups['teacher'], 'city_id' => $city_id));
@@ -673,11 +682,20 @@ class Api extends Controller {
 		$this->check_key();
 		$city_id = $this->input('city_id');
 		if(!$city_id) return $this->error("Invalid City ID");
+		$project_id = $this->input('project_id');
+		if(!$project_id) $project_id = 1;
 
-		$groups = array(
+		if($project_id == 2) { // Foundation
+			$groups = array(
+				'teacher'	=> 376,
+				'mentor'	=> 375,
+			);
+		} else { // Ed Support
+			$groups = array(
 				'teacher'	=> 9,
 				'trained'	=> 368,
 			);
+		}
 
 		$teachers = $this->user_model->search_users(array('user_type'=>'volunteer', 'user_group'=>array_values($groups), 'city_id'=>$city_id));
 		if(!$teachers) return $this->error("No Data from server");

@@ -116,7 +116,6 @@ class Center extends Controller  {
 	
 	}
 	
-	
 	/**
     *
     * Function to ajax_deletecenter
@@ -141,7 +140,7 @@ class Center extends Controller  {
 		set_city_year($this); // Will take care of Program change.
 
 		$issues = $this->center_model->find_issues($center_id);
-		$issues['centers_with_foundation_program'] = [115,207,222,122,113,181,208,153,206,210,4, 	154,184]; // All the Shelters that has the fondation program. :HARDCODE:
+		$issues['centers_with_foundation_program'] = [115,207,222,122,113,181,208,153,206,210,4, 	154,184,220]; // All the Shelters that has the fondation program. :HARDCODE:
 		
 		$issues['center_name'] = $this->center_model->get_center_name($center_id);
 		$issues['center_id'] = $center_id;

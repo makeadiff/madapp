@@ -13,17 +13,17 @@
 
 class Project_model extends Model
 {
-	
+
     function Project_model() {
         parent::Model();
     }
-    
+
 	function getproject() {
 		return $this->db->get('Project');
 	}
 	function project_count()
 	{
-	
+
 	}
 	function add_project($data)
 	{
@@ -55,4 +55,16 @@ class Project_model extends Model
 		$this->db->where('id',$entry_id);
 		$this->db->delete('Project');
 	}
-}	
+	function get_all_projects()
+	{
+		$this->db->select('id,name');
+		$this->db->from('Project');
+		$result=$this->db->get();
+		$result = $result->result_array();
+		$projects = array();
+		foreach ($result as $key => $value) {
+			$projects[$value['id']] = $value['name'];
+		}
+		return $projects;
+	}
+}

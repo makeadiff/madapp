@@ -4,8 +4,8 @@ $this->load->view('layout/header',array('title'=>$title));
 
 function showMessage($count, $message, $threshold=1) {
 	if($message) $message = "($message)";
-	
-	if($count >= $threshold) echo '<span class="success with-icon" style="color:darkgreen;" title="'.$count.'/'.$threshold.'">Completed ' . $message . '</span>'; 
+
+	if($count >= $threshold) echo '<span class="success with-icon" style="color:darkgreen;" title="'.$count.'/'.$threshold.'">Completed ' . $message . '</span>';
 	else echo '<span class="error with-icon" title="'.$count.'/'.$threshold.'">Incomplete ' . $message . '</span>';
 }
 
@@ -46,9 +46,9 @@ if($this->user_auth->get_permission('center_edit')) { ?>
 <?php if($this->user_auth->get_permission('batch_index') and in_array($center_id, $centers_with_foundation_program)) { // :PERMISSION_RESET: ?>
 <tr><td><?php echo $row++; ?></td>
 <td>Select Program</td>
-<td><?php 
+<td><?php
 echo form_open(current_url());
-echo form_dropdown('project_id', $all_projects, $this->session->userdata('project_id')); 
+echo form_dropdown('project_id', $all_projects, $this->session->userdata('project_id'));
 echo form_submit('action', "Change");
 echo form_close();
 ?></td></tr><?php } ?>
@@ -83,16 +83,18 @@ echo form_close();
 <td><a href="<?php echo site_url('center/info/'.$center_id); ?>">View All Center Assignment</a></td>
 <td>&nbsp;</td></tr><?php } ?>
 
+<?php if($this->user_auth->get_permission('shelter_comments')) { // :PERMISSION_RESET: ?>
 <tr><td><?php echo $row++; ?></td>
 <td><a href="<?php echo MAD_APPS_FOLDER ?>comments/?item=Center&amp;item_id=<?php echo $center_id ?>">Comments</a></td>
-<td><?php echo count($comments) ?></td></tr>
+<td><?php echo count($comments) ?></td></tr><?php } ?>
 </table>
 
 <!-- <br /><br />
 <?php if($this->user_auth->get_permission('center_delete')) { ?><a href="<?php echo site_url("center/deletecenter/".$center_id); ?>" class="confirm delete with-icon">Delete <?php echo $center_name ?> Center</a><?php } ?> -->
 
+<?php if($this->user_auth->get_permission('shelter_comments')) { // :PERMISSION_RESET: ?>
 <iframe src="<?php echo MAD_APPS_FOLDER ?>comments/?item=Center&amp;item_id=<?php echo $center_id ?>&amp;layout=0" style="width:100%;" height="400" title="Comments"></iframe>
-
+<?php } ?>
 </div>
 
 <?php

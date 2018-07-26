@@ -16,13 +16,13 @@ class Center_model extends Model
     function Center_model()
     {
         parent::Model();
-        
+
 		$this->ci = &get_instance();
 		$this->city_id = $this->ci->session->userdata('city_id');
 		$this->project_id = $this->ci->session->userdata('project_id');
 		$this->year = $this->ci->session->userdata('year');
     }
-	
+
 	/**
     * Function to getcenter_count
     * @author:Rabeesh
@@ -32,36 +32,36 @@ class Center_model extends Model
 	function getcenter_count()
 	{
 		$this->db->select('*')->where('Center.city_id',$this->city_id)->where('Center.status','1')->from('Center');
-		$count = $this->db->get();	
+		$count = $this->db->get();
 		return count($count->result());
 	}
-    
-	
+
+
     /// Return all centers in given city with information about it.
     function get_all_info($city_id = 0) {
     	if(!$city_id) $city_id = $this->city_id;
 
 		$this->ci->load->model('city_model');
-		
+
 		$this->db->select("Center.*, User.name as user_name");
 		$this->db->from('Center');
 		$this->db->where('Center.city_id',$city_id)->where('Center.status','1');
 		$this->db->join('User', 'Center.center_head_id = User.id' ,'left');
-		
+
 		$result = $this->db->get()->result();
-		
+
 		$city_name = $this->ci->city_model->getCity($this->city_id);
 		// Highlight the errors in the center - if any.
 		for($i=0; $i<count($result); $i++) {
 			$center_id = $result[$i]->id;
-			
+
 			$details = $this->find_issues($center_id);
 			$result[$i]->city_name = $city_name['name'];
 			$result[$i]->problem_count = $details['problem_count'];
 			$result[$i]->information = $details['information'];
 		}
-		
-		return $result;	
+
+		return $result;
     }
     function getcenter_details() { return $this->get_all(); } // :ALIAS: :DEPRICIATED:
 
@@ -71,11 +71,11 @@ class Center_model extends Model
 		$this->db->from('City');
 		$result=$this->db->get();
 		return $result;
-	
+
 	}
 	/**
     * Function to add_center
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean]
     **/
@@ -89,28 +89,63 @@ class Center_model extends Model
 			'medium'	=> $data['medium'],
 			'preferred_gender' => $data['preferred_gender']
 		);
-						  
-	    $this->db->insert('Center',$data);  
+
+	    $this->db->insert('Center',$data);
         return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
-	
+
 	}
 	 /**
     * Function to edit_center
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Array()]
     **/
 	function edit_center($uid) {
-		$this->db->select('*');
-		$this->db->from('Center');
-		$this->db->where('id',$uid);
-		$result=$this->db->get();
+    $q = 'SELECT
+            C.*,
+            Address.address as address,
+            Medium.medium as vernacular_medium,
+            CA.name as ca_name,
+            CA.phone as ca_phone,
+            CA.email as ca_email,
+            GROUP_CONCAT(CP.project_id) as project_ids
+          FROM Center C
+          LEFT JOIN (
+            SELECT CD.center_id as center_id, CD.value as address
+            FROM CenterData CD
+            WHERE CD.name = "address"
+            AND CD.center_id = '.$uid.'
+          ) Address ON Address.center_id = C.id
+          LEFT JOIN (
+            SELECT CD.center_id as center_id, CD.value as medium
+            FROM CenterData CD
+            WHERE CD.name = "medium_of_instruction"
+            AND CD.center_id = '.$uid.'
+          ) Medium ON Address.center_id = C.id
+          LEFT JOIN CenterAuthority CA ON C.authority_id = CA.id
+          LEFT JOIN CenterProject CP ON C.id = CP.center_id
+          WHERE C.id = '.$uid.'
+          ';
+		$result=$this->db->query($q);
 		return $result;
 	}
-	
+
+  function center_type() {
+    $query_types = "SHOW COLUMNS FROM Center LIKE 'type'";
+    $output = $this->db->query($query_types)->row(0)->Type;
+    preg_match("/^enum\(\'(.*)\'\)$/", $output, $matches);
+    $center_types_array = explode("','", $matches[1]);
+    $center_types = array();
+    foreach ($center_types_array as $key => $value) {
+      $center_types[$value] = ucwords(str_replace('_',' ',$value));
+    }
+    return $center_types;
+	}
+
+
 	/**
     * Function to update_center
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean]
     **/
@@ -118,38 +153,152 @@ class Center_model extends Model
 		$center_id = $data['rootId'];
 		$center_details = $this->edit_center($center_id)->row();
 		if(!$center_details) return false;
-		
+
+
+    $sa_data = array();
+    $authority_id = 0;
+    if(!empty($data['sa_name'])) $sa_data['name'] = $data['sa_name'];
+    if(!empty($data['sa_phone'])) $sa_data['phone'] = $data['sa_phone'];
+    if(!empty($data['sa_email'])) $sa_data['email'] = $data['sa_email'];
+    $sa_data['status'] = 1;
+    $sa_data['center_id'] = $center_id;
+
+    $check_sa_q = 'SELECT id FROM CenterAuthority
+                   WHERE (name="'.$sa_data['name'].'")
+                   AND (phone="'.$sa_data['phone'].'"
+                   OR email="'.$sa_data['email'].'"
+                 ) AND center_id='.$center_id;
+
+    if(!empty($data['authority_id'])) $authority_id = $data['authority_id'];
+    if($authority_id==0){
+      $check_sa = $this->db->query($check_sa_q)->row();
+      if(empty($check_sa)){
+        // In case of adding a new Center Authority, marking status of previous Authorities as 0
+        $this->db->set('status','0');
+        $this->db->where('center_id',$center_id);
+        $this->db->update('CenterAuthority');
+        // Insert New Center Authority Data
+        $this->db->insert('CenterAuthority',$sa_data);
+        $authority_id = $this->db->insert_id();
+      }
+      else {
+        $authority_id = $check_sa->id;
+      }
+    }
+    else{
+      $check_sa = $this->db->query($check_sa_q)->row();
+      if(empty($check_sa)){
+        // In case of adding a new Center Authority, marking status of previous Authorities as 0
+        $this->db->set('status','0');
+        $this->db->where('center_id',$center_id);
+        $this->db->update('CenterAuthority');
+        // Insert New Center Authority Data
+        $this->db->insert('CenterAuthority',$sa_data);
+        $authority_id = $this->db->insert_id();
+      }
+      else {
+        $authority_id = $check_sa->id;
+      }
+    }
+
+    if(!empty($data['programmes'])){
+      $project = $data['programmes'];
+      $remove_project_q = 'DELETE FROM CenterProject
+                            WHERE center_id='.$center_id.'
+                            AND year ='.$this->year;
+      $remove_programme = $this->db->query($remove_project_q);
+      foreach ($project as $value) {
+        $project_data = array(
+          'center_id'  => $center_id,
+          'project_id' => $value,
+          'year'       => $this->year,
+          'added_on'   => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('CenterProject',$project_data);
+      }
+    }
+
+
 		$new_data = array();
 		if(!empty($data['center'])) $new_data['name'] = $data['center'];
 		if(!empty($data['user_id'])) $new_data['center_head_id'] = $data['user_id'];
 		if(!empty($data['class_starts_on'])) $new_data['class_starts_on'] = $data['class_starts_on'];
 		if(!empty($data['medium'])) $new_data['medium'] = $data['medium'];
 		if(!empty($data['preferred_gender'])) $new_data['preferred_gender'] = $data['preferred_gender'];
+    if(!empty($data['phone'])) $new_data['phone'] = $data['phone'];
+    if(!empty($data['year_undertaking'])) $new_data['year_undertaking'] = $data['year_undertaking'];
+    if(!empty($data['type'])) $new_data['type'] = $data['type'];
+    if($authority_id!=0) $new_data['authority_id'] = $authority_id;
+
+    //Updating Shelter Address
+    if(!empty($data['address'])){
+      $address = array(
+        'center_id' => $center_id,
+        'name'      => 'address',
+        'year'      => $this->year,
+        'value'     => $data['address'],
+        'data'      => ''
+      );
+      $check_addr_q = 'SELECT id FROM CenterData
+                        WHERE name="address"
+                        AND center_id = '.$center_id.'';
+      $check_addr = $this->db->query($check_addr_q)->row();
+      if(empty($check_addr)){
+        $this->db->insert('CenterData',$address);
+      }
+      else{
+        $this->db->set($address);
+        $this->db->where('id',$check_addr->id);
+        $this->db->update('CenterData');
+      }
+    }
+
+    if(!empty($data['medium_of_instruction'])){
+      $medium = array(
+        'center_id' => $center_id,
+        'name'      => 'medium_of_instruction',
+        'year'      => $this->year,
+        'value'     => $data['medium_of_instruction'],
+        'data'      => ''
+      );
+      $check_addr_q = 'SELECT id FROM CenterData
+                        WHERE name="medium_of_instruction"
+                        AND center_id = '.$center_id.'';
+      $check_addr = $this->db->query($check_addr_q)->row();
+      if(empty($check_addr)){
+        $this->db->insert('CenterData',$medium);
+      }
+      else{
+        $this->db->set($medium);
+        $this->db->where('id',$check_addr->id);
+        $this->db->update('CenterData');
+      }
+    }
 
 		$this->db->where('id', $center_id);
 		$this->db->update('Center', $new_data);
 		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
 
-		if($affected_rows) { // If center has been update, 
+		if($affected_rows) { // If center has been update,
 			if(isset($new_data['medium']) and $new_data['medium'] != 'english')
 				$this->db->where('center_id', $center_id)->where('medium', 'english')->update('Level', ['medium' => $new_data['medium']]);
 
 			if(isset($new_data['preferred_gender']) and $new_data['preferred_gender'] != 'any')
 				$this->db->where('center_id', $center_id)->where('preferred_gender', 'any')->update('Level', ['preferred_gender' => $new_data['preferred_gender']]);
 		}
-		
+
 		if(!empty($data['center_head_id']) and $data['center_head_id'] > 0) {
 			$this->load->model('users_model');
 			$this->users_model->remove_user_from_group($center_details->center_head_id, 7); // Remove the old center head from the group 'Center Head'
 			$this->users_model->adduser_to_group($data['center_head_id'], array(7));// Add the center head to Center Head group.
 		}
-		
+
 		return $affected_rows;
 	}
-	
+
 	/**
     * Function to delete_center
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Boolean]
     **/
@@ -160,11 +309,11 @@ class Center_model extends Model
  		 $this->db->where('center_id',$center_id)->update('Batch', array('status'=>'0'));
 
 		 return ($this->db->affected_rows() > 0) ? true: false ;
-	
+
 	}
 	/**
     * Function to center_name
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Array]
     **/
@@ -174,9 +323,9 @@ class Center_model extends Model
 		$this->db->where('id',$center_id);
 		$result=$this->db->get();
 		return $result;
-	
+
 	}
-	
+
 	function get_center_name($center_id) {
 		$center = $this->db->where('id', $center_id)->get('Center')->row();
 		return $center->name;
@@ -187,7 +336,7 @@ class Center_model extends Model
 		if($center) return $center->center_head_id;
 		return 0;
 	}
-	
+
 	function get_center_of_head_id($user_id) {
 		$center = $this->db->where('center_head_id', $user_id)->get('Center')->row();
 		if($center) return $center->id;
@@ -204,32 +353,32 @@ class Center_model extends Model
 	function get_info($center_id) {
 		return $this->db->where('id',$center_id)->where('status','1')->orderby('name')->get('Center')->result();
 	}
-	
+
 	// Get all the centers. No matter what city
 	function get_all_centers() {
 		return $this->db->where('status','1')->get('Center')->result();
 	}
-	
+
 	// Find the errors in the center - if any.
 	function find_issues($center_id) {
 		$teacher_count = 0;
 		$problem_flag = 0;
 		$information = array();
-		
+
 		$center_head_id = $this->db->query("SELECT center_head_id FROM Center WHERE id=$center_id")->row()->center_head_id;
 		$level_count = $this->db->query("SELECT COUNT(id) AS level_count FROM Level WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year}")->row()->level_count;
 		$batch_count = $this->db->query("SELECT COUNT(id) AS batch_count FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year}")->row()->batch_count;
 		$requirement_count = $this->db->query("SELECT SUM(UserBatch.requirement) AS count FROM UserBatch INNER JOIN Batch ON UserBatch.batch_id=Batch.id WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year}")->row()->count;
 		$kids_count = $this->db->query("SELECT COUNT(id) AS count FROM Student WHERE center_id=$center_id AND status='1'")->row()->count;
 		$total_volunteer_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id={$this->city_id} AND user_type='volunteer' AND status='1'")->row()->count;
-		$assigned_student_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS student_count FROM Student S 
-					INNER JOIN StudentLevel SL ON SL.student_id=S.id 
-					INNER JOIN Level L ON L.id=SL.level_id 
+		$assigned_student_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS student_count FROM Student S
+					INNER JOIN StudentLevel SL ON SL.student_id=S.id
+					INNER JOIN Level L ON L.id=SL.level_id
 					WHERE L.year={$this->year} AND SL.level_id!=0 AND S.status='1' AND S.center_id=$center_id AND L.project_id={$this->project_id}")->row()->student_count;
 
 		if($total_volunteer_count) {
-			$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch 
-					INNER JOIN Batch ON UserBatch.batch_id=Batch.id 
+			$teacher_count = $this->db->query("SELECT COUNT(UserBatch.id) AS count FROM UserBatch
+					INNER JOIN Batch ON UserBatch.batch_id=Batch.id
 					WHERE Batch.center_id=$center_id AND Batch.project_id={$this->project_id} AND Batch.year={$this->year} AND Batch.project_id={$this->project_id}")->row()->count;
 		}
 
@@ -237,7 +386,7 @@ class Center_model extends Model
 			$information[] = "Not all kids are assigned. <span class='warning icon'>!</span>";
 			$problem_flag++;
 		}
-		
+
 		if(!$center_head_id) {
 			$information[] = "Center does not have a center head. <span class='warning icon'>!</span>";
 			$problem_flag++;
@@ -248,26 +397,26 @@ class Center_model extends Model
 		} else {
 			$information[] = "Levels in this center: $level_count";
 		}
-		
+
 		if(!$batch_count) {
 			$information[] = "No batches added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {
 			$information[] = "Batch in this center: $batch_count";
 		}
-		
-		if($teacher_count < 20) {
+
+		if($teacher_count < 30) {
 			$information[] = "Too few teachers added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {
 			$information[] = "Teachers in this center: $teacher_count";
 		}
-		
+
 		if($requirement_count) {
 			$information[] = "More volunteers needed for this center <span class='warning icon'>!</span>";
 			$problem_flag++;
 		}
-		
+
 		if($kids_count < 12) {
 			$information[] = "Too few kids added to the center <span class='warning icon'>!</span>";
 			$problem_flag++;
@@ -279,7 +428,8 @@ class Center_model extends Model
 			$information[] = "Not enough teachers assigned.  <span class='warning icon'>!</span>";
 			$problem_flag++;
 		}
-		
+
+
 		$details = array(
 			'center_head_id'	=> $center_head_id,
 			'level_count'		=> $level_count,
@@ -290,14 +440,14 @@ class Center_model extends Model
 			'assigned_student_count' => $assigned_student_count,
 			'total_volunteer_count'=>$total_volunteer_count,
 		);
-		
+
 		return array('information'=>$information, 'problem_count'=>$problem_flag, 'details'=>$details);
 	}
-	
-	
+
+
 	/**
     * Function to getcenter
-    * @author:Rabeesh 
+    * @author:Rabeesh
     * @param :[$data]
     * @return: type: [Array]
     **/
@@ -308,8 +458,8 @@ class Center_model extends Model
 		$result=$this->db->get();
 		return $result;
 	}
-	
-	
+
+
 	function get_exam_centers()
 	{
 		return $this->db->query("SELECT DISTINCT(Center.name),Center.id FROM Center JOIN Exam_Event ON Center.id = Exam_Event.center_id WHERE Center.city_id={$this->city_id}")->result();
@@ -328,4 +478,3 @@ class Center_model extends Model
     	$this->db->insert("CenterData", $data);
 	}
 }
-

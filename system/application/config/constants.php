@@ -48,7 +48,7 @@ define('PAGINATION_CONSTANT', 	'5');
 
 
 
-define('MAD_APPS_FOLDER', 'http://localhost/MAD/apps/');
+define('MAD_APPS_FOLDER', 'https://makeadiff.in/apps/');
 
 /* End of file constants.php */
 /* Location: ./system/application/config/constants.php */

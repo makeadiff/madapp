@@ -1010,7 +1010,10 @@ class Users_model extends Model {
 			$this->db->or_where('User.mad_email', "'" . $data['email'] . "')", false);
 		}
 		if(!empty($data['left_on'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m") = ', date('Y-m', strtotime($data['left_on'])));
-		if(!empty($data['left_on_after'])) $this->db->where('DATE_FORMAT(User.left_on, "%Y-%m-%d") > ', date('Y-m-d', strtotime($data['left_on_after'])))->or_where("User.left_on = '0000-00-00'");
+		if(!empty($data['left_on_after'])) $this->db->where('(DATE_FORMAT(User.left_on, "%Y-%m-%d") > \'' . date('Y-m-d', strtotime($data['left_on_after'])) . "' OR User.left_on = '0000-00-00')");
+
+		if(!empty($data['joined_on'])) $this->db->where('DATE_FORMAT(User.joined_on, "%Y-%m") = ', date('Y-m', strtotime($data['joined_on'])));
+		if(!empty($data['joined_on_after'])) $this->db->where('(DATE_FORMAT(User.joined_on, "%Y-%m-%d") > \''.date('Y-m-d', strtotime($data['joined_on_after'])) . "' OR User.joined_on = '0000-00-00 00:00:00')");
 
 		if(!empty($data['user_group'])) {
 			$this->db->join('UserGroup', 'User.id = UserGroup.user_id' ,'join');
@@ -1062,7 +1065,7 @@ class Users_model extends Model {
 		// Done - execute the query.
 		$all_users = $this->db->get('User')->result();
 		$this->db->flush_cache();
-		// echo $this->db->last_query(); // :DEBUG: See the query if ther are any issues.
+		// echo $this->db->last_query(); exit; // :DEBUG: See the query if ther are any issues.
 
 		$return = array();
 		foreach($all_users as $user) {

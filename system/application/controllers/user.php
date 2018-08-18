@@ -424,7 +424,7 @@ class User extends Controller  {
 
 		} else if($this->input->post('email')) {
 			$email = $this->input->post('email');
-			$data = $this->users_model->db->query("SELECT * FROM User WHERE email LIKE '%$email%'")->result();
+			$data = $this->users_model->db->query("SELECT * FROM User WHERE email LIKE '%$email%' OR mad_email LIKE '%$email%'")->result();
 		
 		} else if($this->input->post('phone')) {
 			$phone = $this->input->post('phone');

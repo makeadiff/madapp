@@ -46,7 +46,7 @@ class Class_model extends Model {
 					INNER JOIN Level L ON L.id=C.level_id
 					INNER JOIN UserClass UC ON UC.class_id=C.id 
 					INNER JOIN User U ON UC.user_id=U.id
-					WHERE C.batch_id=$batch_id AND L.year={$this->year}")->result());
+					WHERE C.batch_id=$batch_id AND L.year={$this->year} AND C.status!='cancelled'")->result());
 
 		$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
 													. implode(",", array_keys($classes_taught_by_user)) . ")")->result());
@@ -60,10 +60,11 @@ class Class_model extends Model {
 	}
 
 	function get_classes_where_teacher_data_is_not_updated($user_id) {
-		return colFormat($this->db->query("SELECT DISTINCT(DATE(C.class_on)) FROM Class C 
+		$classes = $this->db->query("SELECT DISTINCT(DATE(C.class_on)) as class_on FROM Class C 
 												INNER JOIN Batch B ON B.id=C.batch_id
 												WHERE C.status='projected' AND B.year={$this->year} AND B.batch_head_id=$user_id 
-												ORDER BY C.class_on DESC")->result());
+												ORDER BY C.class_on DESC")->result();
+		return colFormat($classes);
 	}
 	
 	/// Get all the classes of the given batch.

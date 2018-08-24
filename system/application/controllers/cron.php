@@ -80,13 +80,15 @@ class Cron extends Controller  {
 
 					if($debug and count($teachers) and $debug_text) {
 						// dump($teachers, $date, $batch);
-						print "\n-------------------------------\n";
+						print "-------------------------------\n";
 						print "Current Batch: $batch->id at center $batch->center_id\n";
 						print "\tTotal Teachers in this Batch: ". count($teachers) . "\n";
 						print $debug_text;
 					}
 				}
 			}
+
+			if($debug) print "======================================\n";
 		}
 	}
 	

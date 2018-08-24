@@ -2,21 +2,6 @@
 /*
 http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
 
-Singular resource names(user instead of users, level, batch) [This goes against general convention - https://apigee.com/about/blog/technology/restful-api-design-plural-nouns-and-concrete-names]
-JSON output by default
-All lower case - '_' used as seperator - /class/last_batch/
-CRUD Operations [This goes against general convention - you are expected to use the same url - with different methods(POST, DELETE, PATCH, etc)]
-	/user/add {Params as POST}
-	/user/4/edit {Params as POST}
-	/user/4
-	/user/search {Params as POST}
-	/user/4/delete
-
-
-Not there yet...
-Always version your API. Have a major version number in the URL - /v1/users/...
-Documentation. 
-Use SSL everywhere
 Have aliases for common queries - /user/search {user_type=volunteer, user_group=['ES Trained']} can be mapped to /user/teachers
 Use the right HTTP status codes
     200 OK - Response to a successful GET, PUT, PATCH or DELETE. Can also be used for a POST that doesn't result in a creation.
@@ -33,9 +18,6 @@ Use the right HTTP status codes
     422 Unprocessable Entity - Used for validation errors
     429 Too Many Requests - When a request is rejected due to rate limiting
 
-
-/user/login
-/user/{user_id}
 
 /class/last_class/{user_id} -> /user/{user_id}/last_class
 /class/class_on/{date}

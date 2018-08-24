@@ -442,7 +442,8 @@ class User extends Controller  {
 		$data['user_type']	= $user_type;
 		$data['get_user_groups'] = true;
 		$data['get_user_class'] = true;
-		$data['joined_on_after'] = date('Y-m-d H:i:s', strtotime('-6 months'));
+		if($user_type == 'applicant')
+			$data['joined_on_after'] = date('Y-m-d H:i:s', strtotime('-6 months'));
 		
 		$data['all_users'] = $this->users_model->search_users($data);
 		header("Content-type: application/octet-stream");  

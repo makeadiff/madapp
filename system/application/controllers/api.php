@@ -489,6 +489,8 @@ class Api extends Controller {
 		}
 
 		$batch = $this->batch_model->get_batch($batch_id);
+		if(!$project_id) $project_id = $batch->project_id;
+		
 		$center_id = $batch->center_id;
 		$center = $this->center_model->edit_center($center_id)->row();
 		$center_name = $center->name;

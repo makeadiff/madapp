@@ -44,7 +44,7 @@ class Users_model extends Model {
 
 		$correct_password = false;
 
-		if($password)
+		if($password and $user)
 			$correct_password = password_verify($password, $user->password_hash);
 		if($auth_token) {
 			$query = $this->db->where('id', $user->id)->where('auth_token', $auth_token)->get("User");

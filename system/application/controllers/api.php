@@ -269,12 +269,13 @@ class Api extends Controller {
 		$project_id = 1;
 		$fp_teacher_group_id = 376;
 		$fp_mentor_group_id = 375;
+		$es_mentor_group_id = 8;
 		if(isset($status['groups'][$fp_teacher_group_id])) $project_id = 2;
 		if(isset($status['groups'][$fp_mentor_group_id])) $project_id = 2;
 
 		$connections = $this->user_model->get_class_connections($status['id']);
 		$mentor = "0";
-		if($connections['mentor_at']) $mentor = "1";
+		if($connections['mentor_at'] or isset($status['groups'][$es_mentor_group_id])) $mentor = "1";
 
 		$this->send(array(
 			'user_id'	=> $status['id'],
@@ -383,6 +384,7 @@ class Api extends Controller {
 		$class_details = $this->class_model->get_class($class_id);
 		if(!$class_info) {
 			$class_info = $this->class_model->get_class_by_id($class_id);
+			$class_details['center_id'] = $class_info->center_id;
 			$class_details['center_name'] = $class_info->name;
 		}
 		
@@ -671,10 +673,12 @@ class Api extends Controller {
 			$groups = array(
 				'teacher'	=> 376,
 				'mentor'	=> 375,
+				'trained'	=> 387
 			);
 		} else { // Ed Support
 			$groups = array(
 				'teacher'	=> 9,
+				'mentor'	=> 8,
 				'trained'	=> 368,
 			);
 		}

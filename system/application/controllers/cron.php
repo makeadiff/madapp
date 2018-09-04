@@ -319,7 +319,7 @@ class Cron extends Controller  {
 		$this->load->database();
 		$this->load->library('sms');
 		date_default_timezone_set('Asia/Calcutta');
-		$this->debug = false;
+		$this->debug = true;
 		$now = new DateTime("now");
 		$timestamp= time();
 		//On Monday, it resets the message_sent feild to 0
@@ -334,44 +334,36 @@ class Cron extends Controller  {
 														WHEN B.day= 5 THEN 'Thursday' 
 														WHEN B.day= 6 THEN 'Friday' 
 														ELSE 'Saturday' end AS week_day, 
-														B.class_time, C.name as center From 
-														User U INNER JOIN UserBatch S on U.id = S.user_id 
-														INNER JOIN Batch B on S.batch_id = B.id 
-														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN 
-														(SELECT user_id FROM UserClass WHERE class_id IN 
-														 (SELECT id FROM Class WHERE class_on < Date_Add(SYSDATE(),INTERVAL -5 HOUR) AND DATE(class_on) = CURDATE() AND class_on <= NOW() AND updated_by_teacher=0)
-														);"
-														                                );
+													B.class_time, C.name as center 
+													FROM User U 
+													INNER JOIN UserBatch S on U.id = S.user_id 
+													INNER JOIN Batch B on S.batch_id = B.id 
+													INNER JOIN Center C on C.id = B.center_id 
+													WHERE user_id IN  (
+														SELECT user_id FROM UserClass WHERE class_id IN (
+															SELECT id FROM Class WHERE class_on < DATE_ADD(SYSDATE(),INTERVAL -5 HOUR) 
+														 		AND DATE(class_on) = CURDATE() AND class_on <= NOW() AND updated_by_teacher=0
+														 	)
+														)
+													AND C.status='1'");
 
-		// SELECT phone, user_id, name, center, week_day, class_time FROM UserMessage
-		// 						 WHERE user_id IN (SELECT user_id FROM UserClass
-  //            								  WHERE class_id IN (SELECT id FROM Class 
-  //                           									 WHERE class_on < Date_Add(SYSDATE(),INTERVAL 5 HOUR) AND class_on >CURDATE() AND updated_by_teacher=0
-  //           								  					)				
-  //                               			  )
 		foreach($teacher_message_record->result() as $teacher_message_record_row){
-			$name= $teacher_message_record_row->name;
+			$name = ucfirst(@reset(explode(' ', $teacher_message_record_row->name)));
             $center= $teacher_message_record_row->center;
             $slot= $teacher_message_record_row->week_day;
-            $time= $teacher_message_record_row->class_time;
+            $time = date('h:i A', strtotime('2018-08-29 ' . $teacher_message_record_row->class_time)); // Random date. No meaning to it.
 
 			//Message for teachers can be edited from here
 			$teacher_message = "Hi $name,\n\nThe student attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/makeadiff-madapp";
-			if(1){
-			
-					
-				if($this->debug == true){
-					echo "Message to $teacher_message_record_row->phone: $teacher_message<br>";
-				}
-				else{
-					$this->sms->send($teacher_message_record_row->phone,$teacher_message);
-					
-				}
-				
-				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
-				
+			if($this->debug == true){
+				echo "Message to $teacher_message_record_row->phone: $teacher_message<br>\n";
 			}
+			else{
+				// $this->sms->send($teacher_message_record_row->phone,$teacher_message);
+			}
+			//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
 		}
+
 		//extracting the phone number of MENTORS who havent updaed the teacher attendance in the next 5 hours.
 		$mentor_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name, 
 														CASE 
@@ -382,42 +374,37 @@ class Cron extends Controller  {
 														WHEN B.day= 5 THEN 'Thursday' 
 														WHEN B.day= 6 THEN 'Friday' 
 														ELSE 'Saturday' end AS week_day, 
-														B.class_time, C.name as center From 
-														User U INNER JOIN UserBatch S on U.id = S.user_id 
-														INNER JOIN Batch B on S.batch_id = B.id 
-														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL -5 HOUR) AND class_on >CURDATE() AND class_on<NOW()) );
-														");
+													B.class_time, C.name as center 
+													From User U 
+													INNER JOIN UserBatch S on U.id = S.user_id 
+													INNER JOIN Batch B on S.batch_id = B.id 
+													INNER JOIN Center C on C.id = B.center_id 
+													WHERE user_id IN (
+														SELECT batch_head_id FROM Batch WHERE id IN (
+															SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < DATE_ADD(CURRENT_TIMESTAMP,INTERVAL -5 HOUR) 
+																AND class_on > CURDATE() AND class_on<NOW()
+															)
+														)
+													AND C.status='1'"); // 
 
-
-
-
-		// SELECT phone,user_id, name, center, week_day, class_time, message_sent FROM UserMessage WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL 5 HOUR) AND class_on >CURDATE() ) )
-  //                               				
 		foreach($mentor_message_record->result() as $mentor_message_record_row){
-            $name= $mentor_message_record_row->name;
+            $name= ucfirst(@reset(explode(' ', $mentor_message_record_row->name)));
             $center= $mentor_message_record_row->center;
             $slot= $mentor_message_record_row->week_day;
-            $time= $mentor_message_record_row->class_time;
+            $time=  date('h:i A', strtotime('2018-08-29 ' . $mentor_message_record_row->class_time)); // Random date. No meaning to it.
             
 			//Message for MENTORS can be edited from here
-			$mentor_message = "Hi $name,\n\nThe teacher attendance for younr class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
+			// The 'your' in the message was spelled 'younr' - I fixed it. Not sure if the template will work now.
+			$mentor_message = "Hi $name,\n\nThe teacher attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
 
-			if(1){
-				if($this->debug == true){
-					echo "Message to $mentor_message_record_row->phone: $mentor_message<br>";
-				}
-				else{//$mentor_message_record_row->phone
-					$this->sms->send($mentor_message_record_row->phone,$mentor_message);
-				}
-
-				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
-				
-			}	
+			if($this->debug == true){
+				echo "Message to $mentor_message_record_row->phone: $mentor_message<br>";
+			}
+			else{//$mentor_message_record_row->phone
+				// $this->sms->send($mentor_message_record_row->phone,$mentor_message);
+			}
+			//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
 		}
 	}
-
-	// :TODO:
-	
-               
 }
 

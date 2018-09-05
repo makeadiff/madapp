@@ -286,7 +286,7 @@ class Api extends Controller {
 			'credit'	=> $status['credit'],
 			'mentor'	=> $mentor,
 			'connections'=>$connections,
-			'groups'	=> array_values($status['groups']),
+			'groups'	=> $status['groups'],
 			'positions' => $status['positions'],
 			'project_id'=> $project_id
 		));

@@ -389,7 +389,7 @@ class Users_model extends Model {
 
 		if(!empty($data['name'])) 		$user_array['name'] 		= $data['name'];
 		if(!empty($data['email'])) 		$user_array['email'] 		= $data['email'];
-		if(!empty($data['mad_email'])) 	$user_array['mad_email'] 	= $data['mad_email'];
+		if(isset($data['mad_email'])) 	$user_array['mad_email'] 	= $data['mad_email'];
 		if(!empty($data['phone'])) 		$user_array['phone'] 		= $this->_correct_phone_number($data['phone']);
 		if(!empty($data['address'])) 	$user_array['address'] 		= $data['address'];
 		if(!empty($data['sex'])) 		$user_array['sex'] 			= $data['sex'];

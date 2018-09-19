@@ -16,7 +16,7 @@
 		</div>
 	<?php } ?>
 
-	<?php if($this->user_auth->get_permission('classes_madsheet') and 0) { ?>
+	<?php if($this->user_auth->get_permission('classes_madsheet')) { ?>
 		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('classes/madsheet') ?>">
 			<img src="<?php echo base_url(); ?>images/flat_ui/mad_sheet.png" alt="" /> <br>MAD Sheet</a>
 		</div>

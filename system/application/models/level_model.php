@@ -42,7 +42,7 @@ class Level_model extends Model {
 		// $center_id is not used anymore.
 		return $this->db->query("SELECT L.id,CONCAT(grade,' ',name) AS name FROM Level L
 				INNER JOIN BatchLevel BL ON L.id=BL.level_id
-				WHERE L.year='{$this->year}' AND project_id='{$this->project_id}' AND status='1' AND BL.batch_id=$batch_id
+				WHERE L.year='{$this->year}' AND L.project_id='{$this->project_id}' AND status='1' AND BL.batch_id=$batch_id
 				ORDER BY grade,name")->result();
 	}
 	
@@ -134,7 +134,7 @@ class Level_model extends Model {
     	if(isset($student_id)) {
 	    	$levels = $this->db->query("SELECT level_id FROM StudentLevel SL 
 	    		INNER JOIN Level L ON L.id=SL.level_id 
-	    		WHERE SL.student_id=$student_id AND L.year=$year")->result();
+	    		WHERE SL.student_id=$student_id AND L.year=$year AND L.project_id={$this->project_id}")->result();
 
 	    	$levels_associated_with_student = array();
 	    	foreach ($levels as $level_info) {
@@ -144,7 +144,7 @@ class Level_model extends Model {
 	    	}
 
 	    } elseif(isset($level_id)) { // Clears the mapping for an entire level. 
-	    	if(! $this->db->query("SELECT id FROM Level WHERE id=$level_id AND year=$year")->row()) return; // If the given level_id is not of the said year, return.
+	    	if(! $this->db->query("SELECT id FROM Level WHERE id=$level_id AND year=$year AND project_id={$this->project_id}")->row()) return; // If the given level_id is not of the said year, return.
 	    	$this->db->query("DELETE FROM StudentLevel WHERE level_id=$level_id");
 	    }
     }
@@ -154,7 +154,7 @@ class Level_model extends Model {
 		$levels = $this->db->query("SELECT level_id 
 			FROM UserBatch UB
 			INNER JOIN Level L ON UB.level_id=L.id
-			WHERE user_id=$user_id AND L.year={$this->year}")->result();
+			WHERE user_id=$user_id AND L.year={$this->year} AND L.project_id={$this->project_id}")->result();
 		$return = array();
 		foreach($levels as $l) $return[] = $l->level_id;
 		

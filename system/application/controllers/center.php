@@ -19,7 +19,7 @@ class Center extends Controller  {
 		$this->load->model('users_model');
 		$this->load->model('subject_model');
 		$this->load->model('comment_model');
-    $this->load->model('project_model');
+	    $this->load->model('project_model');
     }
 
     /// Show all centers in the current city
@@ -85,9 +85,9 @@ class Center extends Controller  {
 		$this->user_auth->check_permission('center_edit');
 		$data['details']= $this->center_model->edit_center($center_id);
 		$data['all_users']= $this->users_model->get_users_in_city();
-    $data['all_sofs']= $this->users_model->get_sofs_in_city();
-    $data['center_types'] = $this->center_model->center_type();
-    $data['programmes'] = $this->project_model->get_all_projects();
+	    $data['all_sofs']= $this->users_model->get_sofs_in_city();
+	    $data['center_types'] = $this->center_model->center_type();
+	    $data['programmes'] = $this->project_model->get_all_projects();
 		$this->load->view('center/popups/center_edit_view',$data);
 	}
 
@@ -107,10 +107,10 @@ class Center extends Controller  {
 		$data['user_id']= $_REQUEST['user_id'];
 		$data['center']= $_REQUEST['center'];
 		$data['medium'] = $_REQUEST['medium'];
-    $data['year_undertaking'] = $_REQUEST['year_undertaking'];
-    $data['type'] = $_REQUEST['shelter_type'];
+	    $data['year_undertaking'] = $_REQUEST['year_undertaking'];
+	    $data['type'] = $_REQUEST['shelter_type'];
 		$data['preferred_gender'] = $_REQUEST['preferred_gender'];
-    $data['phone'] = $_REQUEST['shelter_contact'];
+    	$data['phone'] = $_REQUEST['shelter_contact'];
 		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
     $data['address'] = $_REQUEST['address'];
     if(isset($_REQUEST['programmes'])) $data['programmes'] = $_REQUEST['programmes'];
@@ -135,7 +135,6 @@ class Center extends Controller  {
 		}
 
 	}
-
 
 	/**
     *
@@ -162,8 +161,7 @@ class Center extends Controller  {
 
 
 		$issues = $this->center_model->find_issues($center_id);
-		$issues['centers_with_foundation_program'] = [115,207,222,122,113,181,208,153,206,210,4, 	154,184]; // All the Shelters that has the fondation program. :HARDCODE:
-
+		$issues['centers_with_foundation_program'] = [115,207,222,122,113,181,208,153,206,210,4, 	154,184,220]; // All the Shelters that has the fondation program. :HARDCODE:
 		$issues['center_name'] = $this->center_model->get_center_name($center_id);
 		$issues['center_id'] = $center_id;
 		$issues['comments'] = $this->comment_model->get_all('Center', $center_id);

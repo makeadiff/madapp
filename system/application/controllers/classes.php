@@ -377,8 +377,6 @@ class Classes extends Controller {
 		$batch_level_user_hirarchy = array(); // On with a Batch -> Level -> User hirarchy.
 		$user_mapping = array(); // And another with a User -> Batch / Level Hirarchy. Ugly - but makes things easier.
 		foreach ($all_batches as $batch_id => $batch_name) {
-			//print "SELECT * FROM `UserBatch` WHERE batch_id=$batch_id  AND level_id IN (". implode(",", array_keys($all_level_in_batch)) . ")<br />";
-
 			foreach ($all_levels[$batch_id] as $level_id => $level_name) {
 				if(!isset($batch_level_user_hirarchy[$batch_id])) $batch_level_user_hirarchy[$batch_id] = array();
 				$user_ids = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level_id); // Get all teacher assignments in the Batch/Level combo.

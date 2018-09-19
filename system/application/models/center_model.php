@@ -159,7 +159,7 @@ class Center_model extends Model
 	function update_center($data) {
 		$center_id = $data['rootId'];
 		$center_details = $this->edit_center($center_id)->row();
-		if(!$center_details) return false;    
+		if(!$center_details) return false;
 
     $sa_data = array();
     $authority_id = 0;
@@ -302,13 +302,13 @@ class Center_model extends Model
         $this->db->set($medium);
         $this->db->where('id',$check_jj->id);
         $this->db->update('CenterData');
-        $affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
+        $affected_rows = ($this->db->affected_rows() >= 0) ? true: false ;
       }
     }
 
 		$this->db->where('id', $center_id);
 		$this->db->update('Center', $new_data);
-		// $affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
+		$affected_rows = ($this->db->affected_rows() >= 0) ? true: false ;
 
 		if($affected_rows) { // If center has been update,
 			if(isset($new_data['medium']) and $new_data['medium'] != 'english')
@@ -323,8 +323,8 @@ class Center_model extends Model
 			$this->users_model->remove_user_from_group($center_details->center_head_id, 7); // Remove the old center head from the group 'Center Head'
 			$this->users_model->adduser_to_group($data['center_head_id'], array(7));// Add the center head to Center Head group.
 		}
-    dump($affected_rows);
-    exit;
+    // dump($affected_rows);
+    // exit;
 
 		return $affected_rows;
 	}

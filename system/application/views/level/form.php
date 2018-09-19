@@ -23,7 +23,7 @@ if(!isset($level)) $level = array(
 </select>
 
 <select name="name" style="width:100px;">
-	<?php foreach(range('A','M') as $l) { ?>
+	<?php foreach(range('A','Z') as $l) { ?>
 	<option value="<?php echo $l ?>" <?php if($level['name'] == $l) echo 'selected'; ?>><?php echo $l ?></option>
 	<?php } ?>
 </select>

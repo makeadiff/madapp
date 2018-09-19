@@ -2,21 +2,6 @@
 /*
 http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
 
-Singular resource names(user instead of users, level, batch) [This goes against general convention - https://apigee.com/about/blog/technology/restful-api-design-plural-nouns-and-concrete-names]
-JSON output by default
-All lower case - '_' used as seperator - /class/last_batch/
-CRUD Operations [This goes against general convention - you are expected to use the same url - with different methods(POST, DELETE, PATCH, etc)]
-	/user/add {Params as POST}
-	/user/4/edit {Params as POST}
-	/user/4
-	/user/search {Params as POST}
-	/user/4/delete
-
-
-Not there yet...
-Always version your API. Have a major version number in the URL - /v1/users/...
-Documentation. 
-Use SSL everywhere
 Have aliases for common queries - /user/search {user_type=volunteer, user_group=['ES Trained']} can be mapped to /user/teachers
 Use the right HTTP status codes
     200 OK - Response to a successful GET, PUT, PATCH or DELETE. Can also be used for a POST that doesn't result in a creation.
@@ -33,9 +18,6 @@ Use the right HTTP status codes
     422 Unprocessable Entity - Used for validation errors
     429 Too Many Requests - When a request is rejected due to rate limiting
 
-
-/user/login
-/user/{user_id}
 
 /class/last_class/{user_id} -> /user/{user_id}/last_class
 /class/class_on/{date}
@@ -284,14 +266,16 @@ class Api extends Controller {
 			return $this->error("Invalid Username or password.");
 		}
 
-		$connections = $this->user_model->get_class_connections($status['id']);
-
-		$mentor = "0";
-		if($connections['mentor_at']) $mentor = "1";
-
 		$project_id = 1;
-		$foundation_program_teacher_group_id = 376;
-		if(isset($status['groups'][$foundation_program_teacher_group_id])) $project_id = 2;
+		$fp_teacher_group_id = 376;
+		$fp_mentor_group_id = 375;
+		$es_mentor_group_id = 8;
+		if(isset($status['groups'][$fp_teacher_group_id])) $project_id = 2;
+		if(isset($status['groups'][$fp_mentor_group_id])) $project_id = 2;
+
+		$connections = $this->user_model->get_class_connections($status['id']);
+		$mentor = "0";
+		if($connections['mentor_at'] or isset($status['groups'][$es_mentor_group_id])) $mentor = "1";
 
 		$this->send(array(
 			'user_id'	=> $status['id'],
@@ -302,7 +286,7 @@ class Api extends Controller {
 			'credit'	=> $status['credit'],
 			'mentor'	=> $mentor,
 			'connections'=>$connections,
-			'groups'	=> array_values($status['groups']),
+			'groups'	=> $status['groups'],
 			'positions' => $status['positions'],
 			'project_id'=> $project_id
 		));
@@ -400,6 +384,7 @@ class Api extends Controller {
 		$class_details = $this->class_model->get_class($class_id);
 		if(!$class_info) {
 			$class_info = $this->class_model->get_class_by_id($class_id);
+			$class_details['center_id'] = $class_info->center_id;
 			$class_details['center_name'] = $class_info->name;
 		}
 		
@@ -485,12 +470,13 @@ class Api extends Controller {
 	}
 
 	/// Open a specific Class based on the Batch ID and the date that class has happened
-	function open_batch($batch_id='', $from_date='') {
+	function open_batch($batch_id='', $from_date='', $project_id='') {
 		$this->check_key();
 
 		// $from_date = '2015-01-11';
 		if(!$batch_id) $batch_id = $this->input('batch_id');
 		if(!$from_date) $from_date = $this->input('class_on');
+		if(!$project_id) $project_id = $this->input('project_id');
 
 		if(!$from_date) {
 			$class_from = $this->input('class_from');
@@ -503,15 +489,24 @@ class Api extends Controller {
 		}
 
 		$batch = $this->batch_model->get_batch($batch_id);
+		if(!$project_id) $project_id = $batch->project_id;
+		
 		$center_id = $batch->center_id;
 		$center = $this->center_model->edit_center($center_id)->row();
 		$center_name = $center->name;
 		$city_id = $center->city_id;
 
-		$groups = array(
+		if($project_id == 2) { // Foundation
+			$groups = array(
+				'teacher'	=> 376,
+				'mentor'	=> 375,
+			);
+		} else { // Ed Support
+			$groups = array(
 				'teacher'	=> 9,
 				'trained'	=> 368,
 			);
+		}
 
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date));
 		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>$groups['teacher'], 'city_id' => $city_id));
@@ -673,11 +668,22 @@ class Api extends Controller {
 		$this->check_key();
 		$city_id = $this->input('city_id');
 		if(!$city_id) return $this->error("Invalid City ID");
+		$project_id = $this->input('project_id');
+		if(!$project_id) $project_id = 1;
 
-		$groups = array(
+		if($project_id == 2) { // Foundation
+			$groups = array(
+				'teacher'	=> 376,
+				'mentor'	=> 375,
+				'trained'	=> 387
+			);
+		} else { // Ed Support
+			$groups = array(
 				'teacher'	=> 9,
+				'mentor'	=> 8,
 				'trained'	=> 368,
 			);
+		}
 
 		$teachers = $this->user_model->search_users(array('user_type'=>'volunteer', 'user_group'=>array_values($groups), 'city_id'=>$city_id));
 		if(!$teachers) return $this->error("No Data from server");

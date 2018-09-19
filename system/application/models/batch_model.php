@@ -31,8 +31,7 @@ class Batch_model extends Model {
 	function get_teachers_in_batch_and_level($batch_id, $level_id) {
 		return colFormat($this->db->query("SELECT DISTINCT UB.user_id FROM UserBatch UB
 				INNER JOIN Batch B ON B.id=UB.batch_id
-				INNER JOIN UserGroup ON UB.user_id=UserGroup.user_id 
-				WHERE batch_id={$batch_id} AND level_id={$level_id} AND UB.user_id!=0 AND UserGroup.group_id=9 AND B.year={$this->year}")->result());
+				WHERE batch_id={$batch_id} AND level_id={$level_id} AND UB.user_id!=0 AND B.year={$this->year}")->result());
 	}
 	function get_teachers_in_batch($batch_id, $teacher_group_id = 9) {
 		return $this->db->query("SELECT UserBatch.user_id AS id FROM UserBatch 
@@ -149,7 +148,10 @@ class Batch_model extends Model {
 		
 		if($data['batch_head_id'] > 0) {
 			$this->load->model('users_model');
-			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
+			$mentor_group_id = 8; // Ed Support Mentor
+			if($this->project_id == 2) $mentor_group_id = 375; // Foundational Fellow - this is the mentor for FP.
+			
+			$this->users_model->adduser_to_group($data['batch_head_id'], array($mentor_group_id));// Add the batch head to Batch Head group.
 		}
 
 		return $batch_id;

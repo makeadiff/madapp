@@ -25,13 +25,11 @@ class Cron extends Controller  {
 
 		if($debug) {
 			print "Debug Mode\n----------\n";
-			print "Total Batches: " . count($all_batches) . "\n";
 		}
 
-		// We have to add all the classes for the next two weeks.
-		for($week = 0; $week < 2; $week++) {
-			foreach($all_batches as $batch) {
-				// if($batch->id != 1187) continue; //:DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
+		foreach ($project_ids as $project_id) {
+			$this->batch_model->project_id = $project_id;
+			$this->class_model->project_id = $project_id;
 
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
@@ -64,16 +62,18 @@ class Cron extends Controller  {
 						);
 						$this->class_model->save_class($class_data);
 					}
-				}
 
-				if($debug and count($teachers) and $debug_text) {
-					// dump($teachers, $date, $batch);
-					print "\n\n-------------------------------\n";
-					print "Current Batch: $batch->id at center $batch->center_id\n";
-					print "\tTotal Teachers in this Batch: ". count($teachers) . "\n";
-					print $debug_text;
+					if($debug and count($teachers) and $debug_text) {
+						// dump($teachers, $date, $batch);
+						print "-------------------------------\n";
+						print "Current Batch: $batch->id at center $batch->center_id\n";
+						print "\tTotal Teachers in this Batch: ". count($teachers) . "\n";
+						print $debug_text;
+					}
 				}
 			}
+
+			if($debug) print "======================================\n";
 		}
 	}
 
@@ -309,7 +309,7 @@ class Cron extends Controller  {
 		$this->load->database();
 		$this->load->library('sms');
 		date_default_timezone_set('Asia/Calcutta');
-		$this->debug = false;
+		$this->debug = true;
 		$now = new DateTime("now");
 		$timestamp= time();
 		//On Monday, it resets the message_sent feild to 0
@@ -340,10 +340,10 @@ class Cron extends Controller  {
   //           								  					)
   //                               			  )
 		foreach($teacher_message_record->result() as $teacher_message_record_row){
-			$name= $teacher_message_record_row->name;
+			$name = ucfirst(@reset(explode(' ', $teacher_message_record_row->name)));
             $center= $teacher_message_record_row->center;
             $slot= $teacher_message_record_row->week_day;
-            $time= $teacher_message_record_row->class_time;
+            $time = date('h:i A', strtotime('2018-08-29 ' . $teacher_message_record_row->class_time)); // Random date. No meaning to it.
 
 			//Message for teachers can be edited from here
 			$teacher_message = "Hi $name,\n\nThe student attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/makeadiff-madapp";
@@ -361,7 +361,9 @@ class Cron extends Controller  {
 				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
 
 			}
+			//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
 		}
+
 		//extracting the phone number of MENTORS who havent updaed the teacher attendance in the next 5 hours.
 		$mentor_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name,
 														CASE
@@ -384,21 +386,14 @@ class Cron extends Controller  {
 		// SELECT phone,user_id, name, center, week_day, class_time, message_sent FROM UserMessage WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL 5 HOUR) AND class_on >CURDATE() ) )
   //
 		foreach($mentor_message_record->result() as $mentor_message_record_row){
-            $name= $mentor_message_record_row->name;
+            $name= ucfirst(@reset(explode(' ', $mentor_message_record_row->name)));
             $center= $mentor_message_record_row->center;
             $slot= $mentor_message_record_row->week_day;
             $time= $mentor_message_record_row->class_time;
 
 			//Message for MENTORS can be edited from here
-			$mentor_message = "Hi $name,\n\nThe teacher attendance for younr class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
-
-			if(1){
-				if($this->debug == true){
-					echo "Message to $mentor_message_record_row->phone: $mentor_message<br>";
-				}
-				else{//$mentor_message_record_row->phone
-					$this->sms->send($mentor_message_record_row->phone,$mentor_message);
-				}
+			// The 'your' in the message was spelled 'younr' - I fixed it. Not sure if the template will work now.
+			$mentor_message = "Hi $name,\n\nThe teacher attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
 
 				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
 

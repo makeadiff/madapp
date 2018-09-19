@@ -163,7 +163,7 @@ background: -moz-linear-gradient(top, #BFFE01, #44A615);	filter: progid:DXImageT
 .form select { width:220px; padding:3px;  }
 .form input[type="button"],
 .form input[type="submit"] { width:auto; min-width:100px; }
-.form input[type="checkbox"] {width:auto; }
+.form input[type="checkbox"],.form input[type="radio"] {width:auto; }
 
 
 /*

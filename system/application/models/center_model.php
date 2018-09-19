@@ -105,6 +105,7 @@ class Center_model extends Model
             C.*,
             Address.address as address,
             Medium.medium as vernacular_medium,
+            JJAct.registered as jjact_registered,
             CA.name as ca_name,
             CA.phone as ca_phone,
             CA.email as ca_email,
@@ -122,6 +123,12 @@ class Center_model extends Model
             WHERE CD.name = "medium_of_instruction"
             AND CD.center_id = '.$uid.'
           ) Medium ON Address.center_id = C.id
+          LEFT JOIN (
+            SELECT CD.center_id as center_id, CD.value as registered
+            FROM CenterData CD
+            WHERE CD.name = "jjact_registered"
+            AND CD.center_id = '.$uid.'
+          ) JJAct ON JJAct.center_id = C.id
           LEFT JOIN CenterAuthority CA ON C.authority_id = CA.id
           LEFT JOIN CenterProject CP ON C.id = CP.center_id
           WHERE C.id = '.$uid.'
@@ -152,8 +159,7 @@ class Center_model extends Model
 	function update_center($data) {
 		$center_id = $data['rootId'];
 		$center_details = $this->edit_center($center_id)->row();
-		if(!$center_details) return false;
-
+		if(!$center_details) return false;    
 
     $sa_data = array();
     $authority_id = 0;
@@ -163,41 +169,43 @@ class Center_model extends Model
     $sa_data['status'] = 1;
     $sa_data['center_id'] = $center_id;
 
-    $check_sa_q = 'SELECT id FROM CenterAuthority
-                   WHERE (name="'.$sa_data['name'].'")
-                   AND (phone="'.$sa_data['phone'].'"
-                   OR email="'.$sa_data['email'].'"
-                 ) AND center_id='.$center_id;
+    if(!empty($data['sa_name'])){ //Check for Data Entry only if the Data Field is not empty.
+      $check_sa_q = 'SELECT id FROM CenterAuthority
+                     WHERE (name="'.$sa_data['name'].'")
+                     AND (phone="'.$sa_data['phone'].'"
+                     OR email="'.$sa_data['email'].'"
+                   ) AND center_id='.$center_id;
 
-    if(!empty($data['authority_id'])) $authority_id = $data['authority_id'];
-    if($authority_id==0){
-      $check_sa = $this->db->query($check_sa_q)->row();
-      if(empty($check_sa)){
-        // In case of adding a new Center Authority, marking status of previous Authorities as 0
-        $this->db->set('status','0');
-        $this->db->where('center_id',$center_id);
-        $this->db->update('CenterAuthority');
-        // Insert New Center Authority Data
-        $this->db->insert('CenterAuthority',$sa_data);
-        $authority_id = $this->db->insert_id();
+      if(!empty($data['authority_id'])) $authority_id = $data['authority_id'];
+      if($authority_id==0){
+        $check_sa = $this->db->query($check_sa_q)->row();
+        if(empty($check_sa)){
+          // In case of adding a new Center Authority, marking status of previous Authorities as 0
+          $this->db->set('status','0');
+          $this->db->where('center_id',$center_id);
+          $this->db->update('CenterAuthority');
+          // Insert New Center Authority Data
+          $this->db->insert('CenterAuthority',$sa_data);
+          $authority_id = $this->db->insert_id();
+        }
+        else {
+          $authority_id = $check_sa->id;
+        }
       }
-      else {
-        $authority_id = $check_sa->id;
-      }
-    }
-    else{
-      $check_sa = $this->db->query($check_sa_q)->row();
-      if(empty($check_sa)){
-        // In case of adding a new Center Authority, marking status of previous Authorities as 0
-        $this->db->set('status','0');
-        $this->db->where('center_id',$center_id);
-        $this->db->update('CenterAuthority');
-        // Insert New Center Authority Data
-        $this->db->insert('CenterAuthority',$sa_data);
-        $authority_id = $this->db->insert_id();
-      }
-      else {
-        $authority_id = $check_sa->id;
+      else{
+        $check_sa = $this->db->query($check_sa_q)->row();
+        if(empty($check_sa)){
+          // In case of adding a new Center Authority, marking status of previous Authorities as 0
+          $this->db->set('status','0');
+          $this->db->where('center_id',$center_id);
+          $this->db->update('CenterAuthority');
+          // Insert New Center Authority Data
+          $this->db->insert('CenterAuthority',$sa_data);
+          $authority_id = $this->db->insert_id();
+        }
+        else {
+          $authority_id = $check_sa->id;
+        }
       }
     }
 
@@ -222,7 +230,7 @@ class Center_model extends Model
 		$new_data = array();
 		if(!empty($data['center'])) $new_data['name'] = $data['center'];
 		if(!empty($data['user_id'])) $new_data['center_head_id'] = $data['user_id'];
-		if(!empty($data['class_starts_on'])) $new_data['class_starts_on'] = $data['class_starts_on'];
+		if(!empty($data['class_starts_on']) && $data['class_starts_on']!='0000-00-00') $new_data['class_starts_on'] = $data['class_starts_on'];
 		if(!empty($data['medium'])) $new_data['medium'] = $data['medium'];
 		if(!empty($data['preferred_gender'])) $new_data['preferred_gender'] = $data['preferred_gender'];
     if(!empty($data['phone'])) $new_data['phone'] = $data['phone'];
@@ -275,9 +283,32 @@ class Center_model extends Model
       }
     }
 
+    if($data['jjact_registered']!=''){
+      $medium = array(
+        'center_id' => $center_id,
+        'name'      => 'jjact_registered',
+        'year'      => $this->year,
+        'value'     => $data['jjact_registered'],
+        'data'      => ''
+      );
+      $check_jj_q = 'SELECT id FROM CenterData
+                        WHERE name="jjact_registered"
+                        AND center_id = '.$center_id.'';
+      $check_jj = $this->db->query($check_jj_q)->row();
+      if(empty($check_jj)){
+        $this->db->insert('CenterData',$medium);
+      }
+      else{
+        $this->db->set($medium);
+        $this->db->where('id',$check_jj->id);
+        $this->db->update('CenterData');
+        $affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
+      }
+    }
+
 		$this->db->where('id', $center_id);
 		$this->db->update('Center', $new_data);
-		$affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
+		// $affected_rows = ($this->db->affected_rows() > 0) ? true: false ;
 
 		if($affected_rows) { // If center has been update,
 			if(isset($new_data['medium']) and $new_data['medium'] != 'english')
@@ -292,6 +323,8 @@ class Center_model extends Model
 			$this->users_model->remove_user_from_group($center_details->center_head_id, 7); // Remove the old center head from the group 'Center Head'
 			$this->users_model->adduser_to_group($data['center_head_id'], array(7));// Add the center head to Center Head group.
 		}
+    dump($affected_rows);
+    exit;
 
 		return $affected_rows;
 	}

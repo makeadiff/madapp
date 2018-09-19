@@ -21,8 +21,8 @@ $mediums = array(
 );
 
 $details=$details->result_array();
-
 foreach($details as $row) {
+	$jjact_registered = $row['jjact_registered'];
 	$root_id=$row['id'];
 	$name=$row['name'];
 	$city_id=$row['city_id'];
@@ -57,6 +57,18 @@ foreach($details as $row) {
 <label for="user_id">Shelter Type</label>
 <?php echo form_dropdown('shelter_type', $center_types, $type); ?>
 </li>
+
+<li>
+<p><strong>Registered with Juvenile Justice (JJ) Act?</strong></p>
+<label class="right" for="jj_act_yes">
+	<input type="radio" name="jjact_registered" value="1" <?php if($jjact_registered=='1') echo "checked"; ?> id="jj_act_yes"/>Yes
+</label>
+<label class="right" for="jj_act_no">
+	<input type="radio" name="jjact_registered" value="0" <?php if($jjact_registered=='0') echo "checked"; ?> id="jj_act_no"/>No
+</label>
+</li>
+
+<!-- ALTER TABLE `Center` ADD `jjact_registered` ENUM('1','0') NOT NULL AFTER `updated_on`; -->
 
 <li>
 <label for="center">Shelter Address </label>

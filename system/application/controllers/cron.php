@@ -3,7 +3,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends Controller  {
 	public $year = false;
-	
+
     function Cron() {
         parent::Controller();
         header("Content-type: text/plain");
@@ -11,18 +11,18 @@ class Cron extends Controller  {
         $this->load->model('Users_model', 'users_model');
         $this->load->model('Class_model','class_model', TRUE);
         $this->load->model('Batch_model','batch_model', TRUE);
-        
+
         $this->year = get_year();
         $this->class_model->year = $this->year;
         $this->users_model->year = $this->year;
         $this->batch_model->year = $this->year;
 		$this->batch_model->project_id = 1;
 	}
-	
+
 	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
 	function schedule_classes($debug=0) {
 		$all_batches = $this->batch_model->get_all_batches(true);
-		
+
 		if($debug) {
 			print "Debug Mode\n----------\n";
 			print "Total Batches: " . count($all_batches) . "\n";
@@ -35,17 +35,17 @@ class Cron extends Controller  {
 
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
-				
+
 				// This is how we find the next sunday, monday(whatever is in the $batch->day).
 				$date_interval = intval($batch->day) - date('w');
 				if($date_interval <= 0) $date_interval += 7;
 				$day = date('d') + $date_interval;
-				
+
 				$day = $day + ($week * 7); // We have to do this for two weeks. So in the first iteration, this will be 0 and in next it will be 7.
-							
+
 				$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
 				$date = date("Y-m-d H:i:s", $time);
-				
+
 				$debug_text = '';
 				foreach($teachers as $teacher) {
 					// if($teacher->id != 83172) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
@@ -53,7 +53,7 @@ class Cron extends Controller  {
 					// Make sure its not already inserted.
 					if(!$this->class_model->get_by_teacher_time($teacher->id, $date, $batch->id, $teacher->level_id)) {
 						$debug_text .= "\tClass by {$teacher->id} at $date\n";
-						
+
 						$class_data = array(
 							'batch_id'	=> $batch->id,
 							'level_id'	=> $teacher->level_id,
@@ -76,14 +76,14 @@ class Cron extends Controller  {
 			}
 		}
 	}
-	
+
 	/// Copies all the existing credits over to the Archive table and reset credits to 3.
 	function archive_credits() {
 		$last_year = $this->year - 1;
-		
-		$users = $this->users_model->db->query("SELECT User.id,credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id 
+
+		$users = $this->users_model->db->query("SELECT User.id,credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id
 				WHERE UserGroup.group_id=9 AND user_type='volunteer'")->result(); // 9 is Teacher Group
-		
+
 		$data = array();
 		$count = 0;
 		foreach($users as $u) {
@@ -93,11 +93,11 @@ class Cron extends Controller  {
 		}
 		$this->users_model->db->query("INSERT INTO Archive(user_id, name, value, year, added_on) VALUES (" . implode("),(", $data) . ")");
 		print "Saved engish credits of $count people.\n";
-		
+
 		// Interns
-		$admin_users = $this->users_model->db->query("SELECT User.id,admin_credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id 
+		$admin_users = $this->users_model->db->query("SELECT User.id,admin_credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id
 				WHERE UserGroup.group_id=14 AND user_type='volunteer'")->result(); // 14 is Admin Group
-		
+
 		$data = array();
 		$count = 0;
 		foreach($admin_users as $u) {
@@ -124,15 +124,15 @@ class Cron extends Controller  {
 					'data'	=> json_encode(array('class_starts_on' => $center->class_starts_on, 'center_head_id'=> $center->center_head_id))
 				));
 			$this->center_model->update_center(array('rootId' => $center->id, 'class_starts_on'=>'0000-00-00'));
-			
+
 			print "Archived {$center->name} - start date - {$center->class_starts_on}\n";
 		}
 	}
-	
+
 	/// Sometimes, the credits go bad. In such cases, rebuild the credits using the credit history.
 	function recalculate_credits($city_id=0, $user_id = 0) {
 		$this->load->model('users_model');
-		
+
 		if($user_id) {
 			$all_users = json_decode('[{"id":'.$user_id.', "name": "User"}]');
 		} else {
@@ -140,7 +140,7 @@ class Cron extends Controller  {
 			if($city_id) $conditions['city_id'] = $city_id;
 			$all_users = $this->users_model->search_users($conditions);
 		}
-		
+
 		print "Recalculating credits of " . count($all_users) . " users.\n";
 		foreach($all_users as $user) {
 			print $user->id . ") " . $user->name;
@@ -149,33 +149,33 @@ class Cron extends Controller  {
 			print "\n";
 		}
 	}
-	
+
 	/// Sometimes, the classes linger in the database even after the user has been removed from the batch. This function clears that.
 	function delete_orphan_classes() {
 		$this->load->model('Batch_model','batch_model');
 		$this->load->model('Center_model','center_model');
 		$this->load->model('Level_model','level_model');
 		$this->load->model('City_model','city_model');
-		
-		
+
+
 		$all_cities = $this->city_model->get_all();
 		foreach($all_cities as $city) {
 			$all_centers = $this->center_model->get_all($city->id);
-			
+
 			foreach($all_centers as $center) {
 				$batches = $this->batch_model->get_class_days($center->id);
 				$all_levels = $this->level_model->get_all_levels_in_center($center->id);
-				
+
 				foreach($batches as $batch_id => $batch_name) {
 					foreach($all_levels as $level) {
 						// Get people in this level.
 						$actual_teachers = $this->batch_model->get_teachers_in_batch_and_level($batch_id, $level->id);
-						
+
 						// Get people shown in madsheet in this level - from the class and userclass table.
 						$shown_classes = $this->class_model->get_classes_by_level_and_batch($level->id, $batch_id);
 						foreach($shown_classes as $class) {
 							// If the class is in the future and the teacher is not in the batch...
-							if($class->class_on > date('Y-m-d H:i:s') and 
+							if($class->class_on > date('Y-m-d H:i:s') and
 									!in_array($class->user_id, $actual_teachers)) {
 								$this->class_model->delete_future_classes($class->user_id, $batch_id, $level->id);// delete the people missing from the level.
 								$actual_teachers[] = $class->user_id; // So that we won't have to delete this user all over again. The parent if condition will prevent that.
@@ -190,15 +190,15 @@ class Cron extends Controller  {
 
 	/**
 	 * Cron that checks if the 5 consicutive classes happened - and reassign credits based on that.
-	 * How it Works: There is two fields in the User Table - credit and consecutive_credit. Credit holds the total credit of the volunteer. consecutive_credit holds the credit they got by doing consecutive classes. 
-	 *	credit field is other type of credit + consecutive_credit. What the function does is basically get the list of all volunteers, go thru each one, find how many consecutive credits they deserve, then if there 
+	 * How it Works: There is two fields in the User Table - credit and consecutive_credit. Credit holds the total credit of the volunteer. consecutive_credit holds the credit they got by doing consecutive classes.
+	 *	credit field is other type of credit + consecutive_credit. What the function does is basically get the list of all volunteers, go thru each one, find how many consecutive credits they deserve, then if there
 	 *	is ANY change(credits should be more that what it is currently - or should be less than what it is), then the script updates the table with the accurate number.
 	 *	The rest of MADApp just have to worry about the credit field as it holds the full credit. Only the script that deals with consecutive credit will use the other field.
 	 */
 	function consecutive_class_credit($city_id = 0) {
 		$conditions = array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'project_id'=>1,'city_id'=>$city_id);
 		$all_users = $this->users_model->search_users($conditions);
-		
+
 		print "Recalculating credits of " . count($all_users) . " users.\n";
 		foreach($all_users as $user) {
 			print $user->id . ") " . $user->name;
@@ -225,9 +225,14 @@ class Cron extends Controller  {
 		// Copy all user groups other than fellow/strat ones. Those change every year.
 		$fellow_strat_group_ids = colFormat($this->users_model->db->query("SELECT id FROM `Group` WHERE (type='fellow' OR type='strat') AND group_type='normal' AND status='1'")->result());
 
-		$this->users_model->db->query("INSERT INTO UserGroup(user_id, group_id, year) 
-										SELECT user_id, group_id, '$current_year' FROM UserGroup 
-											WHERE year='$last_year' AND group_id NOT IN (" . implode(",", $fellow_strat_group_ids) . ")");
+		$this->users_model->db->query("INSERT INTO UserGroup(user_id, group_id, year)
+										SELECT user_id, group_id, '$current_year' FROM UserGroup
+										INNER JOIN User ON User.id = UserGroup.user_id
+											WHERE UserGroup.year='$last_year'
+												AND UserGroup.group_id NOT IN (" . implode(",", $fellow_strat_group_ids) . ")
+												AND User.user_type = 'volunteer'
+												AND User.status = 1
+												");
 	}
 
 	/// Copy over last year's Class structure. Rename all fancy name to ABC, and increment their grade by one. '7 Rainbow class' becomes '8 A'
@@ -242,7 +247,7 @@ class Cron extends Controller  {
 		$batches = $this->users_model->db->query("SELECT * FROM Batch WHERE year='$last_year' AND status='1'")->result();
 		print "Copying " . count($batches) . " batches<br />\n";
 		foreach($batches as $b) {
-			$this->users_model->db->query("INSERT INTO Batch (day,class_time,batch_head_id,center_id,project_id, year, status) 
+			$this->users_model->db->query("INSERT INTO Batch (day,class_time,batch_head_id,center_id,project_id, year, status)
 				VALUES('{$b->day}','{$b->class_time}','{$b->batch_head_id}','{$b->center_id}','{$b->project_id}','$current_year', '{$b->status}')");
 			$batch_mapping[$b->id] = $this->users_model->db->insert_id();
 		}
@@ -256,7 +261,7 @@ class Cron extends Controller  {
 		foreach($levels as $b) {
 			$status = $b->status;
 			$new_grade = intval($b->grade) + 1;
-			if($new_grade == 14) $status = 0; // If people over 13 is upgraded to a deleted level.  
+			if($new_grade == 14) $status = 0; // If people over 13 is upgraded to a deleted level.
 
 			$name = addslashes($b->name);
 			if(!isset($uniqizer[$b->center_id])) {
@@ -269,7 +274,7 @@ class Cron extends Controller  {
 			$name = $alphabets[$uniqizer[$b->center_id][$new_grade]];
 			$uniqizer[$b->center_id][$new_grade]++;
 
-			$this->users_model->db->query("INSERT IGNORE INTO Level (name,grade,center_id,project_id, year, status) 
+			$this->users_model->db->query("INSERT IGNORE INTO Level (name,grade,center_id,project_id, year, status)
 				VALUES('$name','$new_grade','{$b->center_id}','{$b->project_id}','$current_year', '{$status}')");
 
 			$level_mapping[$b->id] = $this->users_model->db->insert_id();
@@ -308,31 +313,31 @@ class Cron extends Controller  {
 		$now = new DateTime("now");
 		$timestamp= time();
 		//On Monday, it resets the message_sent feild to 0
-		
+
 		//extracting the phone number of TEACHERS who havent updated the child attendance in the next 5 hours, add center slot and class_time to this table.
-		$teacher_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name, 
-														CASE 
-														WHEN B.day= 1 THEN 'Sunday' 
+		$teacher_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name,
+														CASE
+														WHEN B.day= 1 THEN 'Sunday'
 														WHEN B.day= 2 THEN 'Monday'
 														WHEN B.day= 3 THEN 'Tuesday'
-														WHEN B.day= 4 THEN 'Wednesday' 
-														WHEN B.day= 5 THEN 'Thursday' 
-														WHEN B.day= 6 THEN 'Friday' 
-														ELSE 'Saturday' end AS week_day, 
-														B.class_time, C.name as center From 
-														User U INNER JOIN UserBatch S on U.id = S.user_id 
-														INNER JOIN Batch B on S.batch_id = B.id 
-														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN 
-														(SELECT user_id FROM UserClass WHERE class_id IN 
+														WHEN B.day= 4 THEN 'Wednesday'
+														WHEN B.day= 5 THEN 'Thursday'
+														WHEN B.day= 6 THEN 'Friday'
+														ELSE 'Saturday' end AS week_day,
+														B.class_time, C.name as center From
+														User U INNER JOIN UserBatch S on U.id = S.user_id
+														INNER JOIN Batch B on S.batch_id = B.id
+														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN
+														(SELECT user_id FROM UserClass WHERE class_id IN
 														 (SELECT id FROM Class WHERE class_on < Date_Add(SYSDATE(),INTERVAL -5 HOUR) AND DATE(class_on) = CURDATE() AND class_on <= NOW() AND updated_by_teacher=0)
 														);"
 														                                );
 
 		// SELECT phone, user_id, name, center, week_day, class_time FROM UserMessage
 		// 						 WHERE user_id IN (SELECT user_id FROM UserClass
-  //            								  WHERE class_id IN (SELECT id FROM Class 
+  //            								  WHERE class_id IN (SELECT id FROM Class
   //                           									 WHERE class_on < Date_Add(SYSDATE(),INTERVAL 5 HOUR) AND class_on >CURDATE() AND updated_by_teacher=0
-  //           								  					)				
+  //           								  					)
   //                               			  )
 		foreach($teacher_message_record->result() as $teacher_message_record_row){
 			$name= $teacher_message_record_row->name;
@@ -343,33 +348,33 @@ class Cron extends Controller  {
 			//Message for teachers can be edited from here
 			$teacher_message = "Hi $name,\n\nThe student attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/makeadiff-madapp";
 			if(1){
-			
-					
+
+
 				if($this->debug == true){
 					echo "Message to $teacher_message_record_row->phone: $teacher_message<br>";
 				}
 				else{
 					$this->sms->send($teacher_message_record_row->phone,$teacher_message);
-					
+
 				}
-				
-				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
-				
+
+				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
+
 			}
 		}
 		//extracting the phone number of MENTORS who havent updaed the teacher attendance in the next 5 hours.
-		$mentor_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name, 
-														CASE 
-														WHEN B.day= 1 THEN 'Sunday' 
+		$mentor_message_record=$this->db->query("SELECT U.id as user_id, U.phone, U.name,
+														CASE
+														WHEN B.day= 1 THEN 'Sunday'
 														WHEN B.day= 2 THEN 'Monday'
 														WHEN B.day= 3 THEN 'Tuesday'
-														WHEN B.day= 4 THEN 'Wednesday' 
-														WHEN B.day= 5 THEN 'Thursday' 
-														WHEN B.day= 6 THEN 'Friday' 
-														ELSE 'Saturday' end AS week_day, 
-														B.class_time, C.name as center From 
-														User U INNER JOIN UserBatch S on U.id = S.user_id 
-														INNER JOIN Batch B on S.batch_id = B.id 
+														WHEN B.day= 4 THEN 'Wednesday'
+														WHEN B.day= 5 THEN 'Thursday'
+														WHEN B.day= 6 THEN 'Friday'
+														ELSE 'Saturday' end AS week_day,
+														B.class_time, C.name as center From
+														User U INNER JOIN UserBatch S on U.id = S.user_id
+														INNER JOIN Batch B on S.batch_id = B.id
 														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL -5 HOUR) AND class_on >CURDATE() AND class_on<NOW()) );
 														");
 
@@ -377,13 +382,13 @@ class Cron extends Controller  {
 
 
 		// SELECT phone,user_id, name, center, week_day, class_time, message_sent FROM UserMessage WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL 5 HOUR) AND class_on >CURDATE() ) )
-  //                               				
+  //
 		foreach($mentor_message_record->result() as $mentor_message_record_row){
             $name= $mentor_message_record_row->name;
             $center= $mentor_message_record_row->center;
             $slot= $mentor_message_record_row->week_day;
             $time= $mentor_message_record_row->class_time;
-            
+
 			//Message for MENTORS can be edited from here
 			$mentor_message = "Hi $name,\n\nThe teacher attendance for younr class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
 
@@ -395,14 +400,13 @@ class Cron extends Controller  {
 					$this->sms->send($mentor_message_record_row->phone,$mentor_message);
 				}
 
-				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.	
-				
-			}	
+				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
+
+			}
 		}
 	}
 
 	// :TODO:
-	
-               
-}
 
+
+}

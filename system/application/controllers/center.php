@@ -113,15 +113,16 @@ class Center extends Controller  {
     $data['phone'] = $_REQUEST['shelter_contact'];
 		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
     $data['address'] = $_REQUEST['address'];
-    $data['programmes'] = $_REQUEST['programmes'];
+    if(isset($_REQUEST['programmes'])) $data['programmes'] = $_REQUEST['programmes'];
     $data['medium_of_instruction'] = $_REQUEST['medium_hidden'];
+    $data['jjact_registered'] = $_REQUEST['jjact_registered'];
     $data['authority_id'] = $_REQUEST['authority_id'];
 
     $data['sa_name'] = $_REQUEST['sa_name'];
     $data['sa_email'] = $_REQUEST['sa_email'];
     $data['sa_phone'] = $_REQUEST['sa_phone'];
 
-    dump($data);
+    // dump($data);
 
 		$returnFlag= $this->center_model->update_center($data);
 

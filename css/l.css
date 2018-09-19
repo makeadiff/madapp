@@ -202,7 +202,7 @@ input#cbRemember { margin: 8px 5px 0 0; }
 }
 a#btnBack {
     float: left;
-    margin-top: 5px; 
+    margin-top: 5px;
 }
 
 /* Top */
@@ -909,7 +909,7 @@ padding-left:160px;
 }
 #question{
 	margin-left:10px;
-	
+
 }
 #up{
 	margin-top:10px;
@@ -951,10 +951,9 @@ padding-left:160px;
 	color:darkgreen;
 	font-weight:bold;
 }
-	
+
 #warning-message,.warning, #success-message,.success,#error-message,.error {
 	padding-left:18px;
 	background-repeat:no-repeat;
 	background-position:top left;
 }
-

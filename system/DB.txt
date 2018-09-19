@@ -151,6 +151,16 @@ Credit_Parameter.negative:
 Credit_Parameter.vertical_id: 
 Credit_Parameter.status: 
 
+Data: Free form data storage(key/value pair) - for any of the tables specified in the 'item' field.
+Data.id: 
+Data.item: Which table this will be associated with. For eg. if this has value 'Class' and item_id has value '35443' that means this data point is assocated with Class with id 35443
+Data.item_id: {Data.item}.id - Which row this will be associated with.
+Data.name: Key part of the key/value pair
+Data.data: Value part of the key/value pair
+Data.year: 
+Data.added_on: 
+Data.added_by_user_id: 
+
 DBMerge: Used for the merge of the databases - not used after that.
 DBMerge.id: 
 DBMerge.table_name: 
@@ -176,8 +186,8 @@ Donut_Deleted_Donation.comment:
 
 Donut_Deposit: Deposit/handover information. When ever a user hands over money to another user(eg. vol to coach, coach to fellow) it creates a row in this table
 Donut_Deposit.id: 
-Donut_Deposit.collected_from_user_id: 
-Donut_Deposit.given_to_user_id: 
+Donut_Deposit.collected_from_user_id: The User.id who gave the deposit
+Donut_Deposit.given_to_user_id: The User.id of the person who collected the money.
 Donut_Deposit.added_on: 
 Donut_Deposit.reviewed_on: 
 Donut_Deposit.amount: Total amount of the hand over - the sum of all the donatitons handed over.
@@ -191,7 +201,7 @@ Donut_Donation.fundraiser_user_id: User.id - the person who raised the amount.
 Donut_Donation.donor_id: Dount_Donor.id - The donor who made donation.
 Donut_Donation.status: 
 Donut_Donation.amount: 
-Donut_Donation.nach_start_on: 
+Donut_Donation.nach_start_on: If this is a NACH donation, the start on date for the NACH
 Donut_Donation.nach_end_on: 
 Donut_Donation.cheque_no: 
 Donut_Donation.added_on: 
@@ -842,12 +852,12 @@ UserEvent: User event attenandce data.
 UserEvent.id: 
 UserEvent.user_id: User.id
 UserEvent.event_id: Event.id
-UserEvent.present: 
+UserEvent.present: 0-No data, 1-Present, 3-Missed
 UserEvent.late: 
-UserEvent.user_choice: 
-UserEvent.reason: 
-UserEvent.created_from: 
-UserEvent.type: 
+UserEvent.user_choice: 0-Data, 1-I'm going, 2-Maybe, 3-Can't go
+UserEvent.reason: If user marks Can't go in RSVP, capture reason
+UserEvent.created_from: 1-Web, 2-App
+UserEvent.type:
 UserEvent.created_on: 
 UserEvent.rsvp_auth_key: 
 

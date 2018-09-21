@@ -68,8 +68,8 @@ class Batch_model extends Model {
 	
 	function get_levels_in_batch($batch_id) {
 		return $this->db->query("SELECT DISTINCT Level.id,CONCAT(Level.grade, ' ', Level.name) AS name FROM Level 
-			INNER JOIN UserBatch ON Level.id=UserBatch.level_id 
-			WHERE UserBatch.batch_id=$batch_id AND Level.project_id={$this->project_id} AND Level.year={$this->year}")->result();
+			INNER JOIN BatchLevel ON Level.id=BatchLevel.level_id 
+			WHERE BatchLevel.batch_id=$batch_id AND BatchLevel.year={$this->year}")->result();
 	}
 	
 	function get_batches_in_center($center_id) {

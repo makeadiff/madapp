@@ -1,28 +1,21 @@
 
-#Database Name
+## Table name
+# Singular. Eg. User
+# First Letter uppercase Eg. User
+# Word separation in Camel case(first upper) and underscore(_). Eg. User_Image - (Different rule for reference tables)
 
-#----Name of the project. Eg. nexty
+## Field Name
+# Singular
+# Completely lowercase
+# Word separation using '_'. Eg. 'first_name'
+# No prefix.
 
-#Table name
-
-#----Singular. Eg. User
-#----First Letter uppercase Eg. User
-#----Word separation in Camel case(first upper) and underscore(_). Eg. User_Image - (Different rule for reference tables)
-
-#Field Name
-
-#----Singular
-#----Completely lowercase
-#----Word separation using '_'. Eg. 'first_name'
-#----No prefix.
-
-#Naming Conventions
-
-#----Postfix date fields with '_on'. Eg. added_on
-#----Primary key should be always 'id'
-#----The title field in the table must always have the name 'name'. Eg User.name, Page.name, Content.name
-#----Reference table must be named in the format <First table><Second table> - Eg. PageTag
-#----Foreign key must be in the format '<table>_<primary key>' - all lower case - Eg. user_id
+## Naming Conventions
+# Postfix date fields with '_on'. Eg. added_on
+# Primary key should be always 'id'
+# The title field in the table must always have the name 'name'. Eg User.name, Page.name, Content.name
+# Reference table must be named in the format <First table><Second table> - Eg. PageTag
+# Foreign key must be in the format '<table>_<primary key>' - all lower case - Eg. user_id
 
 
 App_CSVGo: Used in the app 'CSV:Go'. Stores queries as text that is used to generate CSV's of needed data that can be imported into other tools like Google Spreadsheet
@@ -104,7 +97,7 @@ Center.medium: Medium of instuction
 Center.preferred_gender: Ideal gender of the volunteers teaching at this shelter.
 Center.latitude: Location of shelter
 Center.longitude: Location of shelter
-Center.authority_id:
+Center.authority_id: CenterAuthority.id
 Center.type:
 Center.year_undertaking:
 Center.phone:
@@ -113,7 +106,7 @@ Center.status:
 
 CenterAuthority: Details of the people running the Shelter.
 CenterAuthority.id:
-CenterAuthority.center_id:
+CenterAuthority.center_id: Center.id
 CenterAuthority.name:
 CenterAuthority.phone:
 CenterAuthority.email:
@@ -121,7 +114,7 @@ CenterAuthority.status:
 
 CenterData: More shelter information gets stored here. Things like historical sherter class starting days, Center heads, etc.
 CenterData.id:
-CenterData.center_id:
+CenterData.center_id: Center.id
 CenterData.name:
 CenterData.year:
 CenterData.value:
@@ -129,8 +122,8 @@ CenterData.data:
 
 CenterProject: Which all projects are active in Shelter.
 CenterProject.id:
-CenterProject.center_id:
-CenterProject.project_id:
+CenterProject.center_id: Center.id
+CenterProject.project_id: Project.id
 CenterProject.year:
 CenterProject.added_on:
 
@@ -140,25 +133,25 @@ City.name:
 City.president_id: City Team Lead of this city.
 City.added_on:
 City.classes_happening:
-City.region_id:
+City.region_id: Region.id - not used
 City.latitude:
 City.longitude:
 City.type: Two city(leadership, and test) are marked as vertiual. No actual operations happen in those two cities. They are for testing/management purposes.
 
 Class: All information about classes that happened will be stored in this. Rows in this table are genearted by the schedule_classes cron job. Rows for the next two weeks will be generated based on the assignments.
 Class.id:
-Class.batch_id:
-Class.level_id:
-Class.project_id:
+Class.batch_id: Batch.id
+Class.level_id: Level.id
+Class.project_id: Project.id
 Class.class_on:
 Class.feedback:
-Class.lesson_id: Deprecated
+Class.lesson_id: Lesson.id - Deprecated
 Class.class_type: If its an extra class the value of this will be 'extra'. Those are classes that happens the normal schedule(For eg, if we didn't get enough classes normally).
 Class.class_satisfaction:
 Class.cancel_option:
 Class.cancel_reason:
-Class.updated_by_mentor:
-Class.updated_by_teacher:
+Class.updated_by_mentor: User.id
+Class.updated_by_teacher: User.id
 Class.status:
 
 Comment: Catch-all comment storing table. This will be storing notes on any of the 'item' - 'User','Student','City','Center','Event'
@@ -167,7 +160,7 @@ Comment.item:
 Comment.item_id: The forign key of what ever the item is in that row.
 Comment.comment:
 Comment.added_on:
-Comment.added_by_user_id:
+Comment.added_by_user_id: User.id
 
 Credit_Parameter: Not used right now - will update when used.
 Credit_Parameter.id:
@@ -175,7 +168,7 @@ Credit_Parameter.name:
 Credit_Parameter.description:
 Credit_Parameter.positive:
 Credit_Parameter.negative:
-Credit_Parameter.vertical_id:
+Credit_Parameter.vertical_id: Vertical.id
 Credit_Parameter.status:
 
 Data: Free form data storage(key/value pair) - for any of the tables specified in the 'item' field.
@@ -186,7 +179,7 @@ Data.name: Key part of the key/value pair
 Data.data: Value part of the key/value pair
 Data.year:
 Data.added_on:
-Data.added_by_user_id:
+Data.added_by_user_id: User.id
 
 DBMerge: Used for the merge of the databases - not used after that.
 DBMerge.id:
@@ -198,8 +191,8 @@ DBMerge.updated_on:
 Donut_Deleted_Donation: This stores a copy of the donation when anyone deletes it. For historical purpose.
 Donut_Deleted_Donation.id:
 Donut_Deleted_Donation.type: Type of donation - cash, cheque, online donation, etc.
-Donut_Deleted_Donation.fundraiser_user_id:
-Donut_Deleted_Donation.donor_id:
+Donut_Deleted_Donation.fundraiser_user_id: User.id
+Donut_Deleted_Donation.donor_id: Dount_Donor.id
 Donut_Deleted_Donation.status:
 Donut_Deleted_Donation.amount:
 Donut_Deleted_Donation.nach_start_on:
@@ -207,8 +200,8 @@ Donut_Deleted_Donation.nach_end_on:
 Donut_Deleted_Donation.cheque_no:
 Donut_Deleted_Donation.added_on:
 Donut_Deleted_Donation.updated_on:
-Donut_Deleted_Donation.updated_by_user_id:
-Donut_Deleted_Donation.with_user_id:
+Donut_Deleted_Donation.updated_by_user_id: User.id
+Donut_Deleted_Donation.with_user_id: User.id
 Donut_Deleted_Donation.comment:
 
 Donut_Deposit: Deposit/handover information. When ever a user hands over money to another user(eg. vol to coach, coach to fellow) it creates a row in this table
@@ -239,15 +232,15 @@ Donut_Donation.comment:
 
 Donut_DonationDeposit: Reference tables that holds information on which all donation make up a deposit.
 Donut_DonationDeposit.id:
-Donut_DonationDeposit.deposit_id:
-Donut_DonationDeposit.donation_id:
+Donut_DonationDeposit.deposit_id: Donut_Deposit.id
+Donut_DonationDeposit.donation_id: Donut_Donation.id
 
 Donut_Donation_Version: Not used right now. This was used to hold all changes  made to any donation. Versioning.
 Donut_Donation_Version.id:
-Donut_Donation_Version.donation_id:
+Donut_Donation_Version.donation_id: Donut_Donation.id
 Donut_Donation_Version.type:
-Donut_Donation_Version.fundraiser_user_id:
-Donut_Donation_Version.donor_id:
+Donut_Donation_Version.fundraiser_user_id: User.id
+Donut_Donation_Version.donor_id: Dount_Donor.id
 Donut_Donation_Version.status:
 Donut_Donation_Version.amount:
 Donut_Donation_Version.cheque_no:
@@ -262,7 +255,7 @@ Donut_Donor.name:
 Donut_Donor.phone:
 Donut_Donor.email:
 Donut_Donor.address:
-Donut_Donor.added_by_user_id:
+Donut_Donor.added_by_user_id: User.id
 Donut_Donor.added_on:
 Donut_Donor.updated_on:
 
@@ -278,14 +271,14 @@ Donut_Network.pledge_type:
 Donut_Network.nach_duration:
 Donut_Network.collection_by:
 Donut_Network.address:
-Donut_Network.added_by_user_id:
+Donut_Network.added_by_user_id: User.id
 Donut_Network.follow_up_on:
 Donut_Network.collect_on:
 Donut_Network.added_on:
 
 Donut_NetworkData: Network mapping information.
 Donut_NetworkData.id:
-Donut_NetworkData.donut_network_id:
+Donut_NetworkData.donut_network_id: Donut_Network.id
 Donut_NetworkData.name:
 Donut_NetworkData.value:
 Donut_NetworkData.data:
@@ -299,7 +292,7 @@ Event.starts_on:
 Event.ends_on:
 Event.place:
 Event.type:
-Event.city_id:
+Event.city_id: City.id
 Event.event_type_id: Event_Type.id - What type of an event this is
 Event.vertical_id: Vertical.id - What vertical this event is a part of(eg. Ed Support Training.)
 Event.user_selection_options:
@@ -372,18 +365,18 @@ FAM_Parameter.required:
 FAM_Parameter.sort:
 FAM_Parameter.status:
 
-FAM_Parameter_Category:
+FAM_Parameter_Category: Categorization of the parameters.
 FAM_Parameter_Category.id:
-FAM_Parameter_Category.stage_id:
-FAM_Parameter_Category.group_id:
+FAM_Parameter_Category.stage_id: FAM_Stage.id
+FAM_Parameter_Category.group_id: Group.id
 FAM_Parameter_Category.name:
 FAM_Parameter_Category.status:
 
 FAM_Referral: Applicants can refer other people for  roles. This holdes the referals.
 FAM_Referral.id:
-FAM_Referral.referer_user_id:
-FAM_Referral.referee_user_id:
-FAM_Referral.group_id:
+FAM_Referral.referer_user_id: User.id
+FAM_Referral.referee_user_id: User.id
+FAM_Referral.group_id: Group.id - The role the user is refered for.
 FAM_Referral.created_at:
 
 FAM_Stage: All the stages in play.

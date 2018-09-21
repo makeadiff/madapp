@@ -512,6 +512,7 @@ class Users_model extends Model {
     	if($change == 1) $change = '+1';
     	if($change == 2) $change = '+2';
 		if($change == .5) $change = '+.5';
+		if($change == 0) $change = '+0';
     	$this->db->query("UPDATE User SET credit=credit $change WHERE id=$user_id");
     }
     function set_credit($user_id, $credit) {

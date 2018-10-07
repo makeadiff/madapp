@@ -1,8 +1,9 @@
-
+### Naming Conventions
 ## Table name
 # Singular. Eg. User
 # First Letter uppercase Eg. User
 # Word separation in Camel case(first upper) and underscore(_). Eg. User_Image - (Different rule for reference tables)
+# Reference table must be named in the format <First table><Second table> - Eg. PageTag
 
 ## Field Name
 # Singular
@@ -156,7 +157,7 @@ Class.status:
 
 Comment: Catch-all comment storing table. This will be storing notes on any of the 'item' - 'User','Student','City','Center','Event'
 Comment.id:
-Comment.item:
+Comment.item: Which table this will be associated with. For eg. if this has value 'User' and item_id has value '35443' that means this data point is assocated with User with id 35443
 Comment.item_id: The forign key of what ever the item is in that row.
 Comment.comment:
 Comment.added_on:
@@ -292,7 +293,7 @@ Event.starts_on:
 Event.ends_on:
 Event.place:
 Event.type:
-Event.city_id: City.id
+Event.city_id: City.id - If this is 0, it means its a multi city event(Users from more than one city participating - eg. National Ed Support Fellows Zoom Call)
 Event.event_type_id: Event_Type.id - What type of an event this is
 Event.vertical_id: Vertical.id - What vertical this event is a part of(eg. Ed Support Training.)
 Event.user_selection_options:
@@ -330,9 +331,9 @@ Exam_Type.ferquency:
 
 FAM_ApplicantFeedback: Fellowship Application Management - this table holds the feedback applicants give at year end.
 FAM_ApplicantFeedback.id:
-FAM_ApplicantFeedback.applicant_user_id:
-FAM_ApplicantFeedback.reviewer_user_id:
-FAM_ApplicantFeedback.question_id:
+FAM_ApplicantFeedback.applicant_user_id: User.id
+FAM_ApplicantFeedback.reviewer_user_id: User.id
+FAM_ApplicantFeedback.question_id: FAM_ApplicantFeedbackQuestions.id
 FAM_ApplicantFeedback.feedback:
 FAM_ApplicantFeedback.comment:
 FAM_ApplicantFeedback.added_on:
@@ -347,11 +348,11 @@ FAM_ApplicantFeedbackQuestions.description:
 FAM_ApplicantFeedbackQuestions.comment:
 FAM_ApplicantFeedbackQuestions.status:
 
-FAM_Evaluation:
+FAM_Evaluation: This stores the evaluation for the data the user submited.
 FAM_Evaluation.id:
-FAM_Evaluation.user_id:
-FAM_Evaluation.parameter_id:
-FAM_Evaluation.evaluator_id:
+FAM_Evaluation.user_id: User.id
+FAM_Evaluation.parameter_id: FAM_Parameter.id
+FAM_Evaluation.evaluator_id: User.id
 FAM_Evaluation.response:
 FAM_Evaluation.added_on:
 
@@ -593,7 +594,7 @@ Retention_UserGroupPreference.city_id:
 Retention_UserGroupPreference.added_on:
 Retention_UserGroupPreference.status:
 
-SC_student_shelter_mapping:
+SC_student_shelter_mapping: Not Used
 SC_student_shelter_mapping.id:
 SC_student_shelter_mapping.name:
 SC_student_shelter_mapping.birthday:
@@ -632,7 +633,7 @@ SC_student_shelter_mapping.city_classes_happening:
 SC_student_shelter_mapping.region_id:
 SC_student_shelter_mapping.city_type:
 
-SC_teacher_shelter_mapping:
+SC_teacher_shelter_mapping: Not Used
 SC_teacher_shelter_mapping.id:
 SC_teacher_shelter_mapping.name:
 SC_teacher_shelter_mapping.title:
@@ -803,7 +804,7 @@ User.password: Deprecated
 User.password_hash:
 User.auth_token:
 User.photo:
-User.joined_on:
+User.joined_on: Date when the volunteer was accepted into MAD. 
 User.address:
 User.bio:
 User.facebook_id:
@@ -817,23 +818,23 @@ User.edu_institution:
 User.company:
 User.preferred_day:
 User.why_mad:
-User.left_on:
+User.left_on: The user has left MAD on this date
 User.updated_on:
 User.reason_for_leaving:
 User.induction_status: Deprecated
 User.teacher_training_status: Deprecated
 User.center_id: Not used
 User.city_other:
-User.city_id:
-User.subject_id:
+User.city_id: City.id
+User.subject_id: 
 User.project_id: Not used
-User.user_type:
-User.credit:
+User.user_type: volunteer - Currently active volunteer. alumni - Was a volunteer in the past, left MAD at the end of the year. let_go - Was a volunteer in the past - left in the middle of the year. applicant - Applied to be a MAD volunteer - but hasn't been accepted yet. 
+User.credit: Stores the Credits of the user.
 User.consecutive_credit: Deprecated
 User.admin_credit: Deprecated
 User.campaign:
 User.zoho_user_id:
-User.status:
+User.status: Deleted users will have '0'. Active volunteers will have '1'
 User.app_version:
 
 UserBatch: This holds the teacher mapping - which teacher is assigned to which batch/level

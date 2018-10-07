@@ -94,6 +94,7 @@ class Api extends Controller {
 	}
 
 	/// Returns the user details with the given id/email/phone. 
+	/// GET /users
 	function check_user_exists() {
 		$this->check_key();
 
@@ -116,6 +117,7 @@ class Api extends Controller {
 	}
 
 	/// Add a user as a teacher.
+	/// POST /users
 	function user_add() {
 		$name = $this->input('name');
 		$phone = $this->input('phone');
@@ -139,6 +141,7 @@ class Api extends Controller {
 	}
 
 	/// Returns the details of the user who's ID is provided as a get parameter. 
+	/// GET /users/{user_id}
 	function user_details() {
 		$this->check_key();
 
@@ -158,6 +161,7 @@ class Api extends Controller {
 	}
 
 	// Returns the things needed for the connection/home page. So far, class history, class counts, unmarked classes.
+	// :TODO: GET /users/{user_id}/class_info | unupdated_classes
 	function user_class_info() {
 		$this->check_key();
 
@@ -175,7 +179,8 @@ class Api extends Controller {
 		$this->send($class_info);
 		return $class_info;
 	}
-
+	
+	// :TODO: GET /users/{user_id}/batch_info
 	function user_batch_info() {
 		$this->check_key();
 
@@ -249,6 +254,7 @@ class Api extends Controller {
 	 *			$key - The Auth Key. Include this with every call you make or else you will get a error.
 	 *			$groups - All the Groups this user is a part of.
 	 * Example: http://makeadiff.in/madapp/index.php/api/user_login?email=cto@makeadiff.in&password=pass
+	 * POST /users/login
 	 */
 	function user_login() {
 		// $this->check_key();
@@ -293,6 +299,7 @@ class Api extends Controller {
 	}
 
 	/// Convert this user to a teacher - user_type becomes 'volunteer', add to the Teacher User Group
+	/// POST /users/{user_id}/groups/{group_id}
 	function user_convert_to_teacher() {
 		$this->check_key();
 		$user_id = $this->input('user_id');
@@ -319,6 +326,7 @@ class Api extends Controller {
 	 * Arguments :	$user_id
 	 * Returns : 	Class Details.
 	 * Example : http://makeadiff.in/madapp/index.php/api/?&key=am3omo32hom4lnv32vO
+	 * :TODO: GET /users/{user_id}/last_class
 	 */
 	function class_get_last() {
 		$this->check_key();
@@ -333,6 +341,7 @@ class Api extends Controller {
 
 	/**
 	 * Get the class using the user_id and class date.
+	 * :TODO: GET /classes
 	 */ 
 	function get_class_on() {
 		$this->check_key();
@@ -349,6 +358,7 @@ class Api extends Controller {
 	}
 
 	/// Figures out the next or previous class from the given batch, level, and class date.
+	/// :TODO: GET /classes
 	function browse_class($batch_id = 0, $level_id = 0, $from_date = '', $direction = '+') {
 		$this->check_key();
 
@@ -375,6 +385,7 @@ class Api extends Controller {
 
 	/**
 	 * Returns the details of the class with the given ID.
+	 * * :TODO: GET /classes/{class_id}
 	 */
 	function open_class($class_id = 0, $class_info = false, $user_id=0) {
 		$this->check_key();
@@ -424,6 +435,7 @@ class Api extends Controller {
 
 	/*
 	 * Input: user_id, class_id, students - [{student_id, participation}, ]
+	 * :TODO: POST /classes/{class_id}/student_attendance | students
 	 */
 	function class_save_student_participation() {
 		$this->check_key();
@@ -456,6 +468,7 @@ class Api extends Controller {
 	 * Arguments :	$user_id - ID of the user who's batch must be found.
 	 * Returns : 	the last batch that happened for the given user
 	 * Example : http://makeadiff.in/madapp/index.php/api/class_get_last_batch?user_id=1&key=am3omo32hom4lnv32vO
+	 * :TODO: GET /users/{user_id}/last_batch
 	 */
 	function class_get_last_batch() {
 		$this->check_key();
@@ -470,6 +483,7 @@ class Api extends Controller {
 	}
 
 	/// Open a specific Class based on the Batch ID and the date that class has happened
+	/// :TODO: GET /batches/{batch_id}
 	function open_batch($batch_id='', $from_date='', $project_id='') {
 		$this->check_key();
 
@@ -589,6 +603,7 @@ class Api extends Controller {
 	 * Arguments:	$batch_id
 	 * Returns 	: 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
 	 * Example	: 	http://makeadiff.in/madapp/index.php/api/class_get_batch?&key=am3omo32hom4lnv32vO
+	 * :TODO: GET /batches/{batch_id}
 	 */	
 	function class_get_batch($batch_id = 0, $class_on = false) {
 		$this->check_key();
@@ -612,6 +627,7 @@ class Api extends Controller {
 
 
 	/// Returns all level in the given batch
+	/// GET /batches/{batch_id}/levels
 	function all_levels_in_batch($batch_id = 0) {
 		$this->check_key();
 		if(!$batch_id) $batch_id = $this->input('batch_id');
@@ -623,6 +639,7 @@ class Api extends Controller {
 
 
 	/// Save extra classes using the given batch, class date and a collection of level_ids that the user selected using the app.
+	/// :TODO: POST /classes
 	function save_extra_class($batch_id = 0, $class_on = '', $levels = array()) {
 		$this->check_key();
 		if(!$batch_id) $batch_id = $this->input('batch_id');
@@ -663,6 +680,7 @@ class Api extends Controller {
 	 * Arguments: $city_id - The ID of the city of which teachers you want.
 	 * Returns : A list of all the teachers in the city
 	 * http://makeadiff.in/madapp/index.php/api/user_get_teachers?city_id=10&key=am3omo32hom4lnv32vO
+	 * GET /users
 	 */
 	function user_get_teachers() {
 		$this->check_key();
@@ -713,6 +731,7 @@ class Api extends Controller {
 		status[1]='absent'
 		zero_hour_attendance[1]=0
 
+	* :TODO: POST /classes
 	*/
 	function class_save() {
 		$this->check_key();
@@ -747,7 +766,7 @@ class Api extends Controller {
 		$this->send(array('success' => "Class Attendance Updated", 'status'=>'1'));
 	}
 	
-	///	/levels/{level_id}/students
+	///	GET /levels/{level_id}/students
 	function get_students() {
 		$this->check_key();
 
@@ -870,7 +889,6 @@ class Api extends Controller {
 		$this->send(array('reports' => $result, 'report_name' => 'mentor_report_aggregate'));
 	}
 
-
 	function _getBatchData($report_name, $reduce_function) {
 		$batch_id = $this->input('batch_id');
 
@@ -924,7 +942,6 @@ class Api extends Controller {
 		return $report;
 	}
 
-
 	/// Get Zero Hour Attendance for everyone in the given batch
 	function mentor_report_zero_hour_attendance() {
 		return $this->_getBatchData('zero_hour_attendance', function($carry, $item) {
@@ -955,10 +972,7 @@ class Api extends Controller {
 					}, 0);
 	}
 
-
 	/// Center reports start now...
-
-
 	function center_child_participation() {
 		$center_id = $this->input('center_id');
 
@@ -1062,7 +1076,7 @@ class Api extends Controller {
 		$this->send(array('report' => $substitutions, 'levels' => $all_levels)); 
 	}
 
-	/// Should be in this format in v2 - /city/{city_id}/center
+	/// GET /cities/{city_id}/center
 	function get_centers_in_city() {
 		$city_id = $this->input('city_id');
 
@@ -1070,6 +1084,7 @@ class Api extends Controller {
 		$this->send(array('centers' => $centers));
 	}
 
+	// :TODO: GET /centers/{center_id}
 	function get_batches_and_levels_in_center() {
 		$center_id = $this->input('center_id');
 		

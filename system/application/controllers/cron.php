@@ -21,16 +21,17 @@ class Cron extends Controller  {
 
 	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
 	function schedule_classes($debug=0) {
-		$all_batches = $this->batch_model->get_all_batches(true);
+		$project_ids = [1,2];
 
-		if($debug) {
-			print "Debug Mode\n----------\n";
-		}
+		if($debug) print "Debug Mode\n----------\n";
 
 		foreach ($project_ids as $project_id) {
 			$this->batch_model->project_id = $project_id;
 			$this->class_model->project_id = $project_id;
 
+			$all_batches = $this->batch_model->get_all_batches(true);
+
+			foreach ($all_batches as $batch) {
 				$teachers = $this->batch_model->get_batch_teachers($batch->id);
 				list($hour, $min, $secs) = explode(":", $batch->class_time);
 
@@ -347,20 +348,9 @@ class Cron extends Controller  {
 
 			//Message for teachers can be edited from here
 			$teacher_message = "Hi $name,\n\nThe student attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/makeadiff-madapp";
-			if(1){
 
-
-				if($this->debug == true){
-					echo "Message to $teacher_message_record_row->phone: $teacher_message<br>";
-				}
-				else{
-					$this->sms->send($teacher_message_record_row->phone,$teacher_message);
-
-				}
-
-				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
-
-			}
+			if($this->debug) echo "Message to $teacher_message_record_row->phone: $teacher_message<br>";
+			else $this->sms->send($teacher_message_record_row->phone,$teacher_message);
 			//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
 		}
 
@@ -380,12 +370,8 @@ class Cron extends Controller  {
 														INNER JOIN Center C on C.id = B.center_id WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL -5 HOUR) AND class_on >CURDATE() AND class_on<NOW()) );
 														");
 
-
-
-
 		// SELECT phone,user_id, name, center, week_day, class_time, message_sent FROM UserMessage WHERE user_id IN (SELECT batch_head_id FROM Batch WHERE id IN (SELECT batch_id from Class WHERE updated_by_mentor=0 AND class_on < Date_Add(CURRENT_TIMESTAMP,INTERVAL 5 HOUR) AND class_on >CURDATE() ) )
-  //
-		foreach($mentor_message_record->result() as $mentor_message_record_row){
+		foreach($mentor_message_record->result() as $mentor_message_record_row) {
             $name= ucfirst(@reset(explode(' ', $mentor_message_record_row->name)));
             $center= $mentor_message_record_row->center;
             $slot= $mentor_message_record_row->week_day;
@@ -395,13 +381,7 @@ class Cron extends Controller  {
 			// The 'your' in the message was spelled 'younr' - I fixed it. Not sure if the template will work now.
 			$mentor_message = "Hi $name,\n\nThe teacher attendance for your class in $center on $slot at $time has not been marked yet.\n\nYou can update it here:\nbit.ly/link/makeadiff-madapp";
 
-				//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
-
-			}
+			//Updating the message sent status to 1 so that in a week the teacher will only receive 1 message.
 		}
 	}
-
-	// :TODO:
-
-
 }

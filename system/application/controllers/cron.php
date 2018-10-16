@@ -42,9 +42,9 @@ class Cron extends Controller  {
 					// This is how we find the next sunday, monday(whatever is in the $batch->day).
 					$date_interval = intval($batch->day) - date('w');
 					if($date_interval <= 0) $date_interval += 7;
-					$day = date('d') - $date_interval;
+					$day = date('d') + $date_interval;
 
-					$day = $day - ($week * 7); // We have to do this for two weeks. So in the first iteration, this will be 0 and in next it will be 7.
+					$day = $day + ($week * 7); // We have to do this for two weeks. So in the first iteration, this will be 0 and in next it will be 7.
 
 					$time = mktime($hour, $min, $secs, date('m'), $day, date("Y"));
 					$date = date("Y-m-d H:i:s", $time);

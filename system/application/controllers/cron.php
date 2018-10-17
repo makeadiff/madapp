@@ -40,10 +40,9 @@ class Cron extends Controller  {
 					list($hour, $min, $secs) = explode(":", $batch->class_time);
 
 					// This is how we find the next sunday, monday(whatever is in the $batch->day).
-					$current_day = strtotime('2018-10-14');
-					$date_interval = intval($batch->day) - date('w', $current_day);
+					$date_interval = intval($batch->day) - date('w');
 					if($date_interval <= 0) $date_interval += 7;
-					$day = date('d', $current_day) + $date_interval;
+					$day = date('d') + $date_interval;
 
 					$day = $day + ($week * 7); // We have to do this for two weeks. So in the first iteration, this will be 0 and in next it will be 7.
 

@@ -23,6 +23,7 @@ $mediums = array(
 $details=$details->result_array();
 foreach($details as $row) {
 	$jjact_registered = $row['jjact_registered'];
+	$mou_signed = $row['mou_signed'];
 	$root_id=$row['id'];
 	$name=$row['name'];
 	$city_id=$row['city_id'];
@@ -67,6 +68,16 @@ foreach($details as $row) {
 	<input type="radio" name="jjact_registered" value="0" <?php if($jjact_registered=='0') echo "checked"; ?> id="jj_act_no"/>No
 </label>
 </li>
+
+<p><strong>Memorandum of Understanding Signed?</strong></p>
+<label class="right" for="mou_yes">
+	<input type="radio" name="mou_signed" value="1" <?php if($mou_signed=='1') echo "checked"; ?> id="mou_yes"/>Yes
+</label>
+<label class="right" for="mou_no">
+	<input type="radio" name="mou_signed" value="0" <?php if($mou_signed=='0') echo "checked"; ?> id="mou_no"/>No
+</label>
+</li>
+<br/><br/>
 
 <!-- ALTER TABLE `Center` ADD `jjact_registered` ENUM('1','0') NOT NULL AFTER `updated_on`; -->
 

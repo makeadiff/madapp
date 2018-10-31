@@ -106,6 +106,7 @@ class Center_model extends Model
             Address.address as address,
             Medium.medium as vernacular_medium,
             JJAct.registered as jjact_registered,
+            MOU.signed as mou_signed,
             CA.name as ca_name,
             CA.phone as ca_phone,
             CA.email as ca_email,
@@ -129,6 +130,12 @@ class Center_model extends Model
             WHERE CD.name = "jjact_registered"
             AND CD.center_id = '.$uid.'
           ) JJAct ON JJAct.center_id = C.id
+          LEFT JOIN (
+            SELECT CD.center_id as center_id, CD.value as signed
+            FROM CenterData CD
+            WHERE CD.name = "mou_signed"
+            AND CD.center_id = '.$uid.'
+          ) MOU ON MOU.center_id = C.id
           LEFT JOIN CenterAuthority CA ON C.authority_id = CA.id
           LEFT JOIN CenterProject CP ON C.id = CP.center_id
           WHERE C.id = '.$uid.'
@@ -293,6 +300,29 @@ class Center_model extends Model
       );
       $check_jj_q = 'SELECT id FROM CenterData
                         WHERE name="jjact_registered"
+                        AND center_id = '.$center_id.'';
+      $check_jj = $this->db->query($check_jj_q)->row();
+      if(empty($check_jj)){
+        $this->db->insert('CenterData',$medium);
+      }
+      else{
+        $this->db->set($medium);
+        $this->db->where('id',$check_jj->id);
+        $this->db->update('CenterData');
+        $affected_rows = ($this->db->affected_rows() >= 0) ? true: false ;
+      }
+    }
+
+    if($data['mou_signed']!=''){
+      $medium = array(
+        'center_id' => $center_id,
+        'name'      => 'mou_signed',
+        'year'      => $this->year,
+        'value'     => $data['mou_signed'],
+        'data'      => ''
+      );
+      $check_jj_q = 'SELECT id FROM CenterData
+                        WHERE name="mou_signed"
                         AND center_id = '.$center_id.'';
       $check_jj = $this->db->query($check_jj_q)->row();
       if(empty($check_jj)){

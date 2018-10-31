@@ -116,6 +116,7 @@ class Center extends Controller  {
     if(isset($_REQUEST['programmes'])) $data['programmes'] = $_REQUEST['programmes'];
     $data['medium_of_instruction'] = $_REQUEST['medium_hidden'];
     $data['jjact_registered'] = $_REQUEST['jjact_registered'];
+    $data['mou_signed'] = $_REQUEST['mou_signed'];
     $data['authority_id'] = $_REQUEST['authority_id'];
 
     $data['sa_name'] = $_REQUEST['sa_name'];

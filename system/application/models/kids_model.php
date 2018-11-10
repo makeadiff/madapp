@@ -97,8 +97,9 @@ class Kids_model extends Model {
 					  'name' 	 	=> $data['name'],
 					  'birthday'	=> $data['date'],
 					  'sex'			=> $data['sex'],
-				  	 'description'	=> $data['description'],
-				  	 'status'		=> 1,
+				  	  'description'	=> $data['description'],
+				  	  'added_on'	=> date("Y-m-d H:i:s"),
+				  	  'status'		=> 1,
 			   );
 		$this->db->insert('Student',$data);
 		$kid_id = $this->db->insert_id();

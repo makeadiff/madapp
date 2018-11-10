@@ -337,6 +337,7 @@ class Kids extends Controller  {
 					elseif($fields[$key] == 'Birthday') $insert['birthday'] = date('Y-m-d', strtotime($value));
 				}
 				$insert['center_id'] = $this->input->post('center_id');
+				$insert['added_on'] = date('Y-m-d H:i:s');
 				
 				if($insert['name'])
 					$this->db->insert('Student', $insert);

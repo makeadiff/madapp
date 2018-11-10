@@ -164,7 +164,7 @@ $.tablesorter.addParser({
 </select><br />
 <label>&nbsp;</label><input type="submit" name="action" class="button green" value="Update" /><br />
 </td><td valign="top" style="padding-left:30px;">
-<?php if($this->user_auth->get_permission('user_delete')) { ?><br /><input type="submit" name="action"  class="button primary" value="Delete Selected Users" /><?php } ?>
+<?php if($this->user_auth->get_permission('debug')) { ?><br /><input type="submit" name="action"  class="button primary" value="Delete Selected Users" /><?php } ?>
 </td>
 </tr></table>
 </div><?php } ?>

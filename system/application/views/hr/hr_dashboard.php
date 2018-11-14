@@ -25,7 +25,7 @@
             <?php } ?><br />
 
             <?php if($this->user_auth->get_permission('event_index')) { ?>
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('event/event') ?>">
+                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="https://makeadiff.in/apps/envite/index.php">
                         <img src="<?php echo base_url(); ?>images/flat_ui/events.png" alt="" /> <br>Event</a></div>
             <?php } ?>
         </div>

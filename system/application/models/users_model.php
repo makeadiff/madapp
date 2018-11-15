@@ -538,6 +538,10 @@ class Users_model extends Model {
 		$this->ci->load->model('event_model');
 		$this->ci->load->model('settings_model');
 
+		$users_groups = $this->get_user_groups_of_user($user_id);
+		$ed_teacher_group_id = 9;
+		$fp_teacher_group_id = 376;
+
 		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
 		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
 		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
@@ -546,6 +550,15 @@ class Users_model extends Model {
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
 		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
+
+		if(isset($users_groups[$fp_teacher_group_id])) { // Current user is a FP Teacher, credits are different.
+			$credit = 6;
+			$credit_max_credit_threshold = 8;
+			$credit_lost_for_missing_zero_hour = -1;
+			$credit_lost_for_getting_substitute = -2;
+			$credit_lost_for_missing_class = -3;
+			$credit_for_substituting = 3;
+		}
 
 		$classes_so_far = $this->get_usercredits($user_id);
 
@@ -706,6 +719,9 @@ class Users_model extends Model {
 		$this->load->model('settings_model');
 
     	$details = $this->get_usercredits($user_id);
+ 		$users_groups = $this->get_user_groups_of_user($user_id);
+		$ed_teacher_group_id = 9;
+		$fp_teacher_group_id = 376;
 
 		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
 		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
@@ -715,6 +731,15 @@ class Users_model extends Model {
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
 		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
+
+		if(isset($users_groups[$fp_teacher_group_id])) { // Current user is a FP Teacher, credits are different.
+			$credit = 6;
+			$credit_max_credit_threshold = 8;
+			$credit_lost_for_missing_zero_hour = -1;
+			$credit_lost_for_getting_substitute = -2;
+			$credit_lost_for_missing_class = -3;
+			$credit_for_substituting = 3;
+		}
 
 		$i = 0;
 		$credit_log = array(array(
@@ -980,8 +1005,6 @@ class Users_model extends Model {
 
     	return $fellows;
     }
-
-
 
 	function search_users($data, $return_info = false) {
 		$this->db->start_cache();

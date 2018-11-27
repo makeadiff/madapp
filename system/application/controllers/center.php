@@ -112,16 +112,15 @@ class Center extends Controller  {
 		$data['preferred_gender'] = $_REQUEST['preferred_gender'];
     	$data['phone'] = $_REQUEST['shelter_contact'];
 		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
-    $data['address'] = $_REQUEST['address'];
-    if(isset($_REQUEST['programmes'])) $data['programmes'] = $_REQUEST['programmes'];
-    $data['medium_of_instruction'] = $_REQUEST['medium_hidden'];
-    $data['jjact_registered'] = $_REQUEST['jjact_registered'];
-    $data['mou_signed'] = $_REQUEST['mou_signed'];
-    $data['authority_id'] = $_REQUEST['authority_id'];
-
-    $data['sa_name'] = $_REQUEST['sa_name'];
-    $data['sa_email'] = $_REQUEST['sa_email'];
-    $data['sa_phone'] = $_REQUEST['sa_phone'];
+	    $data['address'] = $_REQUEST['address'];
+	    if(isset($_REQUEST['programmes'])) $data['programmes'] = $_REQUEST['programmes'];
+	    $data['medium_of_instruction'] = $_REQUEST['medium_hidden'];
+	    $data['jjact_registered'] = $_REQUEST['jjact_registered'];
+	    $data['mou_signed'] = $_REQUEST['mou_signed'];
+	    $data['authority_id'] = $_REQUEST['authority_id'];
+	    $data['sa_name'] = $_REQUEST['sa_name'];
+	    $data['sa_email'] = $_REQUEST['sa_email'];
+	    $data['sa_phone'] = $_REQUEST['sa_phone'];
 
     // dump($data);
 
@@ -176,8 +175,13 @@ class Center extends Controller  {
 		$data = array();
 		$all_levels = $this->level_model->get_all_level_names_in_center($center_id);
 		$center = $this->center_model->get_info($center_id);
-		$all_users = idNameFormat($this->users_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9)), array('id'));
-		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
+
+		// Get all teachers in the current city.
+		$teacher_group_id = 9; // Ed support teachers
+		if($this->level_model->project_id == 2) $teacher_group_id = 376; // Fondational teachers
+
+		$all_users = $this->users_model->search_users(['user_type'=>'volunteer', 'status' => '1', 'user_group'=>$teacher_group_id]);
+		$all_subjects = $this->subject_model->get_all_subjects();
 		$all_subjects[0] = "None";
 		$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 
@@ -188,7 +192,7 @@ class Center extends Controller  {
 			$batch_data = array();
 			foreach ($all_batches_in_level as $batch) {
 				$batch_data[$batch->id] = array(
-					'name'		=>  $day_list[$batch->day] . ', ' . date('h:i A', strtotime('2000-01-01 ' . $batch->class_time)),
+					'name'		=> $day_list[$batch->day] . ', ' . date('h:i A', strtotime('2000-01-01 ' . $batch->class_time)),
 					'teachers'	=> $this->batch_model->get_teachers_in_batch_and_level($batch->id, $level_id),
 				);
 			}

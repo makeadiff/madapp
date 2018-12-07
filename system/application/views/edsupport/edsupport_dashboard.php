@@ -49,9 +49,9 @@ foreach($upcomming_classes as $class) { ?>
         <?php } ?>
 
 
-        <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/edsupport-assessment/public/manage">
+        <!-- <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/edsupport-assessment/public/manage">
         	<img src="<?php echo base_url(); ?>images/flat_ui/exams.png" alt="" /> <br>Mark<br>Management</a>
-        </div>
+        </div> -->
         
 
         <?php if($this->user_auth->get_permission('report_index')) { ?>

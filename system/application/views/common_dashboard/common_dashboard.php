@@ -45,7 +45,7 @@
 		<a href='<?php echo site_url('finance/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/finance.png"><br>Finance</a>
 	</div>
 
-	<div class="col-md-3 col-sm-6 text-center">
+	<!-- <div class="col-md-3 col-sm-6 text-center">
 		<a href='http://makeadiff.in/apps/propel/public' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/propel.png"><br>Propel</a>
 	</div>
 
@@ -59,7 +59,7 @@
 
 	<div class="col-md-3 col-sm-6 text-center">
 		<a href='<?php echo site_url('review_milestone/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/review.png"><br>Review</a>
-	</div>
+	</div> -->
 
 	<div class="col-md-3 col-sm-6 text-center">
 		<a href='<?php echo site_url('resources/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/resources.png"><br>Resources</a>

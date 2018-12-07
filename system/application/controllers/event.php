@@ -68,6 +68,9 @@ class Event extends controller{
     **/
 	function index()
 	{
+		$city_id = $this->session->userdata('city_id');
+		header("location: https://makeadiff.in/apps/envite/all_events.php?city_id=$city_id");
+		exit;
 		$this->user_auth->check_permission('event_index');
 		$this->load->view('layout/header',array('title'=>'Manage Event'));
 		$data = array(

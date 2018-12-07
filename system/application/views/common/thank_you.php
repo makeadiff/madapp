@@ -37,14 +37,13 @@ h3 {
 <div id="container">
 <h3>Thank you for choosing to Make a Difference</h3>
 
-<p id="main">1200 new MADsters will join us this year.<br />
-And yours is the <?php echo ordinal($reg_count) ?> registration.</p>
+<p id="main">Your registeration was successful.</p>
 
-<p id="info">We recruit only twice a year.<br />
+<p id="info">We recruit only few times an year.<br />
 We will definitely mail you before our next recruitment drive.<br />
 Looking forward to having you onboard.</p>
 
-<p id="more">For updates on future recruitment workshop in your city, join our <a href="http://facebook.com/makeadiff">FB Page</a>.</p>
+<p id="more">For updates about our activity, join our <a href="http://facebook.com/makeadiff">FB Page</a> or follow us on <a href="https://twitter.com/makeadiff">twitter - @makeadiff</a> or <a href="https://www.instagram.com/makeadiffindia/">Instagram - @makeadiffindia</a></p>
 
 </div>
 

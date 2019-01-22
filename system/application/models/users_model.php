@@ -557,7 +557,7 @@ class Users_model extends Model {
 			$credit_lost_for_missing_zero_hour = -1;
 			$credit_lost_for_getting_substitute = -2;
 			$credit_lost_for_missing_class = -3;
-			$credit_for_substituting = 3;
+			$credit_for_substituting = 2;
 		}
 
 		$classes_so_far = $this->get_usercredits($user_id);

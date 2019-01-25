@@ -603,6 +603,7 @@ class Users_model extends Model {
 					$credit = $credit + $credit_sub_gets;
 					if($debug) print "Credit for subbing: $credit_sub_gets<br />\n";
 				} else {
+					$credit = $credit_max_credit_threshold;
 					if($debug) print "Credit for subbing not got - as upper limit is hit.<br />\n";
 				}
 
@@ -814,6 +815,7 @@ class Users_model extends Model {
 				if($credit_max_credit_threshold >= ($credit + $sub_get_credits)) {
 					$credit = $credit + $sub_get_credits;
 				} else {
+					$credit = $credit_max_credit_threshold;
 					$data['change'] .= " Upper credit limit hit! You Rock!";
 				}
 
@@ -846,21 +848,6 @@ class Users_model extends Model {
 			if(isset($data['credit'])) {
 				$i++;
 				$data['i'] = $i;
-				$credit_log[] = $data;
-			}
-		}
-
-		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
-		foreach($event_attendence as $event) {
-			$i++;
-			if($i > 1) {
-				$data = array(
-					'i' 		=> $i,
-					'credit'	=> $credit + $credit_lost_for_missing_avm,
-					'class_on'	=> $event->starts_on,
-					'action'	=> 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
-					'change'	=> "Lost $credit_lost_for_missing_avm credit"
-				);
 				$credit_log[] = $data;
 			}
 		}

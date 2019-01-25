@@ -17,10 +17,10 @@ class Center_model extends Model
     {
         parent::Model();
 
-		$this->ci = &get_instance();
-		$this->city_id = $this->ci->session->userdata('city_id');
-		$this->project_id = $this->ci->session->userdata('project_id');
-		$this->year = $this->ci->session->userdata('year');
+    		$this->ci = &get_instance();
+    		$this->city_id = $this->ci->session->userdata('city_id');
+    		$this->project_id = $this->ci->session->userdata('project_id');
+    		$this->year = $this->ci->session->userdata('year');
     }
 
 	/**
@@ -37,9 +37,9 @@ class Center_model extends Model
 	}
 
 
-    /// Return all centers in given city with information about it.
-    function get_all_info($city_id = 0) {
-    	if(!$city_id) $city_id = $this->city_id;
+  /// Return all centers in given city with information about it.
+  function get_all_info($city_id = 0) {
+  	if(!$city_id) $city_id = $this->city_id;
 
 		$this->ci->load->model('city_model');
 
@@ -62,9 +62,8 @@ class Center_model extends Model
 		}
 
 		return $result;
-    }
-    function getcenter_details() { return $this->get_all(); } // :ALIAS: :DEPRICIATED:
-
+  }
+  function getcenter_details() { return $this->get_all(); } // :ALIAS: :DEPRICIATED:
 
 	function getcity() {
 		$this->db->select('*');
@@ -90,9 +89,8 @@ class Center_model extends Model
 			'preferred_gender' => $data['preferred_gender']
 		);
 
-	    $this->db->insert('Center',$data);
-        return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
-
+	  $this->db->insert('Center',$data);
+    return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
 	 /**
     * Function to edit_center
@@ -155,7 +153,6 @@ class Center_model extends Model
     }
     return $center_types;
 	}
-
 
 	/**
     * Function to update_center
@@ -232,7 +229,6 @@ class Center_model extends Model
         $this->db->insert('CenterProject',$project_data);
       }
     }
-
 
 		$new_data = array();
 		if(!empty($data['center'])) $new_data['name'] = $data['center'];
@@ -414,7 +410,7 @@ class Center_model extends Model
 
 	// Get info on the current center id
 	function get_info($center_id) {
-		return $this->db->where('id',$center_id)->where('status','1')->orderby('name')->get('Center')->result();
+		return $this->db->where('id',$center_id)->where('status','1')->get('Center')->result();
 	}
 
 	// Get all the centers. No matter what city

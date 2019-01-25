@@ -44,7 +44,7 @@ class Kids extends Controller  {
 			'center_id'		=> $center_id,
 		);
 
-		$this->load->view('layout/header',array('title'=>'Manage Children'));
+		$this->load->view('layout/header',array('title'=>'Manage Students'));
 		$this->load->view('kids/index',$data);
 		$this->load->view('layout/footer');
 	}
@@ -60,7 +60,7 @@ class Kids extends Controller  {
 			'center_list'	=> $this->center_model->get_all()
 		);
 		
-		$this->load->view('layout/header',array('title'=>'Deleted Children'));
+		$this->load->view('layout/header',array('title'=>'Deleted Students'));
 		$this->load->view('kids/show_deleted', $data);
 		$this->load->view('layout/footer');
 	}

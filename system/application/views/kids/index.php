@@ -4,7 +4,7 @@
 
 <form action="<?php echo site_url('kids/index'); ?>" method="post">
 <select name="center_id">
-<option value="0">All Children</option>
+<option value="0">All</option>
 <?php foreach($center_list as $row){ ?>
 <option value="<?php echo $row->id; ?>" <?php if($center_id == $row->id) { echo 'selected'; } ?>><?php echo $row->name; ?></option>
 <?php } ?>
@@ -17,7 +17,7 @@
 
 <div id="actions">
 <?php if($this->user_auth->get_permission('kids_add') and $page == 'index') { ?>
-<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button green primary popup" name="Add Children">Add Children</a>
+<a href="<?php echo site_url('kids/popupaddKids')?>" class="thickbox button green primary popup" name="Add Students">Add Students</a>
 <?php } ?>
 </div><br class="clear" />
 
@@ -26,10 +26,10 @@
 <ul>
 <li id="train-prev"><a href="<?php echo site_url('user/view_users')?>">&lt; Manage Volunteers</a></li>
 <?php if($this->session->userdata("active_center")) { ?>
-<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
-<li id="train-next"><a href="<?php echo site_url('level/index/center/'.$this->session->userdata("active_center"))?>">Manage Levels &gt;</a></li>
+<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Shelter</a></li>
+<li id="train-next"><a href="<?php echo site_url('level/index/center/'.$this->session->userdata("active_center"))?>">Manage Class Sections &gt;</a></li>
 <?php } else { ?>
-<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
+<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Shelter</a></li>
 <?php } ?>
 </ul>
 </div>
@@ -38,15 +38,15 @@
 
 <div id="kids_list">
 <?php if($this->user_auth->get_permission('kids_add') and $page == 'index') { ?>
-<a class="add with-icon" href="<?php echo site_url('kids/import'); ?>">Import Children</a>
+<a class="add with-icon" href="<?php echo site_url('kids/import'); ?>">Import Students</a>
 <?php } ?>
 
 <?php if($this->user_auth->get_permission('kids_show_deleted') and $page == 'index') { ?>
-<a class="delete with-icon" href="<?php echo site_url('kids/show_deleted'); ?>">Show Deleted Children</a>
+<a class="delete with-icon" href="<?php echo site_url('kids/show_deleted'); ?>">Show Deleted Students</a>
 <?php } ?>
 
 <?php if($page == 'show_deleted') { ?>
-<a class="done with-icon" href="<?php echo site_url('kids/manageaddkids'); ?>">Show Actual Children</a>
+<a class="done with-icon" href="<?php echo site_url('kids/manageaddkids'); ?>">Show Actual Students</a>
 <?php } ?>
 
 

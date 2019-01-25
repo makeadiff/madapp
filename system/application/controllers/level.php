@@ -26,11 +26,12 @@ class Level extends Controller {
 			show_error("Choose a center.");
 		}
 		$all_levels = $this->model->get_all_levels_in_center($center_id);
-		$center_name = $this->model->db->where('id',$center_id)->get('Center')->row();
+		$center = $this->center_model->get_info($center_id)[0];
 
 		$this->load->view('level/index', array(
 				'all_levels'	=> $all_levels,
-				'center_name'	=> $center_name->name, 
+				'center_name'	=> $center->name, 
+				'center'		=> $center,
 				'center_id'		=> $center_id,
 				'project_id'	=> $this->model->project_id
 			));
@@ -38,6 +39,7 @@ class Level extends Controller {
 	
 	function create($holder, $center_id = 0) { 
 		$this->user_auth->check_permission('level_create');
+		$center = $this->center_model->get_info($center_id)[0];
 		
 		if($this->input->post('action') == 'Create') {
 			$this->model->create(array(
@@ -57,15 +59,22 @@ class Level extends Controller {
 			$this->load->helper('misc');
 			$this->load->helper('form');
 			
-			$center_name = $this->center_model->get_center_name($center_id);
 			$kids = idNameFormat($this->kids_model->getkids_name_incenter($center_id)->result());
+			$title = 'Class Section';
+			$default_grade = 5;
+			if($center->type == 'aftercare') {
+				$title = "SSG";
+				$default_grade = 13;
+			}
+
 
 			$this->load->view('level/form.php', array(
 				'action'	=> 'Create',
 				'center_id'	=> $center_id,
-				'center_name'=>$center_name,
+				'center_name'=>$center->name,
+				'center'	=> $center,
 				'title'		=> 'Class Section',
-				'level'	=> array(
+				'level'		=> array(
 					'id'		=> 0,
 					'name'		=> '',
 					'center_id'	=> $center_id,
@@ -73,7 +82,7 @@ class Level extends Controller {
 					'medium'	=> 'english',
 					'preferred_gender' => 'any',
 					'selected_students'=> array(),
-					'grade'		=> 5,
+					'grade'		=> $default_grade,
 					)
 				));
 		}
@@ -81,7 +90,8 @@ class Level extends Controller {
 	
 	function edit($level_id) {
 		$this->user_auth->check_permission('level_edit');
-		
+		$center = $this->center_model->get_info($center_id)[0];
+
 		if($this->input->post('action') == 'Edit') {
 			$this->model->edit($level_id, array(
 				'name'		=>	$this->input->post('name'),
@@ -121,6 +131,7 @@ class Level extends Controller {
 				'title'		=> 'Class Section',
 				'center_id'	=> $center_id,
 				'center_name'=> $center_name,
+				'center'	=> $center,
 				'level'		=> $level,
 				));
 		}

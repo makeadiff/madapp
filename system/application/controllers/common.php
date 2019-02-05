@@ -114,6 +114,12 @@ class Common extends Controller {
 							'Mobile_Number'		=> $data['phone'],
 							'Occupation'		=> $data['job_status'],
 							'Reason_for_choosing_to_volunteer_at_MAD'	=> $data['why_mad'],
+							'Latitude' 			=> "0002",	// :HARDCODE: - Researved for future update.
+							'Longitude' 		=> "00002",
+							'Role_Type' 		=> "Teaching",
+							'First_Priority' 	=> "Fundraising Volunteer",
+							'Second_Priority' 	=> "Aftercare ASV",
+							'Third_Priority' 	=> "Aftercare Wingmen",
 							'MAD_Applicant_Id'	=> $status['id'],	// 'Unique_Applicant_ID'	=> $status['id'],
 						]
 					]);

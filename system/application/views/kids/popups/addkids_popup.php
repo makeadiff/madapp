@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
-<h2>Add Kids</h2>
+<h2>Add Student</h2>
 <script type="text/javascript" src="<?php echo base_url()?>css/datetimepicker_css.js"></script>
 
 <div id="message"></div>
@@ -41,7 +41,7 @@
  </ul>
  <ul>
 <li>
-<input  id="btnSubmit" class="button green" type="submit" value="+ Add New Kid" />
+<input  id="btnSubmit" class="button green" type="submit" value="Add Student" />
 <a href="<?=site_url('kids/manageaddkids')?>" class="sec-action">Cancel</a>
 </li>
 </ul>

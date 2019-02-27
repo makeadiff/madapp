@@ -1,20 +1,34 @@
-<?php $this->load->view('layout/thickbox_header'); ?>
-<?php
+<?php 
+$this->load->view('layout/thickbox_header');
+$project_id = 1;
+
 if(!isset($level)) $level = array(
-	'id'		=> 0,
-	'name'		=> '',
-	'center_id'	=> 0,
-	'grade'		=> 5,
-	'medium'	=> 'english',
-	'preferred_gender' => 'any'
+		'id'		=> 0,
+		'name'		=> '',
+		'center_id'	=> 0,
+		'grade'		=> 5,
+		'medium'	=> 'english',
+		'preferred_gender' => 'any'
 	);
 
+
+$labels = [
+	'grade'		=> 'Grade',
+	'level'		=> 'Class Sections',
+	'student'	=> 'Students'
+];
+if($center->type == 'aftercare') {
+	$project_id = 5;
+	$labels['grade'] = 'SSG Name';
+	$labels['level'] = 'SSG';
+	$labels['student'] = 'Youth';
+}
 ?>
 
 <form action="" method="post" class="form-area">
 <ul class="form city-form">
 <li>
-<label for="grade">Grade</label>
+<label for="grade"><?php echo $labels['grade'] ?></label>
 <select name="grade" style="width:100px;">
 	<?php for($i=1;$i<=12;$i++) { ?>
 	<option value="<?php echo $i ?>" <?php if($level['grade'] == $i) echo 'selected'; ?>><?php echo $i ?></option>
@@ -30,7 +44,7 @@ if(!isset($level)) $level = array(
 </li>
 
 <li>
-<label for="selBulkActions">Kids:</label>
+<label for="selBulkActions"><?php echo $labels['student'] ?>:</label>
 <select id="students" name="students[]" multiple>
 <?php foreach($level['kids'] as $id=>$name) { ?>
 <option value="<?php echo $id; ?>" <?php if(in_array($id, $level['selected_students'])) echo 'selected'; ?>><?php echo $name; ?></option> 
@@ -53,7 +67,7 @@ if(!isset($level)) $level = array(
 
 <?php
 echo form_hidden('center_id', $center_id);
-echo form_hidden('project_id', 1);
+echo form_hidden('project_id', $project_id);
 echo form_hidden('id', $level['id']);
 echo '<label for="action">&nbsp;</label>';echo form_submit('action', $action);
 ?>

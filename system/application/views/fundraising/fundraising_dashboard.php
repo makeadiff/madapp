@@ -5,15 +5,11 @@
         <br>
         <div class="row">
 
+            <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' target="_blank" href="https://makeadiff.in/donut/">
+                    <img src="<?php echo base_url(); ?>images/flat_ui/donut.png" width="64" alt="" /><br>Donut</a></div>
 
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' target="_blank" href="http://cfrapp.makeadiff.in:3000">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/donut.png" alt="" /><br>Donut</a></div>
-
-
-            <?php if($this->user_auth->get_permission('target_setting')) { ?>
-                <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/support/targets.php">
-                        <img src="<?php echo base_url(); ?>images/flat_ui/target_setting.png" alt="" /><br>Target<br>Setting</a></div>
-            <?php } ?>
+            <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="https://makeadiff.in/apps/tunod/">
+                    <img src="<?php echo base_url(); ?>images/flat_ui/target_setting.png" alt="" /><br>Fundraising<br />Leaderboards</a></div>
 
             <?php if($this->user_auth->get_permission('event_index')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('event/event') ?>">

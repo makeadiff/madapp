@@ -1,4 +1,4 @@
-<?php  
+<?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 error_reporting(0);
 ini_set('display_errors', 0);
@@ -41,7 +41,7 @@ class Common extends Controller {
 			$data = $_POST;
 			$data['phone'] = $_POST['phone'] = preg_replace('/[^+\d]/','', $_POST['phone']);
 			$data['cities'] = $this->city_model->get_unique_cities();
-			
+      
 			//Set Rules..........
 			$rules['name']	= "required";
 			$rules['email']	= "required|valid_email";
@@ -56,22 +56,22 @@ class Common extends Controller {
 			$this->validation->set_fields($fields);
 			if ($this->validation->run() == FALSE) {
 				$this->load->view('user/register_view', $data);
-				
+
 			} else {
 
-				require('system/vendor/autoload.php');
-				$secret = '6Le_7hsTAAAAAG8-PiI757qs4LQEzQ28TZOgL-vJ';
-				$recaptcha = new \ReCaptcha\ReCaptcha($secret);
-				$gRecaptchaResponse = $_REQUEST['g-recaptcha-response'];
-				$remoteIp = $_SERVER['REMOTE_ADDR'];
+				// require('system/vendor/autoload.php');
+				// $secret = '6Le_7hsTAAAAAG8-PiI757qs4LQEzQ28TZOgL-vJ';
+				// $recaptcha = new \ReCaptcha\ReCaptcha($secret);
+				// $gRecaptchaResponse = $_REQUEST['g-recaptcha-response'];
+				// $remoteIp = $_SERVER['REMOTE_ADDR'];
 
-				$resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
-				if ($resp->isSuccess()) {
-				    // verified!
-				} else {
-					print "Your application has triggered our spam detection algorithm. Click on the back button then make sure you have the \"I'm not a robot\" checkbox ticked.";
-					return false; // Spam.
-				} 
+				// $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
+				// if ($resp->isSuccess()) {
+				//     // verified!
+				// } else {
+				// 	print "Your application has triggered our spam detection algorithm. Click on the back button then make sure you have the \"I'm not a robot\" checkbox ticked.";
+				// 	return false; // Spam.
+				// }
 
 				// Check for spam...
 				if((stripos($data['address'], '<a ') !== false) or (stripos($data['address'], 'http://') !== false) or (stripos($data['address'], 'https://') !== false)) {					// There is a link in the address field. Spam.
@@ -114,6 +114,12 @@ class Common extends Controller {
 							'Mobile_Number'		=> $data['phone'],
 							'Occupation'		=> $data['job_status'],
 							'Reason_for_choosing_to_volunteer_at_MAD'	=> $data['why_mad'],
+							'Latitude' 			=> "0002",	// :HARDCODE: - Researved for future update.
+							'Longitude' 		=> "00002",
+							'Role_Type' 		=> "Teaching",
+							'First_Priority' 	=> "Fundraising Volunteer",
+							'Second_Priority' 	=> "Aftercare ASV",
+							'Third_Priority' 	=> "Aftercare Wingmen",
 							'MAD_Applicant_Id'	=> $status['id'],	// 'Unique_Applicant_ID'	=> $status['id'],
 						]
 					]);
@@ -123,19 +129,19 @@ class Common extends Controller {
 					if($zoho_user_id) $this->users_model->setZohoId($status['id'], $zoho_user_id);
 
 					redirect('common/thank_you');
-				
+
 				} else {
 					$data['error'] = $message;
-					
+
 					$this->load->view('user/register_view',$data);
 				}
-			} 
+			}
 
         } else {
 			if($user_id_encoded) {
 				$user_id_text = base64_decode($user_id_encoded);
 				$user_id = reset(explode(":", $user_id_text));
-				
+
 				$user_data = $this->users_model->get_user($user_id); //:HACK:
 				if($user_data) {
 					$data['user_id'] = $user_id;
@@ -148,17 +154,17 @@ class Common extends Controller {
 
 			$data['cities'] = $this->city_model->get_unique_cities();
 			unset($data['cities'][26]); // remove Leadership
-			unset($data['cities'][28]); // remove Test 
+			unset($data['cities'][28]); // remove Test
 
 			$this->load->view('user/register_view', $data);
 		}
     }
-    
+
     function thank_you() {
 		$this->load->model('settings_model');
 		$registerations = $this->users_model->db->query("SELECT COUNT(id) AS count FROM User WHERE user_type='applicant'")->row();
 		$reg_count = $registerations->count;
-		
+
 		$this->load->view('common/thank_you',array('reg_count'=>$reg_count));
     }
 
@@ -167,9 +173,9 @@ class Common extends Controller {
 		$this->load->model('class_model');
 		$this->load->library('sms');
 		$this->load->helper('misc_helper');
-		
+
 		$log = '';
-		
+
 		$phone = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
 		$time = $_REQUEST['timestamp'];
 		$keyword = strtolower($_REQUEST['keyword']);
@@ -184,25 +190,25 @@ class Common extends Controller {
 			log_message('error', $log);
 			return;
 		}
-		
+
 		// Find the unconfirmed class closest to today by the person who sent the text.
 		$closest_unconfirmed_class = $this->class_model->get_closest_unconfirmed_class($user->id);
-		
+
 		$this->class_model->confirm_class($closest_unconfirmed_class, $user->id); // ... and confirm it.
-		
+
 		$log .= " User {$user->id}, Class $closest_unconfirmed_class. ";
-		
+
 		// Then sent a thank you sms to that user.
 		$name = short_name($user->name);
 		$this->sms->send($phone, "Thank you for confirming your class. All the best, $name :-)");
-		
+
 		$log .= " Sent a thank you SMS to $name.";
-		
+
 		log_message('info', $log);
-		
+
  		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
 	}
-	
+
 
 	/// SMS Registerations.
 	function sms_register() {
@@ -211,25 +217,25 @@ class Common extends Controller {
 		$this->load->helper('misc_helper');
 		$this->load->model('settings_model');
 		$debug = false;
-		
+
 		if(!$debug) error_reporting(0);
-		
+
 		$log = '';
-		
+
 		$phone = preg_replace('/^91/', '', $_REQUEST['msisdn']); // Gupshup uses a 91 at the start. Remove that.
 		$time = $_REQUEST['timestamp'];
 		$keyword = strtolower($_REQUEST['keyword']);
 		$content = $_REQUEST['content'];
 		$log .= "From $phone at $time:\n";
 		if($debug) print "From $phone at $time:<br />";
-		
+
 		list($full_name, $email, $city) = explode(",", str_ireplace('IMAD ','', $content));
 		$name = short_name($full_name);
 		$city = strtolower(trim($city));
 		$name = short_name(trim($full_name));
 		$email = trim($email);
-		
-		
+
+
 		$log .= "$city:$full_name:$name:$email\n";
 		if($debug) print "$city:$full_name:$name:$email<br />";
 
@@ -248,11 +254,11 @@ class Common extends Controller {
 			$log .= "User exists in Database.\n";
 			$log .= print_r($user, 1);
 			if($debug) print "User Exists...<br />" . print_r($user, 1);
-			
+
 		} else {
 			// Then sent a thank you sms to that user.
 			if(!$debug) $this->sms->send($phone, "Dear $name, thank you for registering with Make A Difference. Check your email for more details.");
-			
+
 			// Find which city the user is from...
 			// First, use some presets...
 			if($city == 'hyd') $city = 'hyderabad';
@@ -264,7 +270,7 @@ class Common extends Controller {
 			elseif($city == 'cbe') $city = 'coimbatore';
 			elseif($city == 'ekm') $city = 'cochin';
 			elseif($city == 'poona') $city = 'pune';
-			
+
 			// Now find the city with least text distance from the given text
 			$cities = $this->city_model->get_unique_cities();
 			$most_likely = 0;
@@ -276,17 +282,17 @@ class Common extends Controller {
 					$most_likely_difference = 0;
 					break;
 				}
-				
+
 				if($most_likely_difference > $difference) {
 					$most_likely_difference = $difference;
 					$most_likely = $city_id;
 				}
 			}
 			if($most_likely_difference > 4) $most_likely = 0;
-			
+
 			$log .= "Given City : $city. Most likely means: ".$cities[$most_likely]."($most_likely) with $most_likely_difference difference.\n";
 			$log .= "Sent a thank you SMS to $name.";
-			
+
 			// Add the user to the database.
 			$user_array = array(
 				'name'				=> $full_name,
@@ -310,12 +316,12 @@ class Common extends Controller {
 			if($debug) print $user_id."<br />";
 			$link = site_url('common/register/'.base64_encode($user_id . ":;-)"));
 			if($debug) print $link."<br />";
-			
+
 			// Send email to the user...
 			$email_body = $this->settings_model->get_setting_value('sms_registration_email');
 			$email_body = str_replace(array('%NAME%', '%LINK%'),array($name, $link), $email_body);
 			if($debug) print $email_body."<br />";
-			
+
 			$hr_email = $this->settings_model->get_setting_value('hr_email_city_common'); // For diff city, use 'hr_email_city_'.$status['city_id']
 			if($debug) print $hr_email."<br />";
 			$this->email->from($hr_email, "Make A Difference");
@@ -324,28 +330,28 @@ class Common extends Controller {
 			$this->email->message($email_body);
 			$this->email->send();
 			if($debug) echo $this->email->print_debugger();
-			
+
 		}
-		
+
 		log_message('info', $log);
-		
+
  		$this->db->query("UPDATE Setting SET data='".mysql_real_escape_string($log)."' WHERE name='temp'");
  		// localhost/Projects/Madapp/CI/trunk/index.php/common/sms_register?msisdn=919746068565&timestamp=1339356546&keyword=IMAD&content=IMAD+Binny+V+A,binnyva@gmail.com,Cochin
 	}
-	
+
 
 	function show($setting='temp') {
 		print "<pre>";
 		print $this->db->query("SELECT data FROM Setting WHERE name='$setting'")->row()->data;
 		print "</pre>";
 	}
-	
+
 	function test($text) {
 		$this->load->library('sms');
 		$this->sms->send('9746068565', $text);
 	}
-	
-	
+
+
 	function runners() {
 		$cities = array('Lucknow','Mumbai','Ahmedabad','Dehradun','Pune','Gawlior','Delhi','Kolkata','Nagpur','Chandigarh','Bhopal');
 
@@ -364,10 +370,10 @@ class Common extends Controller {
 				'type' 		=> 'volunteer',
 			));
 			if(!$user_id) continue;
-			
+
 			$city_id  = $this->city_model->createCity(array('name'=>$city_name,'president_id'=>$user_id));
 			$this->users_model->adduser_to_group($user_id, array(2));
-			
+
 			$roles = array(
 				array('name' => 'EPH',	'group_id' => 4,	'email' => 'englishproject'),
 				array('name' => 'HR',	'group_id' => 4,	'email' => 'hr'),
@@ -386,7 +392,7 @@ class Common extends Controller {
 					'type'		 => 'volunteer',
 				));
 				if($user_id) $this->users_model->adduser_to_group($user_id, array($role['group_id']));
-				
+
 				$count++;
 			}
 		}

@@ -66,7 +66,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			// This to make sure that the new classes that was started after missing a lot of class works correctly. For eg. if level 1 starts in Sunday back on 12 Aug, but level 2 started only on 17 Aug(sun), this part will handle it correctly.
 			while(isset($batch_info['days_with_classes'][$class_count]) and date('d M',strtotime($classes->class_on)) != $batch_info['days_with_classes'][$class_count]) { 
 				//if($class_count > 5) dump($classes); :DEBUG:
-				print "<td class='class-cancelled'>";
+				print "<td class='class-empty'>";
 				if($this->user_auth->get_permission('debug')) {
 					$timestamp = strtotime($classes->class_on);
 					$class_on = date('Y-m-d H:i:s', strtotime($batch_info['days_with_classes'][$class_count]." ".date('Y H:i:s', $timestamp)));

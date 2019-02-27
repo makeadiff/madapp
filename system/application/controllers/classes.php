@@ -211,6 +211,7 @@ class Classes extends Controller {
 	function assign_students($center_id, $action='') {
 		$this->user_auth->check_permission('classes_assign_students');
 		$this->load->model('Kids_model', 'kids_model');
+		$center = $this->center_model->get_info($center_id)[0];
 
 		$all_levels = idNameFormat($this->level_model->get_all_level_names_in_center($center_id));
 		$all_students = $this->kids_model->get_kidsby_center($center_id)->result();
@@ -270,6 +271,7 @@ class Classes extends Controller {
 		$this->load->view('classes/assign_students', array(
 				'all_levels'	=> $all_levels, 
 				'all_students'	=> $all_students,
+				'center'		=> $center,
 				'student_level_mapping' => $student_level_mapping,
 				'title'			=> 'Assign Students to Classes'));
 	}
@@ -284,6 +286,7 @@ class Classes extends Controller {
 		$this->user_auth->check_permission('classes_assign');
 
 		// Get all Batches and Levels in this center.
+		$center = $this->center_model->get_info($center_id)[0];
 		$all_batches = $this->batch_model->get_class_days($center_id); // All batches in the given center.
 		$all_levels = array();
 		foreach ($all_batches as $batch_id => $batch_name) {
@@ -434,6 +437,7 @@ class Classes extends Controller {
 				'all_batches'	=> $all_batches, 
 				'all_subjects'	=> $all_subjects,
 				'user_mapping'	=> $user_mapping,
+				'center'		=> $center,
 				'all_assigned_teachers'		=> $all_assigned_teachers,
 				'assigned_teacher_count'	=> $assigned_teacher_count,
 				'batch_level_user_hirarchy'	=> $batch_level_user_hirarchy,

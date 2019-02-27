@@ -1,4 +1,14 @@
-<?php $this->load->view('layout/flatui/header', array('title' => $title)); ?>
+<?php 
+$this->load->view('layout/flatui/header', array('title' => $title)); 
+$labels = [
+	'student'	=> 'Students',
+	'level'		=> 'Class Sections'
+];
+if($center->type == 'aftercare') {
+	$labels['student'] = 'Youth';
+	$labels['level'] = 'SSG';
+}
+?>
 <script type="text/javascript">
 	var batch_level_user_hirarchy = <?php echo json_encode($batch_level_user_hirarchy); ?>;
 	var all_levels = <?php echo json_encode($all_levels); ?>;
@@ -25,7 +35,7 @@
 <input type="hidden" name="submit" value="true" />
 <input type="submit" name="action" value="Save" class="btn btn-primary" />
 <table class="table">
-<tr><th>Teacher</th><?php if(!$show_only_batch) { ?><th>Batch</th><?php } ?><th>Class Section</th><th>Subject</th></tr>
+<tr><th>Teacher</th><?php if(!$show_only_batch) { ?><th>Batch</th><?php } ?><th><?php echo $labels['level'] ?></th><th>Subject</th></tr>
 <?php foreach($all_users as $user_id => $user_name) { 
 	$show_level = 0;
 	$show_level_of_batch = $show_only_batch;

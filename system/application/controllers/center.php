@@ -101,7 +101,6 @@ class Center extends Controller  {
     **/
 	function update_Center()
 	{
-
 		$this->user_auth->check_permission('center_edit');
 		$data['rootId'] = $_REQUEST['rootId'];
 		$data['user_id']= $_REQUEST['user_id'];
@@ -121,8 +120,6 @@ class Center extends Controller  {
 	    $data['sa_name'] = $_REQUEST['sa_name'];
 	    $data['sa_email'] = $_REQUEST['sa_email'];
 	    $data['sa_phone'] = $_REQUEST['sa_phone'];
-
-    // dump($data);
 
 		$returnFlag= $this->center_model->update_center($data);
 
@@ -159,10 +156,11 @@ class Center extends Controller  {
 		$this->user_auth->check_permission('center_edit');
 		set_city_year($this); // Will take care of Program change.
 
-
 		$issues = $this->center_model->find_issues($center_id);
 		$issues['centers_with_foundation_program'] = [115,207,222,122,113,181,208,153,206,210,4, 	154,184,220]; // All the Shelters that has the fondation program. :HARDCODE:
-		$issues['center_name'] = $this->center_model->get_center_name($center_id);
+		$center = $this->center_model->get_info($center_id)[0];
+		$issues['center_name'] = $center->name;
+		$issues['center_type'] = $center->type;
 		$issues['center_id'] = $center_id;
 		$issues['comments'] = $this->comment_model->get_all('Center', $center_id);
 		$issues['all_projects'] = ['1' => 'Ed Support', '2' => 'Foundation'];

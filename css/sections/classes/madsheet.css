@@ -40,6 +40,9 @@
 .class-cancelled {
 	background-color:#000;
 }
+.class-empty {
+	background-color:#bbb;
+}
 
 .teacher {
 	margin:0;

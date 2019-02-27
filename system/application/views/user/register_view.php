@@ -21,43 +21,47 @@ jQuery(document).ready(function () {
 </head>
 <body>
 <div id="container">
+	<?php
+		$cities[26]="Leadership";
+	?>
+	
   <div id="wraper">
     <div id="main-content">
-      
+
 	  <div id="content">
 	   <?php
 		if($this->session->flashdata('success')) $message['success'] = $this->session->flashdata('success');
 		if($this->session->flashdata('error')) $message['error'] = $this->session->flashdata('error');
 		if(!empty($error)) $message['error'] = $error;
-		
+
 		if(!empty($message['success']) or !empty($message['error'])) { ?>
 		<div class="message" id="error-message" <?php echo (!empty($message['error'])) ? '':'style="display:none;"';?>><?php echo (empty($message['error'])) ? '':$message['error'] ?></div>
 		<div class="message" id="success-message" <?php echo (!empty($message['success'])) ? '':'style="display:none;"';?>><?php echo (empty($message['success'])) ? '': $message['success'] ?></div>
 		<?php } ?>
-	  
+
         <form method="post" action="<?php echo site_url('common/register')?>"  name="regform" id="regForm" onsubmit="return validate();" >
 			<div id="title"><h1>Register and Make A Difference</h1></div>
-			
+
             <div class="content-row-large">
 				<span>Name:</span>
-				<input type="text" class="textfield" id="name" name="name" value="<?php if(isset($this->validation->name)){ echo $this->validation->name; } ?>" /><?php 
+				<input type="text" class="textfield" id="name" name="name" value="<?php if(isset($this->validation->name)){ echo $this->validation->name; } ?>" /><?php
 				if(!empty($this->validation->name_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
 
             <div class="content-row-large"><span>Email:</span>
-                <input type="text" class="textfield" id="email" name="email" value="<?php if(!empty($this->validation->email)){ echo $this->validation->email; } ?>" /><?php 
+                <input type="text" class="textfield" id="email" name="email" value="<?php if(!empty($this->validation->email)){ echo $this->validation->email; } ?>" /><?php
                 if(!empty($this->validation->email_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
 
             <div class="content-row-large"><span>Phone:</span>
-				<input type="text" class="textfield" id="phone" name="phone" value="<?php if(isset($this->validation->phone)){ echo $this->validation->phone; } ?>" /><?php 
+				<input type="text" class="textfield" id="phone" name="phone" value="<?php if(isset($this->validation->phone)){ echo $this->validation->phone; } ?>" /><?php
 				if(!empty($this->validation->phone_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
-            
+
             <div class="content-row-large"><span>Address:</span>
             <textarea class="textarea" name="address" id="address" rows="5" cols="40"><?php if(isset($_POST['address'])) echo $_POST['address']; ?></textarea>
             </div>
-            
+
             <div class="content-row-large"><span>Sex:</span>
             <select class="dropdown" id="sex" name="sex">
 				<option value="m" <?php if(isset($_POST['sex']) and $_POST['sex'] == 'm') echo 'selected="selected"'; ?>>Male</option>
@@ -69,12 +73,12 @@ jQuery(document).ready(function () {
             <select class="dropdown" id="city_id" name="city_id" onchange="if(this.value==0)location.href='http://hq.makeadiff.in/7-expansions';">
 				<option value="">Select City</option>
 				<?php foreach($cities as $id=>$name) { ?>
-				<option value="<?php echo $id ?>" <?php 
-					if(!empty($this->validation->city_id) and $this->validation->city_id == $id) echo 'selected="selected"'; 
+				<option value="<?php echo $id ?>" <?php
+					if(!empty($this->validation->city_id) and $this->validation->city_id == $id) echo 'selected="selected"';
 				?>><?php echo $name ?></option>
 				<?php } ?>
 				<!-- <option value="0">Other</option> -->
-			</select><?php 
+			</select><?php
 				if(!empty($this->validation->city_id_error)) { ?><img src="<?php echo base_url(); ?>images/not-available.png" title="Not available" /><?php } ?>
             </div>
 
@@ -109,13 +113,13 @@ jQuery(document).ready(function () {
             <input type="hidden" name="center" value="0" />
             <input type="hidden" name="position" value="" />
             <?php if(!empty($user_id)) { ?><input type="hidden" name="user_id" value="<?php echo $user_id ?>" /><?php } ?>
-            
+
             <div class="content-row-reg" style="margin-top: 30px;">
 				    <input name="button" type="submit" class="reg-button" id="button" value="Register" /><br />
                     <div class="g-recaptcha" data-sitekey="6Le_7hsTAAAAAKFd8R8gboePe1IkCEwi-Q9hQQoi" style="margin:5px 0 0 100px;"></div>
            	</div>
         </form>
-       
+
 </div>
     </div>
   </div>

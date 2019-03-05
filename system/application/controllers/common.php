@@ -27,6 +27,7 @@ class Common extends Controller {
 		$this->load->model('project_model');
 		$this->load->model('users_model');
 		$this->load->model('city_model');
+		$this->load->model('contact_model');
 	}
 	/**
 	* Function to register
@@ -91,7 +92,7 @@ class Common extends Controller {
 					}
 				}
 
-				list($status, $message) = $this->user_auth->register($data);
+				list($status, $message) = $this->contact_model->add($data);
 				if($status)	{
 					// Send Data to Zoho
 					$all_sexes = [
@@ -126,7 +127,7 @@ class Common extends Controller {
 					$zoho_response = json_decode($response);
 					$zoho_user_id = @$zoho_response->formname[1]->operation[1]->values->ID;
 
-					if($zoho_user_id) $this->users_model->setZohoId($status['id'], $zoho_user_id);
+					if($zoho_user_id and $status->id) $this->contact_model->setZohoId($status->id, $zoho_user_id);
 
 					redirect('common/thank_you');
 

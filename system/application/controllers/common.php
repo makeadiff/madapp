@@ -37,6 +37,11 @@ class Common extends Controller {
     **/
     function register($user_id_encoded='', $campaign='')
     {
+    	$campaign_link = '';
+    	if($campaign) $campaign_link = "?campaign=$campaign";
+    	header("Location: https://makeadiff.in/join" . $campaign_link);
+    	exit;
+
     	$data = [];
 		if(Navigation::isPost()){
 			$data = $_POST;

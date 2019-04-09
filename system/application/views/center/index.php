@@ -7,7 +7,7 @@
 
 	<?php if($this->user_auth->get_permission('center_add')) { ?>
 	<div id="actions">
-	<a href="<?php echo site_url('center/popupaddCenter'); ?>" class="thickbox button green primary popup" style="margin-bottom:10px;" id="example" name="Add New Center">Add New Center</a>
+	<a href="<?php echo site_url('center/popupaddCenter'); ?>" class="thickbox button green primary popup" style="margin-bottom:10px;" id="example" name="Add New Center">Add New Shelter</a>
 	</div>
 	<?php } ?>
 </div><br />
@@ -16,10 +16,10 @@
 <thead>
 <tr>
 	<th class="colCheck1">ID</th>
-	<th class="colName left sortable">Center Name</th>
+	<th class="colName left sortable">Name</th>
 
     <th class="colStatus sortable">City</th>
-    <th class="colStatus">Center Head</th>
+    <th class="colStatus">Shelter Operations Fellow</th>
    <th class="colActions">Actions</th>
 </tr>
 </thead>

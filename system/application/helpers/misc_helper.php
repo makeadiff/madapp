@@ -69,16 +69,6 @@ function getById($query, $db) {
 	return $return;
 }
 
-function idNameFormat($data, $fields=array('id','name')) {
-	$return = array();
-	foreach($data as $row) {
-		if(isset($fields[1])) $return[$row->{$fields[0]}] = stripslashes($row->{$fields[1]});
-		else $return[$row->$fields[0]] = $row;
-	}
-	
-	return $return;
-}
-
 function colFormat($data) {
 	$return = array();
 	foreach($data as $row) $return[] = current($row);
@@ -86,11 +76,38 @@ function colFormat($data) {
 	return $return;
 }
 
+/**
+ * Returns the given array after making it into a key format. If an element of the array has a key called 'id', that will be set as the key of that element.*
+ * array('0'=>array('id'=>1,'name'=>'Binny'), '1'=>array('id'=>30,'name'=>'Bijoy')) will become...
+ * array('1'=>array('id'=>1,'name'=>'Binny'), '30'=>array('id'=>30,'name'=>'Bijoy')) 
+ */
+function keyFormat($data, $primary_field='id') {
+	$return = [];
+	foreach($data as $row) {
+		if(is_array($primary_field) and count($primary_field) == 2) {
+			if(is_object($row) and isset($row->{$primary_field[0]})) $return[$row->{$primary_field[0]}] = $row->{$primary_field[1]};
+			elseif(isset($row[$primary_field[0]])) $return[$row[$primary_field[0]]] = $row[$primary_field[1]];
+			
+		} else if(is_array($primary_field) and count($primary_field)) {
+			if(is_object($row)) $return[$row->{$primary_field[0]}] = $row;
+			else $return[$row[$primary_field[0]]] = $row;
+			
+		} else {
+		    $return[$row[$primary_field]] = $row;
+		}
+	}
+	
+	return $return;
+}
+
+function idNameFormat($data, $fields = false) {
+	if(!$fields) $fields = ['id', 'name'];
+	return keyFormat($data, $fields);
+}
+
 function oneFormat($data) {
 	return current($data);
 }
-
-
 
 /**
  * The index function - Created this to avoid the extra isset() check. This will return false 

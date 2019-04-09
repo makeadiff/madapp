@@ -27,7 +27,7 @@ App_CSVGo.query:
 App_CSVGo.db:
 App_CSVGo.added_on:
 App_CSVGo.last_run_on:
-App_CSVGo.vertical_id:
+App_CSVGo.vertical_id: Vertical.id
 App_CSVGo.status:
 
 App_Director: Used by the 'eDirectors' app. Stores a list of all the directors in the system. The website director listing comes from this table.
@@ -39,7 +39,7 @@ App_Director.linkedin:
 App_Director.image:
 App_Director.description:
 App_Director.sort:
-App_Director.user_id:
+App_Director.user_id: User.id - Not used
 App_Director.status:
 
 App_Event_Mail_Tracker: Deprecated. This was used in Events app backend - but not used anymore.
@@ -71,27 +71,27 @@ Batch.id:
 Batch.day: Batch day - 0 is Sunday
 Batch.class_time: Batch time - expressed in 24 hours time.
 Batch.batch_head_id: The ID of the mentor of this batch. Links to the User table.
-Batch.center_id:
-Batch.subject_id:
-Batch.project_id:
+Batch.center_id: Center.id
+Batch.subject_id: Not used.
+Batch.project_id: Project.id
 Batch.year: Holds the year which the batch is a part of.
 Batch.status:
 
 BatchLevel: The batch level linking. Holds information on which all levels are part of which batch.
 BatchLevel.id:
-BatchLevel.batch_id:
-BatchLevel.level_id:
+BatchLevel.batch_id: Batch.id
+BatchLevel.level_id: Level.id
 BatchLevel.year:
 
 BatchSubject: Which all subjects are taught in the which all batches. Reference table.
 BatchSubject.id:
-BatchSubject.batch_id:
-BatchSubject.subject_id:
+BatchSubject.batch_id: Batch.id
+BatchSubject.subject_id: Subject.id
 
 Center: All information about Shelters are stored in this table.
 Center.id:
 Center.name: Name of the Shelter
-Center.city_id: The city this shelter belongs to
+Center.city_id: City.id - The city this shelter belongs to
 Center.center_head_id: The User.id of the volunteer who is the Shelter Operations Fellow of this Shelter
 Center.class_starts_on: Class start date for the current year. Classes will get generated for this shelter only if this field is filled.
 Center.medium: Medium of instuction
@@ -131,7 +131,7 @@ CenterProject.added_on:
 City: All cities that are active in MAD
 City.id:
 City.name:
-City.president_id: City Team Lead of this city.
+City.president_id: User.id - City Team Lead of this city.
 City.added_on:
 City.classes_happening:
 City.region_id: Region.id - not used
@@ -143,7 +143,7 @@ Class: All information about classes that happened will be stored in this. Rows 
 Class.id:
 Class.batch_id: Batch.id
 Class.level_id: Level.id
-Class.project_id: Project.id
+Class.project_id: Project.id - Which project this Class is a part of - ed support/fp/aftercare/tr
 Class.class_on:
 Class.feedback:
 Class.lesson_id: Lesson.id - Deprecated
@@ -765,32 +765,60 @@ Subject.unit_count:
 Subject.city_id: City.id
 Subject.status:
 
-Survey:
+Survey: Survey Instance. Each Survey template can have multiple survey instances. 
 Survey.id:
-Survey.name:
-Survey.type:
-Survey.status:
+Survey.survey_template_id: Survey_Template.id
+Survey.added_by_user_id: User.id
+Survey.added_on:
 
-SurveyAnswer:
-SurveyAnswer.id:
-SurveyAnswer.question_id: SurveyQuestion.id
-SurveyAnswer.answer:
+Survey_Choice: If a Survey question has multiple choices, the choices goes here.
+Survey_Choice.id:
+Survey_Choice.name:
+Survey_Choice.description:
+Survey_Choice.value:
+Survey_Choice.survey_question_id: Survey_Question.id
+Survey_Choice.sort_order:
+Survey_Choice.options:
+Survey_Choice.status:
 
-SurveyQuestion:
-SurveyQuestion.id:
-SurveyQuestion.question:
-SurveyQuestion.survey_id: Survey.id
-SurveyQuestion.type:
-SurveyQuestion.sort_order:
-SurveyQuestion.status:
+Survey_Question:
+Survey_Question.id:
+Survey_Question.question:
+Survey_Question.description:
+Survey_Question.survey_question_category_id: Survey_Question_Category.id
+Survey_Question.survey_template_id: Survey_Template.id
+Survey_Question.response_type:
+Survey_Question.required:
+Survey_Question.sort_order:
+Survey_Question.options:
+Survey_Question.status:
 
-SurveyResponse:
-SurveyResponse.id:
-SurveyResponse.question_id: SurveyQuestion.id
-SurveyResponse.answer_id: SurveyAnswer.id
-SurveyResponse.answer:
-SurveyResponse.user_id: User.id
-SurveyResponse.added_on:
+Survey_Question_Category: Multiple questions can be added to a category within a survey.
+Survey_Question_Category.id:
+Survey_Question_Category.name:
+Survey_Question_Category.survey_template_id: Survey_Template.id
+Survey_Question_Category.sort_order:
+Survey_Question_Category.status:
+
+Survey_Response:
+Survey_Response.id:
+Survey_Response.survey_id: Survey.id
+Survey_Response.responder_id: This will be the ID of the person who the response is attached to. If the Survey_Template for this response has responder=User, this will be User.id
+Survey_Response.survey_question_id: Survey_Question.id
+Survey_Response.survey_choice_id: Survey_Choice.id
+Survey_Response.response:
+Survey_Response.added_on:
+Survey_Response.added_by_user_id: User.id
+
+Survey_Template:
+Survey_Template.id:
+Survey_Template.name:
+Survey_Template.description:
+Survey_Template.added_on:
+Survey_Template.vertical_id: Vertical.id
+Survey_Template.responder:
+Survey_Template.options:
+Survey_Template.status:
 
 User: All volunteer data will be stored here.
 User.id:
@@ -913,7 +941,7 @@ VoiceOfChild_Comment.actionable:
 VoiceOfChild_Comment.escalation_status:
 VoiceOfChild_Comment.added_on:
 
-mailchimp_emaillist:
+mailchimp_emaillist: Not used
 mailchimp_emaillist.id:
 mailchimp_emaillist.list_name:
 mailchimp_emaillist.mailchimp_list_id:
@@ -923,7 +951,7 @@ mailchimp_emaillist.created_at:
 mailchimp_emaillist.user_id:
 mailchimp_emaillist.status:
 
-mailchimp_volunteers:
+mailchimp_volunteers: Not used
 mailchimp_volunteers.id:
 mailchimp_volunteers.user_id:
 

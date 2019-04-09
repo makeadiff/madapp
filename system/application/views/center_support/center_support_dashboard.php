@@ -15,9 +15,9 @@
                         <img src="<?php echo base_url(); ?>images/flat_ui/kids.png" alt="" /> <br>Child<br>Management</a></div>
             <?php } ?>
 
-            <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/edsupport-assessment/public/manage">
+<!--             <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/edsupport-assessment/public/manage">
                 <img src="<?php echo base_url(); ?>images/flat_ui/exams.png" alt="" /> <br>Mark<br>Management</a>
-            </div>
+            </div> -->
 
             <?php if($this->user_auth->get_permission('reimbursement')) { ?>
                 <div class="col-md-4 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' target="_blank" href="https://drive.google.com/a/makeadiff.in/?tab=mo#folders/0B8bB5ID9NRHQUl94TDB0VkhsSkU">

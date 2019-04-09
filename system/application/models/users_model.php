@@ -538,6 +538,10 @@ class Users_model extends Model {
 		$this->ci->load->model('event_model');
 		$this->ci->load->model('settings_model');
 
+		$users_groups = $this->get_user_groups_of_user($user_id);
+		$ed_teacher_group_id = 9;
+		$fp_teacher_group_id = 376;
+
 		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
 		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
 		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
@@ -546,6 +550,15 @@ class Users_model extends Model {
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
 		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
+
+		if(isset($users_groups[$fp_teacher_group_id])) { // Current user is a FP Teacher, credits are different.
+			$credit = $this->ci->settings_model->get_setting_value('fp_beginning_credit');
+			$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('fp_max_credit_threshold');
+			$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_zero_hour');
+			$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_getting_substitute');
+			$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_class');
+			$credit_for_substituting = $this->ci->settings_model->get_setting_value('fp_credit_for_substituting');
+		}
 
 		$classes_so_far = $this->get_usercredits($user_id);
 
@@ -590,6 +603,7 @@ class Users_model extends Model {
 					$credit = $credit + $credit_sub_gets;
 					if($debug) print "Credit for subbing: $credit_sub_gets<br />\n";
 				} else {
+					$credit = $credit_max_credit_threshold;
 					if($debug) print "Credit for subbing not got - as upper limit is hit.<br />\n";
 				}
 
@@ -706,15 +720,26 @@ class Users_model extends Model {
 		$this->load->model('settings_model');
 
     	$details = $this->get_usercredits($user_id);
+ 		$users_groups = $this->get_user_groups_of_user($user_id);
+		$ed_teacher_group_id = 9;
+		$fp_teacher_group_id = 376;
 
 		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
-		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
 		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
 		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
 		$credit_lost_for_missing_avm = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_avm');
 		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
 		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
 		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
+
+		if(isset($users_groups[$fp_teacher_group_id])) { // Current user is a FP Teacher, credits are different.
+			$credit = $this->ci->settings_model->get_setting_value('fp_beginning_credit');
+			$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('fp_max_credit_threshold');
+			$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_zero_hour');
+			$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_getting_substitute');
+			$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_class');
+			$credit_for_substituting = $this->ci->settings_model->get_setting_value('fp_credit_for_substituting');
+		}
 
 		$i = 0;
 		$credit_log = array(array(
@@ -781,13 +806,6 @@ class Users_model extends Model {
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
 				$sub_get_credits = $credit_for_substituting;
 
-				// If the sub is from the same level, give him/her 2 credits. Because we are SO generous.
-				$substitute_levels = $this->ci->level_model->get_user_level($row['substitute_id']);
-				$current_class_level = $this->ci->level_model->get_class_level($row['class_id']);
-				if(in_array($current_class_level, $substitute_levels)) {
-					$sub_get_credits = $credit_for_substituting_in_same_level;
-				}
-
 				$data['class_on'] = $row['class_on'];
 				$teacher_name = $this->get_name_of_Substitute($row['user_id']);
 				$data['action'] = "Substituted for " . $teacher_name->name;
@@ -797,6 +815,7 @@ class Users_model extends Model {
 				if($credit_max_credit_threshold >= ($credit + $sub_get_credits)) {
 					$credit = $credit + $sub_get_credits;
 				} else {
+					$credit = $credit_max_credit_threshold;
 					$data['change'] .= " Upper credit limit hit! You Rock!";
 				}
 
@@ -829,21 +848,6 @@ class Users_model extends Model {
 			if(isset($data['credit'])) {
 				$i++;
 				$data['i'] = $i;
-				$credit_log[] = $data;
-			}
-		}
-
-		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
-		foreach($event_attendence as $event) {
-			$i++;
-			if($i > 1) {
-				$data = array(
-					'i' 		=> $i,
-					'credit'	=> $credit + $credit_lost_for_missing_avm,
-					'class_on'	=> $event->starts_on,
-					'action'	=> 'Missed "' . $event->name . '" on ' . date('d M, Y', strtotime($event->starts_on)),
-					'change'	=> "Lost $credit_lost_for_missing_avm credit"
-				);
 				$credit_log[] = $data;
 			}
 		}
@@ -980,8 +984,6 @@ class Users_model extends Model {
 
     	return $fellows;
     }
-
-
 
 	function search_users($data, $return_info = false) {
 		$this->db->start_cache();

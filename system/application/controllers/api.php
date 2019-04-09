@@ -261,9 +261,10 @@ class Api extends Controller {
 		
 		$data = array(
 			'username' => $this->input('email'),
-			'password' => $this->input('password')
+			'password' => $this->input('password'),
+			'auth_token' => $this->input('auth_token'),
 		);
-		if(!$data['username'] or !$data['password']) {
+		if(!$data['username'] or (!$data['password'] and !$data['auth_token'])) {
 			return $this->error("Username or password not provided.");
 		}
 

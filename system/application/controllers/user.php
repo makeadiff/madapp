@@ -433,7 +433,7 @@ class User extends Controller  {
 		$this->load->view('user/search_email', array('email'=>$email, 'phone'=>$phone, 'name'=>$name, 'id'=>$id, 'search_id' => $id, 'data'=>$data));
 	}
 
-	/// Export to CSV
+	/// Export to CSV, because Kamal is awesome.
 	function export($city_id='0', $user_group='0', $name='', $user_type="volunteer") {
 		$this->user_auth->check_permission('user_export');
 		$data['city_id']	= $city_id;

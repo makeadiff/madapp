@@ -1,6 +1,14 @@
 <?php
 $title = 'Manage ' . $center_name;
 $this->load->view('layout/header',array('title'=>$title));
+$labels = [
+	'student'	=> 'Students',
+	'level'		=> 'Class Sections'
+];
+if($center_type == 'aftercare') {
+	$labels['student'] = 'Youth';
+	$labels['level'] = 'SSG';
+}
 
 function showMessage($count, $message, $threshold=1) {
 	if($message) $message = "($message)";
@@ -30,7 +38,7 @@ function showMessage($count, $message, $threshold=1) {
 $row = 1;
 if($this->user_auth->get_permission('center_edit')) { ?>
 <tr><td><?php echo $row++; ?></td>
-<td><a class="thickbox popup" href="<?php echo site_url('center/popupEdit_center/'.$center_id); ?>">Edit Center Details</a></td>
+<td><a class="thickbox popup" href="<?php echo site_url('center/popupEdit_center/'.$center_id); ?>">Edit Shelter Details</a></td>
 <td><?php showMessage($details['center_head_id'], ''); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('user_index')) { ?>
@@ -40,8 +48,8 @@ if($this->user_auth->get_permission('center_edit')) { ?>
 
 <?php if($this->user_auth->get_permission('kids_index')) { ?>
 <tr><td><?php echo $row++; ?></td>
-<td><a href="<?php echo site_url('kids/index/'.$center_id); ?>">Manage Kids</a></td>
-<td><?php showMessage($details['kids_count'], $details['kids_count'] . " Kids", 12); ?></td></tr><?php } ?>
+<td><a href="<?php echo site_url('kids/index/'.$center_id); ?>">Manage <?php echo $labels['student'] ?></a></td>
+<td><?php showMessage($details['kids_count'], $details['kids_count'] . ' ' . $labels['student'], 12); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index') and in_array($center_id, $centers_with_foundation_program)) { // :PERMISSION_RESET: ?>
 <tr><td><?php echo $row++; ?></td>
@@ -55,13 +63,13 @@ echo form_close();
 
 <?php if($this->user_auth->get_permission('level_index')) { ?>
 <tr><td><?php echo $row++; ?></td>
-<td><a href="<?php echo site_url('level/index/center/'.$center_id); ?>">Manage Class Sections</a></td>
-<td><?php showMessage($details['level_count'], $details['level_count'] . " Class Sections"); ?></td></tr><?php } ?>
+<td><a href="<?php echo site_url('level/index/center/'.$center_id); ?>">Manage <?php echo $labels['level'] ?></a></td>
+<td><?php showMessage($details['level_count'], $details['level_count'] . " " . $labels['level']); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { // :PERMISSION_RESET: ?>
 <tr><td><?php echo $row++; ?></td>
-<td><a href="<?php echo site_url('classes/assign_students/'.$center_id); ?>">Assign Students to Class Sections</a></td>
-<td><?php showMessage($details['assigned_student_count'], $details['assigned_student_count'] . " students assigned.", $details['kids_count']); ?></td></tr><?php } ?>
+<td><a href="<?php echo site_url('classes/assign_students/'.$center_id); ?>">Assign <?php echo $labels['student'] ?> to <?php echo $labels['level'] ?></a></td>
+<td><?php showMessage($details['assigned_student_count'], $details['assigned_student_count'] . " ${labels['student']} assigned.", $details['kids_count']); ?></td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('batch_index')) { ?>
 <tr><td><?php echo $row++; ?></td>
@@ -80,7 +88,7 @@ echo form_close();
 
 <?php if($this->user_auth->get_permission('batch_index')) { // :PERMISSION_RESET: ?>
 <tr><td><?php echo $row++; ?></td>
-<td><a href="<?php echo site_url('center/info/'.$center_id); ?>">View All Center Assignment</a></td>
+<td><a href="<?php echo site_url('center/info/'.$center_id); ?>">View All Shelter Assignment</a></td>
 <td>&nbsp;</td></tr><?php } ?>
 
 <?php if($this->user_auth->get_permission('shelter_comments')) { // :PERMISSION_RESET: ?>

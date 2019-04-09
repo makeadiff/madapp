@@ -361,6 +361,7 @@ class Classes extends Controller {
 							'batch_id'	=> $batch_id,
 							'level_id'	=> $level_id,
 							'teacher_id'=> $user_id,
+							'project_id'=> $this->level_model->project_id,
 							'substitute_id'=>0,
 							'class_on'	=> $date,
 							'status'	=> 'projected'
@@ -704,6 +705,7 @@ class Classes extends Controller {
 					'batch_id'	=> $batch->id,
 					'level_id'	=> $teacher->level_id,
 					'teacher_id'=> $teacher->id,
+					'project_id'=> $batch->project_id,
 					'substitute_id'=>0,
 					'class_on'	=> $class_date,
 					'status'	=> 'projected'

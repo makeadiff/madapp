@@ -175,6 +175,7 @@ class Debug extends Controller {
 						'level_id'	=> $teacher->level_id,
 						'teacher_id'=> $teacher->id,
 						'substitute_id'=>0,
+						'project_id'=> $batch->project_id,
 						'class_on'	=> $class_date,
 						'status'	=> 'projected'
 					));

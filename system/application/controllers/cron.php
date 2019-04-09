@@ -61,6 +61,7 @@ class Cron extends Controller  {
 								'batch_id'	=> $batch->id,
 								'level_id'	=> $teacher->level_id,
 								'teacher_id'=> $teacher->id,
+								'project_id'=> $batch->project_id,
 								'substitute_id'=>0,
 								'class_on'	=> $date,
 								'status'	=> 'projected'

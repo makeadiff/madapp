@@ -22,6 +22,7 @@ class Cron extends Controller  {
 	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
 	function schedule_classes($debug=0) {
 		$project_ids = [1,2];
+		$year_end_time = ($this->year+1) . '-03-31 23:59:59';
 
 		if($debug) print "Debug Mode\n----------\n";
 
@@ -50,6 +51,8 @@ class Cron extends Controller  {
 					$date = date("Y-m-d H:i:s", $time);
 
 					$debug_text = '';
+					if($date >= $year_end_time) continue; // If the classes fall on the next year, don't make them.
+
 					foreach($teachers as $teacher) {
 						// if($teacher->id != 83172) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
 

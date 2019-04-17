@@ -154,7 +154,7 @@ class Class_model extends Model {
 			$this->db->insert('Class', array(
 					'batch_id'	=> $data['batch_id'],
 					'level_id'	=> $data['level_id'],
-					'project_id'=> 1,
+					'project_id'=> $data['project_id'],
 					'class_on'	=> $data['class_on'],
 					'status'	=> 'projected',
 				));

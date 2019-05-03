@@ -4,42 +4,38 @@
 <link type="text/css" rel="stylesheet" href="<?php echo base_url()?>css/thickbox.css">
 
 <script>
+function get_centerlist(page_no,search_query)
+{
+	$('#loading').show();
+        $.ajax({
+        type: "POST",
+        url: "<?= site_url('admin/getcenterlist')?>",
+        data: "pageno="+page_no+"&q="+search_query,
+        success: function(msg){
+        $('#loading').hide();
+        $('#updateDiv').html(msg);
+        }
+        });
+}
 
-	function get_centerlist(page_no,search_query)
+function deleteEntry(entryId,page_no)
+{
+	var bool = confirm("confirm delete!")
+	if(bool)
 	{
+		$.ajax({
+		type : "POST",
+		url  : "<?= site_url('admin/ajax_deletecenter') ?>",
+		data : 'entry_id='+entryId,
 		
-		$('#loading').show();
-            $.ajax({
-            type: "POST",
-            url: "<?= site_url('admin/getcenterlist')?>",
-            data: "pageno="+page_no+"&q="+search_query,
-            success: function(msg){
-            $('#loading').hide();
-            $('#updateDiv').html(msg);
-            }
-            });
-	}
-	
-	function deleteEntry(entryId,page_no)
-	{
-		var bool = confirm("confirm delete!")
-		if(bool)
-		{
-			$.ajax({
-			type : "POST",
-			url  : "<?= site_url('admin/ajax_deletecenter') ?>",
-			data : 'entry_id='+entryId,
-			
-			success : function(data)
-			{		
-			 	get_centerlist(page_no);
-			}
-			
-			});
+		success : function(data)
+		{		
+		 	get_centerlist(page_no);
 		}
-	}	
-	
-	
+		
+		});
+	}
+}	
 </script>
 
 <div style="height:20px;padding-top: 5px;">

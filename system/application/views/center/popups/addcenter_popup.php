@@ -31,7 +31,6 @@ jQuery(document).ready(function () {
 <input type="text" id="class_starts_on" name="class_starts_on" />
 </li>
 
-
 <li>
 <label for="medium">Medium: </label>
 <?php echo form_dropdown('medium', ['vernacular' => 'Vernacular','english' => 'English']); ?>

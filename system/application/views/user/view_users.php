@@ -194,7 +194,6 @@ $.tablesorter.addParser({
     <th>Address</th>
     <?php } elseif($this->input->post('user_type') == 'let_go' or $this->input->post('user_type') == 'alumni') { ?>
     <th>Left On</th>
-    <th>Exit Interview</th>
     <?php } if($this->input->post('user_type') == 'let_go') { ?>
     <th>Reason</th>
     <?php } else { ?>
@@ -208,7 +207,6 @@ $.tablesorter.addParser({
 </thead>
 <tbody>
 
-
 <?php 
 $count = ($current_page - 1) * $items_per_page;
 $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
@@ -217,7 +215,6 @@ foreach($all_users as $id => $user) {
 	$shadeClass = 'even';
 	if($count % 2) $shadeClass = 'odd';
 ?>
-
 
 <tr class="<?php echo $shadeClass; ?>" id="group"><!-- <?php print $count ?> -->
 	<td class="col-select"><input type="checkbox" name="users[]" class="user-select" value="<?php echo $user->id ?>" />
@@ -240,7 +237,6 @@ foreach($all_users as $id => $user) {
     <td class="col-address"><?php echo $user->address; ?></td>
     <?php } elseif($this->input->post('user_type') == 'let_go' or $this->input->post('user_type') == 'alumni') { ?>
     <td class="col-left_on"><?php if($user->left_on != '0000-00-00') echo date('d\<\s\u\p\>S\<\/\s\u\p\> M, Y', strtotime($user->left_on)); ?></td>
-    <td><a class="with-icon <?php echo ($user->exit_interview) ? 'done' : 'error'; ?>" href="http://makeadiff.in/apps/survey/form.php?vol=<?php echo base64_encode($user->id); ?>">Exit Interview</a></td>
     <?php } if($this->input->post('user_type') == 'let_go') { ?>
     <td class="col-reason_for_leaving"><?php echo $user->reason_for_leaving; ?></td>
     <?php } else { ?>

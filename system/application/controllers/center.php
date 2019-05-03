@@ -60,6 +60,8 @@ class Center extends Controller  {
 		$data['user_id']=$_REQUEST['user_id'];
 		$data['center']=$_REQUEST['center'];
 		$data['class_starts_on'] = $_REQUEST['class_starts_on'];
+		$data['medium'] = $_REQUEST['medium'];
+		$data['preferred_gender'] = $_REQUEST['preferred_gender'];
 		$returnFlag= $this->center_model->add_center($data);
 
 		if($returnFlag) {

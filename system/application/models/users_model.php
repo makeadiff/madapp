@@ -1044,7 +1044,7 @@ class Users_model extends Model {
 
 		// Sorting
 		if(!empty($data['user_type'])) {
-			if($data['user_type'] == 'applicant') {
+			if($data['user_type'] == 'applicant' or $data['user_type'] == 'well_wisher') {
 				$this->db->orderby('User.joined_on DESC');
 			} elseif($data['user_type'] == 'let_go') {
 				$this->db->orderby('User.left_on DESC');

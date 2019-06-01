@@ -177,8 +177,8 @@ class Center_model extends Model
       $check_sa_q = 'SELECT id FROM CenterAuthority
                      WHERE (name="'.$sa_data['name'].'")
                      AND (phone="'.$sa_data['phone'].'"
-                     OR email="'.$sa_data['email'].'"
-                   ) AND center_id='.$center_id;
+                       OR email="'.$sa_data['email'].'"
+                     ) AND center_id='.$center_id;
 
       if(!empty($data['authority_id'])) $authority_id = $data['authority_id'];
       if($authority_id==0){
@@ -233,7 +233,7 @@ class Center_model extends Model
 		$new_data = array();
 		if(!empty($data['center'])) $new_data['name'] = $data['center'];
 		if(!empty($data['user_id'])) $new_data['center_head_id'] = $data['user_id'];
-		if(!empty($data['class_starts_on']) && $data['class_starts_on']!='0000-00-00') $new_data['class_starts_on'] = $data['class_starts_on'];
+		if(!empty($data['class_starts_on'])) $new_data['class_starts_on'] = $data['class_starts_on'];
 		if(!empty($data['medium'])) $new_data['medium'] = $data['medium'];
 		if(!empty($data['preferred_gender'])) $new_data['preferred_gender'] = $data['preferred_gender'];
     if(!empty($data['phone'])) $new_data['phone'] = $data['phone'];

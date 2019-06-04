@@ -12,6 +12,9 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 
 <h3>Contact Details...</h3>
 
+<p>Gender: <?php 
+	$genders = ['m' => 'Male', 'f' => 'Female', 'o' => "Other"]; 
+	echo $genders[$user->sex]; ?></p>
 <p>Personal Email: <a href="mailto:<?php echo $user->email ?>;"><?php echo $user->email ?></a></p>
 <p>MAD Email: <a href="mailto:<?php echo $user->mad_email ?>;"><?php echo $user->mad_email ?></a></p>
 <p>Phone: <strong><?php echo $user->phone ?></strong></p>

@@ -18,6 +18,11 @@ class Project_model extends Model
         parent::Model();
     }
 
+    public function getAll()
+	{
+		return idNameFormat($this->db->query("SELECT id, name FROM Project WHERE status='1'")->result());
+	}
+
 	function getproject() {
 		return $this->db->get('Project');
 	}

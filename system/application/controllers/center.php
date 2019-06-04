@@ -165,7 +165,7 @@ class Center extends Controller  {
 		$issues['center_type'] = $center->type;
 		$issues['center_id'] = $center_id;
 		$issues['comments'] = $this->comment_model->get_all('Center', $center_id);
-		$issues['all_projects'] = ['1' => 'Ed Support', '2' => 'Foundation'];
+		$issues['all_projects'] = $this->project_model->getAll();
 		$this->session->set_userdata("active_center", $center_id);
 
 		$this->load->view('center/manage', $issues);

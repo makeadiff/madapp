@@ -21,7 +21,8 @@ class Cron extends Controller  {
 
 	// This is one of the most improtant functions. Makes all the classes for the next two weeks using the data in the Batch table.
 	function schedule_classes($debug=0) {
-		$project_ids = [1,2];
+		$all_projects = idNameFormat($this->db->query("SELECT id, name FROM Project WHERE status='1'")->result());
+		$project_ids = array_keys($all_projects);
 		$year_end_time = ($this->year+1) . '-03-31 23:59:59';
 
 		if($debug) print "Debug Mode\n----------\n";
@@ -98,25 +99,11 @@ class Cron extends Controller  {
 		$count = 0;
 		foreach($users as $u) {
 			$data[] = "{$u->id}, 'user_english_credit', '{$u->credit}', '$last_year', NOW()";
-			$this->users_model->db->query("UPDATE User SET credit=3 WHERE id={$u->id}");
+			$this->users_model->db->query("UPDATE User SET credit=3 WHERE id={$u->id}"); // :TODO: Bad idea to do it here - in case the next query doesn't work, we lose data.
 			$count++;
 		}
 		$this->users_model->db->query("INSERT INTO Archive(user_id, name, value, year, added_on) VALUES (" . implode("),(", $data) . ")");
 		print "Saved engish credits of $count people.\n";
-
-		// Interns
-		$admin_users = $this->users_model->db->query("SELECT User.id,admin_credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id
-				WHERE UserGroup.group_id=14 AND user_type='volunteer'")->result(); // 14 is Admin Group
-
-		$data = array();
-		$count = 0;
-		foreach($admin_users as $u) {
-			$data[] = "{$u->id}, 'user_admin_credit', '{$u->admin_credit}', '$last_year', NOW()";
-			$this->users_model->db->query("UPDATE User SET admin_credit=0 WHERE id={$u->id}");
-			$count++;
-		}
-		$this->users_model->db->query("INSERT INTO Archive(user_id, name, value, year, added_on) VALUES (" . implode("),(", $data) . ")");
-		print "Saved admin credits of $count people.\n";
 	}
 
 	/// In all years the center updates the date which the center started class. And there is no way to archive that before. Now, every year, we reset it to 0 - and then save it to the CenterData table.
@@ -127,7 +114,7 @@ class Cron extends Controller  {
 
 		$all_centers = $this->center_model->get_all_centers();
 		foreach ($all_centers as $center) {
-			if($center->class_starts_on == '0000-00-00') continue;
+			if($center->class_starts_on == '0000-00-00' or !$center->class_starts_on) continue;
 
 			$this->center_model->save_center_data($center->id, 'class_info', array(
 					'year'	=> $last_year,
@@ -166,7 +153,6 @@ class Cron extends Controller  {
 		$this->load->model('Center_model','center_model');
 		$this->load->model('Level_model','level_model');
 		$this->load->model('City_model','city_model');
-
 
 		$all_cities = $this->city_model->get_all();
 		foreach($all_cities as $city) {
@@ -241,8 +227,7 @@ class Cron extends Controller  {
 											WHERE UserGroup.year='$last_year'
 												AND UserGroup.group_id NOT IN (" . implode(",", $fellow_strat_group_ids) . ")
 												AND User.user_type = 'volunteer'
-												AND User.status = 1
-												");
+												AND User.status = 1");
 	}
 
 	/// Copy over last year's Class structure. Rename all fancy name to ABC, and increment their grade by one. '7 Rainbow class' becomes '8 A'

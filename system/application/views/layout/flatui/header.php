@@ -37,7 +37,7 @@
 
                 if($this->user_auth and $this->user_auth->get_permission('change_city')) {
                     $all_cities = idNameFormat($this->db->query("SELECT id, name FROM City ORDER BY name")->result());
-                    $all_projects = ['1' => 'Ed Support', '2' => 'Foundation'];
+                    $all_projects = idNameFormat($this->db->query("SELECT id, name FROM Project WHERE status='1'")->result());
                     $url = site_url('dashboard/dashboard_view');
 
                     if($this->uri->segment(1) == 'kids') $url = site_url('kids/manageaddkids');

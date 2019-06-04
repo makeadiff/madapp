@@ -681,7 +681,7 @@ class Api extends Controller {
 	 * Arguments: $city_id - The ID of the city of which teachers you want.
 	 * Returns : A list of all the teachers in the city
 	 * http://makeadiff.in/madapp/index.php/api/user_get_teachers?city_id=10&key=am3omo32hom4lnv32vO
-	 * GET /users
+	 * GET /users OR /cites/{city_id}/teachers
 	 */
 	function user_get_teachers() {
 		$this->check_key();

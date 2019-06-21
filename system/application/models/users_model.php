@@ -509,10 +509,7 @@ class Users_model extends Model {
     }
 
     function update_credit($user_id, $change) {
-    	if($change == 1) $change = '+1';
-    	if($change == 2) $change = '+2';
-		if($change == .5) $change = '+.5';
-		if($change == 0) $change = '+0';
+    	if(strpos($change, '-') === false) $change = "+ $change";
     	$this->db->query("UPDATE User SET credit=credit $change WHERE id=$user_id");
     }
     function set_credit($user_id, $credit) {
@@ -538,28 +535,28 @@ class Users_model extends Model {
 		$this->ci->load->model('event_model');
 		$this->ci->load->model('settings_model');
 
+		$debug = true;
+
 		$users_groups = $this->get_user_groups_of_user($user_id);
 		$ed_teacher_group_id = 9;
 		$fp_teacher_group_id = 376;
+		$ac_wingman_group_id = 365;
+		$tr_wingman_group_id = 348;
+		$tr_asv_group_id = 349;
 
-		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
-		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
-		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
-		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
-		$credit_lost_for_missing_avm = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_avm');
-		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
-		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
-		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
+		$vertical_prefix = 'ed';
+		if(isset($users_groups[$fp_teacher_group_id])) $vertical_prefix = 'fp_';
+		elseif(isset($users_groups[$ac_wingman_group_id])) $vertical_prefix = 'ac_';
+		elseif(isset($users_groups[$tr_wingman_group_id])) $vertical_prefix = 'tr_wingman_';
+		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 
-		if(isset($users_groups[$fp_teacher_group_id])) { // Current user is a FP Teacher, credits are different.
-			$credit = $this->ci->settings_model->get_setting_value('fp_beginning_credit');
-			$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('fp_max_credit_threshold');
-			$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_zero_hour');
-			$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_getting_substitute');
-			$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_class');
-			$credit_for_substituting = $this->ci->settings_model->get_setting_value('fp_credit_for_substituting');
-		}
-
+		// Get seperate credit values depending on vertical.
+		$credit_for_substituting = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
+		$credit_lost_for_getting_substitute = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
+		$credit_lost_for_missing_class = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
+		$credit_lost_for_missing_zero_hour = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
+		$credit_max_credit_threshold = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
+		$credit = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'beginning_credit'));
 		$classes_so_far = $this->get_usercredits($user_id);
 
 		$start_date = get_year() . '-04-01';
@@ -633,14 +630,6 @@ class Users_model extends Model {
 			}
 		}
 
-		$event_attendence = $this->ci->event_model->get_missing_user_attendance_for_event_type($user_id, 'avm');
-		$avm_count = 0;
-		foreach($event_attendence as $event) {
-			$avm_count++; // You can miss one AVM without any credit loss.
-			if($avm_count > 1);
-			$credit = $credit + $credit_lost_for_missing_avm;
-		}
-
 		// If there is a manual credit edit entry just before this class, make sure that is factored in.
 		if($credit_edits) {
 			$edit = end($credit_edits); // Get the last edit - since this is after all the classes, we'll just get the final one.
@@ -662,57 +651,6 @@ class Users_model extends Model {
 		return $credit;
     }
 
-    /*
-	 * How it Works: There is two fields in the User Table - credit and consecutive_credit. Credit holds the total credit of the volunteer. consecutive_credit holds the credit they got by doing consecutive classes.
-	 *	credit field is other type of credit + consecutive_credit. What the function does is basically get the list of all volunteers, go thru each one, find how many consecutive credits they deserve, then if there
-	 *	is ANY change(credits should be more that what it is currently - or should be less than what it is), then the script updates the table with the accurate number.
-	 *	The rest of MADApp just have to worry about the credit field as it holds the full credit. Only the script that deals with consecutive credit will use the other field.
-	 */
-    function recalculate_user_consecutive_class_credit($user_id) {
-    	// Get all class of this user with status.
-		$all_classes = $this->class_model->get_all($user_id);
-		$all_classes = array_reverse($all_classes);
-
-		$atteneded_class_count_for_credit_reward = 5;
-		$credit_reward = 1;
-
-		$attended_count = 0;
-		$consecutive_credit = 0;
-    	// Go thru them one by one incrementing a variable untill an absent/substituted class comes up...
-    	foreach ($all_classes as $class) {
-    		if($class->status == 'attended' and $class->substitute_id == 0) {
-    			$attended_count++;
-    		}
-    		// If absent/substituted, reset counter.
-    		if($class->status == 'absent' or $class->substitute_id != 0) {
-    			$attended_count = 0;
-    		}
-
-    		// I didn't use else because I don't want to give/take points for projected, cancelled classes.
-
-    		// If we reach X before a absent/subbed class, increment credit counter.
-    		if($attended_count == $atteneded_class_count_for_credit_reward) {
-    			$consecutive_credit += $credit_reward;
-    			$attended_count = 0;
-    		}
-    	}
-
-    	// Does the consecutive credit counter have the same value as the DB field consecutive_credit? If so, let it be.
-    	$user_data = $this->users_model->get_user($user_id);
-    	if($user_data->consecutive_credit == $consecutive_credit) return $consecutive_credit;
-
-    	// Else, first decrease the preset credit from the 'credit' field: credit = credit  - consecutive_credit. Then set the consecutive_credit with the new value. Then, increment user credit
-    	//		with the new consecutive_credit: credit = credit + consecutive_credit
-    	$credit_info = array();
-    	$user_data->credit = $user_data->credit - $user_data->consecutive_credit;
-    	$credit_info['credit'] = $user_data->credit + $consecutive_credit;
-    	$credit_info['consecutive_credit'] = $consecutive_credit;
-
-    	// Save to database.
-    	$this->db->where('id',$user_id)->update("User", $credit_info);
-
-    	return $consecutive_credit;
-    }
 
     function get_credit_history($user_id) {
 		$this->load->model('level_model');
@@ -723,23 +661,23 @@ class Users_model extends Model {
  		$users_groups = $this->get_user_groups_of_user($user_id);
 		$ed_teacher_group_id = 9;
 		$fp_teacher_group_id = 376;
+		$ac_wingman_group_id = 365;
+		$tr_wingman_group_id = 348;
+		$tr_asv_group_id = 349;
 
-		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
-		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
-		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
-		$credit_lost_for_missing_avm = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_avm');
-		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
-		$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
-		$credit = $this->ci->settings_model->get_setting_value('beginning_credit');
+		$vertical_prefix = 'ed'; // Empty is Ed Support
+		if(isset($users_groups[$fp_teacher_group_id])) $vertical_prefix = 'fp_';
+		elseif(isset($users_groups[$ac_wingman_group_id])) $vertical_prefix = 'ac_';
+		elseif(isset($users_groups[$tr_wingman_group_id])) $vertical_prefix = 'tr_wingman_';
+		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 
-		if(isset($users_groups[$fp_teacher_group_id])) { // Current user is a FP Teacher, credits are different.
-			$credit = $this->ci->settings_model->get_setting_value('fp_beginning_credit');
-			$credit_max_credit_threshold = $this->ci->settings_model->get_setting_value('fp_max_credit_threshold');
-			$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_zero_hour');
-			$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_getting_substitute');
-			$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('fp_credit_lost_for_missing_class');
-			$credit_for_substituting = $this->ci->settings_model->get_setting_value('fp_credit_for_substituting');
-		}
+		// Get seperate credit values depending on vertical.
+		$credit_for_substituting = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
+		$credit_lost_for_getting_substitute = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
+		$credit_lost_for_missing_class = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
+		$credit_lost_for_missing_zero_hour = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
+		$credit_max_credit_threshold = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
+		$credit = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'beginning_credit'));
 
 		$i = 0;
 		$credit_log = array(array(

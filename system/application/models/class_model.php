@@ -48,8 +48,12 @@ class Class_model extends Model {
 					INNER JOIN User U ON UC.user_id=U.id
 					WHERE C.batch_id=$batch_id AND L.year={$this->year} AND C.status!='cancelled'")->result());
 
-		$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
+		if($classes_taught_by_user) {
+			$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
 													. implode(",", array_keys($classes_taught_by_user)) . ")")->result());
+		} else {
+			$classes_marked = [];
+		}
 		$classes_unmarked_ids = array_diff(array_keys($classes_taught_by_user), $classes_marked);
 		$classes_unmarked = array();
 		foreach($classes_unmarked_ids as $id) {
@@ -335,17 +339,30 @@ class Class_model extends Model {
 		$debug = false;
 		if($revert) $debug = false;
 		if($debug) {print "<br />Class Data: ";dump($data);}
+
+		$user_id = $data['user_id'];
+		$users_groups = $this->ci->user_model->get_user_groups_of_user($user_id);
+		$ed_teacher_group_id = 9;
+		$fp_teacher_group_id = 376;
+		$ac_wingman_group_id = 365;
+		$tr_wingman_group_id = 348;
+		$tr_asv_group_id = 349;
+
+		$vertical_prefix = 'ed'; 
+		if(isset($users_groups[$fp_teacher_group_id])) $vertical_prefix = 'fp_';
+		elseif(isset($users_groups[$ac_wingman_group_id])) $vertical_prefix = 'ac_';
+		elseif(isset($users_groups[$tr_wingman_group_id])) $vertical_prefix = 'tr_wingman_';
+		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 		
-		$credit_for_substituting = $this->ci->settings_model->get_setting_value('credit_for_substituting');
-		$credit_for_substituting_in_same_level = $this->ci->settings_model->get_setting_value('credit_for_substituting_in_same_level');
-		$credit_lost_for_getting_substitute = $this->ci->settings_model->get_setting_value('credit_lost_for_getting_substitute');
-		$credit_lost_for_missing_class = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_class');
-		$credit_lost_for_missing_zero_hour = $this->ci->settings_model->get_setting_value('credit_lost_for_missing_zero_hour');
-		$max_credit_threshold = $this->ci->settings_model->get_setting_value('max_credit_threshold');
+		$credit_for_substituting = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
+		$credit_lost_for_getting_substitute = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
+		$credit_lost_for_missing_class = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
+		$credit_lost_for_missing_avm = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_avm'));
+		$credit_lost_for_missing_zero_hour = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
+		$credit_max_credit_threshold = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
 				
 		if($revert) { // Revert all class data - negate everything.
 			$credit_for_substituting				= -($credit_for_substituting);
-			$credit_for_substituting_in_same_level	= -($credit_for_substituting_in_same_level);
 			$credit_lost_for_getting_substitute		= -($credit_lost_for_getting_substitute);
 			$credit_lost_for_missing_class			= -($credit_lost_for_missing_class);
 			$credit_lost_for_missing_zero_hour		= -($credit_lost_for_missing_zero_hour);
@@ -390,8 +407,7 @@ class Class_model extends Model {
 				$this->ci->user_model->update_credit($user_id, $credit_lost_for_missing_class);
 				if($debug) print "<br />Teacher was absent. Teacher $credit_lost_for_missing_class";
 			}
-		}
-		
+		}	
 	}
 	
 	

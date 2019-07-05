@@ -420,14 +420,14 @@ class Api extends Controller {
 		$class_details['students'] = array();
 
 		foreach ($students as $id => $name) {
-			$check_for_understanding = false;
-			if(isset($student_data['check_for_understanding'][$id]) and $student_data['check_for_understanding'][$id] == '1') $check_for_understanding = true;
+			// $check_for_understanding = false;
+			// if(isset($student_data['check_for_understanding'][$id]) and $student_data['check_for_understanding'][$id] == '1') $check_for_understanding = true;
 
 			$class_details['students'][$id] = array(
 				'name'			=> $name,
 				'id'			=> $id,
-				'participation' => (!isset($student_data['participation'][$id]) ? 3 : $student_data['participation'][$id]),
-				'check_for_understanding'	=> $check_for_understanding
+				'participation' => (!isset($student_data['participation'][$id]) ? 0 : $student_data['participation'][$id]),
+				'check_for_understanding'	=> (!isset($student_data['check_for_understanding'][$id]) ? 0 : $student_data['check_for_understanding'][$id]),
 			);
 		}
 

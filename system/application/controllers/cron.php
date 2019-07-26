@@ -31,7 +31,7 @@ class Cron extends Controller  {
 			$this->batch_model->project_id = $project_id;
 			$this->class_model->project_id = $project_id;
 
-			if($debug) print "Creating classes for project $project_id\n";
+			if($debug) print "Creating classes for project " . $all_projects[$project_id] . "\n";
 
 			$all_batches = $this->batch_model->get_all_batches(true);
 			if($debug) print "Total Batches: " . count($all_batches) . "\n";

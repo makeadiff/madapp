@@ -273,12 +273,30 @@ class Api extends Controller {
 			return $this->error("Invalid Username or password.");
 		}
 
-		$project_id = 1;
+		$ed_project_id = 1;
+		$fp_project_id = 2;
+		$aftercare_project_id = 6;
+		$tr_asv_project_id = 4;
+		$tr_wingman_project_id = 5;
+
+		$project_id = $ed_support_project_id;
 		$fp_teacher_group_id = 376;
 		$fp_mentor_group_id = 375;
 		$es_mentor_group_id = 8;
-		if(isset($status['groups'][$fp_teacher_group_id])) $project_id = 2;
-		if(isset($status['groups'][$fp_mentor_group_id])) $project_id = 2;
+		$aftercare_mentor_group_id = 378; // Aftercare Fellow
+		$aftercare_teacher_group_id = 377; // OR 365
+		$tr_asv_mentor_group_id = 272; // TR Fellow
+		$tr_asv_group_id = 349;
+		$tr_wingman_group_id = $tr_wingman_mentor_group_id = 348; // Yeah, both are the same - can't use fellow, because already used. :TODO:
+		if(isset($status['groups'][$fp_teacher_group_id])) $project_id = $fp_project_id;
+		if(isset($status['groups'][$fp_mentor_group_id])) $project_id = $fp_project_id;
+
+		if(isset($status['groups'][$tr_wingman_group_id])) $project_id = $tr_wingman_project_id;
+		if(isset($status['groups'][$tr_asv_group_id])) $project_id = $tr_asv_project_id;
+		if(isset($status['groups'][$tr_asv_mentor_group_id])) $project_id = $tr_asv_project_id;
+
+		if(isset($status['groups'][$aftercare_teacher_group_id])) $project_id = $aftercare_project_id;
+		if(isset($status['groups'][$aftercare_mentor_group_id])) $project_id = $aftercare_project_id;
 
 		$connections = $this->user_model->get_class_connections($status['id']);
 		$mentor = "0";

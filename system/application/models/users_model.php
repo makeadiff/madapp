@@ -418,7 +418,7 @@ class Users_model extends Model {
 			if($user_array['user_type'] == 'let_go' || $user_array['user_type'] == 'alumni') { // Remove user from his classes when he is let go.
 				if(!$user_array['left_on'] or $user_array['left_on'] == '0000-00-00') $user_array['left_on'] = date('Y-m-d');
 
-				$this->db->delete('UserBatch', array('user_id'=>$user_id));
+				$this->db->delete('UserBatch', array('user_id'=>$user_id)); // :TODO: This will delete historic data
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'projected'));
 				$this->db->delete('UserClass', array('user_id'=>$user_id, 'status'=>'confirmed'));
 			}

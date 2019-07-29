@@ -238,6 +238,30 @@ function get_cycle($date = false) {
 	return 0;
 }
 
+function getTeacherGroupId($project_id) {
+	$project_teacher_group_mapping = [
+		1 	=> 9,
+		2	=> 376,
+		4	=> 349,
+		5	=> 348,
+		6	=> 377
+	];
+
+	return i($project_teacher_group_mapping, $project_id, 0);
+}
+
+function getMentorGroupId($project_id) {
+	$project_mentor_group_mapping = [
+		1 	=> 8,
+		2	=> 375,
+		4	=> 272,
+		5	=> 348,
+		6	=> 378
+	];
+
+	return i($project_teacher_group_mapping, $project_id, 0);
+}
+
 /**
  * Workaround for PHP < 5.3.0
  */

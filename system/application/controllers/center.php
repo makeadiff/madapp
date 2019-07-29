@@ -177,11 +177,11 @@ class Center extends Controller  {
 		$center = $this->center_model->get_info($center_id);
 
 		// Get all teachers in the current city.
-		$teacher_group_id = 9; // Ed support teachers
-		if($this->level_model->project_id == 2) $teacher_group_id = 376; // Fondational teachers
+		$teacher_group_id = getTeacherGroupId($this->level_model->project_id);
 
 		$all_users = $this->users_model->search_users(['user_type'=>'volunteer', 'status' => '1', 'user_group'=>$teacher_group_id]);
-		$all_subjects = $this->subject_model->get_all_subjects();
+
+		$all_subjects = idNameFormat($this->subject_model->get_all_subjects());
 		$all_subjects[0] = "None";
 		$day_list = array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
 

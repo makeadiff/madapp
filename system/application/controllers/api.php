@@ -279,7 +279,7 @@ class Api extends Controller {
 		$tr_asv_project_id = 4;
 		$tr_wingman_project_id = 5;
 
-		$project_id = $ed_support_project_id;
+		$project_id = $ed_project_id;
 		$fp_teacher_group_id = 376;
 		$fp_mentor_group_id = 375;
 		$es_mentor_group_id = 8;

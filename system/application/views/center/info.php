@@ -30,7 +30,7 @@ td, th {
 <tr><td width='50%'><?php echo $batch['name'] ?></td><td class="nopad"><table width="100%">
 
 <?php foreach ($batch['teachers'] as $user_id) { ?>
-<tr><td width="50%"><?php echo (isset($all_users[$user_id]) ? $all_users[$user_id]->name : 'None') ?></td>
+<tr><td width="50%"><?php echo (isset($all_users[$user_id]) ? $all_users[$user_id]->name : 'None: ') ?></td>
 <td><?php echo (isset($all_users[$user_id]) ? $all_subjects[$all_users[$user_id]->subject_id] : 'None') ?></td></tr>
 <?php } ?>
 </table></td></tr>

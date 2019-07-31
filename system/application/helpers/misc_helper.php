@@ -244,7 +244,7 @@ function getTeacherGroupId($project_id) {
 		2	=> 376,
 		4	=> 349,
 		5	=> 348,
-		6	=> 377
+		6	=> 365
 	];
 
 	return i($project_teacher_group_mapping, $project_id, 0);
@@ -259,7 +259,7 @@ function getMentorGroupId($project_id) {
 		6	=> 378
 	];
 
-	return i($project_teacher_group_mapping, $project_id, 0);
+	return i($project_mentor_group_mapping, $project_id, 0);
 }
 
 /**

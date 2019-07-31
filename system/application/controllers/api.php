@@ -529,20 +529,10 @@ class Api extends Controller {
 		$center_name = $center->name;
 		$city_id = $center->city_id;
 
-		if($project_id == 2) { // Foundation
-			$groups = array(
-				'teacher'	=> 376,
-				'mentor'	=> 375,
-			);
-		} else { // Ed Support
-			$groups = array(
-				'teacher'	=> 9,
-				'trained'	=> 368,
-			);
-		}
+		$teacher_group_id = getTeacherGroupId($project_id);
 
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date));
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>$groups['teacher'], 'city_id' => $city_id));
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>$teacher_group_id, 'city_id' => $city_id));
 
 		$classes = array();
 		$class_done = array();

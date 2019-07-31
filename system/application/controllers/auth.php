@@ -47,9 +47,10 @@ class Auth extends Controller {
 		}
 
 		// Just use the Auth app to do the authentication.
-		$full_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-		if(stripos($full_link, 'localhost')) $main_site_url = 'http://localhost/MAD/';
-		else $main_site_url = 'https://makeadiff.in/';
+		$domain = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/";
+		if(stripos($domain, 'localhost')) $main_site_url = 'http://localhost/MAD/';
+		else $main_site_url = $domain;
+
 		$login_url = $main_site_url . 'apps/auth/';
 		header("Location: " . $login_url . "?url=" . base64_encode($redirect_url));
 		exit;

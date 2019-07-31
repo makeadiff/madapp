@@ -532,7 +532,7 @@ class Api extends Controller {
 		$teacher_group_id = getTeacherGroupId($project_id);
 
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date));
-		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>$teacher_group_id, 'city_id' => $city_id));
+		$all_users = $this->user_model->search_users(array('user_type'=>'volunteer', 'status' => '1', 'city_id' => $city_id)); //  'user_group'=>$teacher_group_id,
 
 		$classes = array();
 		$class_done = array();
@@ -564,8 +564,7 @@ class Api extends Controller {
 						'status'	=> ($row->status == 'attended') ? true : false,
 						'user_type'	=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
 						'substitute_id'=> $row->substitute_id,
-						'substitute'=> ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
-											$all_users[$row->substitute_id]->name : 'None',
+						'substitute'=> ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? $all_users[$row->substitute_id]->name : 'None',
 						'zero_hour_attendance'	=> ($row->zero_hour_attendance) ? true : false
 					)),
 				);
@@ -578,8 +577,7 @@ class Api extends Controller {
 					'status'		=> ($row->status == 'attended') ? true : false,
 					'user_type'		=> isset($all_users[$row->user_id]) ? $all_users[$row->user_id]->user_type : 'None',
 					'substitute_id'	=> $row->substitute_id,
-					'substitute'	=> ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? 
-											$all_users[$row->substitute_id]->name : 'None',
+					'substitute'	=> ($row->substitute_id != 0 and isset($all_users[$row->substitute_id])) ? $all_users[$row->substitute_id]->name : 'None',
 					'zero_hour_attendance'	=> ($row->zero_hour_attendance) ? true : false
 				);
 			}

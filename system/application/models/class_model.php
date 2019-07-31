@@ -64,7 +64,7 @@ class Class_model extends Model {
 	}
 
 	function get_classes_where_teacher_data_is_not_updated($user_id) {
-		$classes = $this->db->query("SELECT DISTINCT(DATE(C.class_on)) as class_on FROM Class C 
+		$classes = $this->db->query("SELECT DISTINCT(C.class_on) as class_on FROM Class C 
 												INNER JOIN Batch B ON B.id=C.batch_id
 												WHERE C.status='projected' AND B.year={$this->year} AND B.batch_head_id=$user_id 
 												ORDER BY C.class_on DESC")->result();

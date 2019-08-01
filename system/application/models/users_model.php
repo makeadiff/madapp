@@ -71,6 +71,32 @@ class Users_model extends Model {
         }
     }
 
+    // Part of the attempt to take away the login logic from UPMA
+    function user_info($user_id) {
+    	$query = $this->db->where('id', $user_id)->get("User");
+		$user = $query->first_row();
+
+        if($user) {
+   			$user_data['id']		= $user->id;
+			$user_data['email']		= $user->email;
+			$user_data['name']		= $user->name;
+			$user_data['project_id']= $user->project_id;
+			$user_data['city_id']	= $user->city_id;
+			$user_data['credit']	= $user->credit;
+			$user_data['permissions']= $this->get_user_permissions($user->id);
+			$user_data['groups']	= $this->get_user_groups_of_user($user->id);
+			$all_positions 			= $this->get_user_groups_of_user($user->id, 'type');
+
+			$user_data['positions'] = array_unique(array_values($all_positions));
+
+            return $user_data;
+        }
+
+        return false;
+    }
+
+
+
     function setAuthToken($user_id, $token = false) {
     	if(!$token) {
     		$length = 20;

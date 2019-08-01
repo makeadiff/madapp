@@ -273,6 +273,14 @@ class Api extends Controller {
 			return $this->error("Invalid Username or password.");
 		}
 
+		$this->user_info($status['id']);
+	}
+
+	function user_info($user_id) {
+		if(!$user_id) $user_id = $this->input('user_id');
+		if(!$user_id) return '';
+		$user = $this->user_model->user_info($user_id);
+
 		$ed_project_id = 1;
 		$fp_project_id = 2;
 		$aftercare_project_id = 6;
@@ -288,31 +296,31 @@ class Api extends Controller {
 		$tr_asv_mentor_group_id = 272; // TR Fellow
 		$tr_asv_group_id = 349;
 		$tr_wingman_group_id = $tr_wingman_mentor_group_id = 348; // Yeah, both are the same - can't use fellow, because already used. :TODO:
-		if(isset($status['groups'][$fp_teacher_group_id])) $project_id = $fp_project_id;
-		if(isset($status['groups'][$fp_mentor_group_id])) $project_id = $fp_project_id;
+		if(isset($user['groups'][$fp_teacher_group_id])) $project_id = $fp_project_id;
+		if(isset($user['groups'][$fp_mentor_group_id])) $project_id = $fp_project_id;
 
-		if(isset($status['groups'][$tr_wingman_group_id])) $project_id = $tr_wingman_project_id;
-		if(isset($status['groups'][$tr_asv_group_id])) $project_id = $tr_asv_project_id;
-		if(isset($status['groups'][$tr_asv_mentor_group_id])) $project_id = $tr_asv_project_id;
+		if(isset($user['groups'][$tr_wingman_group_id])) $project_id = $tr_wingman_project_id;
+		if(isset($user['groups'][$tr_asv_group_id])) $project_id = $tr_asv_project_id;
+		if(isset($user['groups'][$tr_asv_mentor_group_id])) $project_id = $tr_asv_project_id;
 
-		if(isset($status['groups'][$aftercare_teacher_group_id])) $project_id = $aftercare_project_id;
-		if(isset($status['groups'][$aftercare_mentor_group_id])) $project_id = $aftercare_project_id;
+		if(isset($user['groups'][$aftercare_teacher_group_id])) $project_id = $aftercare_project_id;
+		if(isset($user['groups'][$aftercare_mentor_group_id])) $project_id = $aftercare_project_id;
 
-		$connections = $this->user_model->get_class_connections($status['id']);
+		$connections = $this->user_model->get_class_connections($user['id']);
 		$mentor = "0";
-		if($connections['mentor_at'] or isset($status['groups'][$es_mentor_group_id])) $mentor = "1";
+		if($connections['mentor_at'] or isset($user['groups'][$es_mentor_group_id])) $mentor = "1";
 
 		$this->send(array(
-			'user_id'	=> $status['id'],
+			'user_id'	=> $user['id'],
 			'key'		=> $this->key,
-			'name'		=> $status['name'],
-			'email'		=> $status['email'],
-			'city_id'	=> $status['city_id'],
-			'credit'	=> $status['credit'],
+			'name'		=> $user['name'],
+			'email'		=> $user['email'],
+			'city_id'	=> $user['city_id'],
+			'credit'	=> $user['credit'],
 			'mentor'	=> $mentor,
 			'connections'=>$connections,
-			'groups'	=> $status['groups'],
-			'positions' => $status['positions'],
+			'groups'	=> $user['groups'],
+			'positions' => $user['positions'],
 			'project_id'=> $project_id
 		));
 	}

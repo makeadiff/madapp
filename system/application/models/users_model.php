@@ -841,7 +841,7 @@ class Users_model extends Model {
 			INNER JOIN Class C ON (C.batch_id=UB.batch_id AND C.level_id=UB.level_id)
 			INNER JOIN UserClass UC ON UC.class_id=C.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
-			WHERE B.status='1' AND UB.user_id='$user_id' AND UC.user_id=$user_id AND B.year='{$this->year}' AND L.year={$this->year}
+			WHERE B.status='1' AND UB.user_id='$user_id' AND UC.user_id=$user_id AND B.year='{$this->year}' AND L.year={$this->year} AND C.class_on < NOW()
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND level_id=L.id AND class_on < NOW()
 									ORDER BY class_on
 									DESC LIMIT 0,1)")->result();

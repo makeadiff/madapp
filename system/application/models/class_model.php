@@ -42,11 +42,11 @@ class Class_model extends Model {
 
 	/// Returns classes where student attendance is not marked in the given batch
 	function get_classes_where_student_data_is_not_updated_in_batch($batch_id) {
-		$classes_taught_by_user = idNameFormat($this->db->query("SELECT C.id, CONCAT(U.name, ',', DATE_FORMAT(C.class_on, '%b %d')) AS name FROM Class C 
+		$classes_taught_by_user = idNameFormat($this->db->query("SELECT C.id, CONCAT(U.name, ', ', DATE_FORMAT(C.class_on, '%b %d')) AS name FROM Class C 
 					INNER JOIN Level L ON L.id=C.level_id
 					INNER JOIN UserClass UC ON UC.class_id=C.id 
 					INNER JOIN User U ON UC.user_id=U.id
-					WHERE C.batch_id=$batch_id AND L.year={$this->year} AND C.status!='cancelled'")->result());
+					WHERE C.batch_id=$batch_id AND L.year={$this->year} AND C.class_on < NOW() AND C.status!='cancelled'")->result());
 
 		if($classes_taught_by_user) {
 			$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 

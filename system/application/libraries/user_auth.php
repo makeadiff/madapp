@@ -106,10 +106,12 @@ Class User_auth {
     *
     **/
 	function logout () {
+		$info = "Logout from Madapp::User_Auth->logout() at " . date("Y-m-d H:i:s") . "\nBefore...\nSession : ". json_encode($_SESSION) . "\nCookie : " . json_encode($_COOKIE) . "\n";
 		delete_cookie('email');
 		delete_cookie('password_hash');
 
 		unset($_SESSION['user_id']);
+		file_put_contents(__DIR__ . '../../../apps/Auth/system/Logout.log', $info, FILE_APPEND | LOCK_EX); // :DEBUG:
 		return $this->ci->session->unset_userdata('id');
 	}
 

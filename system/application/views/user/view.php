@@ -26,13 +26,16 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <p>Chapter : <strong><?php echo $all_cities[$user->city_id] ?></strong></p>
 <p>User Type : <strong><?php echo ucfirst(str_replace('_',' ',$user->user_type)); ?></strong></p>
 <p>Roles: <strong><?php echo implode(', ', $user->groups_name); ?></strong></p>
-<?php if(in_array('ES Volunteer', $user->groups_name)) { ?>
 
 <?php if($user->batch) { ?>
 <p>Center: <strong><?php echo $user->batch->name; ?></strong></p>
 <p>Batch: <strong><?php echo $days[$user->batch->day] . ' ' . date('h:i A', strtotime(date('Y-m-d ').$user->batch->class_time)); ?></strong></p>
 <?php } ?>
 <p>Credit: <strong><?php echo $user->credit; ?></strong></p>
+
+<?php 
+$teacher_group_ids = [376, 377, 349, 9];
+if(array_intersect($teacher_group_ids, $user->groups)) { ?>
 <a href="<?php echo site_url('classes/index/'.$user->id); ?>">View Class History</a><br />
 <a href="<?php echo site_url('user/credithistory/'.$user->id); ?>">View Credit History</a><br />
 <?php } ?>

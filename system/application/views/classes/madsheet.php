@@ -36,7 +36,7 @@ foreach($data as $center_id => $center_info) {
 ?>
 <table class="madsheet data-table info-box-table">
 <tr>
-<th colspan="3"><a href="<?php echo site_url('classes/batch_view/' . $batch_id) ?>"><?php echo $batch_info['name']; ?></a> 
+<th colspan="3"><a href="<?php echo site_url('batch/index/center/' . $center_id) ?>"><?php echo $batch_info['name']; ?></a> 
 	(<a href="<?php echo site_url('/user/view/' . $batch_info['batch_head']->id) ?>"><?php echo $batch_info['batch_head']->name ?></a>)</th>
 <?php
 foreach($batch_info['days_with_classes'] as $day) print "<th>$day</th>";

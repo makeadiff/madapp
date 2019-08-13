@@ -577,12 +577,12 @@ class Users_model extends Model {
 		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 
 		// Get seperate credit values depending on vertical.
-		$credit_for_substituting = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
-		$credit_lost_for_getting_substitute = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
-		$credit_lost_for_missing_class = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
-		$credit_lost_for_missing_zero_hour = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
-		$credit_max_credit_threshold = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
-		$credit = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'beginning_credit'));
+		$credit_for_substituting = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
+		$credit_lost_for_getting_substitute = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
+		$credit_lost_for_missing_class = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
+		$credit_lost_for_missing_zero_hour = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
+		$credit_max_credit_threshold = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
+		$credit = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'beginning_credit'));
 		$classes_so_far = $this->get_usercredits($user_id);
 
 		$start_date = get_year() . '-04-01';
@@ -698,12 +698,12 @@ class Users_model extends Model {
 		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 
 		// Get seperate credit values depending on vertical.
-		$credit_for_substituting = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
-		$credit_lost_for_getting_substitute = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
-		$credit_lost_for_missing_class = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
-		$credit_lost_for_missing_zero_hour = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
-		$credit_max_credit_threshold = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
-		$credit = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'beginning_credit'));
+		$credit_for_substituting = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
+		$credit_lost_for_getting_substitute = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
+		$credit_lost_for_missing_class = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
+		$credit_lost_for_missing_zero_hour = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
+		$credit_max_credit_threshold = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
+		$credit = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'beginning_credit'));
 
 		$i = 0;
 		$credit_log = array(array(

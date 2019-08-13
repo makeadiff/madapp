@@ -570,7 +570,7 @@ class Users_model extends Model {
 		$tr_wingman_group_id = 348;
 		$tr_asv_group_id = 349;
 
-		$vertical_prefix = 'ed';
+		$vertical_prefix = 'ed_';
 		if(isset($users_groups[$fp_teacher_group_id])) $vertical_prefix = 'fp_';
 		elseif(isset($users_groups[$ac_wingman_group_id])) $vertical_prefix = 'ac_';
 		elseif(isset($users_groups[$tr_wingman_group_id])) $vertical_prefix = 'tr_wingman_';
@@ -691,7 +691,7 @@ class Users_model extends Model {
 		$tr_wingman_group_id = 348;
 		$tr_asv_group_id = 349;
 
-		$vertical_prefix = 'ed'; // Empty is Ed Support
+		$vertical_prefix = 'ed_'; // Empty is Ed Support
 		if(isset($users_groups[$fp_teacher_group_id])) $vertical_prefix = 'fp_';
 		elseif(isset($users_groups[$ac_wingman_group_id])) $vertical_prefix = 'ac_';
 		elseif(isset($users_groups[$tr_wingman_group_id])) $vertical_prefix = 'tr_wingman_';

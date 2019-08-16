@@ -68,7 +68,7 @@
                 $groups = $this->session->userdata('groups');
                 if($groups) print ' (' . implode(',', $groups) . ')';
             ?></a></li>
-            <li><a href="<?php echo site_url('auth/logout') ?>">Logout</a></li>
+            <li><a href="<?php echo MAD_APPS_FOLDER . 'auth/logout.php'; ?>">Logout</a></li>
 
         </ul>
 

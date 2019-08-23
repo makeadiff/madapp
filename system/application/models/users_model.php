@@ -750,7 +750,7 @@ class Users_model extends Model {
 			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$substitute_id = $row['substitute_id'];
 				$name_of_substitute = $this->get_name_of_substitute($substitute_id);
-				if(sizeof($name_of_substitute) >0) $name_of_substitute = $name_of_substitute->name;
+				if(@sizeof($name_of_substitute) >0) $name_of_substitute = $name_of_substitute->name;
 				else $name_of_substitute ='No Name';
 
 				$credit = $credit + $credit_lost_for_getting_substitute;
@@ -1267,7 +1267,7 @@ class Users_model extends Model {
 		$this->db->select('name');
 		$this->db->from('User');
 		$this->db->where('id',$substitute_id);
-		$result=$this->db->get();
+		$result = $this->db->get();
 		return $result->row();
 	}
 

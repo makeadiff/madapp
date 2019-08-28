@@ -253,26 +253,26 @@ class Cron extends Controller  {
 		$levels = $this->users_model->db->query("SELECT * FROM Level WHERE year='$last_year' AND status='1'")->result();
 		$uniqizer = array();
 		print "Copying " . count($levels) . " levels<br />\n";
-		foreach($levels as $b) {
-			$status = $b->status;
-			$new_grade = intval($b->grade) + 1;
+		foreach($levels as $l) {
+			$status = $l->status;
+			$new_grade = intval($l->grade) + 1;
 			if($new_grade == 14) $status = 0; // If people over 13 is upgraded to a deleted level.
 
-			$name = addslashes($b->name);
-			if(!isset($uniqizer[$b->center_id])) {
-				$uniqizer[$b->center_id] = array();
+			$name = addslashes($l->name);
+			if(!isset($uniqizer[$l->center_id])) {
+				$uniqizer[$l->center_id] = array();
 			}
-			if(!isset($uniqizer[$b->center_id][$new_grade])) {
-				$uniqizer[$b->center_id][$new_grade] = 0;
+			if(!isset($uniqizer[$l->center_id][$new_grade])) {
+				$uniqizer[$l->center_id][$new_grade] = 0;
 			}
 
-			$name = $alphabets[$uniqizer[$b->center_id][$new_grade]];
-			$uniqizer[$b->center_id][$new_grade]++;
+			$name = $alphabets[$uniqizer[$l->center_id][$new_grade]];
+			$uniqizer[$l->center_id][$new_grade]++;
 
 			$this->users_model->db->query("INSERT IGNORE INTO Level (name,grade,center_id,project_id, year, status)
-				VALUES('$name','$new_grade','{$b->center_id}','{$b->project_id}','$current_year', '{$status}')");
+				VALUES('$name','$new_grade','{$l->center_id}','{$l->project_id}','$current_year', '{$status}')");
 
-			$level_mapping[$b->id] = $this->users_model->db->insert_id();
+			$level_mapping[$l->id] = $this->users_model->db->insert_id();
 		}
 
 		// Copy over StudentLevel table. Just relations.

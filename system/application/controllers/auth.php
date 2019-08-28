@@ -47,60 +47,9 @@ class Auth extends Controller {
 		}
 
 		// Just use the Auth app to do the authentication.
-		$domain = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/";
-		if(stripos($domain, 'localhost')) $main_site_url = 'http://localhost/MAD/';
-		else $main_site_url = $domain;
-
-		$login_url = $main_site_url . 'apps/auth/';
+		$login_url = MAD_APPS_FOLDER . 'auth/';
 		header("Location: " . $login_url . "?url=" . base64_encode($redirect_url));
 		exit;
-		
-		//validate form input
-		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
-		$this->form_validation->set_rules('password', 'Password', 'required');
-
-		if ($this->form_validation->run() == true) {
-			//check to see if the user is logging in
-			$remember = (bool) $this->input->post('remember'); //check for "remember me"
-
-			if ($this->user_auth->login($this->input->post('email'), $this->input->post('password'), $remember)) {
-				//if the login is successful
-				if($this->input->post('redirect_url')) {
-					redirect(base64_decode($this->input->post('redirect_url')), 'refresh');
-					exit;
-				}
-				//redirect them back to the home page
-				$this->session->set_flashdata('message', "Welcome, ".$this->session->userdata('name'));
-				redirect('dashboard/dashboard_view', 'refresh');
-			} else {
-				//if the login was un-successful
-				//redirect them back to the login page
-				$this->session->set_flashdata('message', "Invalid login");
-				redirect('auth/login'); //use redirects instead of loading views for compatibility with MY_Controller libraries
-				
-			}
-		} else {  
-			//the user is not logging in so display the login page
-			//set the flash data error message if there is one
-			$this->data['message'] = array('error' => (validation_errors()) ? validation_errors() : $this->session->flashdata('message'));
-			$this->data['email'] = array('name' => 'email',
-				'id' => 'email',
-				'type' => 'text',
-				'value' => $this->form_validation->set_value('email'),
-                'class' => 'form-control',
-                'placeholder' => 'Email',
-			);
-			$this->data['password'] = array('name' => 'password',
-				'id' => 'password',
-				'type' => 'password',
-                'class' => 'form-control',
-                'placeholder' => 'Password',
-				//'value' => $this->form_validation->set_value('password'),
-			);
-			$this->data['redirect_url'] = $redirect_url;
-
-			$this->load->view('auth/login', $this->data);
-		}
 	}
 	
 	function no_permission() {

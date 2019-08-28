@@ -6,12 +6,8 @@ class dashboard extends Controller  {
         $this->load->library('session');
         $this->load->library('user_auth');
         $this->load->model('Review_Parameter_model','review_model');
-        $logged_user_id = $this->user_auth->logged_in();
-        if(!$logged_user_id) {
-            redirect('auth/login');
-        }
+        $logged_user_id = $this->user_auth->accessControl();
     }
-
 
     function dashboard_view() {
         $data['title'] = 'MADApp';

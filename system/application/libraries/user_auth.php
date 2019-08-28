@@ -56,6 +56,29 @@ Class User_auth {
 		return $status;
 	}
 
+	function accessControl() {
+		if(empty($_SESSION['user_id']) and empty($_SESSION['id'])) {
+			$url_parts = parse_url($config['site_url']);
+			$domain = $url_parts['scheme'] . '://' . $url_parts['host'];
+			$login_url = MAD_APPS_FOLDER . 'auth/';
+
+			header("Location: " . $login_url . "?url=" . base64_encode($domain . $_SERVER['REQUEST_URI']));
+			exit;
+		}
+
+		if(empty($_SESSION['id'])) $_SESSION['id'] = $_SESSION['user_id']; // Backward compatability.
+
+		if(!$this->ci->session->userdata('permissions')) {
+			$user_details = $this->ci->users_model->db->query("SELECT email,password,auth_token FROM User WHERE id=$_SESSION[user_id]")->row();
+
+			if($user_details) {
+				$status = $this->login($user_details->email, $user_details->password, false, $user_details->auth_token);
+			}
+		}
+
+		return $_SESSION['user_id'];
+	}
+
     /**
      * This function will make sure that the user gets logged in automatically. And there are 3 different ways - userdata(), $_SESSION and cookie.
      */
@@ -63,11 +86,13 @@ Class User_auth {
 		if ( $this->ci->session->userdata('id') ) {
 			return $this->ci->session->userdata('id');
 
-		} elseif(!empty($_SESSION['user_id'])) {
-			$user_data = $this->ci->users_model->db->query("SELECT email,password,city_id,auth_token FROM User WHERE id=".$_SESSION['user_id'])->row();
-			$user_details = $this->login($user_data->email, '', false, $user_data->auth_token);
+		} elseif( $this->ci->session->userdata('user_id') ) {
+			// This was an older methord of authentication, not necessay after moving to Auth
+			// $user_data = $this->ci->users_model->db->query("SELECT email,password,city_id,auth_token FROM User WHERE id=".$_SESSION['user_id'])->row();
+			// $user_details = $this->login($user_data->email, '', false, $user_data->auth_token);
+			// return $user_details['id'];
 
-			return $user_details['id'];
+			return $this->ci->session->userdata('user_id');
 
 		} elseif(get_cookie('email') and get_cookie('auth_token')) {
 			//This is a User who have enabled the 'Remember me' Option - so there is a cookie in the users system
@@ -111,7 +136,7 @@ Class User_auth {
 		delete_cookie('password_hash');
 
 		unset($_SESSION['user_id']);
-		file_put_contents(__DIR__ . '../../../apps/Auth/system/Logout.log', $info, FILE_APPEND | LOCK_EX); // :DEBUG:
+		// file_put_contents(__DIR__ . '../../../apps/Auth/system/Logout.log', $info, FILE_APPEND | LOCK_EX); // :DEBUG:
 		return $this->ci->session->unset_userdata('id');
 	}
 
@@ -124,7 +149,7 @@ Class User_auth {
 
 	/// Returns true if the current user has permission to do the action specified in the argument
 	function get_permission($permission_name) {
-		if($this->ci->session->userdata('id') == 1) return true; //:UGLY:
+		if($this->ci->session->userdata('user_id') == 1) return true; //:UGLY:
 
 		return in_array($permission_name, $this->ci->session->userdata('permissions'));
 	}

@@ -46,9 +46,14 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 define('PAGINATION_CONSTANT', 	'5');
 
+$_main_site_url = 'htts://makeadiff.in';
 
-
-define('MAD_APPS_FOLDER', 'https://makeadiff.in/apps/');
+if(isset($_SERVER['HTTP_HOST'])) {
+	if($_SERVER['HTTP_HOST'] == 'makeadiff.in') $_main_site_url = 'https://makeadiff.in';
+	elseif($_SERVER['HTTP_HOST'] == 'testing.makeadiff.in') $_main_site_url = 'http://testing.makeadiff.in';
+	elseif($_SERVER['HTTP_HOST'] == 'localhost') $_main_site_url = 'http://localhost/MAD';
+}
+define('MAD_APPS_FOLDER', $_main_site_url . '/apps/');
 
 /* End of file constants.php */
 /* Location: ./system/application/config/constants.php */

@@ -27,7 +27,7 @@ App_CSVGo.id:
 App_CSVGo.name: Name of the report. This should be passed as a parameter to CSV:Go.
 App_CSVGo.description: 
 App_CSVGo.query: This holds the actual SQL Query that will make the report.
-App_CSVGo.db: Not Used
+App_CSVGo.db: Not Used - Will never be used. Can delete
 App_CSVGo.added_on: 
 App_CSVGo.last_run_on: The time when this query was last executed
 App_CSVGo.vertical_id: Vertical.id
@@ -45,7 +45,7 @@ App_Director.sort:
 App_Director.user_id: User.id - Not used
 App_Director.status: 
 
-App_Event_Mail_Tracker: Deprecated. This was used in Events app backend - but not used anymore.
+App_Event_Mail_Tracker: Deprecated. This was used in Events app backend - but not used anymore. Can delete.
 App_Event_Mail_Tracker.id: 
 App_Event_Mail_Tracker.receive_id: 
 App_Event_Mail_Tracker.item_id: 
@@ -61,7 +61,7 @@ App_Event_Mail_Tracker.status:
 App_Event_Mail_Tracker.created_at: 
 App_Event_Mail_Tracker.updated_at: 
 
-Archive: Stores the historical credits of all teachers. This is saved at the beginning of every year.
+Archive: Stores the historical credits of all teachers. This is saved at the beginning of every year. Also saved in User_Credit_Archive Table. Need a review.
 Archive.id: 
 Archive.user_id: 
 Archive.name: 
@@ -75,7 +75,7 @@ Batch.day: Batch day - 0 is Sunday
 Batch.class_time: Batch time - expressed in 24 hours time.
 Batch.batch_head_id: The ID of the mentor of this batch. Links to the User table.
 Batch.center_id: Center.id
-Batch.subject_id: Not used.
+Batch.subject_id: Not used. Can be removed - review historic data before removing.
 Batch.project_id: Project.id
 Batch.year: Holds the year which the batch is a part of.
 Batch.status: 
@@ -86,18 +86,18 @@ BatchLevel.batch_id: Batch.id
 BatchLevel.level_id: Level.id
 BatchLevel.year: 
 
-BatchSubject: Which all subjects are taught in the which all batches. Reference table.
+BatchSubject: Which all subjects are taught in the which all batches. Reference table. Not being used right now - delete after data/code review.
 BatchSubject.id: 
 BatchSubject.batch_id: Batch.id
 BatchSubject.subject_id: Subject.id
 
-Center: All information about Shelters are stored in this table.
+Center: All information about Shelters are stored in this table. Note - Shelters used to be called Centers earlier.
 Center.id: 
 Center.name: Name of the Shelter
 Center.city_id: City.id - The city this shelter belongs to
 Center.center_head_id: The User.id of the volunteer who is the Shelter Operations Fellow of this Shelter
-Center.class_starts_on: Class start date for the current year. Classes will get generated for this shelter only if this field is filled.
-Center.medium: Medium of instuction
+Center.class_starts_on: Class start date for the current year. Classes will get generated for this shelter only if this field is filled. Review- Consider moving this field to Batch 
+Center.medium: Medium of instuction - We might need to go to a reference table for this - shelter might have multiple medium that needs to be supported
 Center.preferred_gender: Ideal gender of the volunteers teaching at this shelter.
 Center.latitude: Location of shelter
 Center.longitude: Location of shelter
@@ -116,7 +116,7 @@ CenterAuthority.phone:
 CenterAuthority.email: 
 CenterAuthority.status: 
 
-CenterData: More shelter information gets stored here. Things like historical sherter class starting days, Center heads, etc.
+CenterData: More shelter information gets stored here. Things like historical sherter class starting days, Center heads, etc. Action- Move this to Data table or implement using Formad/Survey system. Needs review.
 CenterData.id: 
 CenterData.center_id: Center.id
 CenterData.name: 
@@ -124,7 +124,7 @@ CenterData.year:
 CenterData.value: 
 CenterData.data: 
 
-CenterProject: Which all projects are active in Shelter.
+CenterProject: Which all projects are active in Shelter. Action - need review. We have this data in Batch/project linking anyway. Does this require to be user inputted.
 CenterProject.id: 
 CenterProject.center_id: Center.id
 CenterProject.project_id: Project.id
@@ -134,13 +134,13 @@ CenterProject.added_on:
 City: All cities that are active in MAD
 City.id: 
 City.name: 
-City.president_id: User.id - City Team Lead of this city.
+City.president_id: User.id - City Team Lead of this city. Can be deleted - user group should be used to figure this out.
 City.added_on: 
-City.classes_happening: 
-City.region_id: Region.id - not used
-City.latitude: Geoglaphic location of the shelter.
-City.longitude: Geoglaphic location of the shelter.
-City.type: Two city(leadership, and test) are marked as vertiual. No actual operations happen in those two cities. They are for testing/management purposes.
+City.classes_happening: Delete after review.
+City.region_id: Region.id - not used - delete.
+City.latitude: Geoglaphic location of the city.
+City.longitude: Geoglaphic location of the city.
+City.type: Two city(leadership, and test) are marked as virtual. No actual operations happen in those two cities. They are for testing/management purposes. Might require a review. Consider moving out the Test city.
 
 Class: All information about classes that happened will be stored in this. Rows in this table are genearted by the schedule_classes cron job. Rows for the next two weeks will be generated based on the assignments.
 Class.id: 
@@ -148,8 +148,8 @@ Class.batch_id: Batch.id
 Class.level_id: Level.id
 Class.project_id: Project.id - Which project this Class is a part of - ed support/fp/aftercare/tr
 Class.class_on: 
-Class.feedback: Not Used
-Class.lesson_id: Lesson.id - Deprecated
+Class.feedback: Not Used - Remove
+Class.lesson_id: Lesson.id - Deprecated - Remove
 Class.class_type: If its an extra class the value of this will be 'extra'. Those are classes that happens the normal schedule(For eg, if we didn't get enough classes normally).
 Class.class_satisfaction: 
 Class.cancel_option: 
@@ -160,13 +160,13 @@ Class.status:
 
 Comment: Catch-all comment storing table. This will be storing notes on any of the 'item' - 'User','Student','City','Center','Event'
 Comment.id: 
-Comment.item: Which table this will be associated with. For eg. if this has value 'User' and item_id has value '35443' that means this data point is assocated with User with id 35443
-Comment.item_id: The forign key of what ever the item is in that row.
+Comment.item: Which table this will be associated with. For eg. if this has value 'User' and item_id has value '35443' that means this data point is associated with User with id 35443
+Comment.item_id: The foreign key of what ever the item is in that row.
 Comment.comment: 
 Comment.added_on: 
 Comment.added_by_user_id: User.id
 
-Contact: This is used to store contact details of people who registered on the site - both care collective and mailing list subscription. For a while we were using it for Applicant data collection as well - but discontinued it.
+Contact: This is used to store contact details of people who registered on the site - both care collective and mailing list subscription. For a while we were using it for Applicant data collection as well - but discontinued it. Review this - might have to delete.
 Contact.id: 
 Contact.name: 
 Contact.email: 
@@ -207,15 +207,15 @@ Credit_Parameter.status:
 
 Data: Free form data storage(key/value pair) - for any of the tables specified in the 'item' field.
 Data.id: 
-Data.item: Which table this will be associated with. For eg. if this has value 'Class' and item_id has value '35443' that means this data point is assocated with Class with id 35443
+Data.item: Which table this will be associated with. For eg. if this has value 'Class' and item_id has value '35443' that means this data point is associated with Class with id 35443
 Data.item_id: {Data.item}.id - Which row this will be associated with.
 Data.name: Key part of the key/value pair
-Data.data: Value part of the key/value pair. This can be a JSON string to store complicated data strutures.
+Data.data: Value part of the key/value pair. This can be a JSON string to store complicated data structures.
 Data.year: 
 Data.added_on: 
 Data.added_by_user_id: User.id
 
-Donut_Deleted_Donation: This stores a copy of the donation when anyone deletes it. For historical purpose.
+Donut_Deleted_Donation: This stores a copy of the donation when anyone deletes it. For historical purpose. Consider moving to a Point in Time Architecture for this.
 Donut_Deleted_Donation.id: 
 Donut_Deleted_Donation.type: Type of donation - cash, cheque, online donation, etc.
 Donut_Deleted_Donation.fundraiser_user_id: User.id
@@ -231,27 +231,27 @@ Donut_Deleted_Donation.updated_by_user_id: User.id
 Donut_Deleted_Donation.with_user_id: User.id
 Donut_Deleted_Donation.comment: 
 
-Donut_Deposit: Deposit/handover information. When ever a user hands over money to another user(eg. vol to coach, coach to fellow) it creates a row in this table
+Donut_Deposit: Deposit/handover information. When ever a user hands over money to another user(eg. vol to coach, coach to fellow, fellow to national account) it creates a row in this table
 Donut_Deposit.id: 
 Donut_Deposit.collected_from_user_id: The User.id who gave the deposit
 Donut_Deposit.given_to_user_id: The User.id of the person who collected the money.
 Donut_Deposit.added_on: 
 Donut_Deposit.reviewed_on: 
-Donut_Deposit.amount: Total amount of the hand over - the sum of all the donatitons handed over.
-Donut_Deposit.deposit_information: Holds the deposit id from salesforce. For double veification.
-Donut_Deposit.status: 
+Donut_Deposit.amount: Total amount of the hand over - the sum of all the donations handed over.
+Donut_Deposit.deposit_information: Holds the deposit id from sales-force. For double verification.
+Donut_Deposit.status: Approval status - pending, approved, rejected. The field name has a consistency issue. In most other cases where the field name is 'status', its a active/deleted 1/0 field. Might need to rename later.
 
-Donut_Donation: All donation inforamtion.
+Donut_Donation: All donation information.
 Donut_Donation.id: 
 Donut_Donation.type: 
 Donut_Donation.fundraiser_user_id: User.id - the person who raised the amount.
 Donut_Donation.donor_id: Dount_Donor.id - The donor who made donation.
-Donut_Donation.status: 
+Donut_Donation.status: Handover status. If the value is 'collected', the donation is with the 'with_user_id'. If value is 'deposited', the user 'with_user_id' has handed it over to someone else - but its not approved yet. Note- The field name has a consistency issue. In most other cases where the field name is 'status', its a active/deleted 1/0 field. Might need to rename later. Note - this is slightly complicated for others to understand.
 Donut_Donation.amount: 
-Donut_Donation.reference_file:
+Donut_Donation.reference_file: NACH forms can be scanned/photographed and uploaded. The path of the image will be stored here. 
 Donut_Donation.nach_start_on: If this is a NACH donation, the start on date for the NACH
 Donut_Donation.nach_end_on: 
-Donut_Donation.donation_repeat_count:
+Donut_Donation.donation_repeat_count: Online recurring donation will happen for this many months for this donation.
 Donut_Donation.cheque_no: 
 Donut_Donation.added_on: 
 Donut_Donation.updated_on: 
@@ -264,7 +264,7 @@ Donut_DonationDeposit.id:
 Donut_DonationDeposit.deposit_id: Donut_Deposit.id
 Donut_DonationDeposit.donation_id: Donut_Donation.id
 
-Donut_Donation_Version: Not used right now. This was used to hold all changes  made to any donation. Versioning.
+Donut_Donation_Version: Not used right now. This was used to hold all changes made to any donation. Versioning. Use Point in Time Architecture to implement this better.
 Donut_Donation_Version.id: 
 Donut_Donation_Version.donation_id: Donut_Donation.id
 Donut_Donation_Version.type: 
@@ -319,24 +319,24 @@ Event.id:
 Event.name: 
 Event.description: 
 Event.starts_on: 
-Event.ends_on: 
+Event.ends_on: Not captured in UI. Not used thanks to that.
 Event.place: 
-Event.type: 
+Event.type: Not used anymore - legacy.
 Event.city_id: City.id - If this is 0, it means its a multi city event(Users from more than one city participating - eg. National Ed Support Fellows Zoom Call)
 Event.event_type_id: Event_Type.id - What type of an event this is
 Event.vertical_id: Vertical.id - What vertical this event is a part of(eg. Ed Support Training.)
-Event.template_event_id: Event.id
-Event.user_selection_options: 
+Event.template_event_id: Event.id - All recurring event are created from a base event - of which the ID is stored in this field.
+Event.user_selection_options: JSON - this field is used to store which all user filtering is used to select the users in the Envite UI. Not used right now.
 Event.created_by_user_id: User.id - Created by the given user
 Event.latitude: Location of the event
 Event.longitude: Location of the event.
 Event.created_on: 
 Event.updated_on: 
-Event.notification_status: 
-Event.created_from: 
+Event.notification_status: Not used for now.
+Event.created_from: Which app created this event - not used right now.
 Event.status: 
 
-Event_Type: All the different event types.
+Event_Type: All the different event types. Note - add vertical_id, description to this. Consider making this a hirarchy using parent_event_type_id
 Event_Type.id: 
 Event_Type.name: 
 Event_Type.status: 
@@ -379,7 +379,7 @@ FAM_ApplicantFeedbackQuestions.description:
 FAM_ApplicantFeedbackQuestions.comment: 
 FAM_ApplicantFeedbackQuestions.status: 
 
-FAM_Evaluation: This stores the evaluation for the data the user submited.
+FAM_Evaluation: This stores the evaluation for the data the user submitted.
 FAM_Evaluation.id: 
 FAM_Evaluation.user_id: User.id
 FAM_Evaluation.parameter_id: FAM_Parameter.id
@@ -432,7 +432,7 @@ FAM_UserGroupPreference.group_id: Group.id
 FAM_UserGroupPreference.evaluator_id: User.id
 FAM_UserGroupPreference.preference: Preference number - 1-3
 FAM_UserGroupPreference.taskfolder_link: 
-FAM_UserGroupPreference.city_id: City.id - Incase the applicant is moving to a new city, the id of the new city will be stored here.
+FAM_UserGroupPreference.city_id: City.id - In case the applicant is moving to a new city, the id of the new city will be stored here.
 FAM_UserGroupPreference.added_on: 
 FAM_UserGroupPreference.year: 
 FAM_UserGroupPreference.status: 
@@ -448,7 +448,7 @@ FAM_UserStage.year:
 FAM_UserStage.status: 
 FAM_UserStage.shelter_id: Center.id
 
-FAM_UserTask: All the tasks the appilcants has submitted.
+FAM_UserTask: All the tasks the applicants has submitted.
 FAM_UserTask.id: 
 FAM_UserTask.user_id: User.id
 FAM_UserTask.common_task_url: 
@@ -465,13 +465,13 @@ FAM_UserTask.preference_3_video_files:
 FAM_UserTask.year: 
 FAM_UserTask.added_on: 
 
-FR_UserCredit: History of FR User credit assignment.
+FR_UserCredit: History of FR User credit assignment. 
 FR_UserCredit.id: 
 FR_UserCredit.user_id: User.id
 FR_UserCredit.credit_parameter_id: Credit_Parameter.id
 FR_UserCredit.change: How much credits did the user gain/lose because of this action.
 FR_UserCredit.current_credit: The resulting credit of the User after the change.
-FR_UserCredit.comment:
+FR_UserCredit.comment: There can be a duplication of this because each task is a row in the table. This field was added later when the requirement changed. Ideal case scenario would have been separate tables.
 FR_UserCredit.week_start_on: 
 FR_UserCredit.added_on: 
 FR_UserCredit.marked_by_user_id: User.id
@@ -492,16 +492,16 @@ Grade_Template_Grade.grade:
 Grade_Template_Grade.from_mark: 
 Grade_Template_Grade.to_mark: 
 
-Group: All the user groups
+Group: All the user groups. Note - need to implement inheritance here - add a parent_group_id to this.
 Group.id: 
 Group.name: 
-Group.type: What level is this group at - volunteer, fellow, strat, director
-Group.group_type: Only valid if this is 'normal'
+Group.type: What level is this group at - volunteer, fellow, strat, national(director), executive
+Group.group_type: Only valid if this is 'normal'. Not used anymore - remove after code review. But we might need it if we are planning to implement inheritance.
 Group.vertical_id: Vertical.id
 Group.region_id: Deprecated
 Group.status: 
 
-GroupHierarchy: Not in use
+GroupHierarchy: Not in use. Can be used to create reporting structures.
 GroupHierarchy.id: 
 GroupHierarchy.group_id: 
 GroupHierarchy.reports_to_group_id: 
@@ -518,13 +518,13 @@ IS_Event.added_on:
 IS_Event.status: 
 IS_Event.vertical_id: Vertical.id
 
-IS_Question: Impact Survey questions
+IS_Question: Impact Survey questions. Will get merged with the Survey system in a year or two.
 IS_Question.id: 
 IS_Question.question: 
 IS_Question.vertical_id: Vertical.id
 IS_Question.status: 
 
-IS_Response: Impact Survey responses.
+IS_Response: Impact Survey responses. Will get merged with the Survey system in a year or two.
 IS_Response.id: 
 IS_Response.is_event_id: IS_Event.id
 IS_Response.user_id: User.id
@@ -543,18 +543,18 @@ Level.id:
 Level.name: A,B,C, etc - this is how students in the same grade is split up.
 Level.grade: Which class/grade the student is in.
 Level.center_id: Center.id
-Level.medium: 
+Level.medium: Not used. Remove this.
 Level.preferred_gender: 
 Level.medium_id: Medium.id
 Level.project_id: Project.id - this decides if the row holds Ed data or FP data.
-Level.book_id: 
+Level.book_id: Not used - remove.
 Level.year: 
 Level.status: 
 
 Log: Event logging. Used for debugging more than anything else. And login data.
 Log.id: 
-Log.name: 
-Log.log: 
+Log.name: Type of event. Eg. user_login
+Log.log: Log text. Can be JSON to hold more richer info
 Log.user_id: User.id
 Log.added_on: 
 Log.level: 
@@ -575,18 +575,18 @@ Medium.id:
 Medium.name: 
 Medium.status: 
 
-Message_Queue: Queue for sending emails. Supports SMSs too - but right now only emails recides here.
+Message_Queue: Queue for sending emails, SMS or push notifications(not implemented yet). Supports SMSs too - but right now only emails recedes here.
 Message_Queue.id: 
 Message_Queue.type: 
-Message_Queue.to: 
+Message_Queue.to: Email/Phone number the message should be sent to.
 Message_Queue.from: 
 Message_Queue.subject: 
 Message_Queue.body: 
-Message_Queue.images: 
-Message_Queue.attachments: 
-Message_Queue.info: 
+Message_Queue.images: JSON - can have a list of images to be embedded.
+Message_Queue.attachments: JSON - can have a list of attachment.
+Message_Queue.info: JSON - information about email sent/attempts.
 Message_Queue.added_on: 
-Message_Queue.status: 
+Message_Queue.status: Non standard naming - 'sent/pending'
 Message_Queue.sent_on: 
 
 Permission: User group permissions.
@@ -604,7 +604,7 @@ Project.status:
 Push_Notification: Used in events app. Holds all the push notifications. There is a cron that will send out the notification.
 Push_Notification.id: 
 Push_Notification.user_id: User.id
-Push_Notification.imei_no: 
+Push_Notification.imei_no: If its a browser notification this is not getting used.
 Push_Notification.hash_key: 
 Push_Notification.fcm_regid: 
 Push_Notification.app_version: 
@@ -614,7 +614,7 @@ Push_Notification.updated_on:
 Push_Notification.platform: 
 Push_Notification.app: 
 
-Region: Deprecated
+Region: Deprecated - remove
 Region.id: 
 Region.name: 
 Region.director_id: 
@@ -640,7 +640,7 @@ Retention_UserGroupPreference.year:
 Retention_UserGroupPreference.added_on: 
 Retention_UserGroupPreference.status: 
 
-SC_student_shelter_mapping: Not Used
+SC_student_shelter_mapping: Not Used - Delete them. Was created by Social Cops
 SC_student_shelter_mapping.id: 
 SC_student_shelter_mapping.name: 
 SC_student_shelter_mapping.birthday: 
@@ -679,7 +679,7 @@ SC_student_shelter_mapping.city_classes_happening:
 SC_student_shelter_mapping.region_id: 
 SC_student_shelter_mapping.city_type: 
 
-SC_teacher_shelter_mapping: Not Used
+SC_teacher_shelter_mapping: Not Used - Delete them. Was created by Social Cops
 SC_teacher_shelter_mapping.id: 
 SC_teacher_shelter_mapping.name: 
 SC_teacher_shelter_mapping.title: 
@@ -737,20 +737,20 @@ SC_teacher_shelter_mapping.batch_project_id:
 SC_teacher_shelter_mapping.batch_year: 
 SC_teacher_shelter_mapping.batch_status: 
 
-SS_Answer: 
+SS_Answer: Stakeholder Survey. An older survey system. We'll have to merge this with Survey in an year or two.
 SS_Answer.id: 
 SS_Answer.answer: 
 SS_Answer.question_id: 
 SS_Answer.level: 
 SS_Answer.status: 
 
-SS_Question: 
+SS_Question: Stakeholder Survey. An older survey system. We'll have to merge this with Survey in an year or two.
 SS_Question.id: 
 SS_Question.question: 
 SS_Question.status: 
 SS_Question.survey_event_id: 
 
-SS_Survey_Event: An older survey system. We'll have to merge this with Survey in an year or two.
+SS_Survey_Event: Stakeholder Survey. An older survey system. We'll have to merge this with Survey in an year or two.
 SS_Survey_Event.id: 
 SS_Survey_Event.name: 
 SS_Survey_Event.cycle: 
@@ -759,7 +759,7 @@ SS_Survey_Event.started_by_user_id:
 SS_Survey_Event.added_on: 
 SS_Survey_Event.status: 
 
-SS_UserAnswer: 
+SS_UserAnswer: Stakeholder Survey. 
 SS_UserAnswer.id: 
 SS_UserAnswer.question_id: 
 SS_UserAnswer.user_id: 
@@ -774,11 +774,11 @@ Setting.name:
 Setting.value: 
 Setting.data: 
 
-State: Deprecated
+State: Deprecated - Delete this.
 State.id: 
 State.name: 
 
-Student: All student information stored in this table.
+Student: All student information stored in this table. Note - figure out a method to uniquely identify students. Prevent deletes of students - add a method of marking as archived/alumni
 Student.id: 
 Student.name: 
 Student.birthday: 
@@ -791,7 +791,7 @@ Student.added_on:
 Student.reason_for_leaving: 
 Student.status: 
 
-StudentClass: Student attendandce will be stored here.
+StudentClass: Student attendance will be stored here.
 StudentClass.id: 
 StudentClass.student_id: Student.id
 StudentClass.class_id: Class.id
@@ -804,11 +804,11 @@ StudentLevel.id:
 StudentLevel.student_id: Student.id
 StudentLevel.level_id: Level.id
 
-Subject: 
+Subject: All subjects that can be taught it our classes. Note - need to have some board/medium connections. Review later.
 Subject.id: 
 Subject.name: 
-Subject.unit_count: 
-Subject.city_id: City.id
+Subject.unit_count: Not used
+Subject.city_id: City.id - Not used
 Subject.status: 
 
 Survey: Survey Instance. Each Survey template can have multiple survey instances.
@@ -991,7 +991,7 @@ UserGroup.user_id: User.id
 UserGroup.group_id: Group.id
 UserGroup.year: This lets us store historical data.
 
-User_Credit_Archive: Historical credit data - this is saved every week.
+User_Credit_Archive: Historical credit data - this is saved every week. Also saved in Archive Table. Need a review.
 User_Credit_Archive.id: 
 User_Credit_Archive.user_id: User.id
 User_Credit_Archive.credit_on: 

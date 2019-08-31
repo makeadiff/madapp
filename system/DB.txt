@@ -947,7 +947,7 @@ UserBatch.batch_id: Batch.id
 UserBatch.level_id: Level.id
 UserBatch.requirement: Not used - used to hold the number of volunteers needed for this Batch.
 
-UserClass: User attendandce is marked in this table
+UserClass: User attendance is marked in this table
 UserClass.id: 
 UserClass.user_id: User.id
 UserClass.class_id: Class.id
@@ -972,12 +972,12 @@ UserData.value:
 UserData.data: 
 UserData.added_on: 
 
-UserEvent: User event attenandce data.
+UserEvent: User event attendance data.
 UserEvent.id: 
 UserEvent.user_id: User.id
 UserEvent.event_id: Event.id
 UserEvent.present: 0-No data, 1-Present, 3-Missed
-UserEvent.late: Was the user late for the event. Right now, we are not caturing this data. Kept here for future purpose.
+UserEvent.late: Was the user late for the event. Right now, we are not capturing this data. Kept here for future purpose.
 UserEvent.user_choice: 0-Data, 1-I'm going, 2-Maybe, 3-Can't go
 UserEvent.reason: If user marks Can't go in RSVP, capture reason
 UserEvent.created_from: 1-Web, 2-App
@@ -1003,10 +1003,10 @@ Vertical.key: Not used.
 Vertical.name: 
 Vertical.status: 
 
-VoiceOfChild_Comment: Stores all the interaction that happens between a Shelter Opeartions Fellow and a child. Ranges from information about shelters to, impact of programmes etc
+VoiceOfChild_Comment: Stores all the interaction that happens between a Shelter Operations Fellow and a child. Ranges from information about shelters to, impact of programs etc
 VoiceOfChild_Comment.id: 
-VoiceOfChild_Comment.added_by_user_id: 
-VoiceOfChild_Comment.student_id: 
+VoiceOfChild_Comment.added_by_user_id: User.id
+VoiceOfChild_Comment.student_id: Student.id
 VoiceOfChild_Comment.question: 
 VoiceOfChild_Comment.type: 
 VoiceOfChild_Comment.tags: 

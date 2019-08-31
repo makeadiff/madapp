@@ -58,11 +58,10 @@ Class User_auth {
 
 	function accessControl() {
 		if(empty($_SESSION['user_id']) and empty($_SESSION['id'])) {
-			$url_parts = parse_url($config['site_url']);
-			$domain = $url_parts['scheme'] . '://' . $url_parts['host'];
+			$current_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 			$login_url = MAD_APPS_FOLDER . 'auth/';
 
-			header("Location: " . $login_url . "?url=" . base64_encode($domain . $_SERVER['REQUEST_URI']));
+			header("Location: " . $login_url . "?url=" . base64_encode($current_link));
 			exit;
 		}
 

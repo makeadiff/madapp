@@ -14,7 +14,7 @@ class dashboard extends Controller  {
 
         set_city_year($this);
 
-        $user_id = $this->session->userdata('id');
+        $user_id = $this->session->userdata('user_id');
         $happiness_index_data_entry_status = $this->review_model->get_happiness_index_data_entry_status($user_id);
 
         $this->load->view('layout/flatui/header',$data);

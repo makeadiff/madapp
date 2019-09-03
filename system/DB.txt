@@ -61,7 +61,7 @@ App_Event_Mail_Tracker.status:
 App_Event_Mail_Tracker.created_at: 
 App_Event_Mail_Tracker.updated_at: 
 
-Archive: Stores the historical credits of all teachers. This is saved at the beginning of every year. Also saved in User_Credit_Archive Table. Need a review.
+Archive: Stores the historical credits of all teachers. This is saved at the beginning of every year. Also saved in User_Credit_Archive Table. Need a review. Maybe, drop this table, just have Use_Credit_Archive
 Archive.id: 
 Archive.user_id: 
 Archive.name: 
@@ -96,7 +96,7 @@ Center.id:
 Center.name: Name of the Shelter
 Center.city_id: City.id - The city this shelter belongs to
 Center.center_head_id: The User.id of the volunteer who is the Shelter Operations Fellow of this Shelter
-Center.class_starts_on: Class start date for the current year. Classes will get generated for this shelter only if this field is filled. Review- Consider moving this field to Batch 
+Center.class_starts_on: Class start date for the current year. Classes will get generated for this shelter only if this field is filled. Review- Consider moving/copying this field to Batch 
 Center.medium: Medium of instuction - We might need to go to a reference table for this - shelter might have multiple medium that needs to be supported
 Center.preferred_gender: Ideal gender of the volunteers teaching at this shelter.
 Center.latitude: Location of shelter
@@ -978,10 +978,10 @@ UserEvent.user_id: User.id
 UserEvent.event_id: Event.id
 UserEvent.present: 0-No data, 1-Present, 3-Missed
 UserEvent.late: Was the user late for the event. Right now, we are not capturing this data. Kept here for future purpose.
-UserEvent.user_choice: 0-Data, 1-I'm going, 2-Maybe, 3-Can't go
+UserEvent.user_choice: 0-No Data, 1-I'm going, 2-Maybe, 3-Can't go
 UserEvent.reason: If user marks Can't go in RSVP, capture reason
-UserEvent.created_from: 1-Web, 2-App
-UserEvent.type: 
+UserEvent.created_from: 1-Web, 2-App. Not used - can delete after code review.
+UserEvent.type: Not used anymore. Delete after review.
 UserEvent.created_on: 
 UserEvent.rsvp_auth_key: To make sure that the right user RSVPs. People RSVP using a link sent on email.
 

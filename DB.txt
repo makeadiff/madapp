@@ -1,0 +1,613 @@
+Tuesday, June 10, 2014
+
+ALTER TABLE `Group` ADD `type` ENUM('national','fellow','volunteer') NOT NULL ; 
+CREATE TABLE IF NOT EXISTS `Vertical` ( `id` INT (11) unsigned NOT NULL auto_increment, `key` VARCHAR (100) NOT NULL, `name` VARCHAR (100) NOT NULL, PRIMARY KEY (`id`) ) DEFAULT CHARSET=utf8;
+ALTER TABLE `City` ADD `region_id` INT(11) UNSIGNED NOT NULL , ADD INDEX (`region_id`) ; 
+ALTER TABLE `Group` ADD `vertical_id` INT(11) UNSIGNED NOT NULL , ADD INDEX (`vertical_id`) ; 
+
+---------------------------------------------------------------------
+Wednesday, June 11, 2014
+
+CREATE TABLE IF NOT EXISTS `OKR_Grade` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`mode` ENUM ('vertical','horizontal'),
+	`region_id` INT (11) unsigned NOT NULL DEFAULT 0,
+	`city_id` INT (11) unsigned NOT NULL DEFAULT 0,
+	`vertical_id` INT (11) unsigned NOT NULL DEFAULT 0,
+	`user_id` INT(11) unsigned NOT NULL DEFAULT '0', 
+	`grade` FLOAT (5),
+	`updated_on` DATETIME   NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`region_id`),
+	KEY (`city_id`),
+	KEY (`vertical_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `Region` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`name` VARCHAR (100)  NOT NULL,
+	`director_id` INT (11) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`),
+	KEY (`director_id`)
+) DEFAULT CHARSET=utf8;
+
+ALTER TABLE `OKR_Objective` ADD `timeframe` INT(2) NOT NULL DEFAULT '0' COMMENT 'Starting Month''s Number. If timeframe is April Beginning to May Mid, it will be 4. May Mid to June Full is 5.' AFTER `grade`;
+
+ALTER TABLE `OKR_Grade` ADD `limited_data` ENUM('0','1') NOT NULL DEFAULT '0' AFTER `grade`; 
+ALTER TABLE `OKR_Grade` CHANGE `mode` `mode_id` ENUM('vertical','horizontal','both') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'horizontal'; 
+
+---------------------------------------------------------------
+Thursday, June 12, 2014
+
+ALTER TABLE `OKR_Grade` ADD `timeframe` INT(2) NOT NULL AFTER `grade`; 
+
+CREATE TABLE IF NOT EXISTS `OKR_Archive` ( `id` INT (11) unsigned NOT NULL auto_increment, `user_id` INT (11) unsigned NOT NULL, `timeframe` INT (2) NOT NULL, PRIMARY KEY (`id`), KEY (`user_id`) ) DEFAULT CHARSET=utf8;
+
+---------------------------------------------------
+Friday, June 13, 2014
+
+ALTER TABLE `User` ADD `reason_for_leaving` MEDIUMTEXT NOT NULL AFTER `left_on`; 
+
+CREATE TABLE IF NOT EXISTS `HR_User` ( `id` INT (11) unsigned NOT NULL auto_increment, `user_id` INT (11) unsigned NOT NULL, `developmental_conversation_for_low_credits_count` INT (5), PRIMARY KEY (`id`), KEY (`user_id`) ) DEFAULT CHARSET=utf8;
+
+
+------------------------------------------------------
+Thursday, June 19, 2014
+
+ALTER TABLE `UserGroup` ADD `year` INT(4) NOT NULL ; 
+
+CREATE TABLE IF NOT EXISTS `Review_Parameter` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`name` VARCHAR (100)  NOT NULL,
+	`description` VARCHAR (255)  NOT NULL,
+	`value` VARCHAR (100)  NOT NULL,
+	`level` INT(2) NOT NULL,
+	`data` VARCHAR (100)  NOT NULL,
+	`comment` VARCHAR(255) NOT NULL,
+	`review_period` ENUM ('monthly','quarterly'),
+	`value_type` ENUM('percentage','number','other') NOT NULL,
+	`input_type` ENUM('manual','automated') NOT NULL,
+	`timeframe` INT (5),
+	`updated_on` DATETIME   NOT NULL,
+	`user_id` INT (11) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`user_id`)
+) DEFAULT CHARSET=utf8;
+
+
+------------------------------------------------
+Wednesday, June 25, 2014
+
+
+CREATE TABLE IF NOT EXISTS `Review_Milestone` ( `id` INT (11) unsigned NOT NULL auto_increment, `name` VARCHAR (255) NOT NULL, `status` ENUM ('0','1'), `done_on` DATETIME NOT NULL, `due_timeframe` INT 2 NOT NULL, `created_by_user_id` INT (11) unsigned NOT NULL, `user_id` INT (11) unsigned NOT NULL, PRIMARY KEY (`id`), KEY (`created_by_user_id`), KEY (`user_id`) ) DEFAULT CHARSET=utf8;
+
+
+-------------------------------------------------
+Monday, June 30, 2014
+
+ALTER TABLE `Review_Milestone` ADD `due_on` DATE NOT NULL AFTER `done_on`; 
+
+
+-------------------------------------------------
+Wednesday, July 02, 2014
+
+ALTER TABLE `Level` ADD `grade` INT(3) NOT NULL AFTER `name`; 
+CREATE TABLE IF NOT EXISTS `Subject` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`name` VARCHAR (100)  NOT NULL,
+	`unit_count` VARCHAR (100)  NOT NULL,
+	`city_id` INT (11) unsigned NOT NULL,
+	`status` ENUM('1','0') NOT NULL DEFAULT '1',
+	PRIMARY KEY (`id`),
+	KEY (`city_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `LevelSubject` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`level_id` INT (11) unsigned NOT NULL,
+	`subject_id` INT (11) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`level_id`),
+	KEY (`subject_id`)
+) DEFAULT CHARSET=utf8;
+
+
+-------------------------------------------------
+-- Thursday, July 03, 2014
+
+
+CREATE TABLE IF NOT EXISTS `HR_UserSelect` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`user_id` INT (11) unsigned NOT NULL,
+	`item_id` INT (11) unsigned NOT NULL,
+	`item_type` ENUM ('engagement','delevopment'),
+	PRIMARY KEY (`id`),
+	KEY (`user_id`),
+	KEY (`item_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `HR_Engagement` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`month` INT (5),
+	`remarks` VARCHAR (255)  NOT NULL,
+	`added_on` DATETIME   NOT NULL,
+	`added_by_user_id` INT (11) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`added_by_user_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `HR_Volunteer_Request` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`vertical_id` INT (11) unsigned NOT NULL,
+	`requirement_count` INT (5),
+	`month` INT (5),
+	`remarks` VARCHAR (255)  NOT NULL,
+	`added_on` DATETIME   NOT NULL,
+	`added_by_user_id` INT (11) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`vertical_id`),
+	KEY (`added_by_user_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `HR_Development_Conversation` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`user_id` INT (11) unsigned NOT NULL,
+	`added_on` DATETIME   NOT NULL,
+	`added_by_user_id` INT (11) unsigned NOT NULL,
+	`remarks` MEDIUMTEXT  NOT NULL,
+	`status` ENUM ('0','1'),
+	`done_on` DATETIME   NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`user_id`),
+	KEY (`added_by_user_id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `HR_PR_Support` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`collateral` VARCHAR (100)  NOT NULL,
+	`remarks` VARCHAR (255)  NOT NULL,
+	`needed_on` DATETIME   NOT NULL,
+	`to_be_presented_on` DATETIME   NOT NULL,
+	`added_by_user_id` INT (11) unsigned NOT NULL,
+	`status` ENUM ('0','1'),
+	`done_on` DATETIME   NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`added_by_user_id`)
+) DEFAULT CHARSET=utf8;
+
+ALTER TABLE `HR_Development_Conversation` ADD `city_id` INT(11) UNSIGNED NOT NULL , ADD INDEX (`city_id`) ; 
+ALTER TABLE `HR_Engagement` ADD `city_id` INT(11) UNSIGNED NOT NULL , ADD INDEX (`city_id`) ; 
+ALTER TABLE `HR_PR_Support` ADD `city_id` INT(11) UNSIGNED NOT NULL , ADD INDEX (`city_id`) ; 
+ALTER TABLE `HR_Volunteer_Request` ADD `city_id` INT(11) UNSIGNED NOT NULL , ADD INDEX (`city_id`) ; 
+
+----------------------------------------
+Thursday, July 17, 2014
+
+ALTER TABLE `Group` CHANGE `type` `type` ENUM('national','fellow','volunteer','strat') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL; 
+CREATE TABLE IF NOT EXISTS `UserData` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`user_id` INT (11) unsigned NOT NULL,
+	`name` VARCHAR (100)  NOT NULL,
+	`value` INT (5),
+	`data` VARCHAR (255),
+	PRIMARY KEY (`id`),
+	KEY (`user_id`)
+) DEFAULT CHARSET=utf8;
+
+ -- Done
+ 
+----------------------------------------- 
+Wednesday, July 23, 2014
+
+RENAME TABLE `Review_Parameter` TO `Review_Data`; 
+CREATE TABLE IF NOT EXISTS `Review_Parameter` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`vertical_id` INT (11) unsigned NOT NULL,
+	`name` VARCHAR (200)  NOT NULL,
+	`info` VARCHAR (255)  NOT NULL,
+	`value_type` ENUM ('percent','absolute'),
+	`level_1` VARCHAR (100)  NOT NULL,
+	`level_2` VARCHAR (100)  NOT NULL,
+	`level_3` VARCHAR (100)  NOT NULL,
+	`level_4` VARCHAR (100)  NOT NULL,
+	`level_5` VARCHAR (100)  NOT NULL,
+	`sql` MEDIUMTEXT  NOT NULL,
+	`status` ENUM ('1','0'),
+	PRIMARY KEY (`id`),
+	KEY (`vertical_id`)
+) DEFAULT CHARSET=utf8
+
+------------------------------------------
+Thursday, July 24, 2014
+
+ALTER TABLE `Review_Parameter` ADD `start_compare` ENUM('1','5') NOT NULL DEFAULT '1' COMMENT 'Checks the level_1 for true if set to 1 and level_5 if set to 5' AFTER `value_type`;
+
+ALTER TABLE `Review_Parameter` ADD `formula` MEDIUMTEXT NOT NULL AFTER `sql`; 
+
+ALTER TABLE `Review_Data`
+  DROP `name`,
+  DROP `description`,
+  DROP `value_type`;
+
+ALTER TABLE `Review_Data` ADD `review_parameter_id` INT(11) UNSIGNED NOT NULL AFTER `id`, ADD INDEX (`review_parameter_id`) ; 
+ALTER TABLE `Review_Data` CHANGE `input_type` `input_type` ENUM('manual','automated') NOT NULL DEFAULT 'manual'; 
+ALTER TABLE `Review_Data` CHANGE `timeframe` `cycle` INT(5) NULL DEFAULT NULL; 
+
+ALTER TABLE `Review_Data` CHANGE `review_period` `review_period` ENUM('cycle','monthly','quarterly') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'cycle'; 
+
+ALTER TABLE `HR_Volunteer_Request` CHANGE `month` `cycle` INT(5) NULL DEFAULT NULL; 
+
+ALTER TABLE `HR_Engagement` CHANGE `month` `cycle` INT(5) NULL DEFAULT NULL; 
+
+-- Done
+
+--------------------------------------
+Friday, August 01, 2014
+
+ALTER TABLE `Group` CHANGE `region_id` `region_id` INT(11) UNSIGNED NOT NULL; 
+ALTER TABLE `Group` ADD `status` ENUM('1','0') NOT NULL DEFAULT '1' ; 
+
+--------------------------------------
+Saturday, August 02, 2014
+
+ALTER TABLE `Group` ADD `group_type` ENUM('normal','hierarchy') NOT NULL DEFAULT 'normal' AFTER `type`; 
+UPDATE `Group` SET group_type='hierarchy' WHERE name LIKE '%, Central' OR name LIKE '%, South' OR name LIKE '%, North' OR name LIKE '%, Deccan';
+
+Done
+
+-----------------------------------------------------
+Sunday, August 03, 2014
+
+ALTER TABLE `Review_Milestone` DROP `due_timeframe`; 
+ALTER TABLE `Review_Milestone` ADD `cycle` INT(3) NOT NULL AFTER `status`; 
+UPDATE `Review_Milestone` SET cycle='1'
+ALTER TABLE `Review_Data` ADD `type` ENUM('parameter','milestone','survey','other') NOT NULL DEFAULT 'parameter' AFTER `id`; 
+
+Done
+
+
+---------------------------------
+Wednesday, August 27, 2014
+
+CREATE TABLE IF NOT EXISTS `SS_Question` ( `id` INT (11) unsigned NOT NULL auto_increment, `question` VARCHAR (255) NOT NULL, `status` ENUM ('0','1'), PRIMARY KEY (`id`) ) DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `SS_UserAnswer` ( `id` INT (11) unsigned NOT NULL auto_increment, `question_id` INT (11) unsigned NOT NULL, `user_id` INT (11) unsigned NOT NULL, `answer` VARCHAR (100) NOT NULL, `added_on` DATETIME NOT NULL, PRIMARY KEY (`id`), KEY (`question_id`), KEY (`user_id`) ) DEFAULT CHARSET=utf8;
+
+-----------------------------------
+
+Thursday, September 04, 2014
+
+
+CREATE TABLE IF NOT EXISTS `SS_Survey_Event` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `cycle` int(5) DEFAULT NULL,
+  `stage` int(5) DEFAULT NULL,
+  `started_by_user_id` int(11) unsigned NOT NULL,
+  `added_on` datetime NOT NULL,
+  `status` enum('0','1') DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `started_by_user_id` (`started_by_user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+ALTER TABLE `Event` CHANGE `type` `type` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'others'; 
+
+ALTER TABLE `Student` ADD `sex` ENUM('m','f','u') NOT NULL DEFAULT 'u' AFTER `birthday`; 
+
+Done
+
+-------------------------------------------
+Tuesday, September 09, 2014
+
+
+CREATE TABLE IF NOT EXISTS `BatchSubject` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`batch_id` INT (11) unsigned NOT NULL,
+	`subject_id` INT (11) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`batch_id`),
+	KEY (`subject_id`)
+) DEFAULT CHARSET=utf8;
+
+
+DROP TABLE LevelSubject;
+
+CREATE TABLE IF NOT EXISTS `SS_Answer` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`answer` VARCHAR (255)  NOT NULL,
+	`question_id` INT (11) unsigned NOT NULL,
+	`level` VARCHAR (100)  NOT NULL,
+	`status` ENUM ('0','1'),
+	PRIMARY KEY (`id`),
+	KEY (`question_id`)
+) DEFAULT CHARSET=utf8;
+
+Done
+
+----------------------------------
+Friday, September 12, 2014
+
+
+CREATE TABLE IF NOT EXISTS `Target_Data` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`user_id` INT (11) unsigned NOT NULL,
+	`cycle` VARCHAR (100)  NOT NULL,
+	`target_amount` VARCHAR (100)  NOT NULL,
+	`actual_amount` VARCHAR (100)  NOT NULL,
+	`added_on` DATETIME   NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`user_id`)
+) DEFAULT CHARSET=utf8;
+
+Done
+
+---------------------------------------------------------
+Monday 15 Sep 2014
+
+CREATE TABLE IF NOT EXISTS `Review_SS_Parameter` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`name` VARCHAR(200) NOT NULL,
+	`vertical_id` INT (11) unsigned NOT NULL,
+	`volunteer_type` ENUM ('volunteer','fellow','strat','national'),
+	`formula` VARCHAR (255)  NOT NULL,
+	`conditions` VARCHAR (255)  NOT NULL,
+	`cache` ENUM('0','1') NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`),
+	KEY (`vertical_id`)
+) DEFAULT CHARSET=utf8;
+
+ALTER TABLE `Review_Data` ADD `name` VARCHAR(200) NOT NULL AFTER `id`; 
+
+ALTER TABLE `Review_Data` CHANGE `level` `level` FLOAT(2) NOT NULL; 
+
+Done.
+
+ALTER TABLE `Group` CHANGE `type` `type` ENUM('executive','national','fellow','volunteer','strat') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL; 
+
+ALTER TABLE `Review_SS_Parameter` CHANGE `volunteer_type` `volunteer_type` ENUM('volunteer','fellow','strat','national','executive') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL; 
+
+Done
+
+--------------------------------------------------
+Thursday 18 Sep 2014
+
+CREATE TABLE IF NOT EXISTS `PR_Requirement` ( `id` INT (11) unsigned NOT NULL auto_increment, `name` VARCHAR (100) NOT NULL, `type` VARCHAR (100) NOT NULL, `description` VARCHAR (255) NOT NULL, `added_on` DATETIME NOT NULL, `promised_on` DATETIME NOT NULL, `delivered_on` DATETIME NOT NULL, `added_by_user_id` INT (11) unsigned NOT NULL, `status` ENUM ('pending','approved','done'), PRIMARY KEY (`id`), KEY (`added_by_user_id`) ) DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `PR_Content` ( `id` INT (11) unsigned NOT NULL auto_increment, `title` VARCHAR (100) NOT NULL, `description` VARCHAR (255) NOT NULL, `type` VARCHAR (100) NOT NULL, `url` VARCHAR (100) NOT NULL, `added_on` DATETIME NOT NULL, `intern_user_id` INT (11) unsigned NOT NULL, `status` ENUM ('pending','approved','rejected'), `status_updated_on` DATETIME NOT NULL, `level` INT(3) NOT NULL, PRIMARY KEY (`id`), KEY (`intern_user_id`) ) DEFAULT CHARSET=utf8;
+
+Done
+
+ALTER TABLE `PR_Requirement` ADD `required_on` DATE NOT NULL AFTER `added_on`; 
+
+Done
+
+
+------------------------------------------------------
+Tuesday 21 Oct 2014
+
+ALTER TABLE `SS_UserAnswer` ADD `survey_event_id` INT(11) UNSIGNED NOT NULL AFTER `answer`, ADD `comment` TEXT NOT NULL AFTER `survey_event_id`; 
+UPDATE `SS_UserAnswer` SET survey_event_id='1';
+
+Done
+-------------------------------------------------------
+Tuesday 04 Nov 2014
+
+ALTER TABLE `OKR_Objective` CHANGE `timeframe` `cycle` INT(2) NOT NULL DEFAULT '0'; 
+ALTER TABLE `OKR_Objective` ADD `status` ENUM('0','1') NOT NULL DEFAULT '1' AFTER `cycle`; 
+ALTER TABLE `OKR_Archive` CHANGE `timeframe` `cycle` INT(2) NOT NULL; 
+ALTER TABLE `OKR_Grade` CHANGE `timeframe` `cycle` INT(2) NOT NULL; 
+
+Done
+-----------------------------------------------------------
+Saturday 15 Nov 2014
+
+ALTER TABLE `User` ADD `consecutive_credit` INT(2) NOT NULL AFTER `credit`; 
+
+Done
+
+-------------------------
+Saturday 02 May 2015
+
+
+CREATE TABLE IF NOT EXISTS `Medium` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `status` enum('0','1') DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+INSERT INTO `Medium` (`id`, `name`, `status`) VALUES
+(1, 'Bengali', '1'),
+(2, 'English', '1'),
+(3, 'Gujarati', '1'),
+(4, 'Hindi', '1'),
+(5, 'Kannada', '1'),
+(6, 'Malayalam', '1'),
+(7, 'Marathi', '1'),
+(8, 'Tamil', '1'),
+(9, 'Telegu', '1'),
+(10, 'Urdu', '1');
+
+ALTER TABLE `Level` ADD `medium_id` INT(11) NOT NULL AFTER `center_id`, ADD INDEX (`medium_id`) ; 
+ALTER TABLE `User` ADD `subject_id` INT(11) UNSIGNED NOT NULL AFTER `city_id`, ADD INDEX (`subject_id`) ; 
+
+Done
+---------
+Tuesday 26 May 2015
+
+ALTER TABLE `StudentClass` ADD `participation` INT(2) NOT NULL ; 
+
+Done
+
+---------------
+Tuesday 16 Jun 2015
+
+
+CREATE TABLE IF NOT EXISTS `CenterData` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `center_id` int(11) unsigned NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `year` int(4) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `data` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `center_id` (`center_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+ALTER TABLE `BatchLevel` ADD `year` INT(4) NOT NULL ; 
+
+Done
+
+------------------------------------
+Thursday 16 Jul 2015
+
+ALTER TABLE `Class` ADD `cancel_option` ENUM('in-volunteer-unavailable','in-volunteer-engaged','in-other','ext-children-out','ext-children-doing-chores','ext-children-have-events','ext-children-unwell','ext-other','misc') NOT NULL DEFAULT 'in-volunteer-unavailable' AFTER `lesson_id`, ADD `cancel_reason` VARCHAR(200) NOT NULL AFTER `cancel_option`;
+
+Done
+
+--------------------------------------
+Saturday 25 Jul 2015
+
+ALTER TABLE `Student` ADD `added_on` DATETIME NOT NULL AFTER `thumbnail`; 
+
+Done
+
+-----------------------------------------
+Wednesday 14 Oct 2015
+
+CREATE TABLE IF NOT EXISTS `UserCredit` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`user_id` INT (11) unsigned NOT NULL,
+	`credit` INT (5),
+	`credit_assigned_by_user_id` INT (11) unsigned NOT NULL,
+	`comment` VARCHAR (250)  NOT NULL,
+	`added_on` DATETIME   NOT NULL,
+	`year` INT (4),
+	PRIMARY KEY (`id`),
+	KEY (`user_id`),
+	KEY (`credit_assigned_by_user_id`)
+) DEFAULT CHARSET=utf8;
+
+Done
+
+----------------------------------------
+Friday 06 Nov 2015
+
+ALTER TABLE `User` CHANGE `user_type` `user_type` ENUM('applicant','volunteer','well_wisher','alumni','let_go','left_before_induction','other') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'volunteer'; 
+ALTER TABLE `City` ADD `type` ENUM('actual','virtual') NOT NULL DEFAULT 'actual' ; 
+ALTER TABLE `Class` CHANGE `cancel_option` `cancel_option` ENUM('in-volunteer-unavailable','in-volunteer-engaged','in-volunteer-unassigned','in-other','ext-children-out','ext-children-doing-chores','ext-children-have-events','ext-children-unwell','ext-other','misc') CHARACTER SET utf8 COLLATE utf8_esperanto_ci NOT NULL DEFAULT 'in-volunteer-unavailable'; 
+
+Done
+--------------------------------------
+Saturday 14 May 2016
+
+
+ALTER TABLE `Class` ADD `class_type` ENUM('scheduled','extra') DEFAULT 'scheduled' NOT NULL AFTER `lesson_id`; 
+-- ALTER TABLE `Class` ADD `check_for_understanding` INT(3) NOT NULL AFTER `lesson_id`; 
+ALTER TABLE `StudentClass` ADD `check_for_understanding` INT(2) NOT NULL DEFAULT '0' AFTER `participation`; 
+
+--------------------------------------
+
+INSERT INTO `Group` (`id`, `name`, `type`, `group_type`, `vertical_id`, `region_id`, `status`) VALUES (NULL, 'ES Trained', 'volunteer', 'normal', '3', '', '1'); 
+
+
+---------------------------------------
+Thursday 23 Jun 2016
+
+ALTER TABLE `Student` ADD `reason_for_leaving` MEDIUMTEXT NOT NULL AFTER `added_on`; 
+ALTER TABLE `User`
+  DROP `english_teacher`,
+  DROP `dream_tee`,
+  DROP `events`,
+  DROP `placements`;
+ALTER TABLE `User` ADD `induction_status` ENUM('0','1') NOT NULL DEFAULT '0' AFTER `reason_for_leaving`, ADD `teacher_training_status` ENUM('0','1') NOT NULL DEFAULT '0' AFTER `induction_status`; 
+
+
+---------------------------------------
+
+Tuesday 05 Jul 2016
+
+CREATE TABLE IF NOT EXISTS `CSVGo` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`name` VARCHAR (100)  NOT NULL,
+	`query` VARCHAR (100)  NOT NULL,
+	`added_on` DATETIME   NOT NULL,
+	`last_run_on` DATETIME   NOT NULL,
+	`status` ENUM('0','1') NOT NULL DEFAULT '1',
+	PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+
+ -- ALTER TABLE `CSVGo` ADD `status` ENUM('0','1') NOT NULL DEFAULT '1' AFTER `last_run_on`; 
+
+
+
+---------------------------------------
+
+Thursday 14 Jul 2016
+
+ALTER TABLE `App_CSVGo` ADD `db` VARCHAR(50) NOT NULL AFTER `query`; 
+
+
+---------------------------------------
+Saturday 18 Feb 2017
+
+ALTER TABLE `App_CSVGo` ADD `vertical_id` INT(11) UNSIGNED NOT NULL AFTER `last_run_on`; 
+ALTER TABLE `App_CSVGo` ADD UNIQUE(` name `);
+
+Done
+
+---------------------------------------
+Thursday 02 Mar 2017
+
+ALTER TABLE `Class` ADD `updated_by_mentor` INT(11) UNSIGNED NOT NULL AFTER `cancel_reason`, ADD `updated_by_teacher` INT(11) UNSIGNED NOT NULL AFTER `updated_by_mentor`; 
+
+---------------------------------------
+Sunday 24 Sep 2017
+
+CREATE TABLE IF NOT EXISTS `IS_Event` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`name` VARCHAR (100)  NOT NULL,
+	`added_on` DATETIME   NOT NULL,
+	`status` ENUM ('1','0') DEFAULT '1',
+	`vertical_id` INT (11) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`vertical_id`)
+) DEFAULT CHARSET=utf8 ;
+
+CREATE TABLE IF NOT EXISTS `IS_Question` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`question` VARCHAR(255) NOT NULL,
+	`vertical_id` INT (11) unsigned NOT NULL,
+	`status` ENUM ('1','0'),
+	PRIMARY KEY (`id`),
+	KEY (`vertical_id`)
+) DEFAULT CHARSET=utf8 ;
+
+CREATE TABLE IF NOT EXISTS `IS_Response` (
+	`id` INT (11) unsigned NOT NULL auto_increment,
+	`is_event_id` INT (11) unsigned NOT NULL,
+	`user_id` INT (11) unsigned NOT NULL,
+	`question_id` INT (11) unsigned NOT NULL,
+	`student_id` INT (11) unsigned NOT NULL,
+	`response` INT (5),
+	`added_on` DATETIME   NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`is_event_id`),
+	KEY (`user_id`),
+	KEY (`question_id`),
+	KEY (`student_id`)
+) DEFAULT CHARSET=utf8 ;
+
+
+--------------------------------
+Wednesday 20 Dec 2017
+
+CREATE TABLE IF NOT EXISTS `Log` (
+	`id` INT (11)  unsigned NOT NULL auto_increment,
+	`name` VARCHAR (100)   NOT NULL,
+	`log` VARCHAR (200)   NOT NULL,
+	`user_id` INT (11)  unsigned NOT NULL,
+	`added_on` DATETIME    NOT NULL,
+	`level` ENUM ('info','warning','error','critical') DEFAULT 'info'  NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY (`user_id`)
+) DEFAULT CHARSET=utf8 ;
+

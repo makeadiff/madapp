@@ -354,12 +354,12 @@ class Class_model extends Model {
 		elseif(isset($users_groups[$tr_wingman_group_id])) $vertical_prefix = 'tr_wingman_';
 		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 		
-		$credit_for_substituting = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
-		$credit_lost_for_getting_substitute = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
-		$credit_lost_for_missing_class = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
-		$credit_lost_for_missing_avm = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_avm'));
-		$credit_lost_for_missing_zero_hour = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
-		$credit_max_credit_threshold = intval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
+		$credit_for_substituting = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
+		$credit_lost_for_getting_substitute = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
+		$credit_lost_for_missing_class = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
+		$credit_lost_for_missing_avm = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_avm'));
+		$credit_lost_for_missing_zero_hour = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
+		$credit_max_credit_threshold = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
 				
 		if($revert) { // Revert all class data - negate everything.
 			$credit_for_substituting				= -($credit_for_substituting);

@@ -6,7 +6,7 @@
         <div class="row">
 
 
-        <div class="col-md-4 col-sm-4 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/profile/fb.php?user_id=<?php echo $current_user->id;?>">
+        <div class="col-md-4 col-sm-4 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/profile/">
                 <img src="<?php echo base_url(); ?>images/flat_ui/mad_cred.png" alt="" /> <br>MAD Cred</a></div>
 
         <div class="col-md-4 col-sm-4 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('user/view/'.$current_user->id); ?>">

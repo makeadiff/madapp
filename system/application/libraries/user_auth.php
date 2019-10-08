@@ -25,11 +25,11 @@ Class User_auth {
     * @return : type : [Array()]
     *
     **/
- 	 function login($username, $password, $remember_me=false, $auth_token='') {
+ 	 function login($username, $password, $remember_me=false, $auth_token='', $pre_validated = false) {
 		$data['username'] = $username;
 		$data['password'] = $password;
 		$data['auth_token']=$auth_token;
-		$status = $this->ci->users_model->login($data);
+		$status = $this->ci->users_model->login($data, $pre_validated);
 
 		if($status) {
 			$this->ci->session->set_userdata('id', $status['id']);
@@ -68,11 +68,7 @@ Class User_auth {
 		if(empty($_SESSION['id'])) $_SESSION['id'] = $_SESSION['user_id']; // Backward compatability.
 
 		if(!$this->ci->session->userdata('permissions')) {
-			$user_details = $this->ci->users_model->db->query("SELECT email,password,auth_token FROM User WHERE id=$_SESSION[user_id]")->row();
-
-			if($user_details) {
-				$status = $this->login($user_details->email, $user_details->password, false, $user_details->auth_token);
-			}
+			$this->login(false, false, false, false, $_SESSION['user_id']);
 		}
 
 		return $_SESSION['user_id'];

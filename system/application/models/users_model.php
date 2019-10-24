@@ -1060,10 +1060,21 @@ class Users_model extends Model {
 
 	/// Returns all the permissions for the given user as an array.
 	function get_user_permissions($user_id) {
+		$users_groups = $this->db->query("SELECT group_id FROM UserGroup WHERE user_id=$user_id AND year={$this->year}")->result();
+		$groups = [];
+		foreach($users_groups as $grp) {
+			$groups[] = $grp->group_id;
+		}
+
+		// Get all parents.
+		$parent_group = $this->db->query("SELECT DISTINCT parent_group_id FROM `Group` WHERE id IN (" . implode(",", $groups) . ") AND status='1' AND parent_group_id != 0")->result();
+		foreach($parent_group as $grp) {
+			$groups[] = $grp->parent_group_id;
+		}
+
 		$permissions = $this->db->query("SELECT DISTINCT(Permission.name) FROM Permission
 			INNER JOIN GroupPermission ON GroupPermission.permission_id=Permission.id
-			INNER JOIN UserGroup ON GroupPermission.group_id=UserGroup.group_id
-			WHERE UserGroup.user_id=$user_id")->result();
+			WHERE GroupPermission.group_id IN (" . implode(",", $groups) . ")")->result();
 
 		if(!count($permissions)) { // If he has no group, he is volunteer group.
 			$default_group = 9; //:HARD-CODE: 9 is the teacher group.
@@ -1077,7 +1088,7 @@ class Users_model extends Model {
 			$all_permissions[] = $permission->name;
 		}
 
-		return $all_permissions;
+		return array_unique($all_permissions);
 	}
 
 	/// Returns all the groups for the given user as an associative array with group id as the key.

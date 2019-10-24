@@ -462,7 +462,6 @@ class Classes extends Controller {
 		$users = $this->user_model->search_users(array('user_type'=>'volunteer','status'=>false));
  		$all_users = idNameFormat($users);
 		$all_user_credits = idNameFormat($users, array('id','credit'));
-		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
 		
 		$data = array();
 		foreach($all_centers as $center) {
@@ -547,7 +546,7 @@ class Classes extends Controller {
 		}
 
 		$this->load->view('classes/madsheet', array(
-			'data'=>$data, 'all_lessons'=>$all_lessons,
+			'data'=>$data, 
 			'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
 	
@@ -559,7 +558,6 @@ class Classes extends Controller {
 		$all_levels = array();
 		
 		$all_users = idNameFormat($this->user_model->search_users(array('user_type'=>'volunteer')));
-		$all_lessons = idNameFormat($this->book_lesson_model->get_all_lessons());
 		
 		$data = array();
 		foreach($all_centers as $center) {
@@ -621,7 +619,7 @@ class Classes extends Controller {
 		}
 		
 		$this->load->view('classes/madsheet_class_mode', array(
-			'data'=>$data, 'all_lessons'=>$all_lessons,
+			'data'=>$data,
 			'all_centers'=>$all_centers, 'all_users'=>$all_users,'all_levels'=>$all_levels));
 	}
 	

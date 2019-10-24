@@ -30,7 +30,7 @@ class Users_model extends Model {
     * @param :[$data]
     * @return: type: [Boolean, Array()]
     **/
-	function login($data) {
+	function login($data, $authenticated = false) {
       	$username= $data['username'];
         $password = $data['password'];
         $auth_token = '';
@@ -39,19 +39,22 @@ class Users_model extends Model {
 		//Check for personal email and mad email when logging in
 		$where = "(`email` = '$username' or `mad_email` = '$username' or `phone` = '$username')";
 
+		// Pre Authenticated users - likely to be coming from auth app
+		if(is_numeric($authenticated) and $authenticated == $_SESSION['user_id']) {
+			$where = "`id` = $authenticated";
+		} elseif(!$username) return false;
+
 		$query = $this->db->where($where)->where('status','1')->where('user_type', 'volunteer')->get("User");
 		$user = $query->first_row();
 
-		$correct_password = false;
-
 		if($password and $user)
-			$correct_password = password_verify($password, $user->password_hash);
+			$authenticated = password_verify($password, $user->password_hash);
 		if($auth_token) {
 			$query = $this->db->where('id', $user->id)->where('auth_token', $auth_token)->get("User");
-			$correct_password = $query->first_row();
+			$authenticated = $query->first_row();
 		}
 
-        if($user and $correct_password) {
+        if($user and $authenticated) {
    			$user_data['id']		= $user->id;
 			$user_data['email']		= $user->email;
 			$user_data['name']		= $user->name;
@@ -132,10 +135,12 @@ class Users_model extends Model {
 	function get_all_groups() {
 		$this->db->from('Group')->where('status','1');
 
-		// Hide the national level groups if the current user is a volunteer
-		if(	!in_array('national', $this->session->userdata('positions'))
-				and !in_array('strat', $this->session->userdata('positions'))) {
-			$this->db->where("(`type`='fellow' OR `type`='volunteer')");
+		if($this->session->userdata('positions')) {
+			// Hide the national level groups if the current user is a volunteer
+			if(	!in_array('national', $this->session->userdata('positions'))
+					and !in_array('strat', $this->session->userdata('positions'))) {
+				$this->db->where("(`type`='fellow' OR `type`='volunteer')");
+			}
 		}
 		$this->db->where('group_type','normal');
 

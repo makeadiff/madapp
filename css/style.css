@@ -189,3 +189,7 @@ a.fdbk_tab_bottom {
 table tr.odd-row {
 	background-color: #fff;
 }
+
+input.button {
+	padding:5px 34px 5px 25px;
+}

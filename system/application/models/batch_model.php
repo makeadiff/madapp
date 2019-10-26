@@ -91,18 +91,6 @@ class Batch_model extends Model {
 		return $this->db->where('id',$batch_id)->get('Batch')->row()->center_id;
 	}
 
-	/// :DEPRECIATED:
-	function get_subjects_in_batch($batch_id) {
-		$students = $this->db->query("SELECT Subject.id,Subject.name FROM Subject 
-			INNER JOIN BatchSubject ON BatchSubject.Subject_id=Subject.id 
-			WHERE BatchSubject.batch_id=$batch_id ORDER BY Subject.name")->result();
-		
-		$students_ids = array();
-		foreach($students as $student) $students_ids[$student->id] = $student->name;
-		return $students_ids;
-	}
-
-	
 	/// Get the details about the batch head of a given batch.
 	function get_batch_head($batch_id) {
 		return $this->db->query("SELECT User.id, User.name, User.phone FROM User INNER JOIN Batch ON User.id=Batch.batch_head_id WHERE Batch.id=$batch_id")->row();
@@ -131,21 +119,10 @@ class Batch_model extends Model {
 	function create($data) {
 		$data['project_id'] = $this->project_id;
 		$data['year'] = $this->year;
-		$selected_subjects = $data['subjects'];
 
-		unset($data['subjects']);
 		$this->db->insert("Batch", $data);
 		$batch_id = $this->db->insert_id();
 
-		if($selected_subjects) {
-			foreach($selected_subjects as $subject_id) {
-				$this->db->insert("BatchSubject", array(
-					'batch_id'  => $batch_id,
-					'subject_id'=> $subject_id
-				));
-			}
-		}
-		
 		if($data['batch_head_id'] > 0) {
 			$this->load->model('users_model');
 			$mentor_group_id = 8; // Ed Support Mentor

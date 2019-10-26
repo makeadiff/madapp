@@ -47,7 +47,7 @@ foreach($all_levels as $level) { ?>
 <?php 
 echo form_hidden('id', $batch['id']);
 echo form_hidden('center_id', $batch['center_id']);
-echo "<label for='action'>&nbsp;</label>"; echo form_submit('action', $action);
+echo "<input type='submit' name='action' class='green button primary' value='Edit' />";
 ?>
 </form>
 

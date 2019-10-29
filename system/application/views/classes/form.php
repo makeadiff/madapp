@@ -72,13 +72,6 @@ else echo $statuses[$class['status']];
 <li><?php echo form_hidden('user_class_id['.$i.']', $class['id']); ?></li>
 <?php } ?>
 
-<?php if(date('Y-m-d H:i:s') > $class_details['class_on']) { ?>
-<li>
-<label for="lesson_id">Feedback</label>
-<?php if($edit) echo form_dropdown('lesson_id', $all_lessons, $class_details['lesson_id']);
-	  else echo $all_lessons[$class_details['lesson_id']]; ?>
-<?php } ?>
-</li>
 </ul>
 <ul>
 <li>

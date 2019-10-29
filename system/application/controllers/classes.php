@@ -14,7 +14,6 @@ class Classes extends Controller {
 		$this->load->model('Center_model','center_model');
 		$this->load->model('city_model');
 		$this->load->model('Batch_model','batch_model');
-		$this->load->model('Book_Lesson_model','book_lesson_model');
 		
 		$this->load->helper('url');
 		$this->load->helper('misc');
@@ -71,7 +70,6 @@ class Classes extends Controller {
 		$batch = $this->batch_model->get_batch($batch_id);
 		$center_id = $batch->center_id;
 		$center_name = $this->center_model->get_center_name($center_id);
-		$all_lessons = array();
 		
 		$data = $this->class_model->search_classes(array('batch_id'=>$batch_id, 'from_date'=>$from_date, 'to_date'=>$to_date));
 		
@@ -85,15 +83,6 @@ class Classes extends Controller {
 			$attendence = $this->class_model->get_attendence($row->id);
 			$level_id = $row->level_id;
 			
-			// Each level must have only the units in the book given to that level.
-			if(empty($all_lessons[$level_id])) {
-				$all_lessons[$level_id] = array();
-				$all_lessons[$level_id][0] = "None";
-				for($i=1; $i<=20; $i++) $all_lessons[$level_id][$i] = $i;
-				$all_lessons[$level_id][-1] = "Revision";
-				$all_lessons[$level_id][-2] = "Test";
-			}
-			
 			$present_count = 0;
 			$total_kids_in_level = count($this->level_model->get_kids_in_level($level_id));
 			foreach($attendence as $id=>$status) if($status == 1) $present_count++;
@@ -106,7 +95,6 @@ class Classes extends Controller {
 					'grade'			=> $row->grade,
 					'class_status'	=> $row->class_status,
 					'level_name'	=> $row->name,
-					'lesson_id'		=> $row->lesson_id,
 					'student_attendence'	=> $attendence_count,
 					'teachers'		=> array(array(
 						'id'		=> $row->user_id,
@@ -135,20 +123,18 @@ class Classes extends Controller {
 		
 		$this->load->view('classes/batch_view', 
 			array('classes'=>$classes, 'center_name'=>$center_name, 'batch_id'=>$batch_id, 'batch_name'=>$batch->name, 'from_date'=>$from_date, 'to_date'=>$to_date,
-				'all_lessons'=>$all_lessons, 'all_user_names'=>$all_user_names));
+				'all_user_names'=>$all_user_names));
 				//$this->load->view('layout/footer');
 	}
 	
 	function batch_view_save() {
-		$lessons = $this->input->post('lesson_id');
 		$substitutes = $this->input->post('substitute_id');
 		$status = $this->input->post('status');
 		$class_status = $this->input->post('class_status');
 		$zero_hour_attendance = $this->input->post('zero_hour_attendance');
 		
 		$this->load->helper('misc_helper');
-		foreach($lessons as $class_id => $lesson_id) {
-			$this->class_model->save_class_lesson($class_id, $lesson_id);
+		foreach($class_status as $class_id => $individual_status) {
 			foreach($substitutes[$class_id] as $teacher_id => $substitute_id) {
 				$this->class_model->save_class_teachers(0, array(
 					'user_id'	=> $teacher_id,
@@ -637,7 +623,6 @@ class Classes extends Controller {
 		$substitutes = $teachers;
 		$substitutes[0] = 'No Substitute';
 		//$substitutes[-1] = 'Other City';
-		$all_lessons = idNameFormat($this->book_lesson_model->get_lessons_in_book($level_details->book_id));
 		
 		$statuses = array(
 			'projected'	=> 'Projected',
@@ -650,7 +635,7 @@ class Classes extends Controller {
 		$this->load->view('classes/form', 
 			array('class_details'=>$class_details, 'teachers'=>$teachers,'substitutes'=>$substitutes,
 			'statuses'=>$statuses, 'message'=>$this->message,
-			'all_lessons'=>$all_lessons,'from'=>$type));
+			'from'=>$type));
 	}
 	
 	function edit_class_save()	 {
@@ -677,9 +662,6 @@ class Classes extends Controller {
 				'status'	=> $statuses[$i],
 			));
 		}
-		
-		if($this->input->post('lesson_id'))
-			$this->class_model->save_class_lesson($this->input->post('class_id'), $this->input->post('lesson_id'));
 		
 		$this->session->set_flashdata('success', 'Saved the class details');
 		redirect('classes/edit_class/'.$class_id);

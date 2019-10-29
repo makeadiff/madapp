@@ -23,7 +23,7 @@ if($to_date) {
 
 <form action="<?php echo site_url('classes/batch_view_save'); ?>" method="post">
 <table class="data-table info-box-table">
-<tr><th>Level</th><th>Unit Taught</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendance</th><th>Zero Hour</th><th>Cancellation</th></tr>
+<tr><th>Level</th><th>Students</th><th>Teacher</th><th>Substitute</th><th>Attendance</th><th>Zero Hour</th><th>Cancellation</th></tr>
 
 <?php
 $row_count = 0;
@@ -44,7 +44,6 @@ foreach($classes as $class) {
 		if($teacher_index == 0) {
 ?>
 <td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/edit_class/'.$class['id'].'/batch') ?>"><?php echo $class['grade'] . ' ' . $class['level_name'] ?></a></td>
-<td <?php echo $rowspan ?>><?php echo form_dropdown('lesson_id['.$class['id'].']', $all_lessons[$class['level_id']], $class['lesson_id'], 'style="width:100px;"'); ?></td>
 <td <?php echo $rowspan ?>><a href="<?php echo site_url('classes/mark_attendence/'.$class['id']); ?>"><?php echo $class['student_attendence'] ?></a></td>
 
 <?php } ?>
@@ -85,7 +84,7 @@ if($class['teachers'][$teacher_index]['substitute_id'] and !isset($all_user_name
 <input type="hidden" name="batch_id" value="<?php echo $batch_id ?>" />
 <input type="hidden" name="from_date" value="<?php echo $from_date ?>" />
 <input type="hidden" name="to_date" value="<?php echo $to_date ?>" />
-<input type="submit" value="Save" class="button green" name="action" id="action" />
+<input type="submit" value="Save" name="action" id="action" disabled />
 </form>
 
 <?php

@@ -413,6 +413,53 @@ class Api extends Controller {
 	/**
 	 * Returns the details of the class with the given ID.
 	 * * :TODO: GET /classes/{class_id}
+	 * GraphQL call...
+	 *  {
+		  class(id: 429626) 
+		  {
+		    id
+		    class_on
+   		    class_type
+		    class_satisfaction
+		    cancel_option
+		    cancel_reason
+		    status
+
+		    batch {
+		      id
+		    }
+		    level {
+		      id
+		      name
+		      center {
+		        id
+		        name
+		      }
+		    }
+		    teachers {
+		      id
+		      name
+		      credit
+		      pivot {
+		        status
+		        substitute_id
+		        zero_hour_attendance
+		      }
+		    }
+		    students {
+		      id
+		      name
+		      pivot {
+		        participation
+		        check_for_understanding
+		      }
+		    }
+		    substitutes {
+		      id
+		      name
+		    }
+		  }
+		}
 	 */
 	function open_class($class_id = 0, $class_info = false, $user_id=0) {
 		$this->check_key();
@@ -619,6 +666,41 @@ class Api extends Controller {
 	 * Returns 	: 	REALLY complicated JSON. Just call it and parse it to see what comes :-P
 	 * Example	: 	http://makeadiff.in/madapp/index.php/api/class_get_batch?&key=am3omo32hom4lnv32vO
 	 * :TODO: GET /batches/{batch_id}
+	 *
+	 * {
+  classSearch(batch_id:2652, direction: "-", limit: 1)
+    {
+      id
+      class_on
+      status
+      cancel_option
+      cancel_reason
+      class_type
+
+      batch {
+        id
+        batch_name
+      }
+      level {
+        id
+        level_name
+        grade
+      }
+      teachers {
+        id
+        name
+        pivot {
+          substitute_id
+          status
+          zero_hour_attendance
+        }
+      }
+      substitutes {
+        id
+        name
+      }
+    }
+}
 	 */	
 	function class_get_batch($batch_id = 0, $class_on = false) {
 		$this->check_key();

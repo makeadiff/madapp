@@ -116,7 +116,7 @@ class Cron extends Controller  {
 		foreach ($all_centers as $center) {
 			if($center->class_starts_on == '0000-00-00' or !$center->class_starts_on) continue;
 
-			$this->center_model->save_center_data($center->id, 'class_info', array(
+			$this->center_model->save_center_data($center->id, 'class_info', false, array(
 					'year'	=> $last_year,
 					'data'	=> json_encode(array('class_starts_on' => $center->class_starts_on, 'center_head_id'=> $center->center_head_id))
 				));

@@ -111,33 +111,36 @@ class Center_model extends Model
             GROUP_CONCAT(CP.project_id) as project_ids
           FROM Center C
           LEFT JOIN (
-            SELECT CD.center_id as center_id, CD.value as address
-            FROM CenterData CD
+            SELECT CD.item_id as item_id, CD.data as address
+            FROM Data CD
             WHERE CD.name = "address"
-            AND CD.center_id = '.$uid.'
-          ) Address ON Address.center_id = C.id
+            AND CD.item = "Center"
+            AND CD.item_id = '.$uid.'
+          ) Address ON Address.item_id = C.id
           LEFT JOIN (
-            SELECT CD.center_id as center_id, CD.value as medium
-            FROM CenterData CD
+            SELECT CD.item_id as item_id, CD.data as medium
+            FROM Data CD
             WHERE CD.name = "medium_of_instruction"
-            AND CD.center_id = '.$uid.'
-          ) Medium ON Address.center_id = C.id
+            AND CD.item = "Center"
+            AND CD.item_id = '.$uid.'
+          ) Medium ON Address.item_id = C.id
           LEFT JOIN (
-            SELECT CD.center_id as center_id, CD.value as registered
-            FROM CenterData CD
+            SELECT CD.item_id as item_id, CD.data as registered
+            FROM Data CD
             WHERE CD.name = "jjact_registered"
-            AND CD.center_id = '.$uid.'
-          ) JJAct ON JJAct.center_id = C.id
+            AND CD.item = "Center"
+            AND CD.item_id = '.$uid.'
+          ) JJAct ON JJAct.item_id = C.id
           LEFT JOIN (
-            SELECT CD.center_id as center_id, CD.value as signed
-            FROM CenterData CD
+            SELECT CD.item_id as item_id, CD.data as signed
+            FROM Data CD
             WHERE CD.name = "mou_signed"
-            AND CD.center_id = '.$uid.'
-          ) MOU ON MOU.center_id = C.id
+            AND CD.item = "Center"
+            AND CD.item_id = '.$uid.'
+          ) MOU ON MOU.item_id = C.id
           LEFT JOIN CenterAuthority CA ON C.authority_id = CA.id
           LEFT JOIN CenterProject CP ON C.id = CP.center_id
-          WHERE C.id = '.$uid.'
-          ';
+          WHERE C.id = '.$uid;
 		$result=$this->db->query($q);
 		return $result;
 	}
@@ -165,70 +168,70 @@ class Center_model extends Model
 		$center_details = $this->edit_center($center_id)->row();
 		if(!$center_details) return false;
 
-    $sa_data = array();
-    $authority_id = 0;
-    if(!empty($data['sa_name'])) $sa_data['name'] = $data['sa_name'];
-    if(!empty($data['sa_phone'])) $sa_data['phone'] = $data['sa_phone'];
-    if(!empty($data['sa_email'])) $sa_data['email'] = $data['sa_email'];
-    $sa_data['status'] = 1;
-    $sa_data['center_id'] = $center_id;
+        $sa_data = array();
+        $authority_id = 0;
+        if(!empty($data['sa_name'])) $sa_data['name'] = $data['sa_name'];
+        if(!empty($data['sa_phone'])) $sa_data['phone'] = $data['sa_phone'];
+        if(!empty($data['sa_email'])) $sa_data['email'] = $data['sa_email'];
+        $sa_data['status'] = 1;
+        $sa_data['center_id'] = $center_id;
 
-    if(!empty($data['sa_name'])){ //Check for Data Entry only if the Data Field is not empty.
-      $check_sa_q = 'SELECT id FROM CenterAuthority
-                     WHERE (name="'.$sa_data['name'].'")
-                     AND (phone="'.$sa_data['phone'].'"
-                       OR email="'.$sa_data['email'].'"
-                     ) AND center_id='.$center_id;
+        if(!empty($data['sa_name'])){ //Check for Data Entry only if the Data Field is not empty.
+          $check_sa_q = 'SELECT id FROM CenterAuthority
+                         WHERE (name="'.$sa_data['name'].'")
+                         AND (phone="'.$sa_data['phone'].'"
+                           OR email="'.$sa_data['email'].'"
+                         ) AND center_id='.$center_id;
 
-      if(!empty($data['authority_id'])) $authority_id = $data['authority_id'];
-      if($authority_id==0){
-        $check_sa = $this->db->query($check_sa_q)->row();
-        if(empty($check_sa)){
-          // In case of adding a new Center Authority, marking status of previous Authorities as 0
-          $this->db->set('status','0');
-          $this->db->where('center_id',$center_id);
-          $this->db->update('CenterAuthority');
-          // Insert New Center Authority Data
-          $this->db->insert('CenterAuthority',$sa_data);
-          $authority_id = $this->db->insert_id();
+          if(!empty($data['authority_id'])) $authority_id = $data['authority_id'];
+          if($authority_id==0){
+            $check_sa = $this->db->query($check_sa_q)->row();
+            if(empty($check_sa)){
+              // In case of adding a new Center Authority, marking status of previous Authorities as 0
+              $this->db->set('status','0');
+              $this->db->where('center_id',$center_id);
+              $this->db->update('CenterAuthority');
+              // Insert New Center Authority Data
+              $this->db->insert('CenterAuthority',$sa_data);
+              $authority_id = $this->db->insert_id();
+            }
+            else {
+              $authority_id = $check_sa->id;
+            }
+          }
+          else{
+            $check_sa = $this->db->query($check_sa_q)->row();
+            if(empty($check_sa)){
+              // In case of adding a new Center Authority, marking status of previous Authorities as 0
+              $this->db->set('status','0');
+              $this->db->where('center_id',$center_id);
+              $this->db->update('CenterAuthority');
+              // Insert New Center Authority Data
+              $this->db->insert('CenterAuthority',$sa_data);
+              $authority_id = $this->db->insert_id();
+            }
+            else {
+              $authority_id = $check_sa->id;
+            }
+          }
         }
-        else {
-          $authority_id = $check_sa->id;
-        }
-      }
-      else{
-        $check_sa = $this->db->query($check_sa_q)->row();
-        if(empty($check_sa)){
-          // In case of adding a new Center Authority, marking status of previous Authorities as 0
-          $this->db->set('status','0');
-          $this->db->where('center_id',$center_id);
-          $this->db->update('CenterAuthority');
-          // Insert New Center Authority Data
-          $this->db->insert('CenterAuthority',$sa_data);
-          $authority_id = $this->db->insert_id();
-        }
-        else {
-          $authority_id = $check_sa->id;
-        }
-      }
-    }
 
-    if(!empty($data['programmes'])){
-      $project = $data['programmes'];
-      $remove_project_q = 'DELETE FROM CenterProject
-                            WHERE center_id='.$center_id.'
-                            AND year ='.$this->year;
-      $remove_programme = $this->db->query($remove_project_q);
-      foreach ($project as $value) {
-        $project_data = array(
-          'center_id'  => $center_id,
-          'project_id' => $value,
-          'year'       => $this->year,
-          'added_on'   => date('Y-m-d H:i:s')
-        );
-        $this->db->insert('CenterProject',$project_data);
-      }
-    }
+        if(!empty($data['programmes'])){
+          $project = $data['programmes'];
+          $remove_project_q = 'DELETE FROM CenterProject
+                                WHERE center_id='.$center_id.'
+                                AND year ='.$this->year;
+          $remove_programme = $this->db->query($remove_project_q);
+          foreach ($project as $value) {
+            $project_data = array(
+              'center_id'  => $center_id,
+              'project_id' => $value,
+              'year'       => $this->year,
+              'added_on'   => date('Y-m-d H:i:s')
+            );
+            $this->db->insert('CenterProject',$project_data);
+          }
+        }
 
 		$new_data = array();
 		if(!empty($data['center'])) $new_data['name'] = $data['center'];
@@ -236,101 +239,18 @@ class Center_model extends Model
 		if(!empty($data['class_starts_on'])) $new_data['class_starts_on'] = $data['class_starts_on'];
 		if(!empty($data['medium'])) $new_data['medium'] = $data['medium'];
 		if(!empty($data['preferred_gender'])) $new_data['preferred_gender'] = $data['preferred_gender'];
-    if(!empty($data['phone'])) $new_data['phone'] = $data['phone'];
-    if(!empty($data['year_undertaking'])) $new_data['year_undertaking'] = $data['year_undertaking'];
-    if(!empty($data['type'])) $new_data['type'] = $data['type'];
-    if($authority_id!=0) $new_data['authority_id'] = $authority_id;
+        if(!empty($data['phone'])) $new_data['phone'] = $data['phone'];
+        if(!empty($data['year_undertaking'])) $new_data['year_undertaking'] = $data['year_undertaking'];
+        if(!empty($data['type'])) $new_data['type'] = $data['type'];
+        if($authority_id!=0) $new_data['authority_id'] = $authority_id;
 
-    //Updating Shelter Address
-    if(!empty($data['address'])){
-      $address = array(
-        'center_id' => $center_id,
-        'name'      => 'address',
-        'year'      => $this->year,
-        'value'     => $data['address'],
-        'data'      => ''
-      );
-      $check_addr_q = 'SELECT id FROM CenterData
-                        WHERE name="address"
-                        AND center_id = '.$center_id.'';
-      $check_addr = $this->db->query($check_addr_q)->row();
-      if(empty($check_addr)){
-        $this->db->insert('CenterData',$address);
-      }
-      else{
-        $this->db->set($address);
-        $this->db->where('id',$check_addr->id);
-        $this->db->update('CenterData');
-      }
-    }
 
-    if(!empty($data['medium_of_instruction'])){
-      $medium = array(
-        'center_id' => $center_id,
-        'name'      => 'medium_of_instruction',
-        'year'      => $this->year,
-        'value'     => $data['medium_of_instruction'],
-        'data'      => ''
-      );
-      $check_addr_q = 'SELECT id FROM CenterData
-                        WHERE name="medium_of_instruction"
-                        AND center_id = '.$center_id.'';
-      $check_addr = $this->db->query($check_addr_q)->row();
-      if(empty($check_addr)){
-        $this->db->insert('CenterData',$medium);
-      }
-      else{
-        $this->db->set($medium);
-        $this->db->where('id',$check_addr->id);
-        $this->db->update('CenterData');
-      }
-    }
-
-    if($data['jjact_registered']!=''){
-      $medium = array(
-        'center_id' => $center_id,
-        'name'      => 'jjact_registered',
-        'year'      => $this->year,
-        'value'     => $data['jjact_registered'],
-        'data'      => ''
-      );
-      $check_jj_q = 'SELECT id FROM CenterData
-                        WHERE name="jjact_registered"
-                        AND center_id = '.$center_id.'';
-      $check_jj = $this->db->query($check_jj_q)->row();
-      if(empty($check_jj)){
-        $this->db->insert('CenterData',$medium);
-      }
-      else{
-        $this->db->set($medium);
-        $this->db->where('id',$check_jj->id);
-        $this->db->update('CenterData');
-        $affected_rows = ($this->db->affected_rows() >= 0) ? true: false ;
-      }
-    }
-
-    if($data['mou_signed']!=''){
-      $medium = array(
-        'center_id' => $center_id,
-        'name'      => 'mou_signed',
-        'year'      => $this->year,
-        'value'     => $data['mou_signed'],
-        'data'      => ''
-      );
-      $check_jj_q = 'SELECT id FROM CenterData
-                        WHERE name="mou_signed"
-                        AND center_id = '.$center_id.'';
-      $check_jj = $this->db->query($check_jj_q)->row();
-      if(empty($check_jj)){
-        $this->db->insert('CenterData',$medium);
-      }
-      else{
-        $this->db->set($medium);
-        $this->db->where('id',$check_jj->id);
-        $this->db->update('CenterData');
-        $affected_rows = ($this->db->affected_rows() >= 0) ? true: false ;
-      }
-    }
+        $accepted_fields = ['address', 'medium_of_instruction', 'jjact_registered', 'mou_signed'];
+        foreach ($accepted_fields as $key) {
+          if(isset($data[$key])){
+            $this->save_center_data($center_id, $key, false, ['data' => $data[$key], 'year' => $this->year]);
+          }
+        }
 
 		$this->db->where('id', $center_id);
 		$this->db->update('Center', $new_data);
@@ -526,14 +446,27 @@ class Center_model extends Model
 
 
 	function get_center_data($center_id, $name) {
-		$result = $this->db->query("SELECT * FROM CenterData WHERE name LIKE '$name' AND center_id=$center_id");
+		$result = $this->db->query("SELECT * FROM Data WHERE name LIKE '$name' AND item_id=$center_id AND item='Center'");
 		return $result->result_array();
 	}
 
-	function save_center_data($center_id, $name, $data) {
-    	$this->db->delete("CenterData", array('center_id'=>$center_id, 'name'=>$name));
-    	$data['center_id'] = $center_id;
-    	$data['name'] = $name;
-    	$this->db->insert("CenterData", $data);
+	function save_center_data($center_id, $name, $value, $insert_data=false) {
+    	$this->db->delete("Data", array('item_id'=>$center_id, 'name'=>$name, 'item' => 'Center'));
+    	$data = [
+            'item_id'  => $center_id,
+            'item'     => 'Center',
+        	'name'     => $name,
+            'added_on' => date('Y-m-d H:i:s')
+        ];
+        if(!isset($data['year'])) $data['year'] = 0;
+
+        if($value) $data['data'] = $value;
+        if($insert_data) {
+            $data = array_merge($data, $insert_data);
+        }
+
+        // dump($data, $insert_data, $value); exit;
+      
+    	$this->db->insert("Data", $data);
 	}
 }

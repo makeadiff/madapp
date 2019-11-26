@@ -3,7 +3,8 @@ $this->load->view('layout/header', array('title'=>'Classes')); ?>
 <div id="head" class="clear"><h1>Classes</h1></div>
 
 <table id="main" class="data-table">
-<tr><th>Center</th><th>Class</th><th>Time</th><th>Teacher</th><th>Substitute</th><th>Status</th><th>Action</th></tr>
+<tr><th>Center</th><th>Class</th><th>Time</th><th>Teacher</th><th>Substitute</th><th>Status</th>
+<?php if($this->user_auth->get_permission('debug')) { ?><th>Action</th></tr><?php } ?>
 <?php foreach($all_classes as $class) { ?>
 <tr>
 <td><?php echo $class->center_name; ?></td>
@@ -12,7 +13,8 @@ $this->load->view('layout/header', array('title'=>'Classes')); ?>
 <td><?php echo $all_users[$class->user_id] ?></td>
 <td><?php echo ($class->substitute_id) ? $all_users[$class->substitute_id] : ''; ?></td>
 <td><?php echo ucfirst($class->status) ?></td>
-<td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>" class="edit with-icon">Edit</a></td>
+<?php if($this->user_auth->get_permission('debug')) { ?> <td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>" class="edit with-icon">Edit</a></td> <?php } ?>
+
 </tr>
 <?php } ?>
 </table>

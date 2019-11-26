@@ -53,10 +53,11 @@ foreach($batch_info['levels'][$level->id] as $classes) {
 		<li><strong>Volunteer:</strong> <?php echo $all_users[$teacher['user_id']]; ?></li>
 		<?php if($teacher['substitute_id'] != 0) { ?><li><strong>Substitute:</strong> <?php echo $all_users[$teacher['substitute_id']]; ?></li><?php } ?>
 		<li><strong>Status:</strong> <?php echo ucfirst($teacher['status']); ?></li>
-		<!-- <?php if($classes->lesson_id) { ?><li><strong>Lesson:</strong> <?php echo $all_lessons[$classes->lesson_id]; ?></li><?php } ?> -->
-		<li><a href="<?php echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li>
-		<?php } ?>
-		<li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li>
+
+		<!-- <?php //if($classes->lesson_id) { ?><li><strong>Lesson:</strong> <?php // echo $all_lessons[$classes->lesson_id]; ?></li><?php } ?> -->
+		<!-- <li><a href="<?php // echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li>
+		<?php } ?> -->
+		<!-- <li><a href="<?php // echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li> -->
 		</dl>
 		</div><?php
 		print "</td>";

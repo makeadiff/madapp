@@ -18,7 +18,7 @@ $days = array('Sun','Mon','Tue','Wed','Thur','Fri','Sat');
 <p>Personal Email: <a href="mailto:<?php echo $user->email ?>;"><?php echo $user->email ?></a></p>
 <p>MAD Email: <a href="mailto:<?php echo $user->mad_email ?>;"><?php echo $user->mad_email ?></a></p>
 <p>Phone: <strong><?php echo $user->phone ?></strong></p>
-<?php if($user->address) { ?><p>Address...<br /><?php echo nl2br($user->address); ?></p><?php } ?>
+<?php if($user->address) { ?><p>Address...<br /><?php echo "Hidden"; ?></p><?php } ?>
 
 <?php if($user->user_type != 'applicant') { ?>
 <h3>MAD Bio...</h3>

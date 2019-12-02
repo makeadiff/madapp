@@ -273,23 +273,6 @@ class Users_model extends Model {
 	}
 
 	/**
-    * Function to getuser_details
-    * @author:Rabeesh
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function getuser_details_csv()
-	{
-		$this->db->select('User.id,User.name,User.email,User.phone,User.credit,User.title,User.user_type,Center.name as center_name, City.name as city_name');
-		$this->db->from('User');
-		$this->db->join('Center', 'Center.id = User.center_id' ,'join');
-		$this->db->join('City', 'City.id = User.city_id' ,'join');
-		$this->db->where('User.status','1');
-		$result = $this->db->get();
-		return $result;
-
-	}
-	/**
     * Function to adduser
     * @author:Rabeesh
     * @param :[$data]
@@ -902,7 +885,6 @@ class Users_model extends Model {
 		else return 0;
     }
 
-
     /// Returns all the Users who have a class assigned them that year
     function get_assigned_teachers($city_id = 0) {
     	if(!$city_id) $city_id = $this->city_id;
@@ -923,42 +905,11 @@ class Users_model extends Model {
 		else return 0;
     }
 
-    function get_fellows($city_id=0, $vertical_id=0) {
-    	$where_city = '';
-    	if($city_id) $where_city = " AND U.city_id=$city_id";
-    	$where_vertical = '';
-    	if($vertical_id) $where_vertical = " AND G.vertical_id=$vertical_id";
-
-    	$fellows = $this->db->query("SELECT DISTINCT U.id,U.name, G.name AS title,G.vertical_id AS title FROM User U
-    		INNER JOIN UserGroup UG ON U.id=UG.user_id
-    		INNER JOIN `Group` G ON UG.group_id=G.id
-    		WHERE G.type='fellow' AND U.user_type='volunteer' AND UG.year='{$this->year}' AND U.status='1' $where_city $where_vertical
-    		GROUP BY U.id")->result();
-
-    	return $fellows;
-    }
-
-    function get_fellows_or_above($city_id=0, $vertical_id=0) {
-    	$where_city = '';
-    	if($city_id) $where_city = " AND U.city_id=$city_id";
-    	$where_vertical = '';
-    	if($vertical_id) $where_vertical = " AND G.vertical_id=$vertical_id";
-
-    	$fellows = $this->db->query("SELECT U.id,U.name,G.name AS title,G.vertical_id,G.type AS group_type,U.city_id
-    		FROM User U
-    		INNER JOIN UserGroup UG ON U.id=UG.user_id
-    		INNER JOIN `Group` G ON UG.group_id=G.id
-    		WHERE (G.type='fellow' OR G.type='strat' OR G.type='national') AND U.user_type='volunteer' AND U.status='1' AND UG.year='{$this->year}' $where_city $where_vertical
-    		GROUP BY U.id")->result();
-
-    	return $fellows;
-    }
-
 	function search_users($data, $return_info = false) {
 		$this->db->start_cache();
 		$this->db->select('User.id,User.name,User.photo,User.email,User.mad_email,User.password,User.phone,User.credit,
 							User.joined_on,User.left_on,User.user_type,User.address,User.sex,User.source,User.birthday,
-							User.job_status,User.preferred_day,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving');
+							User.job_status,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
 
 		if(!isset($data['status'])) $data['status'] = 1;
@@ -1236,17 +1187,6 @@ class Users_model extends Model {
 		return array(true, '');
     }
 
-	/**
-    * Function to get password
-    * @author:Rabeesh
-    * @param :[$data]
-    * @return: type: [Boolean, Array()]
-    **/
-	function get_password($data) {
-		$email=$data['email'];
-		return $this->db->where('email', $email)->get("User")->row();
-	}
-
 	function get_user_data($user_id, $name) {
 		$result = $this->db->query("SELECT * FROM UserData WHERE name LIKE '$name' AND user_id=$user_id");
 		return $result->result_array();
@@ -1287,55 +1227,15 @@ class Users_model extends Model {
 		return $result->row();
 	}
 
-	function get_credit_leaderboard($city_id) {
-		return $this->db->query("SELECT id, name, credit FROM User WHERE city_id=$city_id AND status='1' AND user_type='volunteer' ORDER BY credit DESC LIMIT 0,10")->result_array();
-	}
-
-	/// Return all the people under you - till fellow level
-	function get_all_below($level='fellow', $vertical_id = 0, $region_id = 0, $city_id = 0) {
-		$allowed = array(
-			'executive'	=> "'executive', 'national','strat','fellow'",
-			'national'	=> "'strat','fellow'",
-			'strat'		=> "'fellow'",
-			'fellow'	=> "'fellow'",
-		);
-
-		if($level == 'fellow' and $vertical_id != 1) return array(); // Nothing under fellow(if not CTL) as volunteers not returned.
-		$where = array();
-		if($vertical_id and $vertical_id != 1) $where[] = "G.vertical_id=$vertical_id";
-		//if($region_id) $where[] = "City.region_id=$region_id"; // Apparently they want all the fellows to show up. Not just their region ka strat.
-		if($vertical_id == 1) $where[] = "U.city_id=$city_id AND G.type='fellow'";
-
-		$subordinates = $this->db->query("SELECT DISTINCT U.id,U.*,City.name AS city_name,City.region_id,G.vertical_id,G.name AS group_name FROM User U
-			INNER JOIN UserGroup UG ON UG.user_id=U.id
-			INNER JOIN `Group` G ON G.id=UG.group_id
-			INNER JOIN City ON U.city_id=City.id
-			WHERE G.type IN (".$allowed[$level].")
-			AND U.status='1' AND U.user_type='volunteer' "
-			. (($where) ? " AND " : "") . implode(" AND ", $where)
-			. " GROUP BY UG.user_id ORDER BY City.region_id, City.name")->result();
-
-		return $subordinates;
-	}
-
-
 	/// Returns most necessary info about the user - the entire user table + Vertical, Groups, Centers.
 	function get_info($user_id) {
-		$user = $this->db->query('SELECT U.*,City.region_id FROM User U INNER JOIN City ON City.id=U.city_id WHERE U.id='.$user_id)->row();
+		$user = $this->db->query('SELECT U.* FROM User U WHERE U.id='.$user_id)->row();
 
 		$user->groups = $this->get_user_groups($user_id, true);
 		$highest_group = $this->get_highest_group($user_id, $user->groups, true);
 
 		$user->vertical_id = $highest_group->vertical_id;
 		$user->group_type = $highest_group->type;
-
-		// Some special case for region
-		if($user->region_id == 5) $user->region_id = 0; // National Region is 0.
-		// :HARDCODE:
-		if($user->id == 42117)	$user->region_id = 1;	// Aswin
-		if($user->id == 538)	$user->region_id = 2;	// Kaus
-		if($user->id == 18269)	$user->region_id = 4;	// Shilpa
-		if($user->id == 17383)	$user->region_id = 3;	// Vrishi
 
 		$teacher_info = idNameFormat($this->db->query("SELECT Batch.id, Batch.center_id AS name
 					FROM Batch INNER JOIN UserBatch ON UserBatch.batch_id=Batch.id
@@ -1345,26 +1245,6 @@ class Users_model extends Model {
 		$user->centers = array_unique(array_values($teacher_info));
 
 		return $user;
-	}
-
-
-	function get_intern_credit($user_id) {
-		$credit = $this->db->query("SELECT SUM(credit) AS credit FROM UserCredit WHERE user_id=$user_id AND year={$this->year}")->row();
-
-		return $credit->credit;
-	}
-
-	function get_subordinates($user_id) {
-		$current_user_ka_groups = implode(',', array_keys($this->get_user_groups_of_user($user_id)));
-
-		$subordinates = $this->db->query("SELECT DISTINCT U.id,U.* FROM User U
-			INNER JOIN UserGroup UG ON UG.user_id=U.id
-			INNER JOIN GroupHierarchy GH ON GH.group_id=UG.group_id
-			WHERE GH.reports_to_group_id IN ($current_user_ka_groups)
-			AND U.status='1' AND U.user_type='volunteer'
-			ORDER BY U.city_id DESC")->result();
-
-		return $subordinates;
 	}
 
 	/// Changes the phone number format from +91976068565 to 9746068565. Remove the 91 at the starting.

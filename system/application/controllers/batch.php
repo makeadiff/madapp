@@ -203,9 +203,7 @@ class Batch extends Controller {
 		$center_name = $this->center_model->get_center_name($batch['center_id']);
 		$all_levels = $this->level_model->get_all_levels_in_center($batch['center_id']);
 		$connected_levels = $this->model->get_level_connection($batch_id);
-
-		$batch['selected_subjects'] = array_keys($this->model->get_subjects_in_batch($batch_id));
-		
+	
 		$this->load->view('batch/form.php', array(
 			'action' 			=> 'Edit',
 			'center_ids'		=> $center_ids,

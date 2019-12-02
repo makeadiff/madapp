@@ -9,7 +9,6 @@
 <br /><a href="http://makeadiff.in/apps/stakeholder-survey/form.php">How you doin'?</a>
 
 			<?php if(in_array(9, array_keys($this->session->userdata('groups')))) { ?>Current Credits: <strong><?php echo $current_user->credit ?></strong>.<?php } ?>
-			<?php if(in_array(14, array_keys($this->session->userdata('groups')))) { ?>Admin Credits: <strong><?php echo $current_user->admin_credit ?></strong>.<?php } ?>
 			</div>
 	</div><br />
 
@@ -153,17 +152,6 @@ foreach($upcomming_classes as $class) { ?>
 	
 	<br />
 	
-<!--     <?php if($this->user_auth->get_permission('books_index')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('books/manage_books') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/book.jpeg" alt="" /> <span>Books</span></a></div>
-	<?php } ?>
-	
-    <?php if($this->user_auth->get_permission('chapters_index')) { ?>
-	<div class="quickLink"> <a href="<?php echo site_url('books/manage_chapters') ?>">
-	<img src="<?php echo base_url(); ?>images/ico/chapters.png" alt="" /> <span>Chapters</span></a></div>
-	<?php } ?>
-	 -->
-
     <?php if($this->user_auth->get_permission('setting_index')) { ?>
 	<div class="quickLink"> <a href="<?php echo site_url('settings/index') ?>">
 	<img src="<?php echo base_url(); ?>images/ico/settings.png" alt="" /> <span>Settings</span></a></div>

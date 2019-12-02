@@ -116,7 +116,7 @@ class Cron extends Controller  {
 		foreach ($all_centers as $center) {
 			if($center->class_starts_on == '0000-00-00' or !$center->class_starts_on) continue;
 
-			$this->center_model->save_center_data($center->id, 'class_info', array(
+			$this->center_model->save_center_data($center->id, 'class_info', false, array(
 					'year'	=> $last_year,
 					'data'	=> json_encode(array('class_starts_on' => $center->class_starts_on, 'center_head_id'=> $center->center_head_id))
 				));
@@ -181,26 +181,6 @@ class Cron extends Controller  {
 					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * Cron that checks if the 5 consicutive classes happened - and reassign credits based on that.
-	 * How it Works: There is two fields in the User Table - credit and consecutive_credit. Credit holds the total credit of the volunteer. consecutive_credit holds the credit they got by doing consecutive classes.
-	 *	credit field is other type of credit + consecutive_credit. What the function does is basically get the list of all volunteers, go thru each one, find how many consecutive credits they deserve, then if there
-	 *	is ANY change(credits should be more that what it is currently - or should be less than what it is), then the script updates the table with the accurate number.
-	 *	The rest of MADApp just have to worry about the credit field as it holds the full credit. Only the script that deals with consecutive credit will use the other field.
-	 */
-	function consecutive_class_credit($city_id = 0) {
-		$conditions = array('user_type'=>'volunteer', 'status' => '1', 'user_group'=>9, 'project_id'=>1,'city_id'=>$city_id);
-		$all_users = $this->users_model->search_users($conditions);
-
-		print "Recalculating credits of " . count($all_users) . " users.\n";
-		foreach($all_users as $user) {
-			print $user->id . ") " . $user->name;
-			$this->users_model->year = $this->year;
-			$this->users_model->recalculate_user_consecutive_class_credit($user->id, true, true);
-			print "\n";
 		}
 	}
 

@@ -38,7 +38,6 @@ class City extends Controller {
 			if($this->input->post('name') != '') {
 				$data = array(
 					'name'			=>	$this->input->post('name'), 
-					'president_id'	=>	$this->input->post('president_id'),
 				);
 				
 				$this->city_model->createCity($data);
@@ -56,13 +55,9 @@ class City extends Controller {
 			$this->load->helper('misc');
 			$this->load->model('Users_model','user_model');
 			
-			$president_ids = idNameFormat($this->user_model->get_users_in_city(0));
-			$president_ids['0'] = 'None';
-			
 			$this->load->view('city/form.php', array(
 				'action' => 'New',
-				'president_ids' => $president_ids
-				));
+			));
 			
 		}
 		

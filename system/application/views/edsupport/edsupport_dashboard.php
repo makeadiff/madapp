@@ -7,13 +7,6 @@
 <h1 class="title">Ed Support</h1><br>
 
 
-<!--	<div id="head" class="alert alert-info" >
-
-			<?php /*if(in_array(9, array_keys($this->session->userdata('groups')))) { */?>Current Credits: <strong><?php /*echo $current_user->credit */?></strong>.<?php /*} */?>
-			<?php /*if(in_array(14, array_keys($this->session->userdata('groups')))) { */?>Admin Credits: <strong><?php /*echo $current_user->admin_credit */?></strong>.<?php /*} */?>
-
-	</div><br />-->
-
 <?php if($upcomming_classes) {
 foreach($upcomming_classes as $class) { ?>
 <div class="upcomming">You have a class at <strong><?php echo $class->name ?></strong> on <?php echo date('M d\<\s\u\p\>S\<\/\s\u\p\>(D), h:i A', strtotime($class->class_on)) ?>. 
@@ -29,14 +22,7 @@ foreach($upcomming_classes as $class) { ?>
 } */?>
 	
 <div id="quick">
-
-
     <div class="row">
-
-
-
-
-
 
         <?php if($this->user_auth->get_permission('user_credithistory')) { ?>
             <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('edsupport/attendance_management_view') ?>">
@@ -47,7 +33,6 @@ foreach($upcomming_classes as $class) { ?>
             <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="<?php echo site_url('center/manageaddcenters') ?>">
                     <img src="<?php echo base_url(); ?>images/flat_ui/centers.png" alt="" /> <br>Center<br>Management</a></div>
         <?php } ?>
-
 
         <!-- <div class="col-md-3 col-sm-6 text-center"> <a  class='btn btn-primary btn-dash' href="http://makeadiff.in/apps/edsupport-assessment/public/manage">
         	<img src="<?php echo base_url(); ?>images/flat_ui/exams.png" alt="" /> <br>Mark<br>Management</a>

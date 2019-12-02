@@ -138,17 +138,7 @@ class Class_model extends Model {
 		return $this->db->query("SELECT * FROM Class WHERE batch_id=$batch_id AND DATE(class_on)<=DATE(NOW()) ORDER BY class_on DESC LIMIT 0,1")->row();
 	}
 	
-	
-	/// Returns the last unit taught in that level/batch.
-	function get_last_unit_taught($level_id, $batch_id=0) {
-		$batch_condition = '';
-		if($batch_id) $batch_condition = "batch_id=$batch_id AND ";
-		$class = $this->db->query("SELECT lesson_id FROM Class WHERE $batch_condition level_id=$level_id AND class_on<NOW() AND lesson_id!=0 ORDER BY class_on DESC LIMIT 0,1")->row();
-		
-		if($class) return $class->lesson_id;
-		return 0;
-	}
-	
+
 	function save_class($data) {
 		// Try to find the class if the necessay data. Any class can be identified with the batch_id, level_id and the time of the class.
 		$class_id = $this->get_by_batch_level_time($data['batch_id'], $data['level_id'], $data['class_on']);
@@ -176,10 +166,6 @@ class Class_model extends Model {
 		return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
 	}
 	
-	function save_class_lesson($class_id, $lesson_id) {
-		$this->db->where('id', $class_id)->update('Class',array('lesson_id'=>$lesson_id));
-	}
-
 	function save_class_satisfaction($class_id, $class_satisfaction, $user_id = 0) {
 		$this->db->where('id', $class_id)->update('Class',array(
 													'class_satisfaction' => $class_satisfaction, 
@@ -539,7 +525,7 @@ class Class_model extends Model {
 	}
 	
 	function search_classes($data) {
-		$query = "SELECT Class.id,Class.class_on,Class.lesson_id,Class.cancel_option,Class.cancel_reason,Class.class_type,Class.status AS class_status,
+		$query = "SELECT Class.id,Class.class_on,Class.cancel_option,Class.cancel_reason,Class.class_type,Class.status AS class_status,
 					Level.id AS level_id,Level.name,Level.grade,UserClass.user_id,UserClass.substitute_id,UserClass.zero_hour_attendance,UserClass.status
 			FROM Class
 			INNER JOIN Level ON Class.level_id=Level.id
@@ -591,79 +577,7 @@ class Class_model extends Model {
 		$classes = $this->db->query("SELECT Class.id,Class.class_on,UserClass.status FROM Class JOIN UserClass ON UserClass.class_id=Class.id WHERE level_id=$level_id ORDER BY class_on ASC")->result();
 		return $classes;
 	}
-	
-	/// Returns class progress data. Moved to a model from a controller(where it should be) because we want the data to populate monthly review doc as well...
-	function get_class_progress($city_id=false, $year_month=false, $project_id=false) {
-		if(!$project_id) $project_id = $this->project_id;
-		if(!$city_id) $city_id = $this->city_id;
-		$year = $this->year;
-		if($year_month) {
-			list($year, $month) = explode("-", $year_month);
-			if($month < 3) $year++;
-		}
 		
-		$this->ci->load->model('center_model');
-		$this->ci->load->model('book_lesson_model');
-		$this->ci->load->model('batch_model');
-		$this->ci->load->model('level_model');
-		$this->ci->batch_model->project_id = $project_id;
-		$this->ci->batch_model->city_id = $city_id;
-		$this->ci->batch_model->year = $year;
-		$this->ci->level_model->project_id = $project_id;
-		$this->ci->level_model->city_id = $city_id;
-		$this->ci->level_model->year = $year;
-		
-		$all_centers = $this->ci->center_model->get_all($city_id);
-		$all_levels = array();
-		$all_lessons = idNameFormat($this->ci->book_lesson_model->get_all_lessons());
-		$all_lessons[0] = 'None';
-		$data = array();
-		foreach($all_centers as $center) {
-			//if($center->id != 13) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
-		
-			$data[$center->id] = array(
-				'center_id'	=> $center->id,
-				'center_name'=>$center->name,
-			);
-			$batches = $this->ci->batch_model->get_class_days($center->id);
-			$all_levels[$center->id] = $this->ci->level_model->get_all_levels_in_center($center->id);
-			$data[$center->id]['batches'] = array();
-			$days_with_classes = array();
-	
-			// NOTE: Each batch has all the levels in the center. Think. Its how that works.
-			foreach($all_levels[$center->id] as $level) {
-				$data[$center->id]['class_progress'][$level->id] = $this->get_last_unit_taught($level->id);
-				
-				foreach($batches as $batch_id => $batch_name) {
-					//if($batch_id != 1) continue; // :DEBUG: Use this to localize the issue
-					$data[$center->id]['batches'][$batch_id] = array('name'=>$batch_name);
-
-					//if($level->id != 457) continue; // :DEBUG: Use this to localize the issue. I would recommend keeping this commented. You'll need it a lot.
-					$all_classes = $this->get_classes_by_level_and_batch($level->id, $batch_id, $year_month);
-					
-					$last_class_id = 0;
-					foreach($all_classes as $class) {
-						if($class->status != 'cancelled') {
-							$date = date('d M',strtotime($class->class_on));
-							$month = date('m',strtotime($class->class_on));
-							if($month <= 3) $month = $month + 12; // So that january comes after december.
-							$key = $month . '-'.date('d',strtotime($class->class_on));
-							if(!in_array($date, $days_with_classes)) {
-								$days_with_classes[$key] = $date;
-							}
-							
-							$data[$center->id]['class'][$level->id][$key] = $class;
-						}
-					}
-				}
-			}
-			ksort($days_with_classes);
-			$data[$center->id]['days_with_classes'] = $days_with_classes;
-		}
-		
-		return array($data, $all_lessons, $all_centers, $all_levels);
-	}
-	
 	//////////////////////////////////////// Monthly Review functions.
 	
 	/// Returns the classes that happened in the given month.

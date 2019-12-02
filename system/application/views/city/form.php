@@ -1,7 +1,7 @@
 <?php $this->load->view('layout/thickbox_header'); ?>
  <h2>Add/Edit City</h2>
  <?php
-if(!isset($city)) $city = array('name'=>'','president_id'=>'', 'id'=>'');
+if(!isset($city)) $city = array('name'=>'','id'=>'');
 ?>
 
 <div id="head" class="clear"><h1><?php echo $action . ' City' ?></h1></div>
@@ -11,10 +11,6 @@ if(!isset($city)) $city = array('name'=>'','president_id'=>'', 'id'=>'');
 <li>
 <label for='name'>City Name</label>
 <input type="text" name="name" value="<?php echo set_value('name', $city['name']); ?>" /><br />
-</li>
-<li>
-<label for='president_id'>President</label>
-<?php echo form_dropdown('president_id', $president_ids, $city['president_id']); ?><br/>
 </li>
 </ul>
 

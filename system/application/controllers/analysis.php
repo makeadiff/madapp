@@ -10,7 +10,6 @@ class Analysis extends Controller {
 		$this->load->model('Center_model','center_model');
 		$this->load->model('city_model');
 		$this->load->model('Batch_model','batch_model');
-		$this->load->model('Book_Lesson_model','book_lesson_model');
 		
 		$this->load->helper('url');
 		$this->load->helper('misc');

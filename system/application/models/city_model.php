@@ -96,7 +96,6 @@ class City_model extends Model {
     
     // Find the errors in the city. - if any.
 	function find_issuse($city_id) {
-		$president_id = $this->db->query("SELECT president_id FROM City WHERE id=$city_id")->row()->president_id;
 		$center_count = $this->db->query("SELECT COUNT(id) AS count FROM Center WHERE city_id=$city_id AND Center.status='1'")->row()->count;
 		$kids_count = 0;
 		if($center_count) {
@@ -104,28 +103,23 @@ class City_model extends Model {
 				FROM Student INNER JOIN Center ON Center.id=Student.center_id 
 				WHERE Center.city_id=$city_id AND Student.status='1'")->row()->count;
 		}
-		$teacher_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id=$city_id AND project_id={$this->project_id} AND user_type='volunteer'")->row()->count;
+		$teacher_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id=$city_id AND user_type='volunteer'")->row()->count;
 		
 		$problem_flag = 0;
 		$information = array();
 		
-		if(!$president_id) {
-			$information[] = "City does not have a president. <span class='warning icon'>!</span>";
-			$problem_flag++;
-		}
-		
 		if(!$teacher_count) {
-			$information[] = "No teachers added to the city <span class='warning icon'>!</span>";
+			$information[] = "No volunteers added to the city <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {
-			$information[] = "Teachers in this city: $teacher_count";
+			$information[] = "Volunteers in this city: $teacher_count";
 		}
 		
 		if(!$kids_count) {
 			$information[] = "No students added to the city <span class='warning icon'>!</span>";
 			$problem_flag++;
 		} else {
-			$information[] = "Kids in this city: $kids_count";
+			$information[] = "Students/Youth in this city: $kids_count";
 		}
 		
 		return array($information, $problem_flag);
@@ -135,20 +129,10 @@ class City_model extends Model {
 		$success = $this->db->insert('City', 
 			array(
 				'name'			=>	$data['name'], 
-				'president_id'	=>	$data['president_id'],
 				'added_on'		=>	date('Y-m-d H:i:s')
 			));
 		$city_id = $this->db->insert_id();
-		
-		//  If the City was just created, the president don't belong to that city yet. Make sure s/he belongs to it.
-		if($success) {
-			$this->db->where('id',$data['president_id'])->update('User', 
-				array(
-					'city_id'=>$city_id
-				)
-			);
-		}
-		
+				
 		return $city_id;
     }
     
@@ -163,8 +147,6 @@ class City_model extends Model {
     
     
 	function get_all($happenning = 1) {
-	//	if($happenning) $this->db->where('classes_happening',1);
-
 		$city_data = $this->db->order_by('name')->get('City')->result();
 		$data = idNameFormat($city_data);
 
@@ -181,12 +163,5 @@ class City_model extends Model {
 			}
 		}
 		return $cities;
-	}
-
-	function get_all_verticals() {
-		return idNameFormat($this->db->query("SELECT id,name FROM Vertical")->result());
-	}
-	function get_all_regions() {
-		return idNameFormat($this->db->query("SELECT id,name FROM Region")->result());
 	}
 }

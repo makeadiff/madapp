@@ -42,9 +42,7 @@ class Subject extends Controller {
 	function save() {
 		$subject_id = $this->input->post('subject_id');
 		$data = array(
-			'name'			=> $this->input->post('name'),
-			'unit_count'	=> $this->input->post('unit_count'),
-			'city_id'		=> $this->subject_model->city_id,
+			'name'			=> $this->input->post('name')
 		);
 
 		if($subject_id) {

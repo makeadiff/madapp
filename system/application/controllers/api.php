@@ -386,6 +386,49 @@ class Api extends Controller {
 
 	/// Figures out the next or previous class from the given batch, level, and class date.
 	/// :TODO: GET /classes
+/*
+{
+  classSearch(batch_id: 2652, from_date:"2019-10-27", direction:"-", level_id:7794, limit: "day") 
+  {
+    id
+    class_on
+    batch {
+      id
+    }
+    level {
+      id
+      name
+      center {
+        id
+        name
+      }
+    }
+    class_type
+    class_satisfaction
+    cancel_option
+    cancel_reason
+    status
+    teachers {
+      id
+      name
+      credit
+      pivot {
+        status
+        substitute_id
+        zero_hour_attendance
+      }
+    }
+    students {
+      id
+      name
+      pivot {
+        participation
+        check_for_understanding
+      }
+    }
+  }
+}
+ */
 	function browse_class($batch_id = 0, $level_id = 0, $from_date = '', $direction = '+') {
 		$this->check_key();
 
@@ -667,8 +710,9 @@ class Api extends Controller {
 	 * Example	: 	http://makeadiff.in/madapp/index.php/api/class_get_batch?&key=am3omo32hom4lnv32vO
 	 * :TODO: GET /batches/{batch_id}
 	 *
-	 * {
-  classSearch(batch_id:2652, direction: "-", limit: 1)
+	 * 
+{
+  classSearch(batch_id:2652, direction: "-", limit: "day")
     {
       id
       class_on
@@ -700,6 +744,15 @@ class Api extends Controller {
         name
       }
     }
+  batch(id:2652)
+  {
+    id
+    batch_name
+    center {
+      id
+      name
+    }
+  }
 }
 	 */	
 	function class_get_batch($batch_id = 0, $class_on = false) {
@@ -818,7 +871,6 @@ class Api extends Controller {
 	/*
 	class_save_level
 		class_id=129404
-		lesson_id=7
 		teacher_id[0]=43880
 		substitute_id[0]=0
 		status[0]='attended'

@@ -11,7 +11,6 @@
 
 <!-- 
 <a href="<?php echo site_url('report/volunteer_requirement') ?>">Show volunteer requirement in each center</a><br />
-<a href="<?php echo site_url('report/get_volunteer_admin_credits') ?>">Admin Credits</a><br />
 <a href="<?php echo site_url('analysis/class_progress_report') ?>">Class Progress Report</a><br />
 <a href="<?php echo site_url('analysis/event_attendance') ?>">Attendance For Volunteer Events</a><br />
 <a href="<?php echo site_url('analysis/exam_report_test') ?>">Exam Reports</a><br />

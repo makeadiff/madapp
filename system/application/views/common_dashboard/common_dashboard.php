@@ -49,18 +49,6 @@
 		<a href='<?php echo site_url('fundraising/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/fundraising.png"><br><br>Fundraising</a>
 	</div>
 
-	<!-- <div class="col-md-3 col-sm-6 text-center">
-		<a href='http://makeadiff.in/apps/propel/public' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/propel.png"><br>Propel</a>
-	</div>
-
-	<div class="col-md-3 col-sm-6 text-center">
-		<a href='<?php echo site_url('pr/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/pr.png"><br>PR</a>
-	</div>
-
-	<div class="col-md-3 col-sm-6 text-center">
-		<a href='<?php echo site_url('review_milestone/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/review.png"><br>Review</a>
-	</div> -->
-
 	<div class="col-md-3 col-sm-6 text-center">
 		<a href='<?php echo site_url('resources/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/resources.png"><br>Resources</a>
 	</div>
@@ -68,7 +56,6 @@
 	<div class="col-md-3 col-sm-6 text-center">
 		<a href='<?php echo site_url('profile/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/profile.png"><br>Profile</a>
 	</div>
-
 
 	<div class="col-md-3 col-sm-6 text-center">
 		<a href='<?php echo site_url('setting/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/settings.png"><br>Settings</a>

@@ -163,7 +163,7 @@ class City_model extends Model {
     
     
 	function get_all($happenning = 1) {
-		if($happenning) $this->db->where('classes_happening',1);
+	//	if($happenning) $this->db->where('classes_happening',1);
 
 		$city_data = $this->db->order_by('name')->get('City')->result();
 		$data = idNameFormat($city_data);

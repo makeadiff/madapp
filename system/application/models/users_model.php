@@ -615,35 +615,35 @@ class Users_model extends Model {
 
 			if ($row['user_id'] == $user_id and $row['substitute_id'] == 0 and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
-				if($debug) print "User missed class: $credit_lost_for_missing_class<br />\n";
+				if($debug) print "User missed class on {$row['class_on']}: $credit_lost_for_missing_class\n";
 
 			} else if ($row['user_id'] == $user_id and $row['substitute_id'] != 0 and  ($row['status'] == 'absent' or $row['status'] == 'attended')) {
 				$credit = $credit + $credit_lost_for_getting_substitute;
-				if($debug) print "Had to get a substitute: $credit_lost_for_getting_substitute<br />\n";
+				if($debug) print "Had to get a substitute on {$row['class_on']}: $credit_lost_for_getting_substitute\n";
 
 			} else if($row['substitute_id'] == $user_id and $row['status'] == 'absent') {
 				$credit = $credit + $credit_lost_for_missing_class;
-				if($debug) print "Missed a substitution class: $credit_lost_for_missing_class<br />\n";
+				if($debug) print "Missed a substitution class on {$row['class_on']}: $credit_lost_for_missing_class\n";
 
 			} elseif ($row['substitute_id'] == $user_id and $row['status'] == 'attended') {
 				$credit_sub_gets = $credit_for_substituting;
 
 				if($credit_max_credit_threshold >= ($credit + $credit_sub_gets)) {
 					$credit = $credit + $credit_sub_gets;
-					if($debug) print "Credit for subbing: $credit_sub_gets<br />\n";
+					if($debug) print "Credit for subbing on {$row['class_on']}: $credit_sub_gets\n";
 				} else {
 					$credit = $credit_max_credit_threshold;
-					if($debug) print "Credit for subbing not got - as upper limit is hit.<br />\n";
+					if($debug) print "Credit for subbing not got - as upper limit is hit.\n";
 				}
 
 				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit.
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
-					if($debug) print "Missed Zero Hour: $credit_lost_for_missing_zero_hour<br />\n";
+					if($debug) print "Missed Zero Hour on {$row['class_on']}: $credit_lost_for_missing_zero_hour\n";
 				}
 			} elseif($row['substitute_id'] == '0' and $row['status'] == 'attended') {
 				if(!$row['zero_hour_attendance']) { // Sub didn't reach in time for zero hour. Loses a credit.
 					$credit = $credit + $credit_lost_for_missing_zero_hour;
-					if($debug) print "Missed Zero Hour: $credit_lost_for_missing_zero_hour<br />\n";
+					if($debug) print "Missed Zero Hour on {$row['class_on']}: $credit_lost_for_missing_zero_hour\n";
 				}
 			}
 
@@ -673,11 +673,12 @@ class Users_model extends Model {
 			$user = $this->get_user($user_id);
 
 			$existing_credits = $user->credit;
-			if($debug) print "\t\t\t\tActual Credit: $credit\t\tExisting: $existing_credits";
+			if($debug) print "Actual Credit: $credit\t\tExisting: $existing_credits";
 			if($existing_credits != $credit) {
 				if($debug) print "\t\tWRONG!";
 				$this->set_credit($user_id, $credit);
 			}
+			if($debug) print "\n";
 		}
 
 		return $credit;

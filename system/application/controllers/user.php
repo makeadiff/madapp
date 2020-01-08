@@ -629,6 +629,14 @@ class User extends Controller  {
 		$this->load->view('layout/header', array('title'=>'Credit History'.$for_user));
 
 		$credit_log = $this->users_model->get_credit_history($current_user_id);
+
+		$last_credit = end($credit_log);
+
+		// If credit mis-match is there, reset user credit to the correct version.
+		if($user_details->credit != $last_credit['credit']) {
+			// $user_details->credit = $last_credit['credit'];
+			// $this->users_model->set_credit($current_user_id, $last_credit['credit']);
+		}
 		
 		$this->load->view('user/usercredit', array('credit_log'=>$credit_log, 'user_details' => $user_details));
 		$this->load->view('layout/footer');

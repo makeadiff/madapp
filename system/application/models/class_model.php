@@ -322,7 +322,7 @@ class Class_model extends Model {
 		$this->ci->load->model('level_model','level_model');
 		$this->ci->load->model('settings_model','settings_model');
 		
-		$debug = false;
+		$debug = true;
 		if($revert) $debug = false;
 		if($debug) {print "<br />Class Data: ";dump($data);}
 
@@ -334,16 +334,17 @@ class Class_model extends Model {
 		$tr_wingman_group_id = 348;
 		$tr_asv_group_id = 349;
 
-		$vertical_prefix = 'ed'; 
+		$vertical_prefix = 'ed_'; 
 		if(isset($users_groups[$fp_teacher_group_id])) $vertical_prefix = 'fp_';
 		elseif(isset($users_groups[$ac_wingman_group_id])) $vertical_prefix = 'ac_';
 		elseif(isset($users_groups[$tr_wingman_group_id])) $vertical_prefix = 'tr_wingman_';
 		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
+
+		if($debug) print "Teacher vertical: $vertical_prefix (" . json_encode($users_groups) . ")\n";
 		
 		$credit_for_substituting = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
 		$credit_lost_for_getting_substitute = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_getting_substitute'));
 		$credit_lost_for_missing_class = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_class'));
-		$credit_lost_for_missing_avm = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_avm'));
 		$credit_lost_for_missing_zero_hour = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
 		$credit_max_credit_threshold = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
 				
@@ -353,6 +354,13 @@ class Class_model extends Model {
 			$credit_lost_for_missing_class			= -($credit_lost_for_missing_class);
 			$credit_lost_for_missing_zero_hour		= -($credit_lost_for_missing_zero_hour);
 		}
+
+		if($debug) print "Credit Values...
+\$credit_for_substituting : $credit_for_substituting
+\$credit_lost_for_getting_substitute : $credit_lost_for_getting_substitute
+\$credit_lost_for_missing_class : $credit_lost_for_missing_class
+\$credit_lost_for_missing_zero_hour : $credit_lost_for_missing_zero_hour
+\$credit_max_credit_threshold : $credit_max_credit_threshold\n";
 		
 		extract($data);
 		
@@ -361,11 +369,13 @@ class Class_model extends Model {
 				// A substitute has attended the class. Substitute gets one/two credit, Original teacher loses one credit.
 				$current_substitute_credit = $this->ci->user_model->get_user($substitute_id)->credit;
 				
-				if($max_credit_threshold >= ($current_substitute_credit + $credit_for_substituting)) { // Make sure no one gets more than upper limit. :KNOWNISSUE: When reverting, this could be a issue.
+				// Make sure no one gets more than upper limit. :KNOWNISSUE: When reverting, this could be a issue.
+				if($max_credit_threshold >= ($current_substitute_credit + $credit_for_substituting)) { 
 					$this->ci->user_model->update_credit($substitute_id, $credit_for_substituting);
 				} else {
 					$credit_for_substituting = '0 (Upper limit hit)';
 				}
+
 				$this->ci->user_model->update_credit($user_id, $credit_lost_for_getting_substitute);
 				if($debug) print "<br />Substitute attended. Sub: $credit_for_substituting and Teacher: $credit_lost_for_getting_substitute";
 				

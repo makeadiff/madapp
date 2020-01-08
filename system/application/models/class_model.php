@@ -322,7 +322,7 @@ class Class_model extends Model {
 		$this->ci->load->model('level_model','level_model');
 		$this->ci->load->model('settings_model','settings_model');
 		
-		$debug = true;
+		$debug = false;
 		if($revert) $debug = false;
 		if($debug) {print "<br />Class Data: ";dump($data);}
 

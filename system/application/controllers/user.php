@@ -634,8 +634,8 @@ class User extends Controller  {
 
 		// If credit mis-match is there, reset user credit to the correct version.
 		if($user_details->credit != $last_credit['credit']) {
-			// $user_details->credit = $last_credit['credit'];
-			// $this->users_model->set_credit($current_user_id, $last_credit['credit']);
+			$user_details->credit = $last_credit['credit'];
+			$this->users_model->set_credit($current_user_id, $last_credit['credit']);
 		}
 		
 		$this->load->view('user/usercredit', array('credit_log'=>$credit_log, 'user_details' => $user_details));

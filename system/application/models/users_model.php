@@ -550,7 +550,7 @@ class Users_model extends Model {
     	$this->set_credit($user_id, $credit);
     }
 
-    function cache_credit_settings() {
+    function cache_credit_settings($vertical_prefix) {
     	if($this->credit_for_substituting !== false) return false;
 
 		$this->credit_for_substituting = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_for_substituting'));
@@ -559,6 +559,8 @@ class Users_model extends Model {
 		$this->credit_lost_for_missing_zero_hour = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'credit_lost_for_missing_zero_hour'));
 		$this->credit_max_credit_threshold = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'max_credit_threshold'));
 		$this->credit = floatval($this->ci->settings_model->get_setting_value($vertical_prefix . 'beginning_credit'));
+
+		return true;
     }
 
     function recalculate_user_credit($user_id, $update_if_wrong=false, $debug=false) {
@@ -582,7 +584,7 @@ class Users_model extends Model {
 		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 
 		// Get seperate credit values depending on vertical.
-		if($this->credit_for_substituting === false) $this->cache_credit_settings();
+		if($this->credit_for_substituting === false) $this->cache_credit_settings($vertical_prefix);
 		$credit_for_substituting = $this->credit_for_substituting;
 		$credit_lost_for_getting_substitute = $this->credit_lost_for_getting_substitute;
 		$credit_lost_for_missing_class = $this->credit_lost_for_missing_class;
@@ -705,7 +707,7 @@ class Users_model extends Model {
 		elseif(isset($users_groups[$tr_asv_group_id])) $vertical_prefix = 'tr_asv_';
 
 		// Get seperate credit values depending on vertical.
-		if($this->credit_for_substituting === false) $this->cache_credit_settings();
+		if($this->credit_for_substituting === false) $this->cache_credit_settings($vertical_prefix);
 		$credit_for_substituting = $this->credit_for_substituting;
 		$credit_lost_for_getting_substitute = $this->credit_lost_for_getting_substitute;
 		$credit_lost_for_missing_class = $this->credit_lost_for_missing_class;

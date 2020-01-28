@@ -638,7 +638,7 @@ class User extends Controller  {
 			$this->users_model->set_credit($current_user_id, $last_credit['credit']);
 		}
 		
-		$this->load->view('user/usercredit', array('credit_log'=>$credit_log, 'user_details' => $user_details));
+		$this->load->view('user/usercredit', array('credit_log'=>$credit_log, 'user_details' => $user_details, 'city_id' => $this->users_model->city_id));
 		$this->load->view('layout/footer');
 	}	
 }	

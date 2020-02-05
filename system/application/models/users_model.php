@@ -150,7 +150,7 @@ class Users_model extends Model {
 		}
 		$this->db->where('group_type','normal');
 
-		return $this->db->order_by('type','name')->get()->result();
+		return $this->db->order_by('name')->get()->result();
 	}
 
 	/**

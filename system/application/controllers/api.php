@@ -171,6 +171,7 @@ class Api extends Controller {
 		// Remove all the projected classes from the list.
 		foreach ($class_info['all_classes'] as $i => $class) {
 			if($class->status == 'projected') unset($class_info['all_classes'][$i]);
+			if($class->status == 'cancelled') unset($class_info['all_classes'][$i]);
 		}
 		$class_info['all_classes'] = array_values($class_info['all_classes']);
 		// unset($class_info['all_classes']);

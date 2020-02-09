@@ -168,10 +168,10 @@ class Api extends Controller {
 		$user_id = $this->input("user_id");
 		$class_info = $this->user_model->get_user_class_history($user_id);
 
-		// Remove all the projected classes from the list.
+		// Remove all the projected and cancelled classes from the list.
 		foreach ($class_info['all_classes'] as $i => $class) {
-			if($class->status == 'projected') unset($class_info['all_classes'][$i]);
-			if($class->status == 'cancelled') unset($class_info['all_classes'][$i]);
+			if($class->status == 'projected' || $class->status == 'cancelled') unset($class_info['all_classes'][$i]);
+			
 		}
 		$class_info['all_classes'] = array_values($class_info['all_classes']);
 		// unset($class_info['all_classes']);

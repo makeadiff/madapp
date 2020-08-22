@@ -459,7 +459,7 @@ class Users_model extends Model {
 	function updateuser_to_group($data)
 	{
 		$rootId=$data['rootId'];
-		$this->db->where('user_id',$rootId);
+		$this->db->where('user_id',$rootId)->where('year', $this->year);
 		$this->db->delete('UserGroup');
 		$group=$data['group'];
 		for($i=0;$i <sizeof($group);$i++)

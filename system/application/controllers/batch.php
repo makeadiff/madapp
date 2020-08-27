@@ -173,7 +173,6 @@ class Batch extends Controller {
 					'day'			=>	$this->input->post('day'),
 					'class_time'	=>	$this->input->post('class_time'),
 					'batch_head_id' =>	$this->input->post('batch_head_id'),
-					'subjects'		=>  $this->input->post('subjects'),
 					'center_id'		=>	$this->input->post('center_id'),
 					'project_id'	=>	$this->model->project_id,
 				));

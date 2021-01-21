@@ -27,7 +27,7 @@ td, th {
 <td valign='top' class="nopad"><table width='100%'><tr><th>Batches</th><th>Teachers</th></tr>
 
 <?php foreach ($level['batch'] as $batch_id => $batch) { ?>
-<tr><td width='50%'><?php echo $batch['name'] ?></td><td class="nopad"><table width="100%">
+<tr><td width='50%' style='border-bottom:1px solid #fff;'><?php echo $batch['name'] ?></td><td class="nopad" style='border-bottom:1px solid #fff;'><table width="100%">
 
 <?php foreach ($batch['teachers'] as $user_id) { ?>
 <tr><td width="50%"><?php echo (isset($all_users[$user_id]) ? $all_users[$user_id]->name : 'None: ') ?></td>

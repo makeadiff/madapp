@@ -290,7 +290,7 @@ class Api extends Controller {
 
 		$project_id = $ed_project_id;
 		$fp_teacher_group_id = 376;
-		$fp_mentor_group_id = 375;
+		$fp_mentor_group_id = 386;
 		$es_mentor_group_id = 8;
 		$aftercare_mentor_group_id = 378; // Aftercare Fellow
 		$aftercare_teacher_group_id = 377; // OR 365
@@ -624,7 +624,7 @@ class Api extends Controller {
 		if(!$project_id) $project_id = $batch->project_id;
 		
 		$center_id = $batch->center_id;
-		$center = $this->center_model->edit_center($center_id)->row();
+		$center = $this->center_model->get_info($center_id);
 		$center_name = $center->name;
 		$city_id = $center->city_id;
 

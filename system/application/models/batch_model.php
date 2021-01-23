@@ -61,7 +61,8 @@ class Batch_model extends Model {
 		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN BatchLevel ON Batch.id=BatchLevel.batch_id 
 				WHERE BatchLevel.level_id=$level_id AND Batch.year={$this->year}")->result();
 	}
-	
+
+	// :DEPRICATED:	
 	function get_volunteer_requirement_in_batch($batch_id) {
 		return $this->db->query("SELECT level_id AS id, requirement AS name FROM UserBatch WHERE batch_id=$batch_id AND user_id=0")->result();
 	}

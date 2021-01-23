@@ -48,9 +48,6 @@ foreach($all_teachers as $teacher) {
 <input name="filter[]" class="filter-multiselect" target-field="teachers_in_level_<?php echo $level->id ?>" value="" placeholder="Filter..." />
 <br /><br />
 
-<label for="volunteer_requirement[<?php echo $level->id ?>]">Extra Volunteers<br /> Required</label>
-<input type="text" size="2" name="volunteer_requirement[<?php echo $level->id ?>]" value="<?php 
-	echo empty($volunteer_requirement[$level->id]) ? 0 : $volunteer_requirement[$level->id] ?>" />
 </td>
 <?php 
 if($level_count % 4 == 0) print "</tr><tr>";

@@ -75,7 +75,6 @@ class Batch extends Controller {
 		// $levels_in_center = $this->level_model->get_all_levels_in_center($batch->center_id);
 		$levels_in_center= $this->level_model->get_all_level_names_in_center_and_batch($batch->center_id, $batch_id);
 		$all_teachers = idNameFormat($this->user_model->get_users_in_city($this->session->userdata('city_id')), array('id'));
-		$volunteer_requirement = idNameFormat($this->model->get_volunteer_requirement_in_batch($batch->id));
 
 		// This array will be used later to decide who belongs to which level.
 		$level_teacher = array();
@@ -86,8 +85,8 @@ class Batch extends Controller {
 			}
 		}
 
-		$this->load->view('batch/add_volunteers', array('batch' => $batch,'batch_name'=>$batch_name, 'center_id'=>$batch->center_id, 'volunteer_requirement'=>$volunteer_requirement,
-				'levels_in_center'=>$levels_in_center,'all_teachers'=>$all_teachers, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
+		$this->load->view('batch/add_volunteers', array('batch' => $batch,'batch_name'=>$batch_name, 'center_id'=>$batch->center_id,
+							'levels_in_center'=>$levels_in_center,'all_teachers'=>$all_teachers, 'level_teacher'=>$level_teacher, 'message'=>$this->message));
 	}
 	
 	/**
@@ -100,18 +99,15 @@ class Batch extends Controller {
 		
 		$batch_id = $this->input->post('batch_id');
 		$teacher_levels = $this->input->post('teachers_in_level');
-		$volunteer_requirement = $this->input->post('volunteer_requirement');
 
 		$old_volunteers = array();
 		
-		foreach($volunteer_requirement as $level_id => $requirement) {
+		foreach($teacher_levels as $level_id => $teacher_ids) {
 			// Save the details of the old volunteers in the batch/level
 			$old_volunteers[$level_id] = $this->model->get_teachers_in_batch_and_level($batch_id, $level_id);
 		
 			// Then delete all the users in this batch/level before insert the new data(even the old ones).
 			$this->user_model->unset_user_batch_and_level($batch_id, $level_id);
-			
-			$this->model->set_volunteer_requirement($batch_id, $level_id, $requirement);
 		}
 		
 		foreach($teacher_levels as $level_id => $teacher_ids) {

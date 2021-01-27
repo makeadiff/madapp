@@ -286,7 +286,9 @@ class Class_model extends Model {
 	
 	function get_class($class_id) {
 		// $class_details = $this->db->where('id',$class_id)->get('Class')->row_array();
-		$class_details = $this->db->query('SELECT C.*,CONCAT(L.grade, " ", L.name) AS level FROM Class C INNER JOIN Level L ON L.id=C.level_id WHERE C.id='.$class_id)->row_array();
+		$class_details = $this->db->query('SELECT C.*,CONCAT(L.grade, " ", L.name) AS level FROM Class C 
+											INNER JOIN Level L ON L.id=C.level_id 
+											WHERE C.id='.$class_id)->row_array();
 		$class_details['teachers'] = $this->db->where('class_id',$class_id)->get("UserClass")->result_array();
 		
 		return $class_details;

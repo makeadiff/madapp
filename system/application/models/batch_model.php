@@ -73,8 +73,10 @@ class Batch_model extends Model {
 				WHERE BatchLevel.batch_id=$batch_id AND BatchLevel.year={$this->year}")->result();
 	}
 	
-	function get_batches_in_center($center_id) {
-		$batches = $this->db->where('center_id',$center_id)->where('project_id', $this->project_id)->where('year', $this->year)->orderby('day')->get('Batch')->result();
+	function get_batches_in_center($center_id, $project_id = false) {
+		if(!$project_id) $project_id = $this->project_id;
+
+		$batches = $this->db->where('center_id',$center_id)->where('project_id', $project_id)->where('year', $this->year)->orderby('day')->get('Batch')->result();
 		
 		foreach ($batches as $index => $batch) {
 			$batches[$index]->name = $this->create_batch_name($batch->day, $batch->class_time);
@@ -184,8 +186,10 @@ class Batch_model extends Model {
 	}
 
 	/// Find out all the batch level connection in the given center.
-	function get_batch_level_connections($center_id) {
-		$all_batchs = $this->get_batches_in_center($center_id);
+	function get_batch_level_connections($center_id, $project_id = false) {
+		if(!$project_id) $project_id = $this->project_id;
+
+		$all_batchs = $this->get_batches_in_center($center_id, $project_id);
 		$batch_ids = array_map(function($x) {
 			return $x->id;
 		},$all_batchs);
@@ -193,7 +197,8 @@ class Batch_model extends Model {
 		$batch_level_connections = array();
 
 		if($batch_ids) {
-			$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
+			$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel 
+					WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
 		}
 
 		return $batch_level_connections;

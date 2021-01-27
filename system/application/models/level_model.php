@@ -32,9 +32,11 @@ class Level_model extends Model {
 		return $this->db->where('center_id',$center_id)->where('year', $this->year)->where('project_id', $this->project_id)->where('status','1')->orderby('grade,name')->get('Level')->result();
 	}
 
-	function get_all_level_names_in_center($center_id) {
+	function get_all_level_names_in_center($center_id, $project_id = false) {
+		if(!$project_id) $project_id = $this->project_id;
+
 		return $this->db->query("SELECT id,CONCAT(grade,' ',name) AS name FROM Level 
-				WHERE center_id='$center_id' AND year='{$this->year}' AND project_id='{$this->project_id}' AND status='1' 
+				WHERE center_id='$center_id' AND year='{$this->year}' AND project_id='{$project_id}' AND status='1' 
 				ORDER BY grade,name")->result();
 	}
 

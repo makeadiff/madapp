@@ -1237,10 +1237,11 @@ class Api extends Controller {
 	// :TODO: GET /centers/{center_id}
 	function get_batches_and_levels_in_center() {
 		$center_id = $this->input('center_id');
+		$project_id = $this->input('project_id');
 		
-		$batches = $this->batch_model->get_batches_in_center($center_id);
-		$levels = $this->level_model->get_all_level_names_in_center($center_id);
-		$connection = $this->batch_model->get_batch_level_connections($center_id);
+		$batches = $this->batch_model->get_batches_in_center($center_id, $project_id);
+		$levels = $this->level_model->get_all_level_names_in_center($center_id, $project_id);
+		$connection = $this->batch_model->get_batch_level_connections($center_id, $project_id);
 
 		$this->send(array('batches' => $batches, 'levels' => $levels, 'connection' => $connection));
 	}

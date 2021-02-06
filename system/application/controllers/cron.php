@@ -92,8 +92,7 @@ class Cron extends Controller  {
 	function archive_credits() {
 		$last_year = $this->year - 1;
 
-		$users = $this->users_model->db->query("SELECT User.id,credit FROM User INNER JOIN UserGroup ON User.id=UserGroup.user_id
-				WHERE UserGroup.group_id=9 AND user_type='volunteer'")->result(); // 9 is Teacher Group
+		$users = $this->users_model->db->query("SELECT User.id,credit FROM User WHERE user_type='volunteer'")->result(); // 9 is Teacher Group
 
 		$data = array();
 		$count = 0;

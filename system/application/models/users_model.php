@@ -930,8 +930,9 @@ class Users_model extends Model {
 		$this->db->start_cache();
 		$this->db->select('User.id,User.name,User.photo,User.email,User.mad_email,User.password,User.phone,User.credit,
 							User.joined_on,User.left_on,User.user_type,User.address,User.sex,User.source,User.birthday,
-							User.job_status,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving');
+							User.job_status,User.why_mad, City.name as city_name, User.subject_id, User.reason_for_leaving, Center.name AS center_name');
 		$this->db->join('City', 'City.id = User.city_id' ,'left');
+		$this->db->join('Center', 'Center.id = User.center_id' ,'left');
 
 		if(!isset($data['status'])) $data['status'] = 1;
 		if($data['status'] !== false) $this->db->where('User.status', $data['status']); // Setting status as 'false' gets you even the deleted users

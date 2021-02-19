@@ -45,12 +45,12 @@ $.tablesorter.addParser({
 <div id="train-nav">
 <ul>
 <?php if($this->session->userdata("active_center")) { ?>
-<li id="train-prev"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">&lt; Edit Center Details</a></li>
-<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Center</a></li>
+<li id="train-prev"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">&lt; Edit Shelter Details</a></li>
+<li id="train-top"><a href="<?php echo site_url('center/manage/'.$this->session->userdata("active_center"))?>">^ Manage Shelter</a></li>
 <li id="train-next"><a href="<?php echo site_url('kids/index')?>">Manage Kids &gt;</a></li>
 <?php } else { ?>
 <li id="train-prev">&nbsp;</li>
-<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Center</a></li>
+<li id="train-top"><a href="<?php echo site_url('center/manageaddcenters')?>">^ Manage Shelter</a></li>
 <li id="train-next"><a href="<?php echo site_url('kids/index')?>">Manage Kids &gt;</a></li>
 <?php } ?>
 </ul>
@@ -199,7 +199,7 @@ $.tablesorter.addParser({
     <?php } else { ?>
     <th>User Groups</th>
     <?php if($user_type == 'volunteer') { ?>
-    <th>Center</th>
+    <th>Shelter</th>
     <th>Batch</th>
     <?php } ?>
     <?php } ?>
@@ -242,7 +242,7 @@ foreach($all_users as $id => $user) {
     <?php } else { ?>
     <td class="col-groups"><?php echo implode(',', $user->groups); ?></td>
     <?php if($user_type == 'volunteer') { ?>
-    <td class="col-center"><?php if($user->batch) echo $user->batch->name; ?></td>
+    <td class="col-center"><?php if($user->center_name) echo $user->center_name; ?></td>
     <td class="col-batch"><?php if($user->batch) echo $days[$user->batch->day] . ' ' . date('h:i A', strtotime(date('Y-m-d ').$user->batch->class_time)); ?></td>
     <?php } ?>
     <?php } ?>

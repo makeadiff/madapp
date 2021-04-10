@@ -23,7 +23,7 @@ class Cron extends Controller  {
 	function schedule_classes($debug=0) {
 		$all_projects = idNameFormat($this->db->query("SELECT id, name FROM Project WHERE status='1'")->result());
 		$project_ids = array_keys($all_projects);
-		$year_end_time = ($this->year+1) . '-03-31 23:59:59';
+		$year_end_time = ($this->year+1) . '-06-31 23:59:59'; // :HARDCODE:
 
 		if($debug) print "Debug Mode\n----------\n";
 

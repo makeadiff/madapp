@@ -83,7 +83,7 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			
 			
 			print "<td class='class-{$classes->user_status}'>&nbsp;";
-			if($classes->substitute_id != 0) print 'S';
+			if($classes->substitute_id != 0) print 'S'
 			
 			?><div class="class-info info-box"><ul>
 			<?php if($classes->teacher['status'] != 'cancelled') { ?>
@@ -91,12 +91,15 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 			<?php if($classes->teacher['substitute_id'] != 0) { ?><li><strong>Substitute:</strong> <?php echo $all_users[$classes->teacher['substitute_id']]; ?></li><?php } ?>
 			<li><strong>Status:</strong> <?php echo ucfirst($classes->teacher['status']); ?></li>
 			
-			<!-- <li><a href="<?php echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li> -->
-			<?php } ?>
-			<!-- <li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li> -->
+			<?php 
+			/* <li><a href="<?php echo site_url('classes/mark_attendence/'.$classes->id) ?>">Mark Attendence</a></li> */
+			}
+			/* <li><a href="<?php echo site_url('classes/edit_class/'.$classes->id) ?>">Edit Class</a></li> */
+			?>
 			<li>Date: <?php echo date('d\<\s\u\p\>S\<\/\s\u\p\> M', strtotime($classes->class_on)); ?></li>
 			<?php if($this->user_auth->get_permission('debug')) { ?>
 			<li><a href="<?php echo site_url('classes/delete/'.$classes->id) ?>">Delete Class</a></li>
+			<li>Class ID : <?php echo $classes->id; ?></li>
 			<?php } ?>
 			</ul></div><?php
 			print "</td>";

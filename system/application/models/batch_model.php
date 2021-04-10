@@ -161,6 +161,7 @@ class Batch_model extends Model {
 	
 	/// Delete the batch, the user batch connection, the batch subject connection - and the batch level connection.
 	function delete($batch_id) {
+		// :TODO: Soft delete
 		$this->db->delete('Batch', array('id'=>$batch_id));
 		$this->db->delete('UserBatch', array('batch_id'=>$batch_id));
 		$this->db->delete('BatchSubject', array('batch_id'=>$batch_id));

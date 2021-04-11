@@ -493,12 +493,13 @@ class Classes extends Controller {
 					}
 					
 					$teacher_classes = array();
+					$class_end_month = 6; // We are going to assume class ends on June.
 					foreach($teachers_info as $teacher_id=>$teacher_name) {
 						foreach($all_classes as $class) {
 							$date = date('d M',strtotime($class->class_on));
 							if(!in_array($date, $days_with_classes)) {
 								$month = date('m',strtotime($class->class_on));
-								if($month <= 3) $month = $month + 12; // So that january comes after december.
+								if($month <= $class_end_month) $month = $month + 12; // So that january comes after december. Note.
 								$key = $month . '-'.date('d',strtotime($class->class_on));
 								$days_with_classes[$key] = $date;
 							}

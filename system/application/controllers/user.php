@@ -321,7 +321,6 @@ class User extends Controller  {
 	}
 	
 	/// The User index is handled by this action
-
 	function view_users($city_id='', $user_groups=0, $name=0,$user_type='volunteer', $search_id=0, $email=0, $phone=0, $current_page=1) {
 
 		$this->user_auth->check_permission('user_index');
@@ -368,9 +367,7 @@ class User extends Controller  {
 
 		// Credit range
 		if($this->input->post('credit') !== false) $data['credit'] = $this->input->post('credit');
-
-
-		
+	
 		// Create the query_string.
 		$group = implode(',', $data['user_group']);
 		if(!$group) $group = 0;

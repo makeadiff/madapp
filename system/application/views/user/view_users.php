@@ -106,7 +106,7 @@ $.tablesorter.addParser({
 		<option value="<=0" <?php if(!empty($credit) and $credit === '<=0') echo 'selected="selected"'; ?>>Zero Or Less</option>
 		<option value="<=1" <?php if(!empty($credit) and $credit === '<=1') echo 'selected="selected"'; ?>>One Or Less</option>
 		<option value=">=0" <?php if(!empty($credit) and $credit === '>=0') echo 'selected="selected"'; ?>>Zero Or More</option>
-		<option value=">=0" <?php if(!empty($credit) and $credit === '>=0') echo 'selected="selected"'; ?>>More than 0</option>
+		<option value=">0" <?php if(!empty($credit) and $credit === '>0') echo 'selected="selected"'; ?>>More than 0</option>
 		<option value="<3" <?php if(!empty($credit) and $credit === '<3') echo 'selected="selected"'; ?>>Less than 3</option>
 		<option value=">=3" <?php if(!empty($credit) and $credit === '>=3') echo 'selected="selected"'; ?>>Three or More</option>
 	</select>

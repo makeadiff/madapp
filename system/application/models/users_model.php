@@ -983,6 +983,14 @@ class Users_model extends Model {
 			$this->db->join('Level', 'Class.level_id = Level.id' ,'join');
 			$this->db->where_in('Level.center_id', $data['center']);
 		}
+		if(!empty($data['credit'])) {
+			$allowed_values = ['<0','<=0','<=1','>=0','>=0','<3','>=3'];
+			if(in_array($data['credit'], $allowed_values)) {
+				$operator = preg_replace('/\d/', '', $data['credit']);
+				$number = preg_replace('/\D/', '', $data['credit']);	
+				$this->db->where('User.credit ' . $operator, $number);
+			}
+		}
 
 		// Sorting
 		if(!empty($data['user_type'])) {

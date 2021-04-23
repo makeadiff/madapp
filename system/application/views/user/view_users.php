@@ -71,14 +71,14 @@ $.tablesorter.addParser({
 <td style="vertical-align:top;"><div class="field clear">
 	<label for="city_id" class="above">City </label><br />
 	<select name="city_id" id="city_id">
-	<option value="0">Any City</option>
-	<?php
-	foreach($all_cities as $this_city_id => $this_city_name) { ?>
-	<option value="<?php echo $this_city_id; ?>" <?php 
-		if(!empty($city_id) and $city_id == $this_city_id) echo 'selected="selected"';
-	?>><?php echo $this_city_name; ?></option>
-	<?php } ?>
-	</select>
+		<option value="0">Any City</option>
+		<?php
+		foreach($all_cities as $this_city_id => $this_city_name) { ?>
+		<option value="<?php echo $this_city_id; ?>" <?php 
+			if(!empty($city_id) and $city_id == $this_city_id) echo 'selected="selected"';
+		?>><?php echo $this_city_name; ?></option>
+		<?php } ?>
+		</select>
 	<p class="error clear"></p> 
 	</div>
 
@@ -86,18 +86,32 @@ $.tablesorter.addParser({
 	<div class="field clear">
 	<label for="user_type" class="above">User Type</label><br />
 	<select name="user_type" id="user_type">
-	<option value="0">All Type</option>
-	<?php
-	$types = array('applicant' => "Applicant", 'volunteer' => 'Volunteer', 'well_wisher' => 'Well Wisher', 'alumni' => 'Alumni', 'let_go' => 'Let Go', 'other' => 'Others');
-	foreach($types as $user_type_key => $user_type_name) { ?>
-	<option value="<?php echo $user_type_key; ?>" <?php 
-		if(!empty($user_type) and $user_type_key == $user_type) echo 'selected="selected"';
-	?>><?php echo $user_type_name; ?></option>
-	<?php } ?>
+		<option value="0">All Type</option>
+		<?php
+		$types = array('applicant' => "Applicant", 'volunteer' => 'Volunteer', 'well_wisher' => 'Well Wisher', 'alumni' => 'Alumni', 'let_go' => 'Let Go', 'other' => 'Others');
+		foreach($types as $user_type_key => $user_type_name) { ?>
+		<option value="<?php echo $user_type_key; ?>" <?php 
+			if(!empty($user_type) and $user_type_key == $user_type) echo 'selected="selected"';
+		?>><?php echo $user_type_name; ?></option>
+		<?php } ?>
 	</select>
 	<p class="error clear"></p> 
 	</div>
 	<?php } ?>
+
+	<label for="credit" class="above">Credit </label><br />
+	<select name="credit" id="credit">
+		<option value="">All Credit</option>
+		<option value="<0" <?php if(!empty($credit) and $credit === '<0') echo 'selected="selected"'; ?>>Less than Zero</option>
+		<option value="<=0" <?php if(!empty($credit) and $credit === '<=0') echo 'selected="selected"'; ?>>Zero Or Less</option>
+		<option value="<=1" <?php if(!empty($credit) and $credit === '<=1') echo 'selected="selected"'; ?>>One Or Less</option>
+		<option value=">=0" <?php if(!empty($credit) and $credit === '>=0') echo 'selected="selected"'; ?>>Zero Or More</option>
+		<option value=">=0" <?php if(!empty($credit) and $credit === '>=0') echo 'selected="selected"'; ?>>More than 0</option>
+		<option value="<3" <?php if(!empty($credit) and $credit === '<3') echo 'selected="selected"'; ?>>Less than 3</option>
+		<option value=">=3" <?php if(!empty($credit) and $credit === '>=3') echo 'selected="selected"'; ?>>Three or More</option>
+	</select>
+	<p class="error clear"></p> 
+	</div>
 </td>
 		
 <td style="vertical-align:top;"><div  class="field clear" style="margin-left:20px; margin-bottom:10px;">

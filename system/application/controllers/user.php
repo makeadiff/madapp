@@ -365,6 +365,11 @@ class User extends Controller  {
 		if($this->input->post('user_type') !== false) $data['user_type'] = $this->input->post('user_type');
 		elseif($user_type) $data['user_type'] = $user_type;
 		else $data['user_type'] = 'volunteer';
+
+		// Credit range
+		if($this->input->post('credit') !== false) $data['credit'] = $this->input->post('credit');
+
+
 		
 		// Create the query_string.
 		$group = implode(',', $data['user_group']);

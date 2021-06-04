@@ -4,7 +4,8 @@ $this->load->view('layout/header', array('title'=>'Classes')); ?>
 
 <table id="main" class="data-table">
 <tr><th>Center</th><th>Class</th><th>Time</th><th>Teacher</th><th>Substitute</th><th>Status</th>
-<?php if($this->user_auth->get_permission('debug')) { ?><th>Action</th></tr><?php } ?>
+<th>Student Data</th><th>Teacher Data</th>
+<?php if($this->user_auth->get_permission('debug')) { ?><th>Debug Mode</th></tr><?php } ?>
 <?php foreach($all_classes as $class) { ?>
 <tr>
 <td><?php echo $class->center_name; ?></td>
@@ -13,7 +14,12 @@ $this->load->view('layout/header', array('title'=>'Classes')); ?>
 <td><?php echo $all_users[$class->user_id] ?></td>
 <td><?php echo ($class->substitute_id) ? $all_users[$class->substitute_id] : ''; ?></td>
 <td><?php echo ucfirst($class->status) ?></td>
-<?php if($this->user_auth->get_permission('debug')) { ?> <td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>" class="edit with-icon">Edit</a></td> <?php } ?>
+<td><a href="https://makeadiff.in/madapp/mobile/#/teacher?class_id=<?php echo $class->class_id; ?>" class="edit with-icon">Show Class</a></td>
+<td><a href="https://makeadiff.in/madapp/mobile/#/mentor?batch_id=<?php echo $class->batch_id; ?>&class_on=<?php echo $class->class_on; ?>"
+		class="edit with-icon">Show Batch</a></td>
+<?php if($this->user_auth->get_permission('debug')) { ?>
+	<td><a href="<?php echo site_url('classes/edit_class/'.$class->class_id); ?>" class="edit with-icon">Edit in MADApp(OLD, Don't Use)</a></td>
+<?php } ?>
 
 </tr>
 <?php } ?>

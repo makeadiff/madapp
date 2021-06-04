@@ -74,7 +74,7 @@ function validate(e) {
 </table>
 <br><br>
 
-<?php if($this->user_auth->get_permission('user_edit') and $city_id != 1) { // The 'and 0' part disables this area ?>
+<?php if($this->user_auth->get_permission('user_edit')) { // The 'and 0' part disables this area ?>
 <table class="data-table">
     <thead>
     <tr><th>Update Credit</th></tr>

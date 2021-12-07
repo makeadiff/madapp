@@ -17,10 +17,11 @@ class Center_model extends Model
     {
         parent::Model();
 
-		$this->ci = &get_instance();
-		$this->city_id = $this->ci->session->userdata('city_id');
-		$this->project_id = $this->ci->session->userdata('project_id');
-		$this->year = $this->ci->session->userdata('year');
+				$this->ci = &get_instance();
+				$this->city_id = $this->ci->session->userdata('city_id');
+				$this->project_id = $this->ci->session->userdata('project_id');
+				if(!$this->project_id) $this->project_id = 1;
+				$this->year = $this->ci->session->userdata('year');
     }
 
 	/**

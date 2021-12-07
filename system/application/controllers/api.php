@@ -308,6 +308,7 @@ class Api extends Controller {
 		if(isset($user['groups'][$aftercare_mentor_group_id])) $project_id = $aftercare_project_id;
 
 		$connections = $this->user_model->get_class_connections($user['id']);
+		// dump($connections);exit;
 		$mentor = "0";
 		if($connections['mentor_at'] or isset($user['groups'][$es_mentor_group_id])) $mentor = "1";
 

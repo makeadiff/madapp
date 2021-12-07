@@ -865,7 +865,8 @@ class Users_model extends Model {
 			FROM Batch B
 			INNER JOIN Class C ON C.batch_id=B.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
-			WHERE B.status='1' AND B.batch_head_id='$user_id' AND B.year='{$this->year}'
+			INNER JOIN UserBatch UB ON UB.batch_id=B.id AND UB.user_id={$user_id} AND UB.role='mentor'
+			WHERE B.status='1' AND B.year='{$this->year}'
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
 
 		$teacher_at = $this->db->query("SELECT B.id AS batch_id, UB.level_id, CONCAT(L.grade, ' ', L.name) AS level, B.day, B.class_time, C.id AS class_id, C.class_on,

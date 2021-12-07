@@ -200,13 +200,14 @@ class Cron extends Controller  {
 		// Copy all user groups other than fellow/strat ones. Those change every year.
 		$fellow_strat_group_ids = colFormat($this->users_model->db->query("SELECT id FROM `Group` WHERE (type='fellow' OR type='strat') AND group_type='normal' AND status='1'")->result());
 
-		$this->users_model->db->query("INSERT INTO UserGroup(user_id, group_id, year)
-										SELECT user_id, group_id, '$current_year' FROM UserGroup
+		$this->users_model->db->query("INSERT INTO UserGroup(user_id, group_id, main, year)
+										SELECT user_id, group_id, main, '$current_year' FROM UserGroup
 										INNER JOIN User ON User.id = UserGroup.user_id
 											WHERE UserGroup.year='$last_year'
 												AND UserGroup.group_id NOT IN (" . implode(",", $fellow_strat_group_ids) . ")
 												AND User.user_type = 'volunteer'
 												AND User.status = 1");
+		print "Copied UserGroups from $last_year to $current_year for all groups except fellows and strats.\n";
 	}
 
 	/// Copy over last year's Class structure. Rename all fancy name to ABC, and increment their grade by one. '7 Rainbow class' becomes '8 A'
@@ -276,13 +277,13 @@ class Cron extends Controller  {
 		// DELETE FROM BatchLevel WHERE level_id IN (SELECT id FROM Level WHERE year=2017)
 	}
 
-	// Not tested. Query works.
 	function copy_center_projects() {
 		$current_year = get_year();
 		$last_year = $current_year - 1;
 
 		$this->users_model->db->query("INSERT INTO CenterProject (center_id, project_id, year, added_on) 
 				SELECT center_id,project_id, '$current_year' AS year, NOW() AS added_on FROM CenterProject WHERE year=$last_year");
+		print "Done";
 	}
 
 }

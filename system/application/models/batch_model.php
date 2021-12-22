@@ -40,7 +40,7 @@ class Batch_model extends Model {
 	}
 
 	function get_batches_connected_to_user($user_id) {
-		return colFormat($this->db->query("SELECT id FROM Batch WHERE batch_head_id=$user_id AND year={$this->year}")->result());
+		return colFormat($this->db->query("SELECT batch_id FROM UserBatch WHERE user_id=$user_id AND role='mentor'")->result());
 	}
 	
 	function get_all_batches($class_starts_check=false) {
@@ -96,7 +96,10 @@ class Batch_model extends Model {
 
 	/// Get the details about the batch head of a given batch.
 	function get_batch_head($batch_id) {
-		return $this->db->query("SELECT User.id, User.name, User.phone FROM User INNER JOIN Batch ON User.id=Batch.batch_head_id WHERE Batch.id=$batch_id")->row();
+		return $this->db->query("SELECT User.id, User.name, User.phone 
+				FROM User 
+				INNER JOIN UserBatch ON User.id=UserBatch.user_id
+				WHERE UserBatch.role='mentor' AND UserBatch.batch_id=$batch_id")->row();
 	}
 	
 	function get_class_days($center_id) {
@@ -127,6 +130,14 @@ class Batch_model extends Model {
 		$batch_id = $this->db->insert_id();
 
 		if($data['batch_head_id'] > 0) {
+			$this->db->insert("UserBatch", [
+				'user_id' => $data['batch_head_id'],
+				'batch_id' => $batch_id,
+				'level_id' => '0',
+				'role'=>'mentor',
+				'added_on' => date('Y-m-d H:i:s')
+			]);
+
 			$this->load->model('users_model');
 			$mentor_group_id = 8; // Ed Support Mentor
 			if($this->project_id == 2) $mentor_group_id = 375; // Foundational Fellow - this is the mentor for FP.
@@ -148,6 +159,14 @@ class Batch_model extends Model {
 			$this->load->model('users_model');
 			$this->users_model->remove_user_from_group($old_batch_head->id,8);// Remove old batch head from Batch Head Group.
 			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
+
+			$this->db->insert("UserBatch", [
+				'user_id' => $data['batch_head_id'],
+				'batch_id' => $batch_id,
+				'level_id' => '0',
+				'role'=>'mentor',
+				'added_on' => date('Y-m-d H:i:s')
+			]);
 		}
 
 		$this->db->delete("BatchSubject", array('batch_id'=>$batch_id));

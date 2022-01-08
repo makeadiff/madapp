@@ -36,7 +36,8 @@ foreach($data as $center_id => $center_info) {
 ?>
 <table class="madsheet data-table info-box-table">
 <tr>
-<th colspan="3"><a href="<?php echo site_url('batch/index/center/' . $center_id) ?>"><?php echo $batch_info['name']; ?></a> 
+<th colspan="3"><a href="<?php echo site_url('batch/index/center/' . $center_id) ?>"><?php 
+	echo $batch_info['name'] . " (ID:" . $batch_id . ")"; ?></a>
 	(<a href="<?php echo site_url('/user/view/' . $batch_info['batch_head']->id) ?>"><?php echo $batch_info['batch_head']->name ?></a>)</th>
 <?php
 foreach($batch_info['days_with_classes'] as $day) print "<th>$day</th>";
@@ -80,7 +81,6 @@ foreach($batch_info['levels'] as $level_id => $level_info) { // Level start.
 				$class_count++;
 				if($class_count > 100) exit; // In case something goes terribly, terribly wrong.
 			}
-			
 			
 			print "<td class='class-{$classes->user_status}'>&nbsp;";
 			if($classes->substitute_id != 0) print 'S'

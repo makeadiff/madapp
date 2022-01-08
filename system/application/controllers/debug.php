@@ -163,7 +163,7 @@ class Debug extends Controller {
 		$day_count = 0;
 		echo "Making classes...<br />";
 		while(date_diff($dt_from_date, new DateTime())->format("%r%a") > 0) { // Make sure we are in the past.
-		
+			echo "Class on: " . $dt_from_date->format("Y-m-d") . ": " . date_diff($dt_from_date, new DateTime())->format("%r%a") . "<br />\n";
 			$class_date = $dt_from_date->format("Y-m-d") . ' ' . $batch->class_time;
 			$user_class_id = array(); 
 			$teachers = $this->batch_model->get_batch_teachers($batch->id);
@@ -181,11 +181,13 @@ class Debug extends Controller {
 					));
 					echo "Classes added for $class_date : " . implode(",", $user_class_id) . "<br />";
 				} else {
-					return; // Exit if we encounter a class thats made in that time period.
+					echo "Error. Class already exists for $class_date. Skipping.<br />\n";
+					// return; // Exit if we encounter a class thats made in that time period.
 				}
 			}
 			$dt_from_date->add(new DateInterval('P7D')); // Jump to next week
 			$day_count++;
+			echo "Next Class: " . $dt_from_date->format("Y-m-d") . ": " . date_diff($dt_from_date, new DateTime())->format("%r%a") . "<br />\n";
 			if($day_count > 50) return; // Too long an interval. Don't bother creating classes.
 		}
 	}
@@ -204,7 +206,7 @@ class Debug extends Controller {
 		foreach($all_centers as $center) {
 			$batches = $this->batch_model->get_batches_in_center($center->id);
 			$center_class_starts_on = $center->class_starts_on;
-			if($center_class_starts_on == '0000-00-00') {
+			if($center_class_starts_on == '0000-00-00' or !$center_class_starts_on) {
 				print "Invalid Start date for {$center->name}({$center->id}). Not generating class.<br />";
 				continue;
 			}

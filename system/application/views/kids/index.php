@@ -63,6 +63,7 @@
     <?php } else { ?>
         <th class="colStatus">Center</th>
     <?php } ?>
+    <th class="colActions">Student Type</th>
 	<th class="colActions">Actions</th>
 </tr>
 </thead>
@@ -88,6 +89,8 @@ foreach($details as $row) {
     <?php } else { ?>
         <td><?php echo $row->center_name;?></td>
     <?php } ?>
+
+    <td><?php echo isset($all_student_type[$row->student_type]) ? $all_student_type[$row->student_type] : 'Not assigned'; ?></td>
 
     <td class="colActions right"> 
     <?php if($this->user_auth->get_permission('kids_edit') and $page == 'index') { ?><a href="<?php echo site_url('kids/popupEdit_kids/'.$row->id)?>" class="thickbox icon edit popup" name="Edit student: <?php echo  $row->name ?>">Edit</a><?php } ?>

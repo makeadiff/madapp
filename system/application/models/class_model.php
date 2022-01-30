@@ -572,6 +572,7 @@ class Class_model extends Model {
 		if(!$existing_user_class) {
 			$this->db->insert('UserClass', array(
 				'user_id'	=> $user_id,
+				'substitute_id'	=> 0,
 				'class_id'	=> $class_id,
 				'status'	=> 'projected'
 			));

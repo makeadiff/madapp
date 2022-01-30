@@ -52,14 +52,21 @@ class Batch_model extends Model {
 	}
 	
 	function get_batches_in_level($level_id) {
+		// return $this->db->query("SELECT Batch.* FROM Batch
+		// 		INNER JOIN BatchLevel BL ON BL.batch_id=Batch.id
+		// 		INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id
+		// 	 	WHERE UserBatch.level_id=$level_id AND BL.level_id=$level_id AND Batch.year={$this->year}")->result();
+
 		return $this->db->query("SELECT Batch.* FROM Batch
-				INNER JOIN BatchLevel BL ON BL.batch_id=Batch.id
 				INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id
-			 	WHERE UserBatch.level_id=$level_id AND BL.level_id=$level_id AND Batch.year={$this->year}")->result();
+			 	WHERE UserBatch.level_id=$level_id AND Batch.year={$this->year}")->result();
 	}
 	function get_batches_connected_to_level($level_id) {
-		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN BatchLevel ON Batch.id=BatchLevel.batch_id 
-				WHERE BatchLevel.level_id=$level_id AND Batch.year={$this->year}")->result();
+		// return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN BatchLevel ON Batch.id=BatchLevel.batch_id 
+		// 		WHERE BatchLevel.level_id=$level_id AND Batch.year={$this->year}")->result();
+
+		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id 
+				WHERE UserBatch.level_id=$level_id AND Batch.year={$this->year}")->result();
 	}
 
 	// :DEPRICATED:	
@@ -68,9 +75,14 @@ class Batch_model extends Model {
 	}
 	
 	function get_levels_in_batch($batch_id) {
+		// :DEPRICATED:	Pre Madnet logic.
+		// return $this->db->query("SELECT DISTINCT Level.id,CONCAT(Level.grade, ' ', Level.name) AS name FROM Level 
+		// 		INNER JOIN BatchLevel ON Level.id=BatchLevel.level_id 
+		// 		WHERE BatchLevel.batch_id=$batch_id AND BatchLevel.year={$this->year}")->result();
+
 		return $this->db->query("SELECT DISTINCT Level.id,CONCAT(Level.grade, ' ', Level.name) AS name FROM Level 
-				INNER JOIN BatchLevel ON Level.id=BatchLevel.level_id 
-				WHERE BatchLevel.batch_id=$batch_id AND BatchLevel.year={$this->year}")->result();
+		 		INNER JOIN UserBatch ON Level.id=UserBatch.level_id 
+		 		WHERE UserBatch.batch_id=$batch_id")->result();
 	}
 	
 	function get_batches_in_center($center_id, $project_id = false) {
@@ -217,15 +229,20 @@ class Batch_model extends Model {
 		$batch_level_connections = array();
 
 		if($batch_ids) {
-			$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel 
-					WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
+			// $batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel 
+			// 		WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
+
+			$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM UserBatch 
+			 		WHERE batch_id IN (".implode(",", $batch_ids).")")->result();
 		}
 
 		return $batch_level_connections;
 	}
 
 	function get_level_connection($batch_id) {
-		$levels = $this->db->query("SELECT level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id=$batch_id")->result();
+		// $levels = $this->db->query("SELECT level_id FROM BatchLevel WHERE year='{$this->year}' AND batch_id=$batch_id")->result();
+
+		$levels = $this->db->query("SELECT DISTINCT level_id FROM UserBatch WHERE batch_id=$batch_id")->result();
 		return colFormat($levels);
 	}
 }

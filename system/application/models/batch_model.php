@@ -25,7 +25,7 @@ class Batch_model extends Model {
 	function get_batch_teachers($batch_id) {
 		return $this->db->query("SELECT User.id, User.name, UserBatch.level_id FROM User 
 				INNER JOIN UserBatch ON User.id=UserBatch.user_id 
-				WHERE UserBatch.batch_id={$batch_id}")->result();
+				WHERE UserBatch.batch_id={$batch_id} AND UserBatch.role='teacher'")->result();
 	}
 	
 	function get_teachers_in_batch_and_level($batch_id, $level_id) {
@@ -36,7 +36,7 @@ class Batch_model extends Model {
 	function get_teachers_in_batch($batch_id, $teacher_group_id = 9) {
 		return $this->db->query("SELECT UserBatch.user_id AS id FROM UserBatch 
 				INNER JOIN UserGroup ON UserBatch.user_id=UserGroup.user_id 
-				WHERE batch_id={$batch_id} AND UserBatch.user_id!=0 AND UserGroup.group_id=$teacher_group_id")->result();
+				WHERE UserGroup.batch_id={$batch_id} AND UserBatch.role='teacher' AND UserBatch.user_id != 0 AND UserGroup.group_id=$teacher_group_id")->result();
 	}
 
 	function get_batches_connected_to_user($user_id) {
@@ -123,6 +123,7 @@ class Batch_model extends Model {
 		return $return;
 	}
 	
+	// :DEPRICATED:
 	function set_volunteer_requirement($batch_id, $level_id, $requirement) {
 		if(!$requirement) return;
 		

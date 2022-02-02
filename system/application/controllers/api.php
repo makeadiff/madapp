@@ -729,7 +729,7 @@ class Api extends Controller {
 
 		if(!$class_on) {
 			$last_class = $this->class_model->get_last_class_in_batch($batch_id);
-			if(!$last_class) return $this->send(array('error' => "This batch does not have any past batches"));
+			if(!$last_class) return $this->send(array('error' => "This batch does not have any classes in the past."));
 
 			$from_date = date('Y-m-d', strtotime($last_class->class_on));
 		} else {

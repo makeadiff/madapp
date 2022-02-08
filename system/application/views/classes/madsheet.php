@@ -12,6 +12,16 @@ $this->load->view('layout/header', array('title'=>'MAD Sheet'));
 } ?>
 </ul>
 
+<h3>Programmes</h3>
+
+<?php
+$all_projects = idNameFormat($this->db->query("SELECT id, name FROM Project WHERE status='1'")->result());
+echo form_open('classes/madsheet');
+echo form_dropdown('project_id', $all_projects, $this->session->userdata('project_id'));
+echo form_submit('action', "Change");
+echo form_close();
+?>
+
 <h3>Legend</h3>
 <table class="legend">
 <tr>

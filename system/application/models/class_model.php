@@ -33,7 +33,7 @@ class Class_model extends Model {
 		$classes_taught_by_user = idNameFormat($this->db->query("SELECT C.id, C.class_on AS name FROM Class C 
 					INNER JOIN UserClass UC ON UC.class_id = C.id
 					INNER JOIN Level L ON L.id=C.level_id
-					WHERE UC.user_id=$user_id AND L.year={$this->year}")->result());
+					WHERE UC.user_id=$user_id AND L.year={$this->year} AND C.status != 'cancelled' AND C.class_on <= NOW()")->result());
 		$classes_marked = colFormat($this->db->query("SELECT DISTINCT(class_id) FROM StudentClass WHERE class_id IN (" 
 													. implode(",", array_keys($classes_taught_by_user)) . ")")->result());
 		$classes_unmarked_ids = array_diff(array_keys($classes_taught_by_user), $classes_marked);

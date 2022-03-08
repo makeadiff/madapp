@@ -88,7 +88,8 @@ class Batch_model extends Model {
 	function get_batches_in_center($center_id, $project_id = false) {
 		if(!$project_id) $project_id = $this->project_id;
 
-		$batches = $this->db->where('center_id',$center_id)->where('project_id', $project_id)->where('year', $this->year)->orderby('day')->get('Batch')->result();
+		$batches = $this->db->where('status','1')->where('center_id',$center_id)->where('project_id', $project_id)->where('year', $this->year)
+					->orderby('day')->get('Batch')->result();
 		
 		foreach ($batches as $index => $batch) {
 			$batches[$index]->name = $this->create_batch_name($batch->day, $batch->class_time);

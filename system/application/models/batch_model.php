@@ -66,7 +66,7 @@ class Batch_model extends Model {
 		// 		WHERE BatchLevel.level_id=$level_id AND Batch.year={$this->year}")->result();
 
 		return $this->db->query("SELECT Batch.* FROM Batch INNER JOIN UserBatch ON Batch.id=UserBatch.batch_id 
-				WHERE UserBatch.level_id=$level_id AND Batch.year={$this->year}")->result();
+				WHERE UserBatch.level_id=$level_id AND Batch.year={$this->year} AND Batch.status='1'")->result();
 	}
 
 	// :DEPRICATED:	

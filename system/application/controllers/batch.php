@@ -240,7 +240,8 @@ class Batch extends Controller {
 		$this->user_auth->check_permission('batch_delete');
 		
 		$batch = $this->model->get_batch_as_array($batch_id);
-		$this->model->delete($batch_id);
+
+ 		$this->db->set('status', '0')->where('id', $batch_id)->update('Batch');
 		$this->message['success'] = 'The Batch has been deleted successfully';
 		$this->index('center',$batch['center_id']);
 	}

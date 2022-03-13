@@ -194,15 +194,15 @@ class Api extends Controller {
 		if($total_classes) $substitution_percentage = intval(($substituted_classes / $total_classes) * 100);
 		$substitution_info = array(
 					'substitution_percentage'	=> $substitution_percentage,
-					'last_5_classes'			=> $last_5_classes
+					'last_5_classes'					=> $last_5_classes
 			);
 		
 		$batch_info = array(
-				'batch_id'						=> $batch_id,
+				'batch_id'										=> $batch_id,
 				'volunteer_data_not_updated'	=> $volunteer_data_not_updated,
 				'student_data_not_updated'		=> $student_data_not_updated,
 				'teachers_with_negative_credits'=> $teachers_with_negative_credits,
-				'substitution_info'				=> $substitution_info
+				'substitution_info'						=> $substitution_info
 			);
 		$this->send($batch_info);
 		return $batch_info;
@@ -587,7 +587,7 @@ class Api extends Controller {
 		if(!$project_id) $project_id = $batch->project_id;
 		
 		$center_id = $batch->center_id;
-		$center = $this->center_model->get_info($center_id);
+		$center = $this->center_model->get_info($center_id)[0];
 		$center_name = $center->name;
 		$city_id = $center->city_id;
 
@@ -660,6 +660,7 @@ class Api extends Controller {
 				'classes'		=> $classes, 
 				'center_name'	=> $center_name,
 				'center_id'		=> $center_id,
+				'project_id'	=> $project_id,
 				'batch_id'		=> $batch_id, 
 				'batch_name'	=> $batch_name,
 				'class_on' 		=> $class_on,

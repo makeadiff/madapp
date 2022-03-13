@@ -861,22 +861,25 @@ class Users_model extends Model {
 
     /// Returns all the class connections of this user - all the classes they are a teacher at and all they are a mentor at.
 	function get_class_connections($user_id) {
-		$mentor_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.class_on, Ctr.id AS center_id, Ctr.name AS center_name
+		$mentor_at = $this->db->query("SELECT DISTINCT B.id AS batch_id, B.day, B.class_time, C.class_on, Ctr.id AS center_id, Ctr.name AS center_name, 
+				B.project_id, P.name AS project
 			FROM Batch B
 			INNER JOIN Class C ON C.batch_id=B.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
 			INNER JOIN UserBatch UB ON UB.batch_id=B.id AND UB.user_id={$user_id} AND UB.role='mentor'
+			INNER JOIN Project P ON B.project_id=P.id
 			WHERE B.status='1' AND B.year='{$this->year}'
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND class_on < NOW() ORDER BY class_on DESC LIMIT 0,1)")->result();
 
 		$teacher_at = $this->db->query("SELECT B.id AS batch_id, UB.level_id, CONCAT(L.grade, ' ', L.name) AS level, B.day, B.class_time, C.id AS class_id, C.class_on,
-												Ctr.id AS center_id, Ctr.name AS center_name
+												Ctr.id AS center_id, Ctr.name AS center_name, B.project_id, P.name AS project
 			FROM UserBatch UB
 			INNER JOIN Batch B ON B.id=UB.batch_id
 			INNER JOIN Level L ON UB.level_id=L.id
 			INNER JOIN Class C ON (C.batch_id=UB.batch_id AND C.level_id=UB.level_id)
 			INNER JOIN UserClass UC ON UC.class_id=C.id
 			INNER JOIN Center Ctr ON B.center_id=Ctr.id
+			INNER JOIN Project P ON B.project_id=P.id
 			WHERE B.status='1' AND UB.user_id='$user_id' AND UC.user_id=$user_id AND B.year='{$this->year}' AND L.year={$this->year} AND C.class_on < NOW()
 				AND C.class_on=(SELECT class_on FROM Class WHERE batch_id=B.id AND level_id=L.id AND class_on < NOW()
 									ORDER BY class_on

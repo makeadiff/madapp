@@ -91,10 +91,10 @@ class Api extends Controller {
 			'name'		=> $name,
 			'email'		=> $email,
 			'phone'		=> $phone,
-			'password'	=> 'pass',
+			'password'=> 'pass',
 			'address'	=> '',
 			'city'		=> $city_id,
-			'sex'		=> 'f',
+			'sex'			=> 'f',
 			'type'		=> 'volunteer',
 			));
 		$this->user_model->adduser_to_group($user_id, $groups);
@@ -411,9 +411,17 @@ class Api extends Controller {
 				return $this->error("No classes found beyond this point.");
 			}
 			$from_date = date("Y-m-d", strtotime($next_class->class_on));
+
+		} elseif($direction == 'l') { // Get latest class
+			$next_class = $this->class_model->get_next_class($batch_id, $level_id, date("Y-m-d"), $direction);
+			if(!$next_class) {
+				return $this->error("No classes found beyond this point.");
+			}
+			$from_date = date("Y-m-d", strtotime($next_class->class_on));
 		}
 
 		$class_info = $this->class_model->get_class_by_batch_level_and_date($batch_id, $level_id, $from_date);
+
 		$this->open_class($class_info->id);
 	}
 

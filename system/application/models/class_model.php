@@ -543,7 +543,11 @@ class Class_model extends Model {
 		$level_check = '';
 		if($level_id) $level_check = " AND level_id=$level_id";
 
-		$next_class = $this->db->query("SELECT * FROM Class WHERE class_on $where '$from_date $time' $level_check AND batch_id=$batch_id ORDER BY class_on $order LIMIT 0,1")->row();
+		// print "SELECT * FROM Class WHERE class_on $where '$from_date $time' $level_check AND batch_id=$batch_id ORDER BY class_on $order LIMIT 0,1";
+
+		$next_class = $this->db->query("SELECT * FROM Class 
+				WHERE class_on $where '$from_date $time' $level_check AND batch_id=$batch_id 
+				ORDER BY class_on $order LIMIT 0,1")->row();
 
 		return $next_class;
 	}
@@ -555,8 +559,7 @@ class Class_model extends Model {
 			INNER JOIN Level ON Class.level_id=Level.id
 			INNER JOIN UserClass ON UserClass.class_id=Class.id
 			WHERE Class.batch_id=$data[batch_id] AND DATE(Class.class_on)='$data[from_date]' ORDER BY Level.grade, Level.name, Class.id";
-		$data = $this->db->query($query)->result();
-		return $data;
+		return $this->db->query($query)->result();
 	}
 	
 	function add_class_manually($level_id, $batch_id, $class_on, $user_id, $class_type = 'scheduled') {

@@ -3,7 +3,7 @@
 Class User_auth {
 	protected $error_start_delimiter;
 	protected $error_end_delimiter;
-	protected $hash = '2o^6uU!';
+	protected $hash = '2AAe^342!';
 
 	private $ci;
 	function User_auth() {
@@ -57,13 +57,13 @@ Class User_auth {
 	}
 
 	function accessControl() {
-		if(empty($_SESSION['user_id']) and empty($_SESSION['id'])) {
-			$current_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-			$login_url = MAD_APPS_FOLDER . 'auth/';
+		// if(empty($_SESSION['user_id']) and empty($_SESSION['id'])) {
+		// 	$current_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+		// 	$login_url = MAD_APPS_FOLDER . 'auth/';
 
-			header("Location: " . $login_url . "?url=" . base64_encode($current_link));
-			exit;
-		}
+		// 	header("Location: " . $login_url . "?url=" . base64_encode($current_link));
+		// 	exit;
+		// }
 
 		if(empty($_SESSION['id'])) $_SESSION['id'] = $_SESSION['user_id']; // Backward compatability.
 
@@ -238,22 +238,22 @@ Class User_auth {
 			$password_message = <<<END
 Hey {$user->name},
 
-Someone, hopefully you, has requested to change your MADApp Password. If you wish to do that, go to this URL and set the new password...
-http://makeadiff.in/madapp/index.php/auth/reset_password/{$code}
+Someone, hopefully you, has requested to change your HumApp Password. If you wish to do that, go to this URL and set the new password...
+https://humanityorg.binnyva.com/humapp/index.php/auth/reset_password/{$code}
 
 If you did not make this request, just ignore this email.
 
 Thanks.
 --
-MADApp
+HumApp
 END;
 
-			// $this->ci->email->from('madapp@makeadiff.in', "MADApp");
+			// $this->ci->email->from('madapp@makeadiff.in', "HumApp");
 			// $this->ci->email->to($user->email);
-			// $this->ci->email->subject('MADApp Password Reminder');
+			// $this->ci->email->subject('HumApp Password Reminder');
 			// $this->ci->email->message($password_message);
 			// $this->ci->email->send();
-			sendEmailWithAttachment($identity, 'MADApp Password Reset', $password_message, "MADApp <madapp@makeadiff.in>");
+			sendEmailWithAttachment($identity, 'HumApp Password Reset', $password_message, "HumApp <madapp@makeadiff.in>");
 
 			return true;
 		}

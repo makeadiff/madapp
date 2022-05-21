@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo empty($title) ? 'MADApp - ' . ucfirst($this->uri->segment(1)) : $title; ?></title>
+<title><?php echo empty($title) ? APP_NAME . ' - ' . ucfirst($this->uri->segment(1)) : $title; ?></title>
 <?php $this->load->view('layout/css'); ?>
 <script type="text/javascript" src="<?php echo base_url()?>js/jquery.tablesorter.min.js"></script>
 </head>
@@ -14,7 +14,7 @@
     <!-- HEAD BEGINS -->
     <div class="head">
      <div class="line">	
-       <div class="logo left"><a href="<?php echo site_url('dashboard/dashboard_view') ?>">MADAp&#946;</a></div>
+       <div class="logo left"><a href="<?php echo site_url('dashboard/dashboard_view') ?>"><?= APP_NAME ?></a></div>
        <div class="welcome right">
        <?php
 

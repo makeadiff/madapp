@@ -140,7 +140,7 @@ function short_name($name) {
 function get_year() {
 	$this_month = intval(date('m'));
 	$months = array();
-	$start_month = 8; // Aug
+	$start_month = 4; // Aug
 	$start_year = date('Y');
 	if($this_month < $start_month) $start_year = date('Y')-1;
 	return $start_year;

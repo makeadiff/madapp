@@ -57,13 +57,13 @@ Class User_auth {
 	}
 
 	function accessControl() {
-		// if(empty($_SESSION['user_id']) and empty($_SESSION['id'])) {
-		// 	$current_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-		// 	$login_url = MAD_APPS_FOLDER . 'auth/';
+		if(empty($_SESSION['user_id']) and empty($_SESSION['id'])) {
+			$current_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+			$login_url = MAD_APPS_FOLDER . 'auth/';
 
-		// 	header("Location: " . $login_url . "?url=" . base64_encode($current_link));
-		// 	exit;
-		// }
+			header("Location: " . $login_url . "?url=" . base64_encode($current_link));
+			exit;
+		}
 
 		if(empty($_SESSION['id'])) $_SESSION['id'] = $_SESSION['user_id']; // Backward compatability.
 
@@ -144,7 +144,7 @@ Class User_auth {
 
 	/// Returns true if the current user has permission to do the action specified in the argument
 	function get_permission($permission_name) {
-		if($this->ci->session->userdata('user_id') == 1) return true; //:UGLY:
+		if($this->ci->session->userdata('user_id') == 1) return true; //:UGLY: This makes sure Binny user has all permissions.
 
 		return in_array($permission_name, $this->ci->session->userdata('permissions'));
 	}

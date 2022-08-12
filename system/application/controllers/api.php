@@ -55,6 +55,11 @@ class Api extends Controller {
 		header('Access-Control-Allow-Origin: *');
 	}
 
+	// Check current year according to madapp
+	function year() {
+		print get_year();
+	}
+
 	/// Returns the user details with the given id/email/phone. 
 	/// GET /users
 	function check_user_exists() {

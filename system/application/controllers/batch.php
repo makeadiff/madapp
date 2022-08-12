@@ -254,7 +254,7 @@ class Batch extends Controller {
 		$all_batches = $this->model->get_batches_in_center($center_id);
 		$all_levels = $this->level_model->get_all_levels_in_center($center_id);
 		$center_name = $this->center_model->get_center_name($center_id);
-		$all_batch_level_connections = $this->model->get_batch_level_connections($center_id);
+		$all_batch_level_connections = $this->model->get_batch_level_connections($center_id, false, 'batchlevel');
 
 		$this->load->view('batch/level_assignment.php',array(
 				'center_id'						=> $center_id,

@@ -220,7 +220,7 @@ class Batch_model extends Model {
 	}
 
 	/// Find out all the batch level connection in the given center.
-	function get_batch_level_connections($center_id, $project_id = false) {
+	function get_batch_level_connections($center_id, $project_id = false, $connector = 'userbatch') {
 		if(!$project_id) $project_id = $this->project_id;
 
 		$all_batchs = $this->get_batches_in_center($center_id, $project_id);
@@ -231,11 +231,14 @@ class Batch_model extends Model {
 		$batch_level_connections = array();
 
 		if($batch_ids) {
-			// $batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel 
-			// 		WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
-
-			$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM UserBatch 
-			 		WHERE batch_id IN (".implode(",", $batch_ids).")")->result();
+			if(strtolower($connector) == 'batchlevel') { // Need this for legacy mode. 
+				$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM BatchLevel 
+						WHERE year='{$this->year}' AND batch_id IN (".implode(",", $batch_ids).")")->result();
+			
+			} else {
+				$batch_level_connections = $this->db->query("SELECT batch_id,level_id FROM UserBatch 
+			 			WHERE batch_id IN (".implode(",", $batch_ids).")")->result();
+			}
 		}
 
 		return $batch_level_connections;

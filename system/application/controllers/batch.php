@@ -197,7 +197,7 @@ class Batch extends Controller {
 		$batch_volunters = idNameFormat($this->user_model->get_users_in_city());
 		$center_name = $this->center_model->get_center_name($batch['center_id']);
 		$all_levels = $this->level_model->get_all_levels_in_center($batch['center_id']);
-		$connected_levels = $this->model->get_level_connection($batch_id);
+		$connected_levels = $this->model->get_level_connection($batch_id, false, 'batchlevel');
 	
 		$this->load->view('batch/form.php', array(
 			'action' 			=> 'Edit',

@@ -116,7 +116,9 @@ class Batch_model extends Model {
 	}
 	
 	function get_class_days($center_id) {
-		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} ORDER BY day")->result();
+		$class_days = $this->db->query("SELECT id,day,class_time FROM Batch 
+			WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} AND status='1' 
+			ORDER BY day")->result();
 		$return = array();
 		foreach($class_days as $batch) {
 			$return[$batch->id] = $this->create_batch_name($batch->day, $batch->class_time);
@@ -165,31 +167,26 @@ class Batch_model extends Model {
 	function edit($batch_id, $data) {
 		$old_batch_head = $this->get_batch_head($batch_id);
 
-		$selected_subjects = $data['subjects'];
-		unset($data['subjects']);
-
 		$this->db->where('id', $batch_id)->update('Batch',$data);
-		if($data['batch_head_id'] > 0) {
+		if($data['batch_head_id'] and $old_batch_head->id != $data['batch_head_id']) { // If new mentor assigned
 			$this->load->model('users_model');
 			$this->users_model->remove_user_from_group($old_batch_head->id,8);// Remove old batch head from Batch Head Group.
 			$this->users_model->adduser_to_group($data['batch_head_id'], array(8));// Add the batch head to Batch Head group.
 
+
+			if($old_batch_head->id) {
+				$this->db->delete('UserBatch', ['user_id' => $old_batch_head->id, 'batch_id' => $batch_id, 'role' => 'mentor']);
+			}
+
 			$this->db->insert("UserBatch", [
-				'user_id' => $data['batch_head_id'],
+				'user_id'  => $data['batch_head_id'],
 				'batch_id' => $batch_id,
 				'level_id' => '0',
-				'role'=>'mentor',
+				'role'	   => 'mentor',
 				'added_on' => date('Y-m-d H:i:s')
 			]);
 		}
 
-		$this->db->delete("BatchSubject", array('batch_id'=>$batch_id));
-		foreach($selected_subjects as $subject_id) {
-			$this->db->insert("BatchSubject", array(
-				'batch_id'  => $batch_id,
-				'subject_id'=> $subject_id
-			));
-		}
 	}
 	
 	/// Delete the batch, the user batch connection, the batch subject connection - and the batch level connection.
@@ -199,6 +196,8 @@ class Batch_model extends Model {
 		$this->db->delete('UserBatch', array('batch_id'=>$batch_id));
 		$this->db->delete('BatchSubject', array('batch_id'=>$batch_id));
 		$this->db->delete('BatchLevel', array('batch_id'=>$batch_id));
+
+		// :TODO: Should we delete the future classes of this batch? Class.batch_id = $batch_id 
 	}
 
 	/// Delete all the level connection that this batch has. Important to do that before insterting the connection.

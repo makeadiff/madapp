@@ -105,34 +105,34 @@ class Common extends Controller {
 						'f'		=> 'Female',
 						'u'		=> 'Other'
 					];
-					$response = load('https://creator.zoho.com/api/jithincn1/json/recruitment-management/form/Registration/record/add', [
-						'method'	=> 'post',
-						'post_data'	=> [
-							'authtoken'			=> '205aee93fdc5f6d2d61b5833625f86ce',
-							'scope'				=> 'creatorapi',
-							'campaign_id' 		=> $data['campaign'],
-							'Applicant_Name'	=> $data['name'],
-							'Gender'			=> $all_sexes[$data['sex']],
-							'City'				=> $data['cities'][$data['city_id']],
-							'Date_of_Birth'		=> date('d-M-Y', strtotime($data['birthday'])),
-							'Email'				=> $data['email'],
-							'Address_for_correspondence'	=> $data['address'],
-							'Mobile_Number'		=> $data['phone'],
-							'Occupation'		=> $data['job_status'],
-							'Reason_for_choosing_to_volunteer_at_MAD'	=> $data['why_mad'],
-							'Latitude' 			=> "0002",	// :HARDCODE: - Researved for future update.
-							'Longitude' 		=> "00002",
-							'Role_Type' 		=> "Teaching",
-							'First_Priority' 	=> "Fundraising Volunteer",
-							'Second_Priority' 	=> "Aftercare ASV",
-							'Third_Priority' 	=> "Aftercare Wingmen",
-							'MAD_Applicant_Id'	=> $status['id'],	// 'Unique_Applicant_ID'	=> $status['id'],
-						]
-					]);
-					$zoho_response = json_decode($response);
-					$zoho_user_id = @$zoho_response->formname[1]->operation[1]->values->ID;
+					// $response = load('https://creator.zoho.com/api/jithincn1/json/recruitment-management/form/Registration/record/add', [
+					// 	'method'	=> 'post',
+					// 	'post_data'	=> [
+					// 		'authtoken'			=> '205aee93fdc5f6d2d61b5833625f86ce',
+					// 		'scope'				=> 'creatorapi',
+					// 		'campaign_id' 		=> $data['campaign'],
+					// 		'Applicant_Name'	=> $data['name'],
+					// 		'Gender'			=> $all_sexes[$data['sex']],
+					// 		'City'				=> $data['cities'][$data['city_id']],
+					// 		'Date_of_Birth'		=> date('d-M-Y', strtotime($data['birthday'])),
+					// 		'Email'				=> $data['email'],
+					// 		'Address_for_correspondence'	=> $data['address'],
+					// 		'Mobile_Number'		=> $data['phone'],
+					// 		'Occupation'		=> $data['job_status'],
+					// 		'Reason_for_choosing_to_volunteer_at_MAD'	=> $data['why_mad'],
+					// 		'Latitude' 			=> "0002",	// :HARDCODE: - Researved for future update.
+					// 		'Longitude' 		=> "00002",
+					// 		'Role_Type' 		=> "Teaching",
+					// 		'First_Priority' 	=> "Fundraising Volunteer",
+					// 		'Second_Priority' 	=> "Aftercare ASV",
+					// 		'Third_Priority' 	=> "Aftercare Wingmen",
+					// 		'MAD_Applicant_Id'	=> $status['id'],	// 'Unique_Applicant_ID'	=> $status['id'],
+					// 	]
+					// ]);
+					// $zoho_response = json_decode($response);
+					// $zoho_user_id = @$zoho_response->formname[1]->operation[1]->values->ID;
 
-					if($zoho_user_id and $status->id) $this->contact_model->setZohoId($status->id, $zoho_user_id);
+					// if($zoho_user_id and $status->id) $this->contact_model->setZohoId($status->id, $zoho_user_id);
 
 					redirect('common/thank_you');
 

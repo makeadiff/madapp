@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><?php echo empty($title) ? 'MADApp - ' . ucfirst($this->uri->segment(1)) : $title; ?></title>
+    <title><?php echo empty($title) ? APP_NAME . ' - ' . ucfirst($this->uri->segment(1)) : $title; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="<?php echo base_url()?>css/custom.css" />
@@ -25,7 +25,7 @@
             <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" href="<?php echo site_url('dashboard/dashboard_view') ?>">MADApp</a>
+        <a class="navbar-brand" href="<?php echo site_url('dashboard/dashboard_view') ?>"><?= APP_NAME ?></a>
 
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
@@ -63,7 +63,7 @@
                 ?>
             </li>
 
-            <li><a href="#"><?php
+            <li><a href="<?= site_url("user/view/" . $this->session->userdata('user_id')) ?>"><?php
                 echo $this->session->userdata('name');
                 $groups = $this->session->userdata('groups');
                 if($groups) print ' (' . implode(',', $groups) . ')';

@@ -1,34 +1,27 @@
 <div class="container-fluid">
 <div class="board transparent-container">
-<h1 class="title">MADApp</h1>
+<h1 class="title"><?= APP_NAME ?></h1>
 <br />
 
-	<!-- <div class="alert">Fellowship Signups are out. Sign up for fellowships 2018 here</div> -->
-
 	<?php if($this->user_auth->get_permission('user_index')) { ?>
-		<div class="col-md-3 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="https://makeadiff.in/donut" target="_blank">
-			<img src="<?php echo base_url(); ?>images/flat_ui/donut.png" alt="" width="64px" /> <br><br>Donut</a></div>
-	<?php } ?>
-
-	<?php if($this->user_auth->get_permission('user_index')) { ?>
-		<div class="col-md-3 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('user/view_users') ?>">
+		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('user/view_users') ?>">
 			<img src="<?php echo base_url(); ?>images/flat_ui/volunteers.png" alt="" /> <br>Volunteer<br>Management</a></div>
 	<?php } ?>
 
 	<?php if($this->user_auth->get_permission('center_index')) { ?>
-		<div class="col-md-3 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('center/manageaddcenters') ?>">
+		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('center/manageaddcenters') ?>">
 			<img src="<?php echo base_url(); ?>images/flat_ui/centers.png" alt="" /> <br>Center<br>Management</a>
 		</div>
 	<?php } ?>
 
 	<?php if($this->user_auth->get_permission('classes_madsheet')) { ?>
-		<div class="col-md-3 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('classes/madsheet') ?>">
-			<img src="<?php echo base_url(); ?>images/flat_ui/mad_sheet.png" alt="" /> <br>MAD Sheet</a>
+		<div class="col-md-4 col-sm-6 text-center"> <a class='btn btn-primary btn-dash' href="<?php echo site_url('classes/madsheet') ?>">
+			<img src="<?php echo base_url(); ?>images/flat_ui/mad_sheet.png" alt="" /> <br>ClassSheet</a>
 		</div>
 	<?php } ?>
 
-	<br style="clear:both;" /><hr />
-
+	<br style="clear:both;" />
+<!-- 
 	<div class="col-md-3 col-sm-6 text-center">
 		<a href="<?php echo site_url('edsupport/dashboard_view')?>" class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/ed_support.png"><br>Ed Support</a>
 	</div>
@@ -51,13 +44,13 @@
 
 	<div class="col-md-3 col-sm-6 text-center">
 		<a href='<?php echo site_url('resources/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/resources.png"><br>Resources</a>
-	</div>
+	</div> -->
 
-	<div class="col-md-3 col-sm-6 text-center">
+	<div class="col-md-6 col-sm-6 text-center">
 		<a href='<?php echo site_url('profile/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/profile.png"><br>Profile</a>
 	</div>
 
-	<div class="col-md-3 col-sm-6 text-center">
+	<div class="col-md-6 col-sm-6 text-center">
 		<a href='<?php echo site_url('setting/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/settings.png"><br>Settings</a>
 	</div>
 

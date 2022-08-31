@@ -6,7 +6,7 @@ class Api extends Controller {
 	private $send_data = true;
 	private $_input_data = false;
 
-	public $key = 'am3omo32hom4lnv32vO';
+	public $key = 'or4W3@KOERUme#3';
 
 	public 	$report_level_config = array(
 		'teacher'	=> array(

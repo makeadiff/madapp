@@ -46,14 +46,6 @@ class Center extends Controller  {
 		$this->load->view('center/popups/addcenter_popup',$data);
 	}
 
-	/**
-    *
-    * Function to addCenter
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
 	function addCenter() {
 		$this->user_auth->check_permission('center_add');
 		$data['city']= $this->session->userdata('city_id');
@@ -74,14 +66,6 @@ class Center extends Controller  {
 
 	}
 
-	/**
-    *
-    * Function to popupEdit_center
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
 	function popupEdit_center($center_id)
 	{
 		$this->user_auth->check_permission('center_edit');
@@ -93,14 +77,6 @@ class Center extends Controller  {
 		$this->load->view('center/popups/center_edit_view',$data);
 	}
 
-	/**
-    *
-    * Function to update_Center
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
 	function update_Center()
 	{
 		$this->user_auth->check_permission('center_edit');
@@ -135,14 +111,6 @@ class Center extends Controller  {
 
 	}
 
-	/**
-    *
-    * Function to ajax_deletecenter
-    * @author : Rabeesh
-    * @param  : []
-    * @return : type : []
-    *
-    **/
 	function deletecenter($center_id)
 	{
 		$this->user_auth->check_permission('center_delete');

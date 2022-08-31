@@ -346,10 +346,14 @@ class Center_model extends Model
 		$information = array();
 
 		$center_head_id = $this->db->query("SELECT center_head_id FROM Center WHERE id=$center_id")->row()->center_head_id;
-		$level_count = $this->db->query("SELECT COUNT(id) AS level_count FROM Level WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} AND status='1'")->row()->level_count;
-		$batch_count = $this->db->query("SELECT COUNT(id) AS batch_count FROM Batch WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year}")->row()->batch_count;
-		$kids_count = $this->db->query("SELECT COUNT(id) AS count FROM Student WHERE center_id=$center_id AND status='1'")->row()->count;
-		$total_volunteer_count = $this->db->query("SELECT COUNT(id) AS count FROM User WHERE city_id={$this->city_id} AND user_type='volunteer' AND status='1'")->row()->count;
+		$level_count = $this->db->query("SELECT COUNT(id) AS level_count FROM Level 
+				WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} AND status='1'")->row()->level_count;
+		$batch_count = $this->db->query("SELECT COUNT(id) AS batch_count FROM Batch 
+				WHERE center_id=$center_id AND project_id={$this->project_id} AND year={$this->year} AND status='1'")->row()->batch_count;
+		$kids_count = $this->db->query("SELECT COUNT(id) AS count FROM Student 
+				WHERE center_id=$center_id AND status='1'")->row()->count;
+		$total_volunteer_count = $this->db->query("SELECT COUNT(id) AS count FROM User 
+				WHERE city_id={$this->city_id} AND user_type='volunteer' AND status='1'")->row()->count;
 		$assigned_student_count = $this->db->query("SELECT COUNT(DISTINCT S.id) AS student_count FROM Student S
 					INNER JOIN StudentLevel SL ON SL.student_id=S.id
 					INNER JOIN Level L ON L.id=SL.level_id

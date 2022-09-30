@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-define('APP_NAME', 'HumApp');
+define('APP_NAME', 'MADApp');
 
 /*
 |--------------------------------------------------------------------------
@@ -48,12 +48,12 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 define('PAGINATION_CONSTANT', 	'5');
 
-$_main_site_url = 'https://humanityorg.binnyva.com';
+$_main_site_url = 'htts://makeadiff.in';
 
 if(isset($_SERVER['HTTP_HOST'])) {
-	if($_SERVER['HTTP_HOST'] == 'humanityorg.binnyva.com') $_main_site_url = 'https://humanityorg.binnyva.com';
+	if($_SERVER['HTTP_HOST'] == 'makeadiff.in') $_main_site_url = 'https://makeadiff.in';
 	elseif($_SERVER['HTTP_HOST'] == 'testing.makeadiff.in') $_main_site_url = 'http://testing.makeadiff.in';
-	elseif($_SERVER['HTTP_HOST'] == 'localhost') $_main_site_url = 'http://localhost/Sites/binnyva/humanityorg.binnyva.com';
+	elseif($_SERVER['HTTP_HOST'] == 'localhost') $_main_site_url = 'http://localhost/MAD';
 }
 define('MAD_APPS_FOLDER', $_main_site_url . '/apps/');
 

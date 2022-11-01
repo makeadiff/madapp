@@ -50,7 +50,11 @@
 		<a href='<?php echo site_url('profile/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/profile.png"><br>Profile</a>
 	</div>
 
-	<div class="col-md-6 col-sm-6 text-center">
+	<div class="col-md-4 col-sm-6 text-center">
+		<a href="<?php echo site_url('finance/dashboard_view')?>" class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/finance.png"><br>Finance</a>
+	</div>
+
+	<div class="col-md-12 col-sm-6 text-center">
 		<a href='<?php echo site_url('setting/dashboard_view')?>' class='btn btn-primary btn-dash '><img src="<?php echo base_url()?>/images/flat_ui/settings.png"><br>Settings</a>
 	</div>
 

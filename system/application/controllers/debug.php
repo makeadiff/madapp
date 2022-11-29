@@ -467,6 +467,7 @@ class Debug extends Controller {
 	}
 
 
+	// Once in a while something happens that deletes the assignments in a shelter/batch. This function recreates the assignments based on the already existing classes. The classes that were scheduled before the assignment were deleted.
 	function restore_assignment($batch_id, $date = '') {
 		// Find the latest class for this batch.
 		if(!$date) $date = oneFormat($this->batch_model->db->query("SELECT class_on FROM Class WHERE batch_id=$batch_id ORDER BY class_on DESC LIMIT 0,1")->row());
